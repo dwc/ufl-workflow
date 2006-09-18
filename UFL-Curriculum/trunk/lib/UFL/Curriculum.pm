@@ -2,39 +2,18 @@ package UFL::Curriculum;
 
 use strict;
 use warnings;
+use Catalyst qw/
+    ConfigLoader
+    Static::Simple
+/;
 
-use Catalyst::Runtime '5.70';
+our $VERSION = '0.01_01';
 
-# Set flags and add plugins for the application
-#
-#         -Debug: activates the debug mode for very useful log messages
-#   ConfigLoader: will load the configuration from a YAML file in the
-#                 application's home directory
-# Static::Simple: will serve static files from the application's root 
-#                 directory
-
-use Catalyst qw/-Debug ConfigLoader Static::Simple/;
-
-our $VERSION = '0.01';
-
-# Configure the application. 
-#
-# Note that settings in UFL::Curriculum.yml (or other external
-# configuration file that you set up manually) take precedence
-# over this when using ConfigLoader. Thus configuration
-# details given here can function as a default configuration,
-# with a external configuration file acting as an override for
-# local deployment.
-
-__PACKAGE__->config( name => 'UFL::Curriculum' );
-
-# Start the application
 __PACKAGE__->setup;
-
 
 =head1 NAME
 
-UFL::Curriculum - Catalyst based application
+UFL::Curriculum - Curriculum tracking for the University of Florida
 
 =head1 SYNOPSIS
 
@@ -42,19 +21,28 @@ UFL::Curriculum - Catalyst based application
 
 =head1 DESCRIPTION
 
-[enter your description here]
+Each semester, professors identify new or modified undergraduate and
+graduate courses for the student body.  The professors create course
+requests and submit them for approval.  This application tracks these
+requests.
 
 =head1 SEE ALSO
 
-L<UFL::Curriculum::Controller::Root>, L<Catalyst>
+=over 4
+
+=item * L<UFL::Curriculum::Controller::Root>
+
+=item * L<Catalyst>
+
+=back
 
 =head1 AUTHOR
 
-Catalyst developer
+Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
 
 =head1 LICENSE
 
-This library is free software, you can redistribute it and/or modify
+This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut

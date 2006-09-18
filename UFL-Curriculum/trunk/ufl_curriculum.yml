@@ -1,2 +1,3 @@
----
-name: UFL::Curriculum
+--- #YAML:1.0
+# Do not use tabs for indentation or label/value separation!
+name: Curriculum Tracking

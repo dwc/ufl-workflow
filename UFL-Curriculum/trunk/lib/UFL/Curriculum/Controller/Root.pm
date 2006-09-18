@@ -2,35 +2,31 @@ package UFL::Curriculum::Controller::Root;
 
 use strict;
 use warnings;
-use base 'Catalyst::Controller';
+use base qw/Catalyst::Controller/;
 
-#
-# Sets the actions in this controller to be registered with no prefix
-# so they function identically to actions created in MyApp.pm
-#
 __PACKAGE__->config->{namespace} = '';
 
 =head1 NAME
 
-UFL::Curriculum::Controller::Root - Root Controller for UFL::Curriculum
+UFL::Curriculum::Controller::Root - Root controller
 
 =head1 DESCRIPTION
 
-[enter your description here]
+Root L<Catalyst> controller for L<UFL::Curriculum>.
 
 =head1 METHODS
 
-=cut
-
 =head2 default
+
+Handle any actions which did not match, i.e. 404 errors.
 
 =cut
 
 sub default : Private {
-    my ( $self, $c ) = @_;
+    my ($self, $c) = @_;
 
-    # Hello World
-    $c->response->body( $c->welcome_message );
+    $c->res->status(404);
+    $c->stash(template => '404.tt');
 }
 
 =head2 end
@@ -39,15 +35,16 @@ Attempt to render a view, if needed.
 
 =cut 
 
-sub end : ActionClass('RenderView') {}
+sub end : ActionClass('RenderView') {
+}
 
 =head1 AUTHOR
 
-Catalyst developer
+Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
 
 =head1 LICENSE
 
-This library is free software, you can redistribute it and/or modify
+This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
