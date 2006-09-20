@@ -1,12 +1,12 @@
-package UFL::Curriculum::Schema::ResultSource::Process;
+package UFL::Curriculum::Schema::Group;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
-__PACKAGE__->table('processes');
+__PACKAGE__->table('groups');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
     user_id => {
@@ -22,19 +22,19 @@ __PACKAGE__->add_standard_columns;
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
 
 __PACKAGE__->belongs_to(
-    creator => 'UFL::Curriculum::Schema::ResultSource::User',
+    primary_contact => 'UFL::Curriculum::Schema::User',
     'user_id',
 );
 
 __PACKAGE__->has_many(
-    steps => 'UFL::Curriculum::Schema::ResultSource::Step',
-    { 'foreign.process_id' => 'self.id' },
+    roles => 'UFL::Curriculum::Schema::Role',
+    { 'foreign.group_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::Process - Process table class
+UFL::Curriculum::Schema::Group - Group table class
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,7 @@ See L<UFL::Curriculum>.
 
 =head1 DESCRIPTION
 
-Process table class for L<UFL::Curriculum::Schema>.
+Group table class for L<UFL::Curriculum::Schema>.
 
 =head1 AUTHOR
 

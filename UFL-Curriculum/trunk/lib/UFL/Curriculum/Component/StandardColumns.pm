@@ -1,4 +1,4 @@
-package UFL::Curriculum::Schema::Component::StandardColumns;
+package UFL::Curriculum::Component::StandardColumns;
 
 use strict;
 use warnings;
@@ -6,12 +6,12 @@ use base qw/DBIx::Class/;
 
 =head1 NAME
 
-UFL::Curriculum::Schema::Component::StandardColumns - Definition of columns used on most tables
+UFL::Curriculum::Component::StandardColumns - Definition of columns used on most tables
 
 =head1 SYNOPSIS
 
     # In your table class
-    __PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns/);
+    __PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns/);
     __PACKAGE__->add_standard_primary_key;
     __PACKAGE__->add_standard_columns;
 

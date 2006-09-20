@@ -1,37 +1,36 @@
-package UFL::Curriculum::Schema::ResultSource::Step;
+package UFL::Curriculum::Schema::Request;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
-__PACKAGE__->table('steps');
+__PACKAGE__->table('requests');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
     process_id => {
         data_type => 'integer',
     },
-    role_id => {
-        data_type => 'varchar',
-        size      => '32',
+    user_id => {
+        data_type => 'integer',
     },
 );
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->belongs_to(
-    process => 'UFL::Curriculum::Schema::ResultSource::Process',
+    process => 'UFL::Curriculum::Schema::Process',
     'process_id',
 );
 
 __PACKAGE__->belongs_to(
-    role => 'UFL::Curriculum::Schema::ResultSource::Role',
-    'role_id',
+    submitter => 'UFL::Curriculum::Schema::User',
+    'user_id',
 );
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::Step - Step table class
+UFL::Curriculum::Schema::Request - Request table class
 
 =head1 SYNOPSIS
 
@@ -39,7 +38,7 @@ See L<UFL::Curriculum>.
 
 =head1 DESCRIPTION
 
-Step table class for L<UFL::Curriculum::Schema>.
+Request table class for L<UFL::Curriculum::Schema>.
 
 =head1 AUTHOR
 

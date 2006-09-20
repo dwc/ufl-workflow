@@ -3,11 +3,8 @@ package UFL::Curriculum::Schema;
 use strict;
 use warnings;
 use base qw/DBIx::Class::Schema/;
-use Module::Find ();
 
-__PACKAGE__->load_classes(map {
-    substr $_, length __PACKAGE__ . '::'
-} Module::Find::findallmod(__PACKAGE__ . '::ResultSource'));
+__PACKAGE__->load_classes;
 
 =head1 NAME
 

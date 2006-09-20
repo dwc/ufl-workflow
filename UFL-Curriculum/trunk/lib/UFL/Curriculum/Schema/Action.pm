@@ -1,10 +1,10 @@
-package UFL::Curriculum::Schema::ResultSource::Action;
+package UFL::Curriculum::Schema::Action;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
 __PACKAGE__->table('actions');
 __PACKAGE__->add_standard_primary_key;
@@ -26,23 +26,23 @@ __PACKAGE__->add_columns(
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->belongs_to(
-    request => 'UFL::Curriculum::Schema::ResultSource::Request',
+    request => 'UFL::Curriculum::Schema::Request',
     'request_id',
 );
 
 __PACKAGE__->belongs_to(
-    step => 'UFL::Curriculum::Schema::ResultSource::Step',
+    step => 'UFL::Curriculum::Schema::Step',
     'step_id',
 );
 
 __PACKAGE__->belongs_to(
-    actor => 'UFL::Curriculum::Schema::ResultSource::User',
+    actor => 'UFL::Curriculum::Schema::User',
     'user_id',
 );
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::Action - Action table class
+UFL::Curriculum::Schema::Action - Action table class
 
 =head1 SYNOPSIS
 

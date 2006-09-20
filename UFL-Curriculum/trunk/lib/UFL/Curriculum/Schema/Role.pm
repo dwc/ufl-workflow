@@ -1,10 +1,10 @@
-package UFL::Curriculum::Schema::ResultSource::Role;
+package UFL::Curriculum::Schema::Role;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
 __PACKAGE__->table('roles');
 __PACKAGE__->add_standard_primary_key;
@@ -22,25 +22,25 @@ __PACKAGE__->add_standard_columns;
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
 
 __PACKAGE__->belongs_to(
-    group => 'UFL::Curriculum::Schema::ResultSource::Group',
+    group => 'UFL::Curriculum::Schema::Group',
     'group_id',
 );
 
 __PACKAGE__->has_many(
-    user_roles => 'UFL::Curriculum::Schema::ResultSource::UserRole',
+    user_roles => 'UFL::Curriculum::Schema::UserRole',
     { 'foreign.role_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
 __PACKAGE__->has_many(
-    steps => 'UFL::Curriculum::Schema::ResultSource::Step',
+    steps => 'UFL::Curriculum::Schema::Step',
     { 'foreign.role_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::Role - Role table class
+UFL::Curriculum::Schema::Role - Role table class
 
 =head1 SYNOPSIS
 

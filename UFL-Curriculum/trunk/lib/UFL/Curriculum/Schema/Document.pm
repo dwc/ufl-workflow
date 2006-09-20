@@ -1,31 +1,28 @@
-package UFL::Curriculum::Schema::ResultSource::Comment;
+package UFL::Curriculum::Schema::Document;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
-__PACKAGE__->table('comments');
+__PACKAGE__->table('documents');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
-    action_id => {
+    request_id => {
         data_type => 'integer',
-    },
-    body => {
-        data_type => 'text',
     },
 );
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->belongs_to(
-    action => 'UFL::Curriculum::Schema::ResultSource::Action',
-    'action_id',
+    request => 'UFL::Curriculum::Schema::Request',
+    'request_id',
 );
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::Comment - Comment table class
+UFL::Curriculum::Schema::Document - Document table class
 
 =head1 SYNOPSIS
 
@@ -33,7 +30,7 @@ See L<UFL::Curriculum>.
 
 =head1 DESCRIPTION
 
-Comment table class for L<UFL::Curriculum::Schema>.
+Document table class for L<UFL::Curriculum::Schema>.
 
 =head1 AUTHOR
 

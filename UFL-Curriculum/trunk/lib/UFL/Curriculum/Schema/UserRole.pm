@@ -1,10 +1,10 @@
-package UFL::Curriculum::Schema::ResultSource::UserRole;
+package UFL::Curriculum::Schema::UserRole;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
 __PACKAGE__->table('user_roles');
 __PACKAGE__->add_columns(
@@ -21,18 +21,18 @@ __PACKAGE__->set_primary_key(qw/user_id role_id/);
 
 __PACKAGE__->belongs_to(
     # 'user' is reserved by SQL-92
-    actor => 'UFL::Curriculum::Schema::ResultSource::User',
+    actor => 'UFL::Curriculum::Schema::User',
     'user_id',
 );
 
 __PACKAGE__->belongs_to(
-    role => 'UFL::Curriculum::Schema::ResultSource::Role',
+    role => 'UFL::Curriculum::Schema::Role',
     'role_id',
 );
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::UserRole - User-to-role table class
+UFL::Curriculum::Schema::UserRole - User-to-role table class
 
 =head1 SYNOPSIS
 

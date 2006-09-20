@@ -1,10 +1,10 @@
-package UFL::Curriculum::Schema::ResultSource::User;
+package UFL::Curriculum::Schema::User;
 
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/+UFL::Curriculum::Schema::Component::StandardColumns Core/);
+__PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
 __PACKAGE__->table('users');
 __PACKAGE__->add_standard_primary_key;
@@ -19,17 +19,17 @@ __PACKAGE__->add_standard_columns;
 __PACKAGE__->add_unique_constraint(username => [ qw/username/ ]);
 
 # __PACKAGE__->has_many(
-#     processes => 'UFL::Curriculum::Schema::ResultSource::Process',
+#     processes => 'UFL::Curriculum::Schema::Process',
 #     { 'foreign.user_id' => 'self.id' },
 # );
 
 # __PACKAGE__->has_many(
-#     requests => 'UFL::Curriculum::Schema::ResultSource::Request',
+#     requests => 'UFL::Curriculum::Schema::Request',
 #     { 'foreign.user_id' => 'self.id' },
 # );
 
 __PACKAGE__->has_many(
-    user_roles => 'UFL::Curriculum::Schema::ResultSource::UserRole',
+    user_roles => 'UFL::Curriculum::Schema::UserRole',
     { 'foreign.user_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
@@ -38,7 +38,7 @@ __PACKAGE__->many_to_many('roles', 'user_roles', 'role');
 
 =head1 NAME
 
-UFL::Curriculum::Schema::ResultSource::User - User table class
+UFL::Curriculum::Schema::User - User table class
 
 =head1 SYNOPSIS
 
