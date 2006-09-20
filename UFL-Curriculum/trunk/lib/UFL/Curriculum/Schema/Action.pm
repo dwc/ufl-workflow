@@ -22,7 +22,8 @@ __PACKAGE__->add_columns(
         data_type => 'integer',
     },
     comment => {
-        data_type => 'clob',
+        data_type => 'varchar',
+        size      => 1024,
     },
 );
 __PACKAGE__->add_standard_columns;

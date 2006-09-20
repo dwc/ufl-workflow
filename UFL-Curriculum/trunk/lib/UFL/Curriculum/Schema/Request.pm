@@ -20,7 +20,8 @@ __PACKAGE__->add_columns(
         size      => 32,
     },
     description => {
-        data_type => 'clob',
+        data_type => 'varchar',
+        size      => 1024,
     },
 );
 __PACKAGE__->add_standard_columns;
