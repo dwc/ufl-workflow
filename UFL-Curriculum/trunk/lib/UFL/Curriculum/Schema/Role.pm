@@ -14,7 +14,7 @@ __PACKAGE__->add_columns(
     },
     name => {
         data_type => 'varchar',
-        size      => '32',
+        size      => 32,
     },
 );
 __PACKAGE__->add_standard_columns;

@@ -15,6 +15,13 @@ __PACKAGE__->add_columns(
     user_id => {
         data_type => 'integer',
     },
+    title => {
+        data_type => 'varchar',
+        size      => 32,
+    },
+    description => {
+        data_type => 'clob',
+    },
 );
 __PACKAGE__->add_standard_columns;
 
@@ -26,6 +33,18 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     submitter => 'UFL::Curriculum::Schema::User',
     'user_id',
+);
+
+__PACKAGE__->has_many(
+    actions => 'UFL::Curriculum::Schema::Action',
+    { 'foreign.request_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->has_many(
+    documents => 'UFL::Curriculum::Schema::Document',
+    { 'foreign.request_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
 );
 
 =head1 NAME

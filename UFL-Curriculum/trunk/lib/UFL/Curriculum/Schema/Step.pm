@@ -13,8 +13,11 @@ __PACKAGE__->add_columns(
         data_type => 'integer',
     },
     role_id => {
+        data_type => 'integer',
+    },
+    name => {
         data_type => 'varchar',
-        size      => '32',
+        size      => 32,
     },
 );
 __PACKAGE__->add_standard_columns;

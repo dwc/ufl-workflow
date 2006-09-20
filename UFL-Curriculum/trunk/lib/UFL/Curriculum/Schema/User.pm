@@ -18,15 +18,23 @@ __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->add_unique_constraint(username => [ qw/username/ ]);
 
-# __PACKAGE__->has_many(
-#     processes => 'UFL::Curriculum::Schema::Process',
-#     { 'foreign.user_id' => 'self.id' },
-# );
+__PACKAGE__->has_many(
+    processes => 'UFL::Curriculum::Schema::Process',
+    { 'foreign.user_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
 
-# __PACKAGE__->has_many(
-#     requests => 'UFL::Curriculum::Schema::Request',
-#     { 'foreign.user_id' => 'self.id' },
-# );
+__PACKAGE__->has_many(
+    requests => 'UFL::Curriculum::Schema::Request',
+    { 'foreign.user_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->has_many(
+    actions => 'UFL::Curriculum::Schema::Action',
+    { 'foreign.user_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
 
 __PACKAGE__->has_many(
     user_roles => 'UFL::Curriculum::Schema::UserRole',

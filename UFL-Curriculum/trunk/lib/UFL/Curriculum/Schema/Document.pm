@@ -12,6 +12,14 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
+    md5 => {
+        data_type => 'varchar',
+        size      => 32,
+    },
+    is_obselete => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
 );
 __PACKAGE__->add_standard_columns;
 

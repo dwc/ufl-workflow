@@ -15,12 +15,14 @@ __PACKAGE__->add_columns(
     step_id => {
         data_type => 'integer',
     },
+    status_id => {
+        data_type => 'integer',
+    },
     user_id => {
         data_type => 'integer',
     },
-    status => {
-        data_type => 'varchar',
-        size      => 1,
+    comment => {
+        data_type => 'clob',
     },
 );
 __PACKAGE__->add_standard_columns;
@@ -33,6 +35,11 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     step => 'UFL::Curriculum::Schema::Step',
     'step_id',
+);
+
+__PACKAGE__->belongs_to(
+    status => 'UFL::Curriculum::Schema::Status',
+    'status_id',
 );
 
 __PACKAGE__->belongs_to(
