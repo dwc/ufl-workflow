@@ -1,0 +1,4 @@
+[% SET title = 'Not Found' -%]
+
+<h2>[% title | html %]</h2>
+<p>Unfortunately, the page you were trying to retrieve was not found. Try starting from <a href="[% c.uri_for('/') | html %]">the home page</a>.</p>

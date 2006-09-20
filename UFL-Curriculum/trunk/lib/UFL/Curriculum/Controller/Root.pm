@@ -29,6 +29,18 @@ sub default : Private {
     $c->stash(template => '404.tt');
 }
 
+=head2 index
+
+Display the home page.
+
+=cut
+
+sub index : Path {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'index.tt');
+}
+
 =head2 end
 
 Attempt to render a view, if needed.
