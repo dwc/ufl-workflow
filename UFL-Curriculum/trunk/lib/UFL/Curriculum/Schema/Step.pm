@@ -15,6 +15,14 @@ __PACKAGE__->add_columns(
     role_id => {
         data_type => 'integer',
     },
+    previous_step_id => {
+        data_type   => 'integer',
+        is_nullable => 1,
+    },
+    next_step_id => {
+        data_type => 'integer',
+        is_nullable => 1,
+    },
     name => {
         data_type => 'varchar',
         size      => 32,
@@ -30,6 +38,18 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     role => 'UFL::Curriculum::Schema::Role',
     'role_id',
+);
+
+__PACKAGE__->belongs_to(
+    previous_step => 'UFL::Curriculum::Schema::Step',
+    'previous_step_id',
+    { join_type => 'left' },
+);
+
+__PACKAGE__->belongs_to(
+    next_step => 'UFL::Curriculum::Schema::Step',
+    'next_step_id',
+    { join_type => 'left' },
 );
 
 =head1 NAME
