@@ -16,6 +16,10 @@ __PACKAGE__->add_columns(
         data_type   => 'integer',
         is_nullable => 1,
     },
+    title => {
+        data_type => 'varchar',
+        size      => 32,
+    },
     md5 => {
         data_type => 'varchar',
         size      => 32,
