@@ -12,7 +12,7 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
-    replacement_document_id => {
+    document_id => {
         data_type   => 'integer',
         is_nullable => 1,
     },
@@ -33,8 +33,8 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->belongs_to(
-    replacement_document => 'UFL::Curriculum::Schema::Document',
-    'replacement_document_id',
+    replacement => 'UFL::Curriculum::Schema::Document',
+    'document_id',
     { join_type => 'left' },
 );
 

@@ -15,7 +15,7 @@ __PACKAGE__->add_columns(
     role_id => {
         data_type => 'integer',
     },
-    previous_step_id => {
+    prev_step_id => {
         data_type   => 'integer',
         is_nullable => 1,
     },
@@ -41,8 +41,8 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->belongs_to(
-    previous_step => 'UFL::Curriculum::Schema::Step',
-    'previous_step_id',
+    prev_step => 'UFL::Curriculum::Schema::Step',
+    'prev_step_id',
     { join_type => 'left' },
 );
 
