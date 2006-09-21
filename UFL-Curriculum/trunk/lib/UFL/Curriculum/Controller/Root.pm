@@ -48,6 +48,22 @@ Attempt to render a view, if needed.
 =cut 
 
 sub end : ActionClass('RenderView') {
+    my ($self, $c) = @_;
+
+    if (@{ $c->error }) {
+        $c->res->status(500);
+
+        # Override the ugly Catalyst debug screen
+        unless ($c->debug) {
+            $c->log->error($_) for @{ $c->error };
+
+            $c->stash->{errors} = $c->error;
+            $c->error(0);
+
+            $c->stash->{template} = 'error.tt';
+        }
+        
+    }
 }
 
 =head1 AUTHOR
