@@ -12,13 +12,13 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
+    replacement_document_id => {
+        data_type   => 'integer',
+        is_nullable => 1,
+    },
     md5 => {
         data_type => 'varchar',
         size      => 32,
-    },
-    is_obselete => {
-        data_type     => 'boolean',
-        default_value => 0,
     },
 );
 __PACKAGE__->add_standard_columns;
@@ -26,6 +26,12 @@ __PACKAGE__->add_standard_columns;
 __PACKAGE__->belongs_to(
     request => 'UFL::Curriculum::Schema::Request',
     'request_id',
+);
+
+__PACKAGE__->belongs_to(
+    replacement_document => 'UFL::Curriculum::Schema::Document',
+    'replacement_document_id',
+    { join_type => 'left' },
 );
 
 =head1 NAME
