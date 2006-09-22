@@ -29,4 +29,4 @@ Model::DBIC:
 
 View::TT:
   PRE_CHOMP: 1
-#  WRAPPER:   wrapper.tt
+  WRAPPER:   wrapper.tt
