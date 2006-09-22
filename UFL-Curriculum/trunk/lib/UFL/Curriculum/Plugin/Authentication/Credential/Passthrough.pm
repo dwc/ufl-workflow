@@ -29,8 +29,9 @@ Automatically login the current user.  By default the username is
 pulled from the C<REMOTE_USER> key, but you can configure the behavior
 by setting C<< $c->config->{authentication}->{passthrough}->{key} >>.
 
-When running under the built-in server, the C<USER> environment
-variable is also checked.
+When running under the built-in server or when running tests (i.e.,
+when C<HARNESS_ACTIVE> is set), the C<USER> environment variable is
+also checked.
 
 =cut
 
@@ -44,7 +45,7 @@ sub prepare_request {
             || 'REMOTE_USER';
 
         my $username = $ENV{$key};
-        if (not $username and ref($c->engine) =~ /::HTTP::/) {
+        if (not $username and ($ENV{HARNESS_ACTIVE} or ref($c->engine) =~ /::HTTP::/)) {
             $username = $ENV{USER};
         }
 
