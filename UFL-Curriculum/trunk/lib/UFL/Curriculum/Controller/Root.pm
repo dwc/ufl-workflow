@@ -35,7 +35,7 @@ Display the home page.
 
 =cut
 
-sub index : Path {
+sub index : Path Args(0) {
     my ($self, $c) = @_;
 
     $c->stash(template => 'index.tt');
