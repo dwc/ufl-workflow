@@ -5,6 +5,10 @@ all_from 'lib/UFL/Curriculum.pm';
 
 requires 'Catalyst' => '5.7001';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Plugin::Authentication';
+requires 'Catalyst::Plugin::Authentication::Store::DBIC';
+requires 'Catalyst::Plugin::Authorization::ACL';
+requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';

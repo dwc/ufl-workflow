@@ -3,6 +3,18 @@
 name:       Curriculum Tracking
 logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
 
+authentication:
+  dbic:
+    user_class:           DBIC::User
+    user_field:           username
+
+authorization:
+  dbic:
+    role_class:           DBIC::Role
+    role_field:           name
+    role_rel:             user_roles
+    user_role_user_field: user_id
+
 Model::DBIC:
   schema_class: UFL::Curriculum::Schema
   connect_info:

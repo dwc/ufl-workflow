@@ -4,6 +4,11 @@ use strict;
 use warnings;
 use Catalyst qw/
     ConfigLoader
+    Authentication
+    +UFL::Curriculum::Plugin::Authentication::Credential::Passthrough
+    Authentication::Store::DBIC
+    Authorization::ACL
+    Authorization::Roles
     StackTrace
     Static::Simple
     Unicode::Encoding
