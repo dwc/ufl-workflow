@@ -4,7 +4,9 @@ use strict;
 use warnings;
 use Catalyst qw/
     ConfigLoader
+    StackTrace
     Static::Simple
+    Unicode::Encoding
 /;
 
 our $VERSION = '0.01_01';

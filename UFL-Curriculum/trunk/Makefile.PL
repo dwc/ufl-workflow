@@ -1,12 +1,14 @@
 use inc::Module::Install;
 
-name 'UFL-Curriculum';
+name     'UFL-Curriculum';
 all_from 'lib/UFL/Curriculum.pm';
 
 requires 'Catalyst' => '5.7001';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Plugin::ConfigLoader';
+requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';
+requires 'Catalyst::Plugin::Unicode::Encoding';
 requires 'DBIx::Class' => '0.07000';
 requires 'Module::Find';  # For load_classes
 requires 'YAML';
