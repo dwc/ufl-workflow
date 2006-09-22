@@ -12,6 +12,9 @@ __PACKAGE__->add_columns(
     process_id => {
         data_type => 'integer',
     },
+    group_id => {
+        data_type => 'integer',
+    },
     role_id => {
         data_type => 'integer',
     },
@@ -36,8 +39,11 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->belongs_to(
-    role => 'UFL::Curriculum::Schema::Role',
-    'role_id',
+    group_role => 'UFL::Curriculum::Schema::GroupRole',
+    {
+        'foreign.role_id' => 'self.role_id',
+        'foreign.group_id' => 'self.group_id',
+    },
 );
 
 __PACKAGE__->belongs_to(
@@ -63,6 +69,34 @@ See L<UFL::Curriculum>.
 =head1 DESCRIPTION
 
 Step table class for L<UFL::Curriculum::Schema>.
+
+=head1 METHODS
+
+=head2 group
+
+Return the L<UFL::Curriculum::Schema::Group> associated with this
+step.
+
+=cut
+
+sub group {
+    my $self = shift;
+
+    $self->group_role->group(@_);
+}
+
+=head2 role
+
+Return the L<UFL::Curriculum::Schema::Role> associated with this
+step.
+
+=cut
+
+sub role {
+    my $self = shift;
+
+    $self->group_role->role(@_);
+}
 
 =head1 AUTHOR
 
