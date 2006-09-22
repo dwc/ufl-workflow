@@ -62,7 +62,6 @@ sub end : ActionClass('RenderView') {
 
             $c->stash->{template} = 'error.tt';
         }
-        
     }
 }
 
