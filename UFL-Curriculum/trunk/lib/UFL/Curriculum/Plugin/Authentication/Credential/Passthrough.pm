@@ -23,7 +23,7 @@ Use an existing external authentication mechanism with L<Catalyst>.
 
 =head1 METHODS
 
-=head2 prepare
+=head2 prepare_request
 
 Automatically login the current user.  By default the username is
 pulled from the C<REMOTE_USER> key, but you can configure the behavior
