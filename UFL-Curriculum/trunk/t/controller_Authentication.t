@@ -2,9 +2,8 @@ use strict;
 use warnings;
 use Test::More tests => 3;
 
-BEGIN { use_ok 'Catalyst::Test', 'UFL::Curriculum' }
-BEGIN { use_ok 'UFL::Curriculum::Controller::Auth' }
+use_ok('Catalyst::Test', 'UFL::Curriculum');
+use_ok('UFL::Curriculum::Controller::Authentication');
 
-ok( request('/auth')->is_success, 'Request should succeed' );
-
-
+my $response = request('/logout');
+ok($response->is_success or $response->is_redirect, 'request for /logout');
