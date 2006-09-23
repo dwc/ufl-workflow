@@ -7,8 +7,8 @@ use Catalyst qw/
     Authentication
     +UFL::Curriculum::Plugin::Authentication::Credential::Passthrough
     Authentication::Store::DBIC
-    Authorization::ACL
     Authorization::Roles
+    Authorization::ACL
     StackTrace
     Static::Simple
     Unicode::Encoding
@@ -17,6 +17,11 @@ use Catalyst qw/
 our $VERSION = '0.01_01';
 
 __PACKAGE__->setup;
+
+__PACKAGE__->deny_access_unless(
+    '/users',
+    [ qw/administrator/ ],
+);
 
 =head1 NAME
 

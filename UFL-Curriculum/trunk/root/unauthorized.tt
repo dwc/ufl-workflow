@@ -1,0 +1,4 @@
+[% SET title = 'Unauthorized' -%]
+
+<h2>[% title | html %]</h2>
+<p>Unfortunately, you don't appear to be logged in.</p>

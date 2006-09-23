@@ -16,6 +16,21 @@ Root L<Catalyst> controller for L<UFL::Curriculum>.
 
 =head1 METHODS
 
+=head2 auto
+
+Require authentication for all pages.
+
+=cut
+
+sub auto : Private {
+    my ($self, $c) = @_;
+
+    $c->forward('unauthorized') and return 0
+        unless $c->user_exists;
+
+    return 1;
+}
+
 =head2 default
 
 Handle any actions which did not match, i.e. 404 errors.
@@ -26,7 +41,7 @@ sub default : Private {
     my ($self, $c) = @_;
 
     $c->res->status(404);
-    $c->stash(template => '404.tt');
+    $c->stash(template => 'not_found.tt');
 }
 
 =head2 index
@@ -39,6 +54,45 @@ sub index : Path Args(0) {
     my ($self, $c) = @_;
 
     $c->stash(template => 'index.tt');
+}
+
+=head2 unauthorized
+
+Display a page stating the user is not logged in.
+
+=cut
+
+sub unauthorized : Private {
+    my ($self, $c) = @_;
+
+    $c->res->status(401);
+    $c->stash(template => 'unauthorized.tt');
+}
+
+=head2 forbidden
+
+Display a message stating that the user is not authorized to view the
+requested resource.
+
+=cut
+
+sub forbidden : Private {
+    my ($self, $c) = @_;
+
+    $c->res->status(403);
+    $c->stash(template => 'forbidden.tt');
+}
+
+=head2 access_denied
+
+Callback for L<Catalyst::Plugin::Authorization::ACL>.
+
+=cut
+
+sub access_denied : Private {
+    my ($self, $c) = @_;
+
+    $c->forward('forbidden');
 }
 
 =head2 end
