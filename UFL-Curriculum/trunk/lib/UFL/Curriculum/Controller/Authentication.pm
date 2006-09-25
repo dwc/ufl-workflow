@@ -28,9 +28,9 @@ sub logout : Global {
     my ($self, $c) = @_;
 
     $c->logout;
-    if (my $logout_uri = $c->config->{logout_uri}) {
-        $c->res->redirect($logout_uri);
-    }
+
+    my $logout_uri = $c->config->{logout_uri} || $c->uri_for('/');
+    $c->res->redirect($logout_uri);
 }
 
 =head1 AUTHOR
