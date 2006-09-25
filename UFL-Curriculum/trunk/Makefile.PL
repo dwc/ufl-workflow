@@ -3,6 +3,7 @@ use inc::Module::Install;
 name     'UFL-Curriculum';
 all_from 'lib/UFL/Curriculum.pm';
 
+requires 'Carp';
 requires 'Catalyst' => '5.7001';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Plugin::Authentication';
@@ -10,10 +11,14 @@ requires 'Catalyst::Plugin::Authentication::Store::DBIC';
 requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::ConfigLoader';
+requires 'Catalyst::Plugin::FillInForm';
 requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
+requires 'Class::Accessor::Fast';
 requires 'DBIx::Class' => '0.07000';
+requires 'FormValidator::Simple';
+requires 'FormValidator::Simple::ProfileManager::YAML';
 requires 'Module::Find';  # For load_classes
 requires 'YAML';
 

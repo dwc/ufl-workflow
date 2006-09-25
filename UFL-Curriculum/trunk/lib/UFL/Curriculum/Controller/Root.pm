@@ -95,13 +95,13 @@ sub access_denied : Private {
     $c->forward('forbidden');
 }
 
-=head2 end
+=head2 render
 
 Attempt to render a view, if needed.
 
 =cut 
 
-sub end : ActionClass('RenderView') {
+sub render : ActionClass('RenderView') {
     my ($self, $c) = @_;
 
     if (@{ $c->error }) {
@@ -111,12 +111,26 @@ sub end : ActionClass('RenderView') {
         unless ($c->debug) {
             $c->log->error($_) for @{ $c->error };
 
-            $c->stash->{errors} = $c->error;
-            $c->error(0);
-
-            $c->stash->{template} = 'error.tt';
+            $c->stash(
+                errors   => $c->error,
+                template => 'error.tt',
+            );
+            $c->clear_error;
         }
     }
+}
+
+=head2 end
+
+Render a view and finish up before sending the response.
+
+=cut
+
+sub end : Private {
+    my ($self, $c) = @_;
+
+    $c->forward('render');
+    $c->fillform if $c->stash->{fillform};
 }
 
 =head1 AUTHOR

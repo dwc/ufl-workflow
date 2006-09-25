@@ -9,6 +9,7 @@ use Catalyst qw/
     Authentication::Store::DBIC
     Authorization::Roles
     Authorization::ACL
+    FillInForm
     StackTrace
     Static::Simple
     Unicode::Encoding

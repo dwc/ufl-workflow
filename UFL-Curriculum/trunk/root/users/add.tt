@@ -1,0 +1,6 @@
+[% SET title = 'Add New User' -%]
+
+<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+  <label>Username: <input type="text" name="username" value="[% c.req.param('username') | html %]" /></label>
+  <input type="submit" value="Add user" />
+</form>

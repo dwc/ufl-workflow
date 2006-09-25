@@ -1,0 +1,23 @@
+[% SET title = user.username -%]
+
+<h2>[% user.username | html %]</h2>
+
+[% SET roles = user.roles %]
+[% IF roles.size > 0 %]
+<h3>Roles</h3>
+<ul>
+  [% FOREACH role IN roles %]
+    [% SET group = role.group %]
+  <li>
+    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.id ]) | html %]">[% role.name | html %]</a>
+    [% IF group %]([% group.name | html %])[% END %]
+    <form action="[% c.uri_for(c.controller.action_for('delete_role'), [ user.username ]) | html %]" method="post">
+      <input type="hidden" name="role_id" value="[% role.id | html %]" />
+      <input type="submit" value="Remove" />
+    </form>
+  </li>
+  [% END %]
+</ul>
+
+<p><a href="[% c.uri_for(c.controller.action_for('add_role'), [ user.username ]) | html %]">Add more roles</a></p>
+[% END %]
