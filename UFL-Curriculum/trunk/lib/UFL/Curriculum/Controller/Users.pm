@@ -37,6 +37,8 @@ sub index : Path Args(0) {
 
 =head2 add
 
+Add a new user.
+
 =cut
 
 sub add : Local {
@@ -44,6 +46,7 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
+
         if ($result->success) {
             my $user = $c->model('DBIC::User')->find_or_create({
                 username => $result->valid('username'),
