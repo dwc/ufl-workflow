@@ -18,4 +18,4 @@
 </ul>
 [% END %]
 
-<p><a href="[% c.uri_for(c.controller.action_for('add_role'), [ user.username ]) | html %]">Add a role</a></p>
+<p><a href="[% c.uri_for(c.controller.action_for('add_role'), [ user.username ]) | html %]">Add a role to this user</a></p>
