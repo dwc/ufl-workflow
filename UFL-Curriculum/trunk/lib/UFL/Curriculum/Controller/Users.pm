@@ -86,48 +86,29 @@ sub view : PathPart('') Chained('user') Args(0) {
     $c->stash(template => 'users/view.tt');
 }
 
-=head2 role
-
-If a role is requested, find and stash it.
-
-=cut
-
-sub role : PathPart('roles') Chained('user') CaptureArgs(0) {
-    my ($self, $c) = @_;
-
-    my $role_id = $c->req->param('role_id');
-    $role_id =~ s/\D//g;
-
-    if ($role_id) {
-        my $role = $c->model('DBIC::Role')->find($role_id);
-        $c->detach('/default') unless $role;
-
-        $c->stash(role => $role);
-    }
-}
-
 =head2 add_role
 
 Add the stashed user to the specified role.
 
 =cut
 
-sub add_role : PathPart('add') Chained('role') Args(0) {
+sub add_role : PathPart Chained('user') Args(0) {
     my ($self, $c) = @_;
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-
         if ($result->success) {
-            my $user = $c->stash->{user};
-            my $role = $c->stash->{role};
+            my $role = $c->model('DBIC::Role')->find($result->valid('role_id'));
+            $c->detach('/default') unless $role;
 
+            my $user = $c->stash->{user};
             $user->add_to_roles($role) unless $user->has_role($role);
+
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
         }
     }
 
-    my $roles  = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
+    my $roles = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
 
     $c->stash(
         roles    => $roles,
@@ -141,16 +122,22 @@ Remove the stashed user from the specified role.
 
 =cut
 
-sub delete_role : PathPart('delete') Chained('role') Args(0) {
+sub delete_role : PathPart Chained('user') Args(0) {
     my ($self, $c) = @_;
 
-    if ($c->req->method eq 'POST') {
-        my $user = $c->stash->{user};
-        my $role = $c->stash->{role};
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $user = $c->stash->{user};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $role = $c->model('DBIC::Role')->find($result->valid('role_id'));
+        $c->detach('/default') unless $role;
 
         $user->remove_from_roles($role);
-        return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
     }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
 }
 
 =head1 AUTHOR
