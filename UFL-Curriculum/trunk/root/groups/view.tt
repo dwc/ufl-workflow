@@ -1,9 +1,5 @@
 [% SET title = group.name -%]
 
-<h3>Primary contact</h3>
-[% SET primary_contact = group.primary_contact %]
-<p><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ primary_contact.uri_args ]) | html %]">[% primary_contact.username | html %]</a></p>
-
 <h3>Users by role</h3>
 [% SET roles = group.roles %]
 [% IF roles %]
