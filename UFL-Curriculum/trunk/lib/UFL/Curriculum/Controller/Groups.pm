@@ -86,6 +86,35 @@ sub view : PathPart('') Chained('group') Args(0) {
     $c->stash(template => 'groups/view.tt');
 }
 
+=head2 edit
+
+Edit the stashed group.
+
+=cut
+
+sub edit : PathPart Chained('group') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $group = $c->stash->{group};
+
+            my $values = $result->valid;
+            foreach my $key (keys %$values) {
+                $c->log->debug($key);
+                $group->$key($values->{$key}) if $group->can($key);
+            }
+
+            $group->update;
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
+        }
+    }
+
+    $c->stash(template => 'groups/edit.tt');
+}
+
 =head2 add_role
 
 Add a role to the stashed group.
