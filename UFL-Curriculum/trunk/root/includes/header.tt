@@ -14,3 +14,6 @@
       <p>Logged in as <strong>[% c.user.username | html %]</strong> (<a href="[% c.uri_for('/logout') | html %]">Logout</a>)</p>
 [% END %]
     </div>
+[% FILTER indent('    ') %]
+  [% INCLUDE includes/nav.tt %]
+[% END -%]
