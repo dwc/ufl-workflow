@@ -35,6 +35,18 @@ sub index : Path Args(0) {
     );
 }
 
+=head2 add
+
+Add a new group.
+
+=cut
+
+sub add : Local {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'groups/add.tt');
+}
+
 =head2 group
 
 Fetch the specified group.
