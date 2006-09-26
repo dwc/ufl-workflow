@@ -9,9 +9,6 @@ __PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Cor
 __PACKAGE__->table('groups');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
-    user_id => {
-        data_type => 'integer',
-    },
     name => {
         data_type => 'varchar',
         size      => 32,
@@ -20,11 +17,6 @@ __PACKAGE__->add_columns(
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
-
-__PACKAGE__->belongs_to(
-    primary_contact => 'UFL::Curriculum::Schema::User',
-    'user_id',
-);
 
 __PACKAGE__->has_many(
     roles => 'UFL::Curriculum::Schema::Role',
