@@ -1,6 +1,6 @@
 [% SET title = 'Users' -%]
 
-<h2>Current users</h2>
+<h3>Current users</h3>
 [% IF users.count > 0 %]
 <ul>
   [% WHILE (user = users.next) %]
