@@ -60,6 +60,20 @@ See L<UFL::Curriculum>.
 
 Request table class for L<UFL::Curriculum::Schema>.
 
+=head1 METHODS
+
+=head2 uri_args
+
+Return the list of URI path arguments needed to identify this request.
+
+=cut
+
+sub uri_args {
+    my ($self) = @_;
+
+    return $self->id;
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

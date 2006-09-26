@@ -44,6 +44,20 @@ See L<UFL::Curriculum>.
 
 Group table class for L<UFL::Curriculum::Schema>.
 
+=head1 METHODS
+
+=head2 uri_args
+
+Return the list of URI path arguments needed to identify this group.
+
+=cut
+
+sub uri_args {
+    my ($self) = @_;
+
+    return $self->id;
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

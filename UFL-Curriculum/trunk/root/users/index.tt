@@ -4,7 +4,7 @@
 [% IF users.count > 0 %]
 <ul>
   [% WHILE (user = users.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ user.username ]) | html %]">[% user.username | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ user.uri_args ]) | html %]">[% user.username | html %]</a></li>
   [% END %]
 </ul>
 [% END %]

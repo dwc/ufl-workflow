@@ -52,7 +52,7 @@ sub add : Local {
                 username => $result->valid('username'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->username ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
         }
     }
 
@@ -123,7 +123,7 @@ sub add_role : PathPart('add') Chained('role') Args(0) {
             $c->detach('/default') unless $user and $role;
 
             $user->add_to_roles($role);
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->username ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
         }
     }
 
@@ -151,7 +151,7 @@ sub delete_role : PathPart('delete') Chained('role') Args(0) {
     $c->detach('/default') unless $user and $role;
 
     $user->remove_from_roles($role);
-    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->username ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
 }
 
 =head1 AUTHOR

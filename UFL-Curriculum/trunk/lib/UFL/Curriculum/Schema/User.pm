@@ -58,14 +58,13 @@ User table class for L<UFL::Curriculum::Schema>.
 
 =head1 METHODS
 
-=head2 get_url_args
+=head2 uri_args
 
-Return the list of URL path arguments needed to identify this
-user.
+Return the list of URI path arguments needed to identify this user.
 
 =cut
 
-sub get_url_args {
+sub uri_args {
     my ($self) = @_;
 
     return $self->username;

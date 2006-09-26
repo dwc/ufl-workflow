@@ -7,9 +7,9 @@
   [% FOREACH role IN roles %]
     [% SET group = role.group %]
   <li>
-    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.id ]) | html %]">[% role.name | html %]</a>
-    [% IF group %] (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.id ]) | html %]">[% group.name | html %]</a>)[% END %]
-    <form action="[% c.uri_for(c.controller.action_for('delete_role'), [ user.username ]) | html %]" method="post">
+    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>
+    (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a>)
+    <form action="[% c.uri_for(c.controller.action_for('delete_role'), [ user.uri_args ]) | html %]" method="post">
       <input type="hidden" name="role_id" value="[% role.id | html %]" />
       <input type="submit" value="Remove" />
     </form>
@@ -18,4 +18,4 @@
 </ul>
 [% END %]
 
-<p><a href="[% c.uri_for(c.controller.action_for('add_role'), [ user.username ]) | html %]">Add a role to this user</a></p>
+<p><a href="[% c.uri_for(c.controller.action_for('add_role'), [ user.uri_args ]) | html %]">Add a role to this user</a></p>
