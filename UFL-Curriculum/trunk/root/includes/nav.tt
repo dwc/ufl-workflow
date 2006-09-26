@@ -1,7 +1,7 @@
 [% IF c.check_user_roles('Administrator') %]
 <ul id="navigation">
-  <li><a href="[% c.uri_for(c.controller('Users').action_for('index')) | html %]">Users</a></li>
-  <li><a href="[% c.uri_for(c.controller('Groups').action_for('index')) | html %]">Groups</a></li>
-  <li><a href="[% c.uri_for(c.controller('Processes').action_for('index')) | html %]">Processes</a></li>
+  [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses' ] %]
+  <li><a href="[% c.uri_for(c.controller(name).action_for('index')) | html %]">[% name | html %]</a></li>
+  [% END %]
 </ul>
 [% END %]
