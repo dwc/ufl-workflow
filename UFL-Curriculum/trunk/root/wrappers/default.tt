@@ -3,7 +3,7 @@
     <div id="content">
 
 [% FILTER indent('      ') %]
-  [% INCLUDE includes/errors.tt %]
+  [% INCLUDE includes/form_errors.tt %]
   [% IF title %]<h2>[% title | html %]</h2>[% END %]
   [% content || "\n" %]
 [% END -%]
