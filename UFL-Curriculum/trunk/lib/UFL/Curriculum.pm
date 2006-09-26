@@ -20,19 +20,8 @@ our $VERSION = '0.01_01';
 __PACKAGE__->setup;
 
 __PACKAGE__->deny_access_unless(
-    '/users',
-    [ qw/Administrator/ ],
-);
-
-__PACKAGE__->deny_access_unless(
-    '/groups',
-    [ qw/Administrator/ ],
-);
-
-__PACKAGE__->deny_access_unless(
-    '/roles',
-    [ qw/Administrator/ ],
-);
+    "/$_", [ qw/Administrator/ ]
+) for qw/users groups processes statuses/;
 
 =head1 NAME
 

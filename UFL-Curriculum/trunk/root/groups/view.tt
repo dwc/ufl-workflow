@@ -5,7 +5,7 @@
 [% IF roles %]
 <ul>
   [% FOREACH role IN roles %]
-  <li><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>
+  <li>[% role.name | html %]
   [% SET users = role.users %]
   [% IF users %]
     <ul>
