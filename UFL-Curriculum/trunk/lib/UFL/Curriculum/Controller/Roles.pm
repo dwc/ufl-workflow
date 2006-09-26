@@ -18,35 +18,6 @@ L<Catalyst> controller component for managing roles.
 
 =head1 METHODS
 
-=head2 index 
-
-Display a list of current roles.
-
-=cut
-
-sub index : Path Args(0) {
-    my ($self, $c) = @_;
-
-    my $roles = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
-
-    $c->stash(
-        roles    => $roles,
-        template => 'roles/index.tt',
-    );
-}
-
-=head2 add
-
-Add a new role.
-
-=cut
-
-sub add : Local {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'roles/add.tt');
-}
-
 =head2 role
 
 Fetch the specified role.

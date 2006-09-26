@@ -1,0 +1,17 @@
+[% SET title = role.name -%]
+
+<h3>Group</h3>
+[% SET group = role.group %]
+<p><a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a></p>
+
+<h3>Users</h3>
+[% SET users = role.users %]
+<ul>
+  [% FOREACH user IN users %]
+  <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ user.uri_args ]) | html %]">[% user.username | html %]</a></p>
+  [% END %]
+</ul>
+[% IF users %]
+[% ELSE %]
+<p>None yet.
+[% END %]
