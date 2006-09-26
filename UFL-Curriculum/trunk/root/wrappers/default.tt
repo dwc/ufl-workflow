@@ -3,7 +3,7 @@
     <div id="content">
 [% FILTER indent('      ') %]
   [% INCLUDE includes/errors.tt %]
-  <h2>[% title | html %]</h2>
+<h2>[% title | html %]</h2>
   [% content %]
 [% END -%]
 
