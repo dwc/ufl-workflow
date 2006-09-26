@@ -21,7 +21,15 @@ if ($type eq 'DB2') {
         next unless $source->has_column($field_name);
 
         my $table_name = $source->from;
-        my $trigger_name = "${table_name}_update";
+        my $trigger_name = "${table_name}_u";
+        if (length $trigger_name > 18) {
+            my $new_trigger_name = $trigger_name;
+            $new_trigger_name =~ s/([A-Za-z])[A-Za-z]+_/$1_/g;
+
+            warn "Shortening trigger [$trigger_name] to [$new_trigger_name]";
+            $trigger_name = $new_trigger_name;
+        }
+
         my $l = length($trigger_name);
 
         my $drop = "DROP TRIGGER $trigger_name;";
