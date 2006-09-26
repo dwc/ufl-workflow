@@ -24,6 +24,16 @@ __PACKAGE__->deny_access_unless(
     [ qw/administrator/ ],
 );
 
+__PACKAGE__->deny_access_unless(
+    '/groups',
+    [ qw/administrator/ ],
+);
+
+__PACKAGE__->deny_access_unless(
+    '/roles',
+    [ qw/administrator/ ],
+);
+
 =head1 NAME
 
 UFL::Curriculum - Curriculum tracking for the University of Florida
