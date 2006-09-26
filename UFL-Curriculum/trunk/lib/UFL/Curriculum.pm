@@ -21,17 +21,17 @@ __PACKAGE__->setup;
 
 __PACKAGE__->deny_access_unless(
     '/users',
-    [ qw/administrator/ ],
+    [ qw/Administrator/ ],
 );
 
 __PACKAGE__->deny_access_unless(
     '/groups',
-    [ qw/administrator/ ],
+    [ qw/Administrator/ ],
 );
 
 __PACKAGE__->deny_access_unless(
     '/roles',
-    [ qw/administrator/ ],
+    [ qw/Administrator/ ],
 );
 
 =head1 NAME
