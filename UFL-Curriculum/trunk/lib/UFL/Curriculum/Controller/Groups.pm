@@ -97,7 +97,6 @@ sub add_role : PathPart Chained('group') Args(0) {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-
         if ($result->success) {
             my $group = $c->stash->{group};
 
