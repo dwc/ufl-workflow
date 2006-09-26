@@ -36,11 +36,13 @@ sub new {
     my $c = $_[0];
 
     my $path = $c->path_to('root', $self->path_prefix($c));
-    $self->_path($path);
+    if (-d $path) {
+        $self->_path($path);
 
-    if (-e (my $profiles_file = $self->profiles_file($path))) {
-        my $manager = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
-        $self->_manager($manager);
+        if (-e (my $profiles_file = $self->profiles_file($path))) {
+            my $manager = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
+            $self->_manager($manager);
+        }
     }
 
     return $self;
