@@ -86,16 +86,53 @@ sub view : PathPart('') Chained('user') Args(0) {
     $c->stash(template => 'users/view.tt');
 }
 
-=head2 add_role
+=head2 role
 
-Display a form for adding the stashed user to a role.
+If a role is requested, find and stash it.
 
 =cut
 
-sub add_role : PathPart Chained('user') Args(0) {
+sub role : PathPart('roles') Chained('user') CaptureArgs(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'users/add_role.tt');
+    my $role_id = $c->req->param('role_id');
+    $role_id =~ s/\D//g;
+
+    if ($role_id) {
+        my $role = $c->model('DBIC::Role')->find($role_id);
+
+        $c->stash(role => $role);
+    }
+}
+
+=head2 add_role
+
+Add the stashed user to the specified role.
+
+=cut
+
+sub add_role : PathPart('add') Chained('role') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+
+        if ($result->success) {
+            my $user = $c->stash->{user};
+            my $role = $c->stash->{role};
+            $c->detach('/default') unless $user and $role;
+
+            $user->add_to_roles($role);
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->username ]));
+        }
+    }
+
+    my $roles  = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
+
+    $c->stash(
+        roles    => $roles,
+        template => 'users/add_role.tt'
+    );
 }
 
 =head2 delete_role
@@ -104,19 +141,17 @@ Remove the stashed user from the specified role.
 
 =cut
 
-sub delete_role : PathPart Chained('user') Args(0) {
+sub delete_role : PathPart('delete') Chained('role') Args(0) {
     my ($self, $c) = @_;
 
-    my $role_id = $c->req->param('role_id');
-    $role_id =~ s/\D//g;
-    $c->detach('/default') unless $role_id;
+    die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $user = $c->stash->{user};
-    my $role = $c->model('DBIC::Role')->find($role_id);
+    my $role = $c->stash->{role};
     $c->detach('/default') unless $user and $role;
 
     $user->remove_from_roles($role);
-    $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->username ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->username ]));
 }
 
 =head1 AUTHOR
