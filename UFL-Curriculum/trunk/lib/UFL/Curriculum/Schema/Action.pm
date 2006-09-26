@@ -15,10 +15,10 @@ __PACKAGE__->add_columns(
     step_id => {
         data_type => 'integer',
     },
-    status_id => {
+    user_id => {
         data_type => 'integer',
     },
-    user_id => {
+    status_id => {
         data_type => 'integer',
     },
     comment => {
@@ -39,13 +39,13 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->belongs_to(
-    status => 'UFL::Curriculum::Schema::Status',
-    'status_id',
+    actor => 'UFL::Curriculum::Schema::User',
+    'user_id',
 );
 
 __PACKAGE__->belongs_to(
-    actor => 'UFL::Curriculum::Schema::User',
-    'user_id',
+    status => 'UFL::Curriculum::Schema::Status',
+    'status_id',
 );
 
 =head1 NAME
