@@ -6,7 +6,6 @@
 <h2>[% title | html %]</h2>
   [% content %]
 [% END -%]
-
     </div><!-- content -->
 
 [% INCLUDE includes/footer.tt -%]
