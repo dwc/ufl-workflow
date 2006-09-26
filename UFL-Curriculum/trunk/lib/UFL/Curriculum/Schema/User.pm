@@ -58,6 +58,23 @@ User table class for L<UFL::Curriculum::Schema>.
 
 =head1 METHODS
 
+=head2 has_role
+
+Return true if this user has the specified
+L<UFL::Curriculum::Schema::Role>.
+
+=cut
+
+sub has_role {
+    my ($self, $role) = @_;
+
+    return unless $role->isa('UFL::Curriculum::Schema::Role');
+
+    my @roles = $self->roles;
+
+    return grep { $role->id == $_->id } @roles;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this user.
