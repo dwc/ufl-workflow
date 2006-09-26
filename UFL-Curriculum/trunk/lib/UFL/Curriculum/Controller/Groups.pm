@@ -44,6 +44,18 @@ Add a new group.
 sub add : Local {
     my ($self, $c) = @_;
 
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+
+        if ($result->success) {
+            my $user = $c->model('DBIC::Group')->find_or_create({
+                name => $result->valid('name'),
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
+        }
+    }
+
     $c->stash(template => 'groups/add.tt');
 }
 
