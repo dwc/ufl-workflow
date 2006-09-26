@@ -1,4 +1,4 @@
-[% SET title = group.name -%]
+[% SET title = "${group.name} Group" -%]
 
 <h3>Users by role</h3>
 [% SET roles = group.roles %]
