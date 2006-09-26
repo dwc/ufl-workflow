@@ -15,5 +15,3 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
-
-<p><a href="[% c.uri_for(c.controller.action_for('add_user'), [ role.uri_args ]) | html %]">Add a user to this role</a></p>

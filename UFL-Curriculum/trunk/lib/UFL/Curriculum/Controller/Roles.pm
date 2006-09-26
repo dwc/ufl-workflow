@@ -45,18 +45,6 @@ sub view : PathPart('') Chained('role') Args(0) {
     $c->stash(template => 'roles/view.tt');
 }
 
-=head2 add_user
-
-Add the specified user to the stashed role.
-
-=cut
-
-sub add_user : PathPart Chained('role') Args(0) {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'roles/add_user.tt');
-}
-
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
