@@ -5,7 +5,7 @@
 <h3>Users by role</h3>
 <ul>
   [% FOREACH role IN roles %]
-  <li>[% role.name | html %]
+  <li><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>
   [% SET users = role.users %]
   [% IF users %]
     <ul>

@@ -21,7 +21,7 @@ __PACKAGE__->setup;
 
 __PACKAGE__->deny_access_unless(
     "/$_", [ qw/Administrator/ ]
-) for qw/users groups processes statuses/;
+) for qw/users groups roles processes statuses/;
 
 =head1 NAME
 
