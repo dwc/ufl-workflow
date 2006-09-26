@@ -1,7 +1,6 @@
 [% SET title = "Add a Role to ${user.username}'s Account" -%]
 
 <p>Select the role from the list below. Note that roles are specific to a group.</p>
-<p>You can add <a href="[% c.uri_for(c.controller('Groups').action_for('add')) | html %]">groups</a> and <a href="[% c.uri_for(c.controller('Roles').action_for('add')) | html %]">roles</a>.
 
 <form action="[% c.uri_for(c.controller.action_for('add_role'), [ user.uri_args ]) | html %]" method="post">
   <label>Role:
