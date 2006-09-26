@@ -48,11 +48,11 @@ sub add : Local {
         my $result = $self->validate_form($c);
 
         if ($result->success) {
-            my $user = $c->model('DBIC::Group')->find_or_create({
+            my $group = $c->model('DBIC::Group')->find_or_create({
                 name => $result->valid('name'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
         }
     }
 
@@ -84,6 +84,32 @@ sub view : PathPart('') Chained('group') Args(0) {
     my ($self, $c) = @_;
 
     $c->stash(template => 'groups/view.tt');
+}
+
+=head2 add_role
+
+Add a role to the stashed group.
+
+=cut
+
+sub add_role : PathPart Chained('group') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+
+        if ($result->success) {
+            my $group = $c->stash->{group};
+
+            my $role = $group->roles->find_or_create({
+                name => $result->valid('name'),
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
+        }
+    }
+
+    $c->stash(template => 'groups/add_role.tt');
 }
 
 =head1 AUTHOR
