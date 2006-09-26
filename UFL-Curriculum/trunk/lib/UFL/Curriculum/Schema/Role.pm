@@ -9,6 +9,9 @@ __PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Cor
 __PACKAGE__->table('roles');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
+    group_id => {
+        data_type => 'integer',
+    },
     name => {
         data_type => 'varchar',
         size      => 32,
@@ -18,6 +21,11 @@ __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
 
+__PACKAGE__->belongs_to(
+    group => 'UFL::Curriculum::Schema::Group',
+    'group_id',
+);
+
 __PACKAGE__->has_many(
     user_roles => 'UFL::Curriculum::Schema::UserRole',
     { 'foreign.role_id' => 'self.id' },
@@ -25,14 +33,6 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->many_to_many('users', 'user_roles', 'actor');
-
-__PACKAGE__->has_many(
-    group_roles => 'UFL::Curriculum::Schema::GroupRole',
-    { 'foreign.role_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
-);
-
-__PACKAGE__->many_to_many('groups', 'group_roles', 'group');
 
 __PACKAGE__->has_many(
     steps => 'UFL::Curriculum::Schema::Step',

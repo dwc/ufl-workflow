@@ -27,12 +27,10 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->has_many(
-    group_roles => 'UFL::Curriculum::Schema::GroupRole',
+    roles => 'UFL::Curriculum::Schema::Role',
     { 'foreign.group_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
-
-__PACKAGE__->many_to_many('roles', 'group_roles', 'role');
 
 =head1 NAME
 
