@@ -1,0 +1,26 @@
+[% SET title = group.name -%]
+
+<h3>Primary contact</h3>
+[% SET primary_contact = group.primary_contact %]
+<p><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ primary_contact.username ]) | html %]">[% primary_contact.username | html %]</a></p>
+
+<h3>Users by role</h3>
+[% SET roles = group.roles %]
+[% IF roles %]
+<ul>
+  [% FOREACH role IN roles %]
+  <li><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.id ]) | html %]">[% role.name | html %]</a>
+  [% SET users = role.users %]
+  [% IF users %]
+    <ul>
+    [% FOREACH user IN users %]
+      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ user.username ]) | html %]">[% user.username | html %]</a></li>
+    [% END %]
+    </ul>
+  [% END %]
+  </li>
+  [% END %]
+</ul>
+[% END %]
+
+<p><a href="[% c.uri_for(c.controller.action_for('add_role'), [ group.id ]) | html %]">Add a role to this group</a></p>
