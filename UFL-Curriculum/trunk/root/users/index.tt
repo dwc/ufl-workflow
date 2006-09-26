@@ -7,6 +7,8 @@
   <li><a href="[% c.uri_for(c.controller.action_for('view'), [ user.uri_args ]) | html %]">[% user.username | html %]</a></li>
   [% END %]
 </ul>
+[% ELSE %]
+<p>None yet.</p>
 [% END %]
 
 <p><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></p>
