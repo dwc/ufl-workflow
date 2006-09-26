@@ -15,11 +15,14 @@ requires 'Catalyst::Plugin::FillInForm';
 requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
+requires 'Catalyst::View::TT';
 requires 'Class::Accessor::Fast';
 requires 'DBIx::Class' => '0.07000';
 requires 'FormValidator::Simple';
 requires 'FormValidator::Simple::ProfileManager::YAML';
 requires 'Module::Find';  # For load_classes
+requires 'NEXT';
+requires 'Scalar::Util';
 requires 'YAML';
 
 build_requires 'Catalyst::Test';
