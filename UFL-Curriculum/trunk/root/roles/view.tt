@@ -15,3 +15,8 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
+
+<h3>Manage</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ role.uri_args ]) | html %]">Edit this role</a></li>
+</ul>

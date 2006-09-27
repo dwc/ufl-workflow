@@ -1,6 +1,9 @@
 [% SET title = "Add Role to ${group.name}" -%]
 
 <form action="[% c.uri_for(c.controller.action_for('add_role'), [ group.uri_args ]) | html %]" method="post">
-  <label>Name: <input type="text" name="name" /></label>
+
+[% FILTER indent('  ') %]
+  [% INCLUDE roles/includes/role.tt %]
+[% END -%]
   <input type="submit" value="Add Role" />
 </form>

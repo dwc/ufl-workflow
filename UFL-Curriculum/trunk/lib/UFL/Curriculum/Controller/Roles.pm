@@ -45,6 +45,35 @@ sub view : PathPart('') Chained('role') Args(0) {
     $c->stash(template => 'roles/view.tt');
 }
 
+=head2 edit
+
+Edit the stashed role.
+
+=cut
+
+sub edit : PathPart Chained('role') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $role = $c->stash->{role};
+
+            my $values = $result->valid;
+            foreach my $key (keys %$values) {
+                $role->$key($values->{$key}) if $role->can($key);
+            }
+
+            # TODO: Unique check
+            $role->update;
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $role->uri_args ]));
+        }
+    }
+
+    $c->stash(template => 'roles/edit.tt');
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
