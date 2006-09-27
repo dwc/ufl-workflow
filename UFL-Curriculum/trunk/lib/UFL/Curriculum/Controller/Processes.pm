@@ -58,6 +58,33 @@ sub add : Local {
     $c->stash(template => 'processes/add.tt');
 }
 
+=head2 process
+
+Fetch the specified process.
+
+=cut
+
+sub process : PathPart('processes') Chained('/') CaptureArgs(1) {
+    my ($self, $c, $process_id) = @_;
+
+    my $process = $c->model('DBIC::Process')->find($process_id);
+    $c->detach('/default') unless $process;
+
+    $c->stash(process => $process);
+}
+
+=head2 view
+
+Display basic information on the stashed process.
+
+=cut
+
+sub view : PathPart('') Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'processes/view.tt');
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

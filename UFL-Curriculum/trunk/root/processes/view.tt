@@ -1,0 +1,19 @@
+[% SET title = "${process.name} Process" -%]
+
+<h3>Creator</h3>
+[% SET creator = process.creator %]
+<p><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ creator.uri_args ]) | html %]">[% creator.username | html %]</a></p>
+
+<h3>Steps</h3>
+[% SET steps = process.steps_rs %]
+[% IF steps.count > 0 %]
+<ul>
+  [% WHILE (step = steps.next) %]
+  <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a></li>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<p><a href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></p>
