@@ -13,6 +13,14 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 32,
     },
+    continues_request => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
+    finishes_request => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
 );
 __PACKAGE__->add_standard_columns;
 
