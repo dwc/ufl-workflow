@@ -7,7 +7,7 @@ use Carp qw/croak/;
 use FormValidator::Simple;
 use FormValidator::Simple::ProfileManager::YAML;
 
-__PACKAGE__->mk_accessors(qw/_path _manager/);
+__PACKAGE__->mk_accessors(qw/_path/);
 
 =head1 NAME
 
@@ -36,14 +36,7 @@ sub new {
     my $c = $_[0];
 
     my $path = $c->path_to('root', $self->path_prefix($c));
-    if (-d $path) {
-        $self->_path($path);
-
-        if (-e (my $profiles_file = $self->profiles_file($path))) {
-            my $manager = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
-            $self->_manager($manager);
-        }
-    }
+    $self->_path($path);
 
     return $self;
 }
@@ -58,8 +51,9 @@ profile definition file for this controller.
 sub profiles_file {
     my ($self) = @_;
 
-    my $filename = $self->config->{profiles_file} || 'profiles.yml';
+    return unless -d $self->_path;
 
+    my $filename = $self->config->{profiles_file} || 'profiles.yml';
     return $self->_path->file($filename);
 }
 
@@ -73,8 +67,9 @@ messages definition file for this controller.
 sub messages_file {
     my ($self) = @_;
 
-    my $filename = $self->config->{messages_file} || 'messages.yml';
+    return unless -d $self->_path;
 
+    my $filename = $self->config->{messages_file} || 'messages.yml';
     return $self->_path->file($filename);
 }
 
@@ -90,16 +85,18 @@ Also, stash any error messages under the C<form_errors> key.
 sub validate_form {
     my ($self, $c) = @_;
 
-    croak 'No form profiles were found' unless $self->_manager;
+    my $profiles_file = $self->profiles_file;
+    croak 'No form profiles were found' unless -e $profiles_file;
 
     my $messages_file = $self->messages_file;
     croak 'No form messages were found' unless -e $messages_file;
 
-    # XXX: Would love to instantiate this in new, but FVS holds some class data
+    # XXX: Would love to instantiate these in new, but FVS holds some class data
+    my $manager   = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
     my $validator = FormValidator::Simple->new;
     $validator->set_messages($messages_file);
 
-    my $profile = $self->_manager->get_profile($c->action->name);
+    my $profile = $manager->get_profile($c->action->name);
     my $result  = $validator->check($c->req, $profile);
 
     $c->stash(
