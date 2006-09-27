@@ -94,7 +94,10 @@ sub view : PathPart('') Chained('status') Args(0) {
 
 =head2 edit
 
-Edit the stashed status.
+Edit the stashed status.  We do not allow editing of the action to
+take when a status is selected (e.g., continue to next step or finish
+request) since it would possibly put the request database in an
+inconsistent state.
 
 =cut
 
