@@ -1,9 +1,9 @@
 add:
   name:
-    DEFAULT:   A group name
+    DEFAULT: A group name
 edit:
   name:
-    DEFAULT:   A group name
+    DEFAULT: A group name
 add_role:
   name:
     DEFAULT:   A role name
