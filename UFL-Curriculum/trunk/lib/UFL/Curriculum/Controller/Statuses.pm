@@ -46,14 +46,16 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        $result->set_invalid(action => 'DEFAULT')
-            if $result->valid('continues_request') and $result->valid('finishes_request');
+
+        my $continues_request = ($result->valid('action') eq 'continue');
+        my $finishes_request  = ($result->valid('action') eq 'finish');
+        $finishes_request = 0 if $continues_request;
 
         if ($result->success) {
             my $status = $c->model('DBIC::Status')->find_or_create({
                 name              => $result->valid('name'),
-                continues_request => $result->valid('continues_request'),
-                finishes_request  => $result->valid('finishes_request'),
+                continues_request => $continues_request,
+                finishes_request  => $finishes_request,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('index')));

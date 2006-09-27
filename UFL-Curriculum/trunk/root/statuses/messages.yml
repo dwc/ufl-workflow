@@ -2,9 +2,5 @@ add: &status
   name:
     DEFAULT: A status name
   action:
-    DEFAULT: Whether the status continues or finishes the request (not both)
-  continues_request:
-    DEFAULT: Whether the status continues the request
-  finishes_request:
-    DEFAULT: Whether the status finishes the request
+    DEFAULT: Whether the status continues or finishes the request
 edit: *status

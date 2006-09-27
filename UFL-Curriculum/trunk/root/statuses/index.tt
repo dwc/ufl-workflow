@@ -4,8 +4,7 @@
 <h3>Current statuses</h3>
 <ul>
   [% WHILE (status = statuses.next) %]
-    [% SET action_count = status.actions_rs.count %]
-  <li>[% status.name | html %] ([% action_count | html %] action[% action_count == 1 ? '' : 's' | html %])</li>
+  <li>[% status.name | html %][% IF status.continues_request %] (continues to next step)[% ELSIF status.finishes_request %] (finishes request)[% END %]</li>
   [% END %]
 </ul>
 [% ELSE %]
