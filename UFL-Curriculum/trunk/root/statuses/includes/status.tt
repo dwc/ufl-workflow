@@ -1,0 +1,3 @@
+<label>Name: <input type="text" name="name" value="[% status.name | html %]" /></label>
+<label>Continues request: <input type="checkbox" name="continues_request" value="1"[% IF status.continues_request %] checked="checked"[% END %] /></label>
+<label>Finishes request: <input type="checkbox" name="finishes_request" value="1"[% IF status.finishes_request %] checked="checked"[% END %] /></label>

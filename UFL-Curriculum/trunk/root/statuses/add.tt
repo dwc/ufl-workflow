@@ -1,0 +1,9 @@
+[% SET title = 'Add Status' -%]
+
+<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE statuses/includes/status.tt %]
+[% END -%]
+  <input type="submit" value="Add Status" />
+</form>

@@ -1,0 +1,15 @@
+[% SET title = 'Statuses' -%]
+
+[% IF statuses.count > 0 %]
+<h3>Current statuses</h3>
+<ul>
+  [% WHILE (status = statuses.next) %]
+    [% SET action_count = status.actions_rs.count %]
+  <li>[% status.name | html %] ([% action_count | html %] action[% action_count == 1 ? '' : 's' | html %])</li>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<p><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new status</a></p>

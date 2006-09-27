@@ -1,0 +1,10 @@
+add: &status
+  - name
+  - [ NOT_BLANK ]
+  - action: [ continues_request, finishes_request ]
+  - []
+  - continues_request
+  - [ INT, [ BETWEEN, 0, 1 ] ]
+  - finishes_request
+  - [ INT, [ BETWEEN, 0, 1 ] ]
+edit: *status
