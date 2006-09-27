@@ -1,9 +1,7 @@
-add:
+add: &group
   name:
     DEFAULT: A group name
-edit:
-  name:
-    DEFAULT: A group name
+edit: *group
 add_role:
   name:
     DEFAULT:   A role name
