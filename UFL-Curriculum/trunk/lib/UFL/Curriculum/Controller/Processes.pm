@@ -35,6 +35,29 @@ sub index : Path Args(0) {
     );
 }
 
+=head2 add
+
+Add a new process.
+
+=cut
+
+sub add : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $process = $c->user->processes->find_or_create({
+                name => $result->valid('name'),
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+        }
+    }
+
+    $c->stash(template => 'processes/add.tt');
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

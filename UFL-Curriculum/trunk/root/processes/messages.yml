@@ -1,0 +1,4 @@
+add: &process
+  name:
+    DEFAULT: A process name
+edit: *process
