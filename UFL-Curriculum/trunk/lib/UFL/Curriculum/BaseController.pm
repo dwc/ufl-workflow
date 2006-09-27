@@ -96,11 +96,14 @@ sub validate_form {
     my $validator = FormValidator::Simple->new;
     $validator->set_messages($messages_file);
 
-    my $profile = $manager->get_profile($c->action->name);
+    my $name    = $c->action->name;
+    my $profile = $manager->get_profile($name);
+    croak "No form profile found for action $name" unless $profile;
+
     my $result  = $validator->check($c->req, $profile);
 
     $c->stash(
-        form_errors => $result->messages($c->action->name),
+        form_errors => $result->messages($name),
         fillform    => 1,
     );
 
