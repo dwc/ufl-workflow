@@ -46,6 +46,66 @@ Process table class for L<UFL::Curriculum::Schema>.
 
 =head1 METHODS
 
+=head2 first_step
+
+Return the first L<UFL::Curriculum::Schema::Step> associated with this
+process.
+
+=cut
+
+sub first_step {
+    my $self = shift;
+
+    my $first_step = $self->steps->search({ previous_step_id => undef })->first;
+
+    return $first_step;
+}
+
+=head2 last_step
+
+Return the last L<UFL::Curriculum::Schema::Step> associated with this
+process.
+
+=cut
+
+sub last_step {
+    my $self = shift;
+
+    my $last_step = $self->steps->search({ next_step_id => undef })->first;
+
+    return $last_step;
+}
+
+=head2 add_step
+
+Add a new step to the end of the chain for this process.
+
+=cut
+
+sub add_step {
+    my ($self, $values) = @_;
+
+    $self->throw_exception('You must provide a role and name for the step')
+        unless ref $values eq 'HASH' and $values->{role_id} and $values->{name};
+
+    my $new_step;
+    $self->result_source->schema->txn_do(sub {
+        my $last_step = $self->last_step;
+
+        my %values = %$values;
+        $values{prev_step_id} = $last_step->id
+            if $last_step;
+        $new_step = $self->steps->find_or_create(\%values);
+
+        if ($last_step) {
+            $last_step->next_step_id($new_step->id);
+            $last_step->update;
+        }
+    });
+
+    return $new_step;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this process.

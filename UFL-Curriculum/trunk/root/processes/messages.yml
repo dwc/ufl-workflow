@@ -2,3 +2,8 @@ add: &process
   name:
     DEFAULT: A process name
 edit: *process
+add_step:
+  name:
+    DEFAULT: A step name
+  role_id:
+    DEFAULT: A role

@@ -2,3 +2,8 @@ add: &process
   - name
   - [ NOT_BLANK ]
 edit: *process
+add_step:
+  - name
+  - [ NOT_BLANK ]
+  - role_id
+  - [ NOT_BLANK, INT ]

@@ -114,6 +114,40 @@ sub edit : PathPart Chained('process') Args(0) {
     $c->stash(template => 'processes/edit.tt');
 }
 
+=head2 add_step
+
+Add a step to the stashed process.
+
+=cut
+
+sub add_step : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $process = $c->stash->{process};
+
+            my $step = $process->add_step({
+                role_id => $result->valid('role_id'),
+                name    => $result->valid('name'),
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+        }
+    }
+
+    my $roles = $c->model('DBIC::Role')->search(undef, {
+        join     => 'group',
+        order_by => 'group.name, me.name'
+    });
+
+    $c->stash(
+        roles    => $roles,
+        template => 'processes/add_step.tt',
+    );
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
