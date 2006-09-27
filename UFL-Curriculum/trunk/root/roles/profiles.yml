@@ -1,3 +1,6 @@
 edit:
   - name
   - [ NOT_BLANK, [ NOT_REGEX, '^Administrator$' ] ]
+add_users:
+  - usernames
+  - [ NOT_BLANK ]
