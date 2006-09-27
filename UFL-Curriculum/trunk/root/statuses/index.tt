@@ -4,7 +4,11 @@
 <h3>Current statuses</h3>
 <ul>
   [% WHILE (status = statuses.next) %]
-  <li>[% status.name | html %][% IF status.continues_request %] (continues to next step)[% ELSIF status.finishes_request %] (finishes request)[% END %]</li>
+  <li>[% status.name | html %]
+    [% IF status.name == c.config.initial_status %] (initial status)[% END %]
+    [% IF status.continues_request %] (continues to next step)[% END %]
+    [% IF status.finishes_request %] (finishes request)[% END %]
+  </li>
   [% END %]
 </ul>
 [% ELSE %]
