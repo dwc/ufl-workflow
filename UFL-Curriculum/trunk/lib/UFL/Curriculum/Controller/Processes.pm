@@ -85,6 +85,35 @@ sub view : PathPart('') Chained('process') Args(0) {
     $c->stash(template => 'processes/view.tt');
 }
 
+=head2 edit
+
+Edit the stashed process.
+
+=cut
+
+sub edit : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $process = $c->stash->{process};
+
+            my $values = $result->valid;
+            foreach my $key (keys %$values) {
+                $process->$key($values->{$key}) if $process->can($key);
+            }
+
+            # TODO: Unique check
+            $process->update;
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+        }
+    }
+
+    $c->stash(template => 'processes/edit.tt');
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
