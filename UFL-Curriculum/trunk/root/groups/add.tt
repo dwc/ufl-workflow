@@ -1,6 +1,9 @@
 [% SET title = 'Add Group' -%]
 
 <form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
-[% INCLUDE groups/includes/group.tt %]
+
+[% FILTER indent('  ') %]
+  [% INCLUDE groups/includes/group.tt %]
+[% END -%]
   <input type="submit" value="Add Group" />
 </form>
