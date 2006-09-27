@@ -107,7 +107,10 @@ sub add_role : PathPart Chained('user') Args(0) {
         }
     }
 
-    my $roles = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
+    my $roles = $c->model('DBIC::Role')->search(undef, {
+        join     => 'group',
+        order_by => 'group.name, me.name'
+    });
 
     $c->stash(
         roles    => $roles,
