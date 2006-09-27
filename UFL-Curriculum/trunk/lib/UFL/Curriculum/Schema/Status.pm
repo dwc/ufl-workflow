@@ -24,6 +24,8 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->add_standard_columns;
 
+__PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
+
 __PACKAGE__->has_many(
     actions => 'UFL::Curriculum::Schema::Action',
     { 'foreign.status_id' => 'self.id' },
