@@ -101,10 +101,10 @@ sub edit : PathPart Chained('group') Args(0) {
 
             my $values = $result->valid;
             foreach my $key (keys %$values) {
-                $c->log->debug($key);
                 $group->$key($values->{$key}) if $group->can($key);
             }
 
+            # TODO: Unique check
             $group->update;
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
