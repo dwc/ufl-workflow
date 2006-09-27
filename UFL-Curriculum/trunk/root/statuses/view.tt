@@ -1,0 +1,3 @@
+[% SET title = "${status.name} Status" -%]
+
+<p><a href="[% c.uri_for(c.controller.action_for('edit'), [ status.uri_args ]) | html %]">Edit this status</p>

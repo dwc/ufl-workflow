@@ -1,0 +1,9 @@
+[% SET title = "Edit ${status.name} Status" -%]
+
+<form action="[% c.uri_for(c.controller.action_for('edit'), [ status.uri_args ]) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE statuses/includes/status.tt %]
+[% END -%]
+  <input type="submit" value="Edit Status" />
+</form>

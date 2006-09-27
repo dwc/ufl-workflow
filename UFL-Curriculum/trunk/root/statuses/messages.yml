@@ -1,6 +1,8 @@
-add: &status
+add:
   name:
     DEFAULT: A status name
   action:
     DEFAULT: Whether the status continues or finishes the request
-edit: *status
+edit:
+  name:
+    DEFAULT: A status name

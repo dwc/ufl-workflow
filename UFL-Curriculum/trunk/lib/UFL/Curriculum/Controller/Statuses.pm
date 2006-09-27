@@ -65,6 +65,62 @@ sub add : Local {
     $c->stash(template => 'statuses/add.tt');
 }
 
+=head2 status
+
+Fetch the specified status.
+
+=cut
+
+sub status : PathPart('statuses') Chained('/') CaptureArgs(1) {
+    my ($self, $c, $status_id) = @_;
+
+    my $status = $c->model('DBIC::Status')->find($status_id);
+    $c->detach('/default') unless $status;
+
+    $c->stash(status => $status);
+}
+
+=head2 view
+
+Display basic information on the stashed status.
+
+=cut
+
+sub view : PathPart('') Chained('status') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'statuses/view.tt');
+}
+
+=head2 edit
+
+Edit the stashed status.
+
+=cut
+
+sub edit : PathPart Chained('status') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $status = $c->stash->{status};
+
+            my $values = $result->valid;
+            foreach my $key (keys %$values) {
+                $status->$key($values->{$key}) if $status->can($key);
+            }
+
+            # TODO: Unique check
+            $status->update;
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $status->uri_args ]));
+        }
+    }
+
+    $c->stash(template => 'statuses/edit.tt');
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

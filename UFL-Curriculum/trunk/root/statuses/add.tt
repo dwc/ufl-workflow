@@ -5,5 +5,10 @@
 [% FILTER indent('  ') %]
   [% INCLUDE statuses/includes/status.tt %]
 [% END -%]
+  <p>When the status is used:
+    <label><input type="radio" name="action" value="none"[% UNLESS status.continues_request OR status.finishes_request %] checked="checked"[% END %] />Do nothing</label>
+    <label><input type="radio" name="action" value="continue"[% IF status.continues_request %] checked="checked"[% END %] /> Continue to the next step</label>
+    <label><input type="radio" name="action" value="finish"[% IF status.finishes_request %] checked="checked"[% END %] /> Finish request</label>
+  </p>
   <input type="submit" value="Add Status" />
 </form>

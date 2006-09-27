@@ -1,6 +1,8 @@
-add: &status
+add:
   - name
   - [ NOT_BLANK ]
   - action
   - [ NOT_BLANK, [ IN_ARRAY, none, continue, finish ] ]
-edit: *status
+edit:
+  - name
+  - [ NOT_BLANK ]
