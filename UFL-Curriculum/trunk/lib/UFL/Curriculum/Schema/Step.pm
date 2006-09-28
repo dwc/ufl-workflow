@@ -52,6 +52,11 @@ __PACKAGE__->belongs_to(
     { join_type => 'left' },
 );
 
+__PACKAGE__->has_many(
+    actions => 'UFL::Curriculum::Schema::Action',
+    { 'foreign.step_id' => 'self.id' },
+);
+
 =head1 NAME
 
 UFL::Curriculum::Schema::Step - Step table class
