@@ -9,13 +9,27 @@
 [% IF step %]
 <ul>
   [% WHILE step %]
+    [% SET prev_step = step.prev_step %]
+    [% SET next_step = step.next_step %]
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a>
+    [% IF prev_step %]
+    <form action="[% c.uri_for(c.controller.action_for('move_step_up'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Move Up" />
+    </form>
+    [% END %]
+    [% IF next_step %]
+    <form action="[% c.uri_for(c.controller.action_for('move_step_down'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Move Down" />
+    </form>
+    [% END %]
     <form action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
       <input type="submit" value="Remove" />
     </form>
   </li>
-    [% SET step = step.next_step %]
+    [% SET step = next_step %]
   [% END %]
 </ul>
 [% ELSE %]

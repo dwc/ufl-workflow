@@ -85,6 +85,7 @@ sub delete {
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
+    # Not using txn_do for $self->next::method
     my $schema = $self->result_source->schema;
     eval {
         $schema->txn_begin;
@@ -111,6 +112,88 @@ sub delete {
         eval { $schema->txn_rollback; $self->throw_exception($error) };
         $self->throw_exception($@) if $@;
     }
+}
+
+=head2 move_up
+
+Move this step up one in the chain.  If the step has associated
+actions or is the first in the process, an exception is thrown.
+
+=cut
+
+sub move_up {
+    my ($self) = @_;
+
+    $self->throw_exception('Step has associated actions')
+        if $self->actions->count > 0;
+
+    my $prev_step      = $self->prev_step;
+    my $prev_prev_step = $prev_step->prev_step;
+    my $next_step      = $self->next_step;
+
+    $self->throw_exception('Step appears to be first in chain')
+        unless $prev_step;
+
+    $self->result_source->schema->txn_do(sub {
+        $self->prev_step($prev_prev_step);
+        $self->next_step($prev_step);
+        $self->update;
+
+        if ($prev_prev_step) {
+            $prev_prev_step->next_step($self);
+            $prev_prev_step->update;
+        }
+
+        $prev_step->prev_step($self);
+        $prev_step->next_step($next_step);
+        $prev_step->update;
+
+        if ($next_step) {
+            $next_step->prev_step($prev_step);
+            $next_step->update;
+        }
+    });
+}
+
+=head2 move_down
+
+Move this step down one in the chain.  If the step has associated
+actions or is the first in the process, an exception is thrown.
+
+=cut
+
+sub move_down {
+    my ($self) = @_;
+
+    $self->throw_exception('Step has associated actions')
+        if $self->actions->count > 0;
+
+    my $prev_step      = $self->prev_step;
+    my $next_step      = $self->next_step;
+    my $next_next_step = $next_step->next_step;
+
+    $self->throw_exception('Step appears to be last in chain')
+        unless $next_step;
+
+    $self->result_source->schema->txn_do(sub {
+        $self->prev_step($next_step);
+        $self->next_step($next_next_step);
+        $self->update;
+
+        if ($next_next_step) {
+            $next_next_step->prev_step($self);
+            $next_next_step->update;
+        }
+
+        $next_step->prev_step($prev_step);
+        $next_step->next_step($self);
+        $next_step->update;
+
+        if ($prev_step) {
+            $prev_step->next_step($next_step);
+            $prev_step->update;
+        }
+    });
 }
 
 =head2 uri_args

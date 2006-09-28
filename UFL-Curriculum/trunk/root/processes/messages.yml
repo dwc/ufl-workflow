@@ -10,3 +10,7 @@ add_step:
 delete_step:
   step_id:
     DEFAULT: A step
+move_step_up: &move
+  step_id:
+    DEFAULT: A step
+move_step_down: *move

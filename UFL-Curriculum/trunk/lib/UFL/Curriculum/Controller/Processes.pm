@@ -172,6 +172,54 @@ sub delete_step : PathPart Chained('process') Args(0) {
     return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
 }
 
+=head2 move_step_up
+
+Move the specified step up one position in the stashed process.
+
+=cut
+
+sub move_step_up : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $process = $c->stash->{process};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $step = $process->steps->find($result->valid('step_id'));
+        $c->detach('/default') unless $step;
+
+        $step->move_up;
+    }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+}
+
+=head2 move_step_down
+
+Move the specified step down one position in the stashed process.
+
+=cut
+
+sub move_step_down : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $process = $c->stash->{process};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $step = $process->steps->find($result->valid('step_id'));
+        $c->detach('/default') unless $step;
+
+        $step->move_down;
+    }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
