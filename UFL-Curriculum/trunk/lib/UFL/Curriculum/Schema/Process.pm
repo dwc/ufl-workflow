@@ -32,6 +32,12 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->has_many(
+    requests => 'UFL::Curriculum::Schema::Request',
+    { 'foreign.process_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
 =head1 NAME
 
 UFL::Curriculum::Schema::Process - Process table class

@@ -37,6 +37,35 @@ sub index : Path Args(0) {
     );
 }
 
+sub add : Local {
+    my ($self, $c) = @_;
+
+    my $process_id = $c->req->param('process_id');
+    $process_id =~ s/\D//g;
+    $c->detach('/default') unless $process_id;
+
+    my $process = $c->model('DBIC::Process')->find($process_id);
+    $c->detach('/default') unless $process;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $request = $process->requests->find_or_create({
+                user_id     => $c->user->obj->id,
+                title       => $result->valid('title'),
+                description => $result->valid('description'),
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));
+        }
+    }
+
+    $c->stash(
+        process  => $process,
+        template => 'requests/add.tt',
+    );
+}
+
 =head2 request
 
 Fetch the specified request.

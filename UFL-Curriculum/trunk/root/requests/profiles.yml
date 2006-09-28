@@ -1,0 +1,5 @@
+add:
+  - title
+  - [ NOT_BLANK ]
+  - description
+  - [ NOT_BLANK ]
