@@ -19,3 +19,8 @@
 <h3>Role</h3>
 [% SET role = step.role %]
 <p><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a></p>
+
+<h3>Manage</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ step.uri_args ]) | html %]">Edit this step</a></li>
+</ul>

@@ -1,2 +1,1 @@
 <label>Name: <input type="text" name="name" value="[% step.name | html %]" /></label>
-[% INCLUDE roles/includes/roles.tt selected_role = step.role %]

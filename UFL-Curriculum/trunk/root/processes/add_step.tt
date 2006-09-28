@@ -4,6 +4,7 @@
 
 [% FILTER indent('  ') %]
   [% INCLUDE steps/includes/step.tt %]
+  [% INCLUDE roles/includes/roles.tt selected_role = step.role %]
 [% END -%]
   <input type="submit" value="Add Step" />
 </form>
