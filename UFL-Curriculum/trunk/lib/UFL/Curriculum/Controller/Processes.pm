@@ -148,6 +148,30 @@ sub add_step : PathPart Chained('process') Args(0) {
     );
 }
 
+=head2 delete_step
+
+Remove the specified step from the stashed process.
+
+=cut
+
+sub delete_step : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $process = $c->stash->{process};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $step = $process->steps->find($result->valid('step_id'));
+        $c->detach('/default') unless $step;
+
+        $step->delete;
+    }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

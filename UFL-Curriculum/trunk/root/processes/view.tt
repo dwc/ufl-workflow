@@ -9,7 +9,12 @@
 [% IF step %]
 <ul>
   [% WHILE step %]
-  <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a>
+    <form action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Remove" />
+    </form>
+  </li>
     [% SET step = step.next_step %]
   [% END %]
 </ul>

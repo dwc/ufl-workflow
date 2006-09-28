@@ -7,3 +7,6 @@ add_step:
     DEFAULT: A step name
   role_id:
     DEFAULT: A role
+delete_step:
+  step_id:
+    DEFAULT: A step

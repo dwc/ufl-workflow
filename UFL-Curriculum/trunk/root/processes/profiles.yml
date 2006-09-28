@@ -7,3 +7,6 @@ add_step:
   - [ NOT_BLANK ]
   - role_id
   - [ NOT_BLANK, INT ]
+delete_step:
+  - step_id
+  - [ NOT_BLANK, INT ]
