@@ -5,11 +5,12 @@
 <p><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ creator.uri_args ]) | html %]">[% creator.username | html %]</a></p>
 
 <h3>Steps</h3>
-[% SET steps = process.steps_rs %]
-[% IF steps.count > 0 %]
+[% SET step = process.first_step %]
+[% IF step %]
 <ul>
-  [% WHILE (step = steps.next) %]
+  [% WHILE step %]
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a></li>
+    [% SET step = step.next_step %]
   [% END %]
 </ul>
 [% ELSE %]

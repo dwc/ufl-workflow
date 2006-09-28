@@ -56,7 +56,7 @@ process.
 sub first_step {
     my $self = shift;
 
-    my $first_step = $self->steps->search({ previous_step_id => undef })->first;
+    my $first_step = $self->steps->search({ prev_step_id => undef })->first;
 
     return $first_step;
 }
