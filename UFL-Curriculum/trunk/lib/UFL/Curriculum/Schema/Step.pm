@@ -135,10 +135,6 @@ sub move_up {
         unless $prev_step;
 
     $self->result_source->schema->txn_do(sub {
-        $self->prev_step($prev_prev_step);
-        $self->next_step($prev_step);
-        $self->update;
-
         if ($prev_prev_step) {
             $prev_prev_step->next_step($self);
             $prev_prev_step->update;
@@ -147,6 +143,10 @@ sub move_up {
         $prev_step->prev_step($self);
         $prev_step->next_step($next_step);
         $prev_step->update;
+
+        $self->prev_step($prev_prev_step);
+        $self->next_step($prev_step);
+        $self->update;
 
         if ($next_step) {
             $next_step->prev_step($prev_step);
@@ -176,22 +176,22 @@ sub move_down {
         unless $next_step;
 
     $self->result_source->schema->txn_do(sub {
+        if ($prev_step) {
+            $prev_step->next_step($next_step);
+            $prev_step->update;
+        }
+
         $self->prev_step($next_step);
         $self->next_step($next_next_step);
         $self->update;
-
-        if ($next_next_step) {
-            $next_next_step->prev_step($self);
-            $next_next_step->update;
-        }
 
         $next_step->prev_step($prev_step);
         $next_step->next_step($self);
         $next_step->update;
 
-        if ($prev_step) {
-            $prev_step->next_step($next_step);
-            $prev_step->update;
+        if ($next_next_step) {
+            $next_next_step->prev_step($self);
+            $next_next_step->update;
         }
     });
 }
