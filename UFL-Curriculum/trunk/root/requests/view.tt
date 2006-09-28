@@ -1,0 +1,48 @@
+[% SET title = request.title -%]
+
+<h3>Request Details</h3>
+
+<h3>Process</h3>
+[% SET process = request.process %]
+<p>[% process.name | html %]</p>
+
+[% SET last_action = request.last_action %]
+[% IF last_action %]
+<h4>Status</h4>
+<p>[% last_action.status.name | html %] decision on [% last_action.name | html %].</p>
+<p><a href="#actions">Details</a></p>
+[% END %]
+
+<h4>Title</h4>
+<p>[% request.title | html %]</p>
+
+<h4>Description</h4>
+<p>[% request.description | html %]</p>
+
+<h4>Added</h4>
+<p>[% request.insert_time | html %]</p>
+
+<h4>Updated</h4>
+<p>[% request.update_time | html %]</p>
+
+<h3>Documents</h3>
+[% SET documents = request.documents_rs %]
+[% IF documents.count > 0 %]
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<h3 id="actions">Actions</h3>
+[% SET action = request.first_action %]
+[% IF action %]
+  [% WHILE action %]
+    [% SET action = action.next_action %]
+  [% END %]
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<h3>Manage</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></li>
+</ul>

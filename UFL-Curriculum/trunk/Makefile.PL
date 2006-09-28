@@ -17,6 +17,7 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
 requires 'Catalyst::View::TT';
 requires 'Class::Accessor::Fast';
+requires 'DateTime::Format::DB2';
 requires 'DBIx::Class' => '0.07000';
 requires 'FormValidator::Simple';
 requires 'FormValidator::Simple::ProfileManager::YAML';
