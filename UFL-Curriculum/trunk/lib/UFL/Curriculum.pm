@@ -20,8 +20,17 @@ our $VERSION = '0.01_01';
 __PACKAGE__->setup;
 
 __PACKAGE__->deny_access_unless(
-    "/$_", [ qw/Administrator/ ]
+    "/$_",
+    [ qw/Administrator/ ]
 ) for qw/groups processes roles statuses steps users/;
+
+__PACKAGE__->allow_access_if(
+    '/requests/view',
+    sub {
+        my $c = shift;
+        return $c->user->can_view_request($c->stash->{request});
+    },
+);
 
 =head1 NAME
 

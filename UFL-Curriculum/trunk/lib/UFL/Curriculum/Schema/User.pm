@@ -3,6 +3,8 @@ package UFL::Curriculum::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
+use Carp qw/croak/;
+use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
@@ -68,11 +70,30 @@ L<UFL::Curriculum::Schema::Role>.
 sub has_role {
     my ($self, $role) = @_;
 
-    return unless $role->isa('UFL::Curriculum::Schema::Role');
+    croak 'You must provide a role'
+        unless blessed $role and $role->isa('UFL::Curriculum::Schema::Role');
 
     my @roles = $self->roles;
 
     return grep { $role->id == $_->id } @roles;
+}
+
+=head2 can_view_request
+
+Return true if this user can view the specified request.  This is
+defined as the submitter of the request, an administrator.
+
+=cut
+
+sub can_view_request {
+    my ($self, $request) = @_;
+
+    croak 'You must provide a request'
+        unless blessed $request and $request->isa('UFL::Curriculum::Schema::Request');
+
+    return 1 if $request->user_id == $self->id;
+    return 1 if grep { $_->name eq 'Administrator' } $self->roles;
+    return 0;
 }
 
 =head2 uri_args
