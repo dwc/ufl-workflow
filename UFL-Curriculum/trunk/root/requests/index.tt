@@ -1,9 +1,10 @@
 [% SET title = 'Requests' -%]
 
-<h3>Your requests</h3>
+<h3>All requests</h3>
 [% IF requests.count > 0 %]
 <table>
   <tr>
+    <th>Submitter</th>
     <th>Title</th>
     <th>Status</th>
     <th>Added</th>
@@ -11,6 +12,7 @@
   </tr>
   [% WHILE (request = requests.next) %]
   <tr>
+    <td>[% request.submitter.username | html %]</td>
     <td><a href="[% c.uri_for(c.controller.action_for('view'), [ request.uri_args ]) | html %]">[% request.title | html %]</a></td>
     <td>[% INCLUDE requests/includes/status.tt -%]</td>
     <td>[% request.insert_time | html %]</td>
@@ -20,16 +22,4 @@
 </table>
 [% ELSE %]
 <p>None yet.</p>
-[% END %]
-
-<h3>Add new request</h3>
-[% IF processes.count > 0 %]
-<p>You can add a new request for one of the following processes:</p>
-<ul>
-  [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('add'), process_id = process.id) | html %]">[% process.name | html %]</a></li>
-  [% END %]
-</ul>
-[% ELSE %]
-<p>There are currently no processes to which you can add a request.</p>
 [% END %]

@@ -27,13 +27,14 @@ Display a list of the user's current requests.
 sub index : Path Args(0) {
     my ($self, $c) = @_;
 
-    my $requests = $c->user->requests;
-    my $processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });
+    my $requests = $c->model('DBIC::Request')->search(
+        undef,
+        { order_by => \q[update_time DESC, insert_time DESC] }
+    );
 
     $c->stash(
-        requests  => $requests,
-        processes => $processes,
-        template  => 'requests/index.tt',
+        requests => $requests,
+        template => 'requests/index.tt',
     );
 }
 

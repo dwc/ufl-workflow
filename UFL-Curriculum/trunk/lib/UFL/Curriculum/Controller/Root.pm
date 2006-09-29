@@ -53,7 +53,20 @@ Display the home page.
 sub index : Path Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'index.tt');
+    my $requests = $c->user->requests->search(
+        undef,
+        { order_by => \q[update_time DESC, insert_time DESC] },
+    );
+    my $processes = $c->model('DBIC::Process')->search(
+        undef,
+        { order_by => 'name' },
+    );
+
+    $c->stash(
+        requests  => $requests,
+        processes => $processes,
+        template  => 'index.tt'
+    );
 }
 
 =head2 unauthorized
