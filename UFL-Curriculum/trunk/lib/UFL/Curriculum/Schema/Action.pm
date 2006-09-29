@@ -132,11 +132,13 @@ sub update_status {
             $action = $request->add_action({ step_id => $self->step_id });
         }
 
-        $self->next_action($action);
-        $self->update;
+        if ($action) {
+            $self->next_action($action);
+            $self->update;
 
-        $action->prev_action($self);
-        $action->update;
+            $action->prev_action($self);
+            $action->update;
+        }
     });
 }
 
