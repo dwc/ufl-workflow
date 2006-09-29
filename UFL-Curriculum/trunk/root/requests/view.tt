@@ -9,7 +9,7 @@
 [% SET last_action = request.last_action %]
 [% IF last_action %]
 <h4>Status</h4>
-<p>[% last_action.status.name | html %] decision on [% last_action.name | html %].</p>
+<p>[% last_action.status.name | html %] decision on [% last_action.step.name | html %].</p>
 <p><a href="#actions">Details</a></p>
 [% END %]
 
@@ -35,9 +35,25 @@
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
 [% IF action %]
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Status</th>
+    <th>User</th>
+    <th>Added</th>
+    <th>Updated</th>
+  </tr>
   [% WHILE action %]
+  <tr>
+    <td>[% action.step.name | html %]</td>
+    <td>[% action.status.name | html %]</td>
+    <td>[% IF action.user %][% action.user.username | html %][% ELSE %]-[% END %]</td>
+    <td>[% action.insert_time | html %]</td>
+    <td>[% action.update_time | html %]</td>
+  </tr>
     [% SET action = action.next_action %]
   [% END %]
+</table>
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
