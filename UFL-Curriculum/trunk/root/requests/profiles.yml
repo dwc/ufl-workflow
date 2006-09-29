@@ -6,3 +6,10 @@ add:
 add_document:
   - document_id
   - [ INT ]
+add_action:
+  - action_id
+  - [ NOT_BLANK, INT ]
+  - status_id
+  - [ NOT_BLANK, INT ]
+  - comment
+  - []

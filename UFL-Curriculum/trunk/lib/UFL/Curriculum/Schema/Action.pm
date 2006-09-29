@@ -3,6 +3,7 @@ package UFL::Curriculum::Schema::Action;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
+use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
@@ -83,6 +84,61 @@ See L<UFL::Curriculum>.
 Action table class for L<UFL::Curriculum::Schema>.
 
 =head1 METHODS
+
+=head2 update_status
+
+Update the status of this action, driving the process to the next
+step.
+
+=cut
+
+sub update_status {
+    my ($self, $status, $actor, $comment) = @_;
+
+    my $request = $self->request;
+
+    $self->throw_exception('You must provide a status')
+        unless blessed $status and $status->isa('UFL::Curriculum::Schema::Status');
+    $self->throw_exception('You must provide an actor')
+        unless blessed $actor and $actor->isa('UFL::Curriculum::Schema::User');
+    $self->throw_exception('Decision already made')
+        unless $self->status->is_initial;
+    $self->throw_exception('Action does not appear to be the last')
+        unless $self->id == $request->last_action->id;
+
+    $self->result_source->schema->txn_do(sub {
+        $self->status($status);
+        $self->actor($actor);
+        $self->comment($comment);
+        $self->update;
+
+        my $action;
+        if ($status->continues_request) {
+            # Add the next step
+            my $step = $request->current_step;
+            while ($step and $step->prev_step_id != $self->step_id) {
+                $step = $step->next_step;
+            }
+
+            if ($step) {
+                $action = $request->add_action({ step_id => $step->id });
+            }
+        }
+        elsif ($status->finishes_request) {
+            # Done
+        }
+        else {
+            # Add a copy of the current step
+            $action = $request->add_action({ step_id => $self->step_id });
+        }
+
+        $self->next_action($action);
+        $self->update;
+
+        $action->prev_action($self);
+        $action->update;
+    });
+}
 
 =head2 uri_args
 

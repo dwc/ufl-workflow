@@ -91,9 +91,7 @@ sub can_decide_on {
     croak 'You must provide an action'
         unless blessed $action and $action->isa('UFL::Curriculum::Schema::Action');
 
-    my $step = $action->step;
-
-    return $self->has_role($step->role);
+    return $action->status->is_initial and $self->has_role($action->step->role);
 }
 
 =head2 uri_args

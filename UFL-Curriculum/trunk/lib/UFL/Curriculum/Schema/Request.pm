@@ -95,6 +95,19 @@ sub last_action {
     return $last_action;
 }
 
+=head2 current_step
+
+Return the current L<UFL::Curriculum::Schema::Step> associated with
+this request.
+
+=cut
+
+sub current_step {
+    my ($self) = @_;
+
+    return $self->last_action->step;
+}
+
 =head2 add_action
 
 Add a new action to this request.
