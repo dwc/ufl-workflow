@@ -3,7 +3,12 @@ body {
 }
 
 a, a:visited {
-  color: #668;
+  color: #0021a5;
+  text-decoration: none;
+}
+
+a:hover {
+  border-bottom: 1px solid #8b9ad6;
 }
 
 th, td {
@@ -40,12 +45,12 @@ ul#nav {
 
 ul#nav li {
   display: inline;
-  padding-right: 20px;
 }
 
 ul#nav li a {
   text-decoration: none;
-  padding: 5px;
+  border: none;
+  padding: 10px;
 }
 
 ul#nav li a:hover {
