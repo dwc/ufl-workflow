@@ -1,0 +1,57 @@
+body {
+  font-family: sans;
+}
+
+a, a:visited {
+  color: #668;
+}
+
+th, td {
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+}
+
+th {
+  padding-top: 0;
+}
+
+label {
+  display: block;
+  background: #eee;
+  padding: 10px;
+  margin: 5px;
+}
+
+label input, label select, label textarea {
+  display: block;
+}
+
+label textarea {
+  width: 500px;
+  height: 100px;
+}
+
+ul#nav {
+  display: inline;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px 0 10px 0;
+}
+
+ul#nav li {
+  display: inline;
+  padding-right: 20px;
+}
+
+ul#nav li a {
+  text-decoration: none;
+  padding: 5px;
+}
+
+ul#nav li a:hover {
+  background: #eee;
+}
+
+.replaced {
+  text-decoration: line-through;
+}

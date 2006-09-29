@@ -6,6 +6,7 @@
     <title>[% title_parts.grep('.').join(' - ') | html %]</title>
     <meta name="generator" content="[% c.config.name _ ' ' _ c.VERSION %]" />
     <meta http-equiv="Content-Type" content="text/html; charset=[% c.config.encoding || 'UTF-8' | html %]" />
+    <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/main.css') | html %]" />
   </head>
   <body>
     <div id="header">
@@ -14,6 +15,7 @@
       <p>Logged in as <strong>[% c.user.username | html %]</strong> (<a href="[% c.uri_for('/logout') | html %]">Logout</a>)</p>
 [% END %]
     </div>
+
 [% FILTER indent('    ') %]
   [% INCLUDE includes/nav.tt %]
 [% END -%]
