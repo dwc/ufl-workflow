@@ -7,7 +7,7 @@
 <h3>Steps</h3>
 [% SET step = process.first_step %]
 [% IF step %]
-<ul>
+<ol type="1">
   [% WHILE step %]
     [% SET prev_step = step.prev_step %]
     [% SET next_step = step.next_step %]
@@ -31,7 +31,7 @@
   </li>
     [% SET step = next_step %]
   [% END %]
-</ul>
+</ol>
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
