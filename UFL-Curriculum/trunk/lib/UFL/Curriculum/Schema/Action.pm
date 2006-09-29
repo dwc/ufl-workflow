@@ -103,8 +103,8 @@ sub update_status {
         unless blessed $actor and $actor->isa('UFL::Curriculum::Schema::User');
     $self->throw_exception('Decision already made')
         unless $self->status->is_initial;
-    $self->throw_exception('Action does not appear to be the last')
-        unless $self->id == $request->last_action->id;
+    $self->throw_exception('Action does not appear to be the current one')
+        unless $self->id == $request->current_action->id;
 
     $self->result_source->schema->txn_do(sub {
         $self->status($status);

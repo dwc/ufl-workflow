@@ -7,7 +7,7 @@
 <p>[% process.name | html %]</p>
 
 <h4>Status</h4>
-<p>[% INCLUDE requests/includes/status.tt %]</p>
+<p>[% INCLUDE requests/includes/status.tt action = request.current_action %]</p>
 <p><a href="#actions">Details</a></p>
 
 <h4>Title</h4>
@@ -47,7 +47,7 @@
 
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
-[% SET last_action = request.last_action %]
+[% SET current_action = request.current_action %]
 [% IF action %]
 <table>
   <tr>
@@ -71,10 +71,10 @@
   [% END %]
 </table>
 
-  [% IF c.user.can_decide_on(last_action) %]
-<p>You can make a decision on the [% last_action.step.name | html %] step of this request.</p>
+  [% IF c.user.can_decide_on(current_action) %]
+<p>You can make a decision on the [% current_action.step.name | html %] step of this request.</p>
 <form action="[% c.uri_for(c.controller.action_for('add_action'), [ request.uri_args ]) | html %]" method="post">
-  <input type="hidden" name="action_id" value="[% last_action.id | html %]" />
+  <input type="hidden" name="action_id" value="[% current_action.id | html %]" />
   <label>Set status to:
     <select name="status_id">
     [% WHILE (status = statuses.next) %]

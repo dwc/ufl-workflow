@@ -79,20 +79,20 @@ sub first_action {
     return $first_action;
 }
 
-=head2 last_action
+=head2 current_action
 
-Return the last L<UFL::Curriculum::Schema::Action> entered for this
+Return the current L<UFL::Curriculum::Schema::Action> entered for this
 request, i.e., the latest L<UFL::Curriculum::Schema::Action> in the
 L<UFL::Curriculum::Schema::Process>.
 
 =cut
 
-sub last_action {
+sub current_action {
     my ($self) = @_;
 
-    my $last_action = $self->actions->search({ next_action_id => undef })->first;
+    my $current_action = $self->actions->search({ next_action_id => undef })->first;
 
-    return $last_action;
+    return $current_action;
 }
 
 =head2 current_step
@@ -105,7 +105,7 @@ this request.
 sub current_step {
     my ($self) = @_;
 
-    return $self->last_action->step;
+    return $self->current_action->step;
 }
 
 =head2 add_action

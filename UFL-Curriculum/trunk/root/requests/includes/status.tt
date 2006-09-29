@@ -1,2 +1,1 @@
-[% SET last_action = request.last_action %]
-[% last_action.status.name | html %] at [% last_action.step.name | html -%]
+[% action.status.name | html %] at [% action.step.name | html -%]
