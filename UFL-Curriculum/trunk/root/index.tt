@@ -1,5 +1,23 @@
 [% SET title = '' -%]
 
+[% IF actions.count > 0 %]
+<h3>Pending actions</h3>
+<table>
+  <tr>
+    <th>Request</th>
+    <th>Action</th>
+    <th>Added</th>
+  </tr>
+  [% WHILE (action = actions.next) %]
+  <tr>
+    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ action.request.uri_args ]) | html %]">[% action.request.title | html %]</a></td>
+    <td>[% action.step.name | html %]</td>
+    <td>[% action.insert_time | html %]</td>
+  </tr>
+  [% END %]
+</table>
+[% END %]
+
 <h3>Your requests</h3>
 [% IF requests.count > 0 %]
 <table>
