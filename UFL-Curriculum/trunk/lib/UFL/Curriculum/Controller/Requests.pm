@@ -50,7 +50,7 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $request = $process->requests->find_or_create({
+            my $request = $process->add_request({
                 user_id     => $c->user->obj->id,
                 title       => $result->valid('title'),
                 description => $result->valid('description'),

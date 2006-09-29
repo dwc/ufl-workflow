@@ -112,6 +112,30 @@ sub add_step {
     return $new_step;
 }
 
+=head2 add_request
+
+Add a request that follows this process.
+
+=cut
+
+sub add_request {
+    my ($self, $values) = @_;
+
+    $self->throw_exception('You must provide a user, title, and description for the request')
+        unless ref $values eq 'HASH' and $values->{user_id} and $values->{title} and $values->{description};
+
+    my $new_request;
+    $self->result_source->schema->txn_do(sub {
+        $new_request = $self->requests->find_or_create($values);
+
+        $new_request->add_action({
+            step_id => $self->first_step->id,
+        });
+    });
+
+    return $new_request;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this process.

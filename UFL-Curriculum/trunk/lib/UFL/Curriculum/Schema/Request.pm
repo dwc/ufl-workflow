@@ -62,6 +62,35 @@ Request table class for L<UFL::Curriculum::Schema>.
 
 =head1 METHODS
 
+=head2 add_action
+
+Add a new action to this request.
+
+=cut
+
+sub add_action {
+    my ($self, $values) = @_;
+
+    $self->throw_exception('You must provide a step for the action')
+        unless ref $values eq 'HASH' and $values->{step_id};
+
+    my $initial_status = $self->result_source->schema->resultset('Status')->search({ is_initial => 1 })->first;
+    $self->throw_exception('Could not find initial status')
+        unless $initial_status;
+
+    my $new_action;
+    $self->result_source->schema->txn_do(sub {
+        my %values = (
+             status_id => $initial_status->id,
+             %$values,
+        );
+
+        $new_action = $self->actions->find_or_create(\%values);
+    });
+
+    return $new_action;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this request.
