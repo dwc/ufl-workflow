@@ -15,6 +15,10 @@
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>)
     <br />
+    <form action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Remove" />
+    </form>
     [% IF prev_step %]
     <form action="[% c.uri_for(c.controller.action_for('move_step_up'), [ process.uri_args ]) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
@@ -27,10 +31,6 @@
       <input type="submit" value="Move Down" />
     </form>
     [% END %]
-    <form action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
-      <input type="hidden" name="step_id" value="[% step.id | html %]" />
-      <input type="submit" value="Remove" />
-    </form>
   </li>
     [% SET step = next_step %]
   [% END %]
