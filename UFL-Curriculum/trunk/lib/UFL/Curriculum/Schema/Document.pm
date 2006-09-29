@@ -20,6 +20,10 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 32,
     },
+    extension => {
+        data_type => 'varchar',
+        size      => 8,
+    },
     md5 => {
         data_type => 'varchar',
         size      => 32,
@@ -62,7 +66,7 @@ document.
 sub uri_args {
     my ($self) = @_;
 
-    return $self->id;
+    return $self->id . '.' . $self->extension;
 }
 
 =head1 AUTHOR

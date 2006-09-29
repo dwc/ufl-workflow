@@ -3,3 +3,6 @@ add:
     DEFAULT: A title
   description:
     DEFAULT: A description
+add_document:
+  document_id:
+    DEFAULT: A replacement document

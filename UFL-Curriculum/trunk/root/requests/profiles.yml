@@ -3,3 +3,6 @@ add:
   - [ NOT_BLANK ]
   - description
   - [ NOT_BLANK ]
+add_document:
+  - document_id
+  - [ INT ]

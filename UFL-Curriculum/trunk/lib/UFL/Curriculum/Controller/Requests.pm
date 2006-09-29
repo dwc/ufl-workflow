@@ -3,6 +3,7 @@ package UFL::Curriculum::Controller::Requests;
 use strict;
 use warnings;
 use base qw/UFL::Curriculum::BaseController/;
+use Digest::MD5 ();
 
 =head1 NAME
 
@@ -96,7 +97,75 @@ Display basic information on the stashed request.
 sub view : PathPart('') Chained('request') Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'requests/view.tt');
+    my $request   = $c->stash->{request};
+    my $documents = $request->documents->search(undef, { order_by => 'insert_time' });
+
+    $c->stash(
+        documents => $documents,
+        template  => 'requests/view.tt',
+    );
+}
+
+=head2 add_document
+
+Add a document to the stashed request.
+
+=cut
+
+sub add_document : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success and my $upload = $c->req->upload('document')) {
+            my $request = $c->stash->{request};
+
+            my $filename = $upload->basename;
+            my ($title, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
+            $extension = lc $extension;
+
+            my @extensions = keys %{ $c->config->{documents}->{accepted_types} || {} };
+            die 'File is not one of the allowed types'
+                unless grep { /^\Q$extension\E$/i } @extensions;
+
+            my $document;
+            $request->result_source->schema->txn_do(sub {
+                my $contents = $upload->slurp;
+                my $md5      = Digest::MD5::md5_hex($contents);
+
+                $document = $request->documents->find_or_create({
+                    title     => $title,
+                    extension => $extension,
+                    md5       => $md5,
+                });
+
+                if (my $replaced_document_id = $result->valid('document_id')) {
+                    my $replaced_document = $c->model('DBIC::Document')->find($replaced_document_id);
+                    die 'Replaced document not found' unless $replaced_document;
+
+                    $replaced_document->document_id($document->id);
+                    $replaced_document->update;
+                }
+
+                my $destination = $c->path_to('root', $c->config->{documents}->{destination}, $document->uri_args);
+                $upload->copy_to($destination)
+                    or die 'Error copying document to destination directory';
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));
+        }
+    }
+
+    my $request   = $c->stash->{request};
+    my $documents = $request->documents->search(
+        { document_id => undef },
+        { order_by    => 'insert_time' },
+    );
+
+    $c->stash(
+        documents => $documents,
+        template  => 'requests/add_document.tt'
+    );
 }
 
 =head1 AUTHOR

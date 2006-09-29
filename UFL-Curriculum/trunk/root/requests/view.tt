@@ -23,8 +23,24 @@
 <p>[% request.update_time | html %]</p>
 
 <h3>Documents</h3>
-[% SET documents = request.documents_rs %]
 [% IF documents.count > 0 %]
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Replacement</th>
+    <th>Added</th>
+    <th>Updated</th>
+  </tr>
+  [% WHILE (document = documents.next) %]
+    [% SET replacement = document.replacement %]
+  <tr>
+    <td><a href="[% c.uri_for('/documents', document.uri_args) | html %]">[% document.title | html %]</a></td>
+    <td>[% IF replacement %]<a href="[% c.uri_for('documents', replacement.uri_args) | html %]">[% replacement.title | html %]</a>[% END %]</td>
+    <td>[% document.insert_time | html %]</td>
+    <td>[% document.update_time | html %]</td>
+  </tr>
+  [% END %]
+</table>
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
