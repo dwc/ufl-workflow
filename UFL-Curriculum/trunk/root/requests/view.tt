@@ -62,7 +62,7 @@
   <tr>
     <td>[% action.step.name | html %]</td>
     <td>[% action.status.name | html %]</td>
-    <td>[% action.user.username || '-' | html %]</td>
+    <td>[% action.actor.username || '-' | html %]</td>
     <td>[% action.comment || '-' | html %]</td>
     <td>[% action.insert_time | html %]</td>
     <td>[% action.update_time | html %]</td>
