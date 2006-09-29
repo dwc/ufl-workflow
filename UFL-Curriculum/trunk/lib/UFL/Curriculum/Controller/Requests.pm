@@ -120,11 +120,12 @@ Add a document to the stashed request.
 sub add_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
+    my $request = $c->stash->{request};
+    die 'Request is not open' unless $request->is_open;
+
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
-            my $request = $c->stash->{request};
-
             my $filename = $upload->basename;
             my ($title, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
             $extension = lc $extension;
@@ -156,7 +157,6 @@ sub add_document : PathPart Chained('request') Args(0) {
         }
     }
 
-    my $request   = $c->stash->{request};
     my $documents = $request->documents->search(
         { document_id => undef },
         { order_by    => 'insert_time' },
@@ -181,6 +181,7 @@ sub add_action : PathPart Chained('request') Args(0) {
     die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $request = $c->stash->{request};
+    die 'Request is not open' unless $request->is_open;
 
     my $result = $self->validate_form($c);
     if ($result->success) {

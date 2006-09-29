@@ -108,6 +108,19 @@ sub current_step {
     return $self->current_action->step;
 }
 
+=head2 is_open
+
+Return true if this request is open, i.e., the current step is pending
+a decision.
+
+=cut
+
+sub is_open {
+    my ($self) = @_;
+
+    return $self->current_action->status->is_initial;
+}
+
 =head2 add_action
 
 Add a new action to this request.

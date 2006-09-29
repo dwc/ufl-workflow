@@ -44,6 +44,9 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
+[% IF request.is_open %]
+<p><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></p>
+[% END %]
 
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
@@ -89,8 +92,3 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
-
-<h3>Manage</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></li>
-</ul>
