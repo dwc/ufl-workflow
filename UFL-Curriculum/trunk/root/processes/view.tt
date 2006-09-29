@@ -11,7 +11,9 @@
   [% WHILE step %]
     [% SET prev_step = step.prev_step %]
     [% SET next_step = step.next_step %]
+    [% SET role = step.role %]
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a>
+    (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>)
     <br />
     [% IF prev_step %]
     <form action="[% c.uri_for(c.controller.action_for('move_step_up'), [ process.uri_args ]) | html %]" method="post">
