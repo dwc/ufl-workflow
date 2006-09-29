@@ -24,14 +24,6 @@ __PACKAGE__->deny_access_unless(
     [ qw/Administrator/ ]
 ) for qw/groups processes roles statuses steps users/;
 
-__PACKAGE__->allow_access_if(
-    '/requests/view',
-    sub {
-        my $c = shift;
-        return $c->user->can_view_request($c->stash->{request});
-    },
-);
-
 =head1 NAME
 
 UFL::Curriculum - Curriculum tracking for the University of Florida
