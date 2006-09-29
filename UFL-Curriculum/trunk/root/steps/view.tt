@@ -18,7 +18,8 @@
 
 <h3>Role</h3>
 [% SET role = step.role %]
-<p><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a></p>
+[% SET group = role.group %]
+<p><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a> (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a>)</p>
 
 <h3>Manage</h3>
 <ul>
