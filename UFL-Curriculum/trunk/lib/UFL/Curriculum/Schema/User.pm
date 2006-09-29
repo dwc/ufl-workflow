@@ -78,24 +78,6 @@ sub has_role {
     return grep { $role->id == $_->id } @roles;
 }
 
-=head2 can_view_request
-
-Return true if this user can view the specified request.  This is
-defined as the submitter of the request, an administrator.
-
-=cut
-
-sub can_view_request {
-    my ($self, $request) = @_;
-
-    croak 'You must provide a request'
-        unless blessed $request and $request->isa('UFL::Curriculum::Schema::Request');
-
-    return 1 if $request->user_id == $self->id;
-    return 1 if grep { $_->name eq 'Administrator' } $self->roles;
-    return 0;
-}
-
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this user.
