@@ -18,6 +18,14 @@ __PACKAGE__->add_columns(
     status_id => {
         data_type => 'integer',
     },
+    prev_action_id => {
+        data_type   => 'integer',
+        is_nullable => 1,
+    },
+    next_action_id => {
+        data_type => 'integer',
+        is_nullable => 1,
+    },
     user_id => {
         data_type   => 'integer',
         is_nullable => 1,
@@ -43,6 +51,18 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     status => 'UFL::Curriculum::Schema::Status',
     'status_id',
+);
+
+__PACKAGE__->belongs_to(
+    prev_action => 'UFL::Curriculum::Schema::Action',
+    'prev_action_id',
+    { join_type => 'left' },
+);
+
+__PACKAGE__->belongs_to(
+    next_action => 'UFL::Curriculum::Schema::Action',
+    'next_action_id',
+    { join_type => 'left' },
 );
 
 __PACKAGE__->belongs_to(
