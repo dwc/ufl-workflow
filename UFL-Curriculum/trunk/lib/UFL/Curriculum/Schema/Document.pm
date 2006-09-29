@@ -66,7 +66,10 @@ document.
 sub uri_args {
     my ($self) = @_;
 
-    return $self->id . '.' . $self->extension;
+    # Based on Cache::FileCache
+    my @path = unpack 'A2' x 2 . 'A*', $self->md5 . '.' . $self->extension;
+
+    return @path;
 }
 
 =head1 AUTHOR

@@ -148,6 +148,7 @@ sub add_document : PathPart Chained('request') Args(0) {
                 }
 
                 my $destination = $c->path_to('root', $c->config->{documents}->{destination}, $document->uri_args);
+                $destination->parent->mkpath;
                 $upload->copy_to($destination)
                     or die 'Error copying document to destination directory';
             });
