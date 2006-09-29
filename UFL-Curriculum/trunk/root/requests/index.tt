@@ -5,12 +5,14 @@
 <table>
   <tr>
     <th>Title</th>
+    <th>Status</th>
     <th>Added</th>
     <th>Updated</th>
   </tr>
   [% WHILE (request = requests.next) %]
   <tr>
     <td><a href="[% c.uri_for(c.controller.action_for('view'), [ request.uri_args ]) | html %]">[% request.title | html %]</a></td>
+    <td>[% INCLUDE requests/includes/status.tt -%]</td>
     <td>[% request.insert_time | html %]</td>
     <td>[% request.update_time | html %]</td>
   </tr>

@@ -6,12 +6,9 @@
 [% SET process = request.process %]
 <p>[% process.name | html %]</p>
 
-[% SET last_action = request.last_action %]
-[% IF last_action %]
 <h4>Status</h4>
-<p>[% last_action.status.name | html %] decision on [% last_action.step.name | html %].</p>
+<p>[% INCLUDE requests/includes/status.tt %]</p>
 <p><a href="#actions">Details</a></p>
-[% END %]
 
 <h4>Title</h4>
 <p>[% request.title | html %]</p>
