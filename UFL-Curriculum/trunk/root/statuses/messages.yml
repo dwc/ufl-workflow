@@ -1,6 +1,8 @@
 add:
   name:
     DEFAULT: A status name
+  is_initial:
+    DEFAULT: Whether the status is the initial one for new actions
   action:
     DEFAULT: Whether the status continues or finishes the request
 edit:

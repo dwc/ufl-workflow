@@ -13,6 +13,10 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 32,
     },
+    is_initial => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
     continues_request => {
         data_type     => 'boolean',
         default_value => 0,
