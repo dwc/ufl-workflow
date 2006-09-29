@@ -37,6 +37,12 @@ sub index : Path Args(0) {
     );
 }
 
+=head2 add
+
+Add a request that follows the specified process.
+
+=cut
+
 sub add : Local {
     my ($self, $c) = @_;
 
