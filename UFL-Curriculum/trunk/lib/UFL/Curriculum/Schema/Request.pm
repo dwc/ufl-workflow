@@ -3,6 +3,7 @@ package UFL::Curriculum::Schema::Request;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
+use Digest::MD5 ();
 
 __PACKAGE__->load_components(qw/+UFL::Curriculum::Component::StandardColumns Core/);
 
@@ -121,6 +122,40 @@ sub add_action {
     });
 
     return $new_action;
+}
+
+=head2 add_document
+
+Add a new L<UFL::Curriculum::Schema::Document> to this request.
+
+=cut
+
+sub add_document {
+    my ($self, $values) = @_;
+
+    $self->throw_exception('You must provide a title, extension, and contents for the document')
+        unless ref $values eq 'HASH' and $values->{title} and $values->{extension} and $values->{contents};
+
+    my $md5 = Digest::MD5::md5_hex(delete $values->{contents});
+    my $replaced_document_id = delete $values->{replaced_document_id};
+
+    my $document;
+    $self->result_source->schema->txn_do(sub {
+        $document = $self->documents->find_or_create({
+            md5 => $md5,
+            %$values,
+        });
+
+        if ($replaced_document_id) {
+            my $replaced_document = $self->documents->find($replaced_document_id);
+            die 'Replaced document not found' unless $replaced_document;
+
+            $replaced_document->document_id($document->id);
+            $replaced_document->update;
+        }
+    });
+
+    return $document;
 }
 
 =head2 uri_args

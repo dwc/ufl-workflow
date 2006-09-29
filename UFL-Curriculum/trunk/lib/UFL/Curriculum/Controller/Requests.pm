@@ -3,7 +3,6 @@ package UFL::Curriculum::Controller::Requests;
 use strict;
 use warnings;
 use base qw/UFL::Curriculum::BaseController/;
-use Digest::MD5 ();
 
 =head1 NAME
 
@@ -130,22 +129,16 @@ sub add_document : PathPart Chained('request') Args(0) {
 
             my $document;
             $request->result_source->schema->txn_do(sub {
-                my $contents = $upload->slurp;
-                my $md5      = Digest::MD5::md5_hex($contents);
-
-                $document = $request->documents->find_or_create({
+                my %values = (
                     title     => $title,
                     extension => $extension,
-                    md5       => $md5,
-                });
-
+                    contents  => $upload->slurp,
+                );
                 if (my $replaced_document_id = $result->valid('document_id')) {
-                    my $replaced_document = $c->model('DBIC::Document')->find($replaced_document_id);
-                    die 'Replaced document not found' unless $replaced_document;
-
-                    $replaced_document->document_id($document->id);
-                    $replaced_document->update;
+                    $values{replaced_document_id} = $replaced_document_id;
                 }
+
+                $document = $request->add_document(\%values);
 
                 my $destination = $c->path_to('root', $c->config->{documents}->{destination}, $document->uri_args);
                 $destination->parent->mkpath;
