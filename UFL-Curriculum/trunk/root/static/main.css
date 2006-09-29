@@ -27,13 +27,21 @@ label {
   margin: 5px;
 }
 
-label input, label select, label textarea {
+input[type="text"], select, textarea {
   display: block;
+  width: 500px;
 }
 
-label textarea {
-  width: 500px;
+textarea {
   height: 100px;
+}
+
+li form {
+  display: inline;
+}
+
+li form input {
+  margin: 5px;
 }
 
 ul#nav {
