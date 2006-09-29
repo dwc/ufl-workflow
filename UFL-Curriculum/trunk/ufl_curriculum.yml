@@ -6,7 +6,7 @@ encoding:   UTF-8
 
 documents:
   destination:         documents
-  accepted_extentions: [ doc, pdf, odt, txt ]
+  accepted_extensions: [ doc, pdf, odt, txt ]
 
 authentication:
   dbic:

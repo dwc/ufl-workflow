@@ -123,7 +123,7 @@ sub add_document : PathPart Chained('request') Args(0) {
             my ($title, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
             $extension = lc $extension;
 
-            my @extensions = @{ $c->config->{documents}->{accepted_extentions} || [] };
+            my @extensions = @{ $c->config->{documents}->{accepted_extensions} || [] };
             die 'File is not one of the allowed types'
                 unless grep { /^\Q$extension\E$/i } @extensions;
 
