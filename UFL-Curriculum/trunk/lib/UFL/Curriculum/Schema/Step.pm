@@ -55,6 +55,7 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->has_many(
     actions => 'UFL::Curriculum::Schema::Action',
     { 'foreign.step_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
 );
 
 =head1 NAME
