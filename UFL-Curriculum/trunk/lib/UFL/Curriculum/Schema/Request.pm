@@ -62,6 +62,38 @@ Request table class for L<UFL::Curriculum::Schema>.
 
 =head1 METHODS
 
+=head2 first_action
+
+Return the first L<UFL::Curriculum::Schema::Action> entered for this
+request, i.e., the earliest L<UFL::Curriculum::Schema::Action> in the
+L<UFL::Curriculum::Schema::Process>.
+
+=cut
+
+sub first_action {
+    my ($self) = @_;
+
+    my $first_action = $self->actions->search({ prev_action_id => undef })->first;
+
+    return $first_action;
+}
+
+=head2 last_action
+
+Return the last L<UFL::Curriculum::Schema::Action> entered for this
+request, i.e., the latest L<UFL::Curriculum::Schema::Action> in the
+L<UFL::Curriculum::Schema::Process>.
+
+=cut
+
+sub last_action {
+    my ($self) = @_;
+
+    my $last_action = $self->actions->search({ next_action_id => undef })->first;
+
+    return $last_action;
+}
+
 =head2 add_action
 
 Add a new action to this request.
