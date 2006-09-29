@@ -47,6 +47,7 @@
 
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
+[% SET last_action = request.last_action %]
 [% IF action %]
 <table>
   <tr>
@@ -67,6 +68,20 @@
     [% SET action = action.next_action %]
   [% END %]
 </table>
+
+  [% IF c.user.can_decide_on(last_action) %]
+<p>You can make a decision on the [% last_action.step.name | html %] step of this request.</p>
+<form action="[% c.uri_for(c.controller.action_for('add_action'), [ request.uri_args ]) | html %]" method="post">
+  <label>Set status to:
+    <select name="status_id">
+    [% WHILE (status = statuses.next) %]
+      <option value="[% status.id | html %]">[% status.name | html %]</option>
+    [% END %]
+    </select>
+  </label>
+  <input type="submit" value="Submit Decision" />
+</form>
+  [% END %]
 [% ELSE %]
 <p>None yet.</p>
 [% END %]

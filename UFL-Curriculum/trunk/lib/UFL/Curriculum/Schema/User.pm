@@ -78,6 +78,24 @@ sub has_role {
     return grep { $role->id == $_->id } @roles;
 }
 
+=head2 can_decide_on
+
+Return true if this user can decide on the specified
+L<UFL::Curriculum::Schema::Action>.
+
+=cut
+
+sub can_decide_on {
+    my ($self, $action) = @_;
+
+    croak 'You must provide an action'
+        unless blessed $action and $action->isa('UFL::Curriculum::Schema::Action');
+
+    my $step = $action->step;
+
+    return $self->has_role($step->role);
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this user.

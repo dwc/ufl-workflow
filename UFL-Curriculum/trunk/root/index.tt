@@ -10,7 +10,7 @@
   </tr>
   [% WHILE (action = actions.next) %]
   <tr>
-    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ action.request.uri_args ]) | html %]">[% action.request.title | html %]</a></td>
+    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ action.request.uri_args ]) | html %]#actions">[% action.request.title | html %]</a></td>
     <td>[% action.step.name | html %]</td>
     <td>[% action.insert_time | html %]</td>
   </tr>
