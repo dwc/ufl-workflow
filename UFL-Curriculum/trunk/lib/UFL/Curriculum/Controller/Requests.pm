@@ -101,7 +101,7 @@ sub view : PathPart('') Chained('request') Args(0) {
     my $documents = $request->documents->search(undef, { order_by => 'insert_time' });
     my $statuses  = $c->model('DBIC::Status')->search(
         { is_initial => 0 },
-        { order_by => 'name' },
+        { order_by   => 'name' },
     );
 
     $c->stash(
@@ -159,7 +159,7 @@ sub add_document : PathPart Chained('request') Args(0) {
     my $request   = $c->stash->{request};
     my $documents = $request->documents->search(
         { document_id => undef },
-        { order_by => 'insert_time' },
+        { order_by    => 'insert_time' },
     );
 
     $c->stash(
