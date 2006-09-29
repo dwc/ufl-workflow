@@ -23,8 +23,9 @@ __PACKAGE__->add_columns(
         is_nullable => 1,
     },
     comment => {
-        data_type => 'varchar',
-        size      => 1024,
+        data_type   => 'varchar',
+        size        => 1024,
+        is_nullable => 1,
     },
 );
 __PACKAGE__->add_standard_columns;
