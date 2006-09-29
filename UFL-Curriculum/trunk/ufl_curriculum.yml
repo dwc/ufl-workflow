@@ -5,11 +5,8 @@ logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
 encoding:   UTF-8
 
 documents:
-  destination: documents
-  accepted_types:
-    doc: application/msword
-    pdf: application/pdf
-    odt: application/vnd.oasis.opendocument.text
+  destination:         documents
+  accepted_extentions: [ doc, pdf, odt, txt ]
 
 authentication:
   dbic:
