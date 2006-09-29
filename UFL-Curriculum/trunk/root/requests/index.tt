@@ -6,6 +6,7 @@
   <tr>
     <th>Submitter</th>
     <th>Title</th>
+    <th>Process</th>
     <th>Status</th>
     <th>Added</th>
     <th>Updated</th>
@@ -14,6 +15,7 @@
   <tr>
     <td>[% request.submitter.username | html %]</td>
     <td><a href="[% c.uri_for(c.controller.action_for('view'), [ request.uri_args ]) | html %]">[% request.title | html %]</a></td>
+    <td>[% request.process.name | html %]</td>
     <td>[% INCLUDE requests/includes/status.tt -%]</td>
     <td>[% request.insert_time | html %]</td>
     <td>[% request.update_time | html %]</td>
