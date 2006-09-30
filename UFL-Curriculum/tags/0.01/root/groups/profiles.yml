@@ -1,0 +1,7 @@
+add: &group
+  - name
+  - [ NOT_BLANK ]
+edit: *group
+add_role:
+  - name
+  - [ NOT_BLANK, [ NOT_REGEX, '^Administrator$' ] ]

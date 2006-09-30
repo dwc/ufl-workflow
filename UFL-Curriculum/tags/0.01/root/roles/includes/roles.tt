@@ -1,0 +1,13 @@
+<label>Role:
+  <select name="role_id">
+[% SET current_group = undef %]
+[% WHILE (role = roles.next) %]
+  [% SET group = role.group %]
+  [% IF group.id != current_group.id %]
+    [% SET current_group = group %]
+    <option value="">[% group.name | html %]</option>
+  [% END %]
+    <option value="[% role.id | html %]"[% IF role.id == selected_role.id %] selected="selected"[% END %]>&mdash; [% role.name | html %]</option>
+[% END %]
+  </select>
+</label>

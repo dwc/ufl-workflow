@@ -1,0 +1,14 @@
+[% SET title = 'Groups' -%]
+
+[% IF groups.count > 0 %]
+<h3>Current groups</h3>
+<ul>
+  [% WHILE (group = groups.next) %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</li>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<p><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></p>

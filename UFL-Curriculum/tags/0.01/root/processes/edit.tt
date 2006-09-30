@@ -1,0 +1,9 @@
+[% SET title = "Edit ${process.name} Process" -%]
+
+<form action="[% c.uri_for(c.controller.action_for('edit'), [ process.uri_args ]) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE processes/includes/process.tt %]
+[% END -%]
+  <input type="submit" value="Edit Process" />
+</form>

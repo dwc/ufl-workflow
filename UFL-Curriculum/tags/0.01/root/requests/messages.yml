@@ -1,0 +1,15 @@
+add:
+  title:
+    DEFAULT: A title
+  description:
+    DEFAULT: A description
+add_document:
+  document_id:
+    DEFAULT: A replacement document
+add_action:
+  action_id:
+    DEFAULT: An action
+  status_id:
+    DEFAULT: A status
+  comment:
+    DEFAULT: A comment

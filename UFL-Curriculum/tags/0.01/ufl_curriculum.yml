@@ -1,0 +1,37 @@
+--- #YAML:1.0
+# Do not use tabs for indentation or label/value separation!
+name:       Curriculum Tracking
+logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
+encoding:   UTF-8
+
+documents:
+  destination:         documents
+  accepted_extensions: [ doc, pdf, odt, txt ]
+
+authentication:
+  dbic:
+    user_class:           DBIC::User
+    user_field:           username
+
+authorization:
+  dbic:
+    role_class:           DBIC::Role
+    role_field:           name
+    role_rel:             user_roles
+    user_role_user_field: user_id
+
+Model::DBIC:
+  schema_class: UFL::Curriculum::Schema
+  connect_info:
+    - dbi:DB2:public
+    - dwester
+    - a*hu2C$u
+    -
+      RaiseError:         1
+      PrintError:         0
+      ShowErrorStatement: 1
+      TraceLevel:         0
+
+View::TT:
+  PRE_CHOMP: 1
+  WRAPPER:   wrapper.tt

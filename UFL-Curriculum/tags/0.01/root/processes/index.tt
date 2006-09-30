@@ -1,0 +1,14 @@
+[% SET title = 'Processes' -%]
+
+<h3>Current processes</h3>
+[% IF processes.count > 0 %]
+<ul>
+  [% WHILE (process = processes.next) %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></li>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<p><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new process</a></p>

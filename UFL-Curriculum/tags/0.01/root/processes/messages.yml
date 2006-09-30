@@ -1,0 +1,16 @@
+add: &process
+  name:
+    DEFAULT: A process name
+edit: *process
+add_step:
+  name:
+    DEFAULT: A step name
+  role_id:
+    DEFAULT: A role
+delete_step:
+  step_id:
+    DEFAULT: A step
+move_step_up: &move
+  step_id:
+    DEFAULT: A step
+move_step_down: *move

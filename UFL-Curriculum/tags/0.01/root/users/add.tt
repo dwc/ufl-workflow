@@ -1,0 +1,9 @@
+[% SET title = 'Add New User' -%]
+
+<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE users/includes/user.tt %]
+[% END -%]
+  <input type="submit" value="Add User" />
+</form>

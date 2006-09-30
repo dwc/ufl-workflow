@@ -1,0 +1,46 @@
+[% SET title = "${process.name} Process" -%]
+
+<h3>Creator</h3>
+[% SET creator = process.creator %]
+<p><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ creator.uri_args ]) | html %]">[% creator.username | html %]</a></p>
+
+<h3>Steps</h3>
+[% SET step = process.first_step %]
+[% IF step %]
+<ol type="1">
+  [% WHILE step %]
+    [% SET prev_step = step.prev_step %]
+    [% SET next_step = step.next_step %]
+    [% SET role = step.role %]
+  <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a>
+    (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>)
+    <br />
+    <form action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Remove" />
+    </form>
+    [% IF prev_step %]
+    <form action="[% c.uri_for(c.controller.action_for('move_step_up'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Move Up" />
+    </form>
+    [% END %]
+    [% IF next_step %]
+    <form action="[% c.uri_for(c.controller.action_for('move_step_down'), [ process.uri_args ]) | html %]" method="post">
+      <input type="hidden" name="step_id" value="[% step.id | html %]" />
+      <input type="submit" value="Move Down" />
+    </form>
+    [% END %]
+  </li>
+    [% SET step = next_step %]
+  [% END %]
+</ol>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<h3>Manage</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ process.uri_args ]) | html %]">Edit this process</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></li>
+</ul>

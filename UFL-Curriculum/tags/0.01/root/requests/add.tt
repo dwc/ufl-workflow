@@ -1,0 +1,9 @@
+[% SET title = "Add Request to ${process.name}" -%]
+
+<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE requests/includes/request.tt %]
+[% END -%]
+  <input type="submit" value="Add Request" />
+</form>

@@ -1,0 +1,8 @@
+<ul id="nav">
+[% IF c.check_user_roles('Administrator') %]
+  [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses' ] %]
+  <li><a href="[% c.uri_for(c.controller(name).action_for('index')) | html %]">[% name | html %]</a></li>
+  [% END %]
+[% END %]
+  <li><a href="[% c.uri_for(c.controller('Requests').action_for('index')) | html %]">Requests</a></li>
+</ul>

@@ -1,0 +1,7 @@
+add:
+  - username
+  - [ NOT_BLANK ]
+add_role: &role
+  - role_id
+  - [ NOT_BLANK, INT ]
+delete_role: *role
