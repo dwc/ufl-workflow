@@ -2,4 +2,4 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-use_ok('UFL::Curriculum::View::TT');
+use_ok('UFL::Workflow::View::TT');

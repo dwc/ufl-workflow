@@ -1,7 +1,7 @@
 use inc::Module::Install;
 
-name     'UFL-Curriculum';
-all_from 'lib/UFL/Curriculum.pm';
+name     'UFL-Workflow';
+all_from 'lib/UFL/Workflow.pm';
 
 requires 'Carp';
 requires 'Catalyst' => '5.7001';

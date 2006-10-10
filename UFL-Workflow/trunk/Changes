@@ -1,4 +1,7 @@
-This file documents the revision history for UFL::Curriculum.
+This file documents the revision history for UFL::Workflow.
+
+0.02
+        - Rename application from UFL::Curriculum to UFL::Workflow
 
 0.01  Fri Sep 29 16:51:33 EDT 2006
         - Initial revision
