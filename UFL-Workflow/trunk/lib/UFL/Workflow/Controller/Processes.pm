@@ -24,7 +24,7 @@ Display a list of current processes.
 
 =cut
 
-sub index : Path Args(0) {
+sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });

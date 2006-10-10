@@ -24,7 +24,7 @@ Display a list of current statuses.
 
 =cut
 
-sub index : Path Args(0) {
+sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });

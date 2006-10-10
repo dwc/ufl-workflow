@@ -50,7 +50,7 @@ Display the home page.
 
 =cut
 
-sub index : Path Args(0) {
+sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $actions = $c->model('DBIC::Action')->search(

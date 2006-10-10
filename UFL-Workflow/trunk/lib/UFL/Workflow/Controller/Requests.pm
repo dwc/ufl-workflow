@@ -24,7 +24,7 @@ Display a list of the user's current requests.
 
 =cut
 
-sub index : Path Args(0) {
+sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $requests = $c->model('DBIC::Request')->search(

@@ -24,7 +24,7 @@ Display a list of current groups.
 
 =cut
 
-sub index : Path Args(0) {
+sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $groups = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
