@@ -23,9 +23,6 @@ authorization:
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
   connect_info:
-    - dbi:DB2:public
-    - dwester
-    - a*hu2C$u
     -
       RaiseError:         1
       PrintError:         0
