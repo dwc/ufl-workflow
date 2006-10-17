@@ -1,7 +1,9 @@
 add:
   username:
     DEFAULT: A username
-add_role: &role
+add_group_role: &role
+  group_id:
+    DEFAULT: A group
   role_id:
     DEFAULT: A role
-delete_role: *role
+delete_group_role: *role

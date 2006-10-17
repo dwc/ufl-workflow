@@ -85,46 +85,66 @@ sub view : PathPart('') Chained('user') Args(0) {
     $c->stash(template => 'users/view.tt');
 }
 
-=head2 add_role
+=head2 add_group_role
 
-Add the stashed user to the specified role.
+Add the stashed user to the specified group-role.
 
 =cut
 
-sub add_role : PathPart Chained('user') Args(0) {
+sub add_group_role : PathPart Chained('user') Args(0) {
     my ($self, $c) = @_;
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $role = $c->model('DBIC::Role')->find($result->valid('role_id'));
-            $c->detach('/default') unless $role;
+            my $group_role = $c->model('DBIC::GroupRole')->find({
+                group_id => $result->valid('group_id'),
+                role_id  => $result->valid('role_id'),
+            });
+            $c->detach('/default') unless $group_role;
 
             my $user = $c->stash->{user};
-            $user->add_to_roles($role) unless $user->has_role($role);
+            $user->add_to_group_roles($group_role) unless $user->has_group_role($group_role);
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
         }
     }
 
-    my $roles = $c->model('DBIC::Role')->search(undef, {
-        join     => 'group',
-        order_by => 'group.name, me.name'
+    my $groups = $c->model('DBIC::Group')->search(undef, {
+        order_by => 'name',
     });
 
+    if (my $group_id = $c->req->param('group_id')) {
+        $group_id =~ s/\D//g;
+        $c->detach('/default') unless $group_id;
+
+        my $group = $c->model('DBIC::Group')->find($group_id);
+        $c->detach('/default') unless $group;
+
+        my $roles = $c->model('DBIC::Role')->search(
+            { 'group_roles.group_id' => $group->id },
+            { join => 'group_roles' },
+        );
+
+        $c->stash(
+            group => $group,
+            roles => $roles,
+        );
+    }
+
     $c->stash(
-        roles    => $roles,
-        template => 'users/add_role.tt'
+        groups   => $groups,
+        template => 'users/add_group_role.tt'
     );
 }
 
-=head2 delete_role
+=head2 delete_group_role
 
-Remove the stashed user from the specified role.
+Remove the stashed user from the specified group-role.
 
 =cut
 
-sub delete_role : PathPart Chained('user') Args(0) {
+sub delete_group_role : PathPart Chained('user') Args(0) {
     my ($self, $c) = @_;
 
     die 'Method must be POST' unless $c->req->method eq 'POST';
@@ -133,10 +153,13 @@ sub delete_role : PathPart Chained('user') Args(0) {
 
     my $result = $self->validate_form($c);
     if ($result->success) {
-        my $role = $c->model('DBIC::Role')->find($result->valid('role_id'));
-        $c->detach('/default') unless $role;
+        my $group_role = $c->model('DBIC::GroupRole')->find({
+            group_id => $result->valid('group_id'),
+            role_id  => $result->valid('role_id'),
+        });
+        $c->detach('/default') unless $group_role;
 
-        $user->remove_from_roles($role);
+        $user->remove_from_group_roles($group_role);
     }
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));

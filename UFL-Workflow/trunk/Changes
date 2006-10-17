@@ -4,6 +4,7 @@ This file documents the revision history for UFL::Workflow.
         - Rename application from UFL::Curriculum to UFL::Workflow
         - Move database authentication information to local
           configuration file
+        - Normalize groups and roles to make roles more flexible
 
 0.01  Fri Sep 29 16:51:33 EDT 2006
         - Initial revision

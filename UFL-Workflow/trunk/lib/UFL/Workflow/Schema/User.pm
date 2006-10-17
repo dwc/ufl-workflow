@@ -39,12 +39,14 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->has_many(
-    user_roles => 'UFL::Workflow::Schema::UserRole',
+    user_group_roles => 'UFL::Workflow::Schema::UserGroupRole',
     { 'foreign.user_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
-__PACKAGE__->many_to_many('roles', 'user_roles', 'role');
+__PACKAGE__->many_to_many('group_roles', 'user_group_roles', 'group_role');
+__PACKAGE__->many_to_many('groups', 'user_group_roles', 'group');
+__PACKAGE__->many_to_many('roles', 'user_group_roles', 'role');
 
 =head1 NAME
 
@@ -76,6 +78,27 @@ sub has_role {
     my @roles = $self->roles;
 
     return grep { $role->id == $_->id } @roles;
+}
+
+=head2 has_group_role
+
+Return true if this user has the specified
+L<UFL::Workflow::Schema::Group_Role>.
+
+=cut
+
+sub has_group_role {
+    my ($self, $group_role) = @_;
+
+    croak 'You must provide a group-role'
+        unless blessed $group_role and $group_role->isa('UFL::Workflow::Schema::GroupRole');
+
+    my @group_roles = $self->group_roles;
+
+    return grep {
+        $group_role->group_id == $_->group_id
+            and $group_role->role_id == $_->role_id
+    } @group_roles;
 }
 
 =head2 can_decide_on

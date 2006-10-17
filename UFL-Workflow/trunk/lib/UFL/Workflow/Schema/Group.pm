@@ -19,10 +19,12 @@ __PACKAGE__->add_standard_columns;
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
 
 __PACKAGE__->has_many(
-    roles => 'UFL::Workflow::Schema::Role',
+    group_roles => 'UFL::Workflow::Schema::GroupRole',
     { 'foreign.group_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
+
+__PACKAGE__->many_to_many('roles', 'group_roles', 'role');
 
 =head1 NAME
 
@@ -37,6 +39,24 @@ See L<UFL::Workflow>.
 Group table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
+
+=head2 add_role
+
+Add a role to this group.
+
+=cut
+
+sub add_role {
+    my ($self, $values) = @_;
+
+    my $role;
+    $self->result_source->schema->txn_do(sub {
+        $role = $self->result_source->schema->resultset('Role')->find_or_create($values);
+        $self->add_to_roles($role);
+    });
+
+    return $role;
+}
 
 =head2 uri_args
 

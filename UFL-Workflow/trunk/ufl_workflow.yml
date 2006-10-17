@@ -17,7 +17,7 @@ authorization:
   dbic:
     role_class:           DBIC::Role
     role_field:           name
-    role_rel:             user_roles
+    role_rel:             user_group_roles
     user_role_user_field: user_id
 
 Model::DBIC:

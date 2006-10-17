@@ -1,7 +1,9 @@
 add:
   - username
   - [ NOT_BLANK ]
-add_role: &role
+add_group_role: &role
+  - group_id
+  - [ NOT_BLANK, INT ]
   - role_id
   - [ NOT_BLANK, INT ]
-delete_role: *role
+delete_group_role: *role

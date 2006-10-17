@@ -138,8 +138,7 @@ sub add_step : PathPart Chained('process') Args(0) {
     }
 
     my $roles = $c->model('DBIC::Role')->search(undef, {
-        join     => 'group',
-        order_by => 'group.name, me.name'
+        order_by => 'name'
     });
 
     $c->stash(

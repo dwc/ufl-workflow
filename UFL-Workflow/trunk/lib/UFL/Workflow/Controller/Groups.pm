@@ -128,7 +128,7 @@ sub add_role : PathPart Chained('group') Args(0) {
         if ($result->success) {
             my $group = $c->stash->{group};
 
-            my $role = $group->roles->find_or_create({
+            my $role = $group->add_role({
                 name => $result->valid('name'),
             });
 

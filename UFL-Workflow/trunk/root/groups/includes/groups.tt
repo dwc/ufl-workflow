@@ -1,0 +1,7 @@
+<label>Group:
+  <select name="group_id">
+[% WHILE (group = groups.next) %]
+    <option value="[% group.id | html %]"[% IF group.id == selected_group.id %] selected="selected"[% END %]>[% group.name | html %]</option>
+[% END %]
+  </select>
+</label>

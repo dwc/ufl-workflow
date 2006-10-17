@@ -1,8 +1,16 @@
 [% SET title = "${role.name} Role" -%]
 
-<h3>Group</h3>
-[% SET group = role.group %]
-<p><a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a></p>
+<h3>Groups</h3>
+[% SET groups = role.groups %]
+[% IF groups %]
+<ul>
+  [% FOREACH group IN groups %]
+  <li><a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a></p>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
 
 <h3>Users</h3>
 [% SET users = role.users %]
@@ -19,5 +27,4 @@
 <h3>Manage</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ role.uri_args ]) | html %]">Edit this role</a></li>
-  <li><a href="[% c.uri_for(c.controller.action_for('add_users'), [ role.uri_args ]) | html %]">Add users to this role</a></li>
 </ul>

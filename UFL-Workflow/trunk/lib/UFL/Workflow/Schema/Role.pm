@@ -9,9 +9,6 @@ __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/
 __PACKAGE__->table('roles');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
-    group_id => {
-        data_type => 'integer',
-    },
     name => {
         data_type => 'varchar',
         size      => 32,
@@ -21,24 +18,26 @@ __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
 
-__PACKAGE__->belongs_to(
-    group => 'UFL::Workflow::Schema::Group',
-    'group_id',
-);
-
-__PACKAGE__->has_many(
-    user_roles => 'UFL::Workflow::Schema::UserRole',
-    { 'foreign.role_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
-);
-
-__PACKAGE__->many_to_many('users', 'user_roles', 'actor');
-
 __PACKAGE__->has_many(
     steps => 'UFL::Workflow::Schema::Step',
     { 'foreign.role_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
+
+__PACKAGE__->has_many(
+    group_roles => 'UFL::Workflow::Schema::GroupRole',
+    { 'foreign.role_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->has_many(
+    user_group_roles => 'UFL::Workflow::Schema::UserGroupRole',
+    { 'foreign.role_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->many_to_many('groups', 'group_roles', 'group');
+__PACKAGE__->many_to_many('users', 'user_group_roles', 'actor');
 
 =head1 NAME
 
