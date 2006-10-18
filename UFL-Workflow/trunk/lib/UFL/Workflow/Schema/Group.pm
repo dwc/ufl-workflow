@@ -9,6 +9,10 @@ __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/
 __PACKAGE__->table('groups');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
+    parent_group_id => {
+        data_type   => 'integer',
+        is_nullable => 1,
+    },
     name => {
         data_type => 'varchar',
         size      => 32,
@@ -17,6 +21,16 @@ __PACKAGE__->add_columns(
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
+
+__PACKAGE__->belongs_to(
+    parent => 'UFL::Workflow::Schema::Group',
+    { 'foreign.id' => 'self.parent_group_id' },
+);
+
+__PACKAGE__->belongs_to(
+    children => 'UFL::Workflow::Schema::Group',
+    { 'foreign.parent_group_id' => 'self.id' },
+);
 
 __PACKAGE__->has_many(
     group_roles => 'UFL::Workflow::Schema::GroupRole',
