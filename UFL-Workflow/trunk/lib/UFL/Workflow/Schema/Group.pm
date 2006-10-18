@@ -23,13 +23,14 @@ __PACKAGE__->add_standard_columns;
 __PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
 
 __PACKAGE__->belongs_to(
-    parent => 'UFL::Workflow::Schema::Group',
+    parent_group => 'UFL::Workflow::Schema::Group',
     { 'foreign.id' => 'self.parent_group_id' },
 );
 
-__PACKAGE__->belongs_to(
-    children => 'UFL::Workflow::Schema::Group',
+__PACKAGE__->has_many(
+    child_groups => 'UFL::Workflow::Schema::Group',
     { 'foreign.parent_group_id' => 'self.id' },
+    { order_by => 'name' },
 );
 
 __PACKAGE__->has_many(
@@ -39,6 +40,8 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->many_to_many('roles', 'group_roles', 'role');
+
+__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Group');
 
 =head1 NAME
 

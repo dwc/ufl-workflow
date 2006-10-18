@@ -27,7 +27,7 @@ Display a list of current groups.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $groups = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
+    my $groups = $c->model('DBIC::Group')->root_groups;
 
     $c->stash(
         groups   => $groups,
