@@ -28,7 +28,7 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->has_many(
     child_groups => 'UFL::Workflow::Schema::Group',
     { 'foreign.parent_group_id' => 'self.id' },
-    { order_by => 'name' },
+    { cascade_delete => 0, cascade_copy => 0, order_by => 'name' },
 );
 
 __PACKAGE__->has_many(
