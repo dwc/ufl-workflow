@@ -110,9 +110,7 @@ sub add_group_role : PathPart Chained('user') Args(0) {
         }
     }
 
-    my $groups = $c->model('DBIC::Group')->search(undef, {
-        order_by => 'name',
-    });
+    my $groups = $c->model('DBIC::Group')->root_groups;
 
     if (my $group_id = $c->req->param('group_id')) {
         $group_id =~ s/\D//g;
