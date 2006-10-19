@@ -48,14 +48,20 @@ sub add : Local {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $group = $c->model('DBIC::Group')->find_or_create({
-                name => $result->valid('name'),
+                name            => $result->valid('name'),
+                parent_group_id => $result->valid('parent_group_id'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
         }
     }
 
-    $c->stash(template => 'groups/add.tt');
+    my $groups = $c->model('DBIC::Group')->root_groups;
+
+    $c->stash(
+        groups   => $groups,
+        template => 'groups/add.tt'
+    );
 }
 
 =head2 group
@@ -111,7 +117,12 @@ sub edit : PathPart Chained('group') Args(0) {
         }
     }
 
-    $c->stash(template => 'groups/edit.tt');
+    my $groups = $c->model('DBIC::Group')->root_groups;
+
+    $c->stash(
+        groups   => $groups,
+        template => 'groups/edit.tt'
+    );
 }
 
 =head2 add_role

@@ -1,1 +1,2 @@
+[% INCLUDE groups/includes/groups.tt field.label = 'Parent Group', field.name = 'parent_group_id' %]
 <label>Name: <input type="text" name="name" value="[% group.name | html %]" /></label>

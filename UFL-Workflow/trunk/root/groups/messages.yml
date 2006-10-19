@@ -1,6 +1,8 @@
 add: &group
   name:
     DEFAULT: A group name
+  parent_group_id:
+    DEFAULT: A parent group
 edit: *group
 add_role:
   name:

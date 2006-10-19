@@ -57,6 +57,22 @@ Group table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
+=head2 update
+
+Check that the group ID is not the same as the parent group ID.  If
+the check passes, update the record.
+
+=cut
+
+sub update {
+    my $self = shift;
+
+    $self->throw_exception('Parent group cannot be the same as the group')
+        if $self->id == $self->parent_group_id;
+
+    $self->next::method(@_);
+}
+
 =head2 add_role
 
 Add a role to this group.
