@@ -3,7 +3,6 @@ package UFL::Workflow::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
-use Carp qw/croak/;
 use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
@@ -72,7 +71,7 @@ L<UFL::Workflow::Schema::Role>.
 sub has_role {
     my ($self, $role) = @_;
 
-    croak 'You must provide a role'
+    $self->throw_exception('You must provide a role')
         unless blessed $role and $role->isa('UFL::Workflow::Schema::Role');
 
     my @roles = $self->roles;
@@ -90,7 +89,7 @@ L<UFL::Workflow::Schema::Group_Role>.
 sub has_group_role {
     my ($self, $group_role) = @_;
 
-    croak 'You must provide a group-role'
+    $self->throw_exception('You must provide a group-role')
         unless blessed $group_role and $group_role->isa('UFL::Workflow::Schema::GroupRole');
 
     my @group_roles = $self->group_roles;
@@ -111,7 +110,7 @@ L<UFL::Workflow::Schema::Action>.
 sub can_decide_on {
     my ($self, $action) = @_;
 
-    croak 'You must provide an action'
+    $self->throw_exception('You must provide an action')
         unless blessed $action and $action->isa('UFL::Workflow::Schema::Action');
 
     return ($action->status->is_initial and $self->has_role($action->step->role));
