@@ -19,8 +19,6 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->add_standard_columns;
 
-__PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
-
 __PACKAGE__->belongs_to(
     creator => 'UFL::Workflow::Schema::User',
     'user_id',

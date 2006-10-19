@@ -20,8 +20,6 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->add_standard_columns;
 
-__PACKAGE__->add_unique_constraint(name => [ qw/name/ ]);
-
 __PACKAGE__->belongs_to(
     parent_group => 'UFL::Workflow::Schema::Group',
     { 'foreign.id' => 'self.parent_group_id' },
