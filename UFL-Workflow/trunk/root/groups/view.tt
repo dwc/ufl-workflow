@@ -1,5 +1,21 @@
 [% SET title = "${group.name} Group" -%]
 
+[% SET parent_group = group.parent_group %]
+[% IF parent_group %]
+<h3>Parent group</h3>
+<p><a href="[% c.uri_for(c.controller.action_for('view'), [ parent_group.uri_args ]) | html %]">[% parent_group.name | html %]</a></p>
+[% END %]
+
+[% SET child_groups = group.child_groups_rs %]
+[% IF child_groups.count > 0 %]
+<h3>Child groups</h3>
+<ul>
+  [% WHILE (child_group = child_groups.next) %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ child_group.uri_args ]) | html %]">[% child_group.name | html %]</a></li>
+  [% END %]
+</ul>
+[% END %]
+
 [% SET roles = group.roles %]
 [% IF roles %]
 <h3>Users by role</h3>
