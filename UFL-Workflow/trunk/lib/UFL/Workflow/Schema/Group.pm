@@ -63,12 +63,23 @@ the check passes, update the record.
 =cut
 
 sub update {
-    my $self = shift;
+    my ($self, @args) = @_;
 
-    $self->throw_exception('Parent group cannot be the same as the group')
-        if $self->id == $self->parent_group_id;
+    # Not using txn_do for $self->next::method
+    my $schema = $self->result_source->schema;
+    eval {
+        $schema->txn_begin;
 
-    $self->next::method(@_);
+        $self->next::method(@args);
+
+        $self->throw_exception('Parent group cannot be the same as the group')
+            if $self->id == $self->parent_group_id;
+        $schema->txn_commit;
+    };
+    if (my $error = $@) {
+        eval { $schema->txn_rollback; $self->throw_exception($error) };
+        $self->throw_exception($@) if $@;
+    }
 }
 
 =head2 add_role
