@@ -100,7 +100,7 @@ sub validate_form {
     my $profile = $manager->get_profile($name);
     croak "No form profile found for action $name" unless $profile;
 
-    my $result  = $validator->check($c->req, $profile);
+    my $result = $validator->check($c->req, $profile);
 
     $c->stash(
         form_errors => $result->messages($name),
