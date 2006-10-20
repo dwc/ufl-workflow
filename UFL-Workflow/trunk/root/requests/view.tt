@@ -45,7 +45,7 @@
 <p>None yet.</p>
 [% END %]
 [% IF request.is_open %]
-<p><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></p>
+<p><a class="add" href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></p>
 [% END %]
 
 <h3 id="actions">Actions</h3>
@@ -86,7 +86,7 @@
     </select>
   </label>
   <label>Comment: <textarea name="comment"></textarea></label>
-  <input type="submit" value="Submit Decision" />
+  <input type="submit" class="submit" value="Submit Decision" />
 </form>
   [% END %]
 [% ELSE %]

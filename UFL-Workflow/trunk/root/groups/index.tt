@@ -22,4 +22,4 @@
 <p>None yet.</p>
 [% END %]
 
-<p><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></p>
+<p><a class="add" href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></p>

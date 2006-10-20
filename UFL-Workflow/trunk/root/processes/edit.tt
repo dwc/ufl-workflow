@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE processes/includes/process.tt %]
 [% END -%]
-  <input type="submit" value="Edit Process" />
+  <input type="submit" class="submit" value="Edit Process" />
 </form>

@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE statuses/includes/status.tt %]
 [% END -%]
-  <input type="submit" value="Edit Status" />
+  <input type="submit" class="submit" value="Edit Status" />
 </form>

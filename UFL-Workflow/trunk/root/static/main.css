@@ -1,70 +1,215 @@
+* {margin:0;padding:0}
+
 body {
-  font-family: sans;
+background:#FFF url(images/bg.jpg) repeat-x;
+color:#444;
+font:63.125%/200% 'Trebuchet MS', verdana, geneva, Arial, Helvetica, sans-serif;
+text-align:center;
 }
 
-a, a:visited {
-  color: #0021a5;
-  text-decoration: none;
+a:link,a:visited,a:active {
+border-bottom:1px solid #0045c4;
+color:#0021a5;
+text-decoration:none
 }
 
 a:hover {
-  border-bottom: 1px solid #8b9ad6;
+border-bottom:1px solid #ff4a00;
+color:#ff4a00
 }
 
-th, td {
-  border-bottom: 1px solid #eee;
-  padding: 10px;
+form p {
+font-size:1.2em;
+margin:2px 0 50px 45px
 }
 
-th {
-  padding-top: 0;
+#header, #content, #nav {
+width: 770px;
+margin: 0 auto;
+position: relative;
+font-size:1.4em;
 }
 
-label {
-  display: block;
-  background: #eee;
-  padding: 10px;
-  margin: 5px;
+#header h1{
+font-size:14px;
+height:40px;
+/* \*/overflow: hidden;/* */
 }
 
-input[type="text"], select, textarea {
-  display: block;
-  width: 500px;
+#header h1{
+position:relative;
+width: 105px;
+margin-left:30px
 }
 
-textarea {
-  height: 100px;
+#header h1 a span {
+background:url(images/unitHeader.gif) no-repeat;
+cursor:hand;
+display:block;
+height:100%;
+position:absolute;
+top:0;
+left:0;
+width:100%
 }
 
-li form {
-  display: inline;
+#header p {
+position: absolute;
+right: 0;
+top: 5px;
+color: #fff;
+font-size: .9em;
 }
 
-li form input {
-  margin: 5px;
+#header p a {
+color: #fff;
+border:none;
+text-decoration:underline;
+padding: 2px;
 }
 
-ul#nav {
-  display: inline;
-  list-style-type: none;
-  margin: 0;
-  padding: 10px 0 10px 0;
+#header p a:hover {
+background: #fff;
+color: #000;
 }
 
-ul#nav li {
-  display: inline;
+#content h3 {
+background:#fff url(images/bg_dir_heading.gif) bottom repeat-x;
+border:3px double #ccc;
+color:#333;
+font-size:1.2em;
+margin:15px 0 5px;
+padding:5px;
+text-align: left;
+clear:both;
 }
 
-ul#nav li a {
-  text-decoration: none;
-  border: none;
-  padding: 10px;
+p,li,form,h4 {
+text-align:left
 }
 
-ul#nav li a:hover {
-  background: #eee;
+
+#header,.directories h3 {
+text-align:left
 }
 
-.replaced {
-  text-decoration: line-through;
+#nav {
+height: 45px;
+margin-bottom: 20px;
+border-bottom: 3px solid #ccc;
+}
+#nav li {
+list-style:none;
+display:inline;
+}
+
+#nav li a {
+display:block;
+float:left;
+border:3px solid #ccc;
+border-width: 3px 3px 0;
+font-size:1em;
+margin:15px 10px 5px 0;
+padding:5px;
+text-align: left;
+}
+
+#nav li a:hover {
+background: #fff;
+color: #ff4a00;
+text-decoration:underline;
+}
+
+#nav li#active a{
+background: #fff;
+color: #000;
+text-decoration:underline;
+}
+
+#note {
+clear:both;
+font-size:1.2em;
+margin:0 auto;
+width:40em
+}
+
+#content table {
+border-collapse:collapse;
+font-size: 1em;
+width: 100%;
+margin: 0 0 25px;
+}
+
+#content tr {
+border-bottom: 1px solid #ccc;
+}
+
+#content th {
+padding: 0 5px;
+text-align: left;
+border-bottom: 3px solid #aaa;
+}
+
+#content td {
+padding: 5px;
+}
+
+#content p {
+margin: 0 5px 10px;
+clear:both;
+}
+
+#content ul, #content ol {
+margin: 0 25px 10px;
+}
+
+#content li {
+margin: 5px 0;
+clear:both;
+}
+
+#content h2 {
+display:none;
+}
+
+#content input, #content textarea {
+clear:both;
+display:block;
+margin:0 0 15px;
+width: 100%;
+font-size: 1em;
+}
+#content form.process-steps input, #content form.roles input{
+display:inline;
+clear:none;
+margin: 5px 10px 20px 0;
+float:left;
+}
+
+#content label.radio {
+clear:both;
+display:block;
+height: 1.4em;
+}
+ #content input.checkbox, #content label.radio input  {
+display:inline;
+width: 20px;
+ }
+#content form.process-steps-down {
+margin-left: 220px;
+}
+#content textarea {
+margin: 10px 0;
+height: 50px;
+}
+
+#content input.submit {
+width: 120px;
+}
+
+a.add {
+background: url(images/add.gif) left center no-repeat;
+padding-left: 17px;
+text-decoration:underline;
+border:none;
 }

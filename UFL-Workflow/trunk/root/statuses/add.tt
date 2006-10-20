@@ -5,11 +5,11 @@
 [% FILTER indent('  ') %]
   [% INCLUDE statuses/includes/status.tt %]
 [% END -%]
-  <p><label><input type="checkbox" name="is_initial" value="1"[% IF status.is_initial %] checked="checked"[% END %] />Initial status for new actions</label></p>
+  <p><label><input type="checkbox" class="checkbox" name="is_initial" value="1"[% IF status.is_initial %] checked="checked"[% END %] />Initial status for new actions</label></p>
   <p>When the status is used:
-    <label><input type="radio" name="action" value="none"[% UNLESS status.continues_request OR status.finishes_request %] checked="checked"[% END %] />Do nothing</label>
-    <label><input type="radio" name="action" value="continue"[% IF status.continues_request %] checked="checked"[% END %] /> Continue to the next step</label>
-    <label><input type="radio" name="action" value="finish"[% IF status.finishes_request %] checked="checked"[% END %] /> Finish request</label>
+    <label class="radio"><input type="radio" name="action" value="none"[% UNLESS status.continues_request OR status.finishes_request %] checked="checked"[% END %] /> Do nothing</label>
+    <label class="radio"><input type="radio" name="action" value="continue"[% IF status.continues_request %] checked="checked"[% END %] /> Continue to the next step</label>
+    <label class="radio"><input type="radio" name="action" value="finish"[% IF status.finishes_request %] checked="checked"[% END %] /> Finish request</label>
   </p>
-  <input type="submit" value="Add Status" />
+  <input type="submit" class="submit" value="Add Status" />
 </form>

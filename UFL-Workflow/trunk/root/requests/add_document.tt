@@ -16,5 +16,5 @@
     </select>
   </label>
 [% END %]
-  <input type="submit" value="Add Document" />
+  <input type="submit" class="submit" value="Add Document" />
 </form>

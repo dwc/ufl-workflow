@@ -15,20 +15,20 @@
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), [ step.uri_args ]) | html %]">[% step.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>)
     <br />
-    <form action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
+    <form class="process-steps" action="[% c.uri_for(c.controller.action_for('delete_step'), [ process.uri_args ]) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
-      <input type="submit" value="Remove" />
+      <input type="submit" class="submit" value="Remove" />
     </form>
     [% IF prev_step %]
-    <form action="[% c.uri_for(c.controller.action_for('move_step_up'), [ process.uri_args ]) | html %]" method="post">
+    <form class="process-steps" action="[% c.uri_for(c.controller.action_for('move_step_up'), [ process.uri_args ]) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
-      <input type="submit" value="Move Up" />
+      <input type="submit" class="submit" value="Move Up &uarr;" />
     </form>
     [% END %]
     [% IF next_step %]
-    <form action="[% c.uri_for(c.controller.action_for('move_step_down'), [ process.uri_args ]) | html %]" method="post">
+    <form class="process-steps process-steps-down" action="[% c.uri_for(c.controller.action_for('move_step_down'), [ process.uri_args ]) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
-      <input type="submit" value="Move Down" />
+      <input type="submit" class="submit" value="Move Down &darr;" />
     </form>
     [% END %]
   </li>
@@ -42,5 +42,5 @@
 <h3>Manage</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ process.uri_args ]) | html %]">Edit this process</a></li>
-  <li><a href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></li>
+  <li><a class="add" href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></li>
 </ul>

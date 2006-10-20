@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE requests/includes/request.tt %]
 [% END -%]
-  <input type="submit" value="Add Request" />
+  <input type="submit" class="submit" value="Add Request" />
 </form>
