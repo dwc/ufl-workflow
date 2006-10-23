@@ -2,7 +2,7 @@
 [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses', 'Requests' ] %]
   [% IF name == 'Requests' OR c.check_user_roles('Administrator') %]
     [% SET uri = c.uri_for(c.controller(name).action_for('index')) %]
-  <li[% IF uri == c.req.uri.replace('\/+$', '') %] id="active"[% END %]><a href="[% uri | html %]">[% name | html %]</a></li>
+  <li[% IF c.req.uri.match("^$uri") %] id="active"[% END %]><a href="[% uri | html %]">[% name | html %]</a></li>
   [% END %]
 [% END %]
 </ul>
