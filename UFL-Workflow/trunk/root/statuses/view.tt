@@ -1,3 +1,15 @@
 [% SET title = "${status.name} Status" -%]
 
+<h3>Status details</h3>
+<dl>
+  <dt>Name</dt>
+  <dd>[% status.name | html %]</dd>
+  <dt>Initial status for new requests?</dt>
+  <dd>[% status.is_initial ? 'Yes' : 'No' | html %]</dd>
+  <dt>Continues request to next step?</dt>
+  <dd>[% status.continues_request ? 'Yes' : 'No' | html %]</dd>
+  <dt>Finishes requests?</dt>
+  <dd>[% status.finishes_request ? 'Yes' : 'No' | html %]</dd>
+</dl>
+
 <p><a href="[% c.uri_for(c.controller.action_for('edit'), [ status.uri_args ]) | html %]">Edit this status</p>

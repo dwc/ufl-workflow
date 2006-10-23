@@ -1,5 +1,11 @@
 [% SET title = "${role.name} Role" -%]
 
+<h3>Role details</h3>
+<dl>
+  <dt>Name</dt>
+  <dd>[% role.name | html %]</dd>
+</dl>
+
 <h3>Groups</h3>
 [% SET groups = role.groups %]
 [% IF groups %]

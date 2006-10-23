@@ -1,8 +1,11 @@
 [% SET title = "${process.name} Process" -%]
 
-<h3>Creator</h3>
+<h3>Process details</h3>
+<dl>
+  <dt>Creator</dt>
 [% SET creator = process.creator %]
-<p><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ creator.uri_args ]) | html %]">[% creator.username | html %]</a></p>
+  <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ creator.uri_args ]) | html %]">[% creator.username | html %]</a></dd>
+</dl>
 
 <h3>Steps</h3>
 [% SET step = process.first_step %]

@@ -1,26 +1,20 @@
 [% SET title = request.title -%]
 
-<h3>Request Details</h3>
-
-<h3>Process</h3>
-[% SET process = request.process %]
-<p>[% process.name | html %]</p>
-
-<h4>Status</h4>
-<p>[% INCLUDE requests/includes/status.tt action = request.current_action %]</p>
-<p><a href="#actions">Details</a></p>
-
-<h4>Title</h4>
-<p>[% request.title | html %]</p>
-
-<h4>Description</h4>
-<p>[% request.description | html %]</p>
-
-<h4>Added</h4>
-<p>[% request.insert_time | html %]</p>
-
-<h4>Updated</h4>
-<p>[% request.update_time | html %]</p>
+<h3>Request details</h3>
+<dl>
+  <dt>Process</dt>
+  <dd>[% request.process.name | html %]</dd>
+  <dt>Status</dt>
+  <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
+  <dt>Title</dt>
+  <dd>[% request.title | html %]</dd>
+  <dt>Description</dt>
+  <dd>[% request.description | html %]</dd>
+  <dt>Added</dt>
+  <dd>[% request.insert_time | html %]</dd>
+  <dt>Updated</dt>
+  <dd>[% request.update_time | html %]</dd>
+</dl>
 
 <h3>Documents</h3>
 [% IF documents.count > 0 %]

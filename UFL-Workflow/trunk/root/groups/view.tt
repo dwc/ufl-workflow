@@ -1,5 +1,11 @@
 [% SET title = "${group.name} Group" -%]
 
+<h3>Group details</h3>
+<dl>
+  <dt>Name</dt>
+  <dd>[% group.name | html %]</dd>
+</dl>
+
 [% SET parent_group = group.parent_group %]
 [% IF parent_group %]
 <h3>Parent group</h3>
