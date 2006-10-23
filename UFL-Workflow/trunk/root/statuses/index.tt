@@ -15,4 +15,5 @@
 <p>None yet.</p>
 [% END %]
 
+<h3>Manage statuses</h3>
 <p><a class="add" href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new status</a></p>
