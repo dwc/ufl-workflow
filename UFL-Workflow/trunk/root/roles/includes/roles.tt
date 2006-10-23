@@ -1,7 +1,11 @@
-<label>Role:
-  <select name="role_id">
+[% DEFAULT
+   field.label = 'Role'
+   field.name  = 'role_id'
+-%]
+<label>[% field.label | html %]:
+  <select name="[% field.name | html %]">
 [% WHILE (role = roles.next) %]
-    <option value="[% role.id | html %]"[% IF role.id == selected_role.id %] selected="selected"[% END %]>[% role.name | html %]</option>
+    <option value="[% role.id | html %]"[% IF role.id == field.value %] selected="selected"[% END %]>[% role.name | html %]</option>
 [% END %]
   </select>
 </label>
