@@ -48,8 +48,8 @@ sub add : Local {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $group = $c->model('DBIC::Group')->find_or_create({
+                parent_group_id => $result->valid('parent_group_id') || undef,
                 name            => $result->valid('name'),
-                parent_group_id => $result->valid('parent_group_id'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
@@ -104,14 +104,10 @@ sub edit : PathPart Chained('group') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $group = $c->stash->{group};
-
-            my $values = $result->valid;
-            foreach my $key (keys %$values) {
-                $group->$key($values->{$key}) if $group->can($key);
-            }
-
-            # TODO: Unique check
-            $group->update;
+            $group->update({
+                parent_group_id => $result->valid('parent_group_id') || undef,
+                name            => $result->valid('name'),
+            });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
         }
@@ -138,7 +134,6 @@ sub add_role : PathPart Chained('group') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $group = $c->stash->{group};
-
             my $role = $group->add_role({
                 name => $result->valid('name'),
             });
