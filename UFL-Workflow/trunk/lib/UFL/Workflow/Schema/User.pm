@@ -152,11 +152,14 @@ sub group_requests {
 
     return $self->result_source->schema->resultset('Request')->search(
         {
-            'user_group_roles.group_id' => { -in => [ map { $_->id } $self->groups  ] },
             'submitter.id'              => { '!=' => $self->id },
+            -or => [
+                'group.id'              => { -in => [ map { $_->id } $self->groups  ] },
+                'group.parent_group_id' => { -in => [ map { $_->id } $self->groups  ] },
+            ],
         },
         {
-            join     => { submitter => 'user_group_roles' },
+            join     => { submitter => { user_group_roles => 'group' } },
             order_by => \q[update_time DESC, insert_time DESC],
             distinct => 1,
         },
