@@ -1,4 +1,4 @@
-<div id="container">
+
 [% INCLUDE includes/header.tt -%]
 
     <div id="content">
@@ -11,4 +11,3 @@
     </div><!-- content -->
 
 [% INCLUDE includes/footer.tt -%]
-</div>

@@ -5,6 +5,7 @@
   <dt>Name</dt>
   <dd>[% group.name | html %]</dd>
 </dl>
+<br style="clear:both" />
 
 [% SET parent_group = group.parent_group %]
 [% IF parent_group %]

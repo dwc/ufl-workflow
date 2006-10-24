@@ -45,5 +45,5 @@
 <h3>Manage</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ process.uri_args ]) | html %]">Edit this process</a></li>
-  <li><a class="add" href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></li>
 </ul>

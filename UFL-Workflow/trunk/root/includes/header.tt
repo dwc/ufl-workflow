@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/main.css') | html %]" />
   </head>
   <body>
+  <div id="container">
     <div id="header">
       <h1><a href="[% c.uri_for('/') | html %]">[% c.config.name | html %]<span></span></a></h1>
 [% IF c.user_exists %]
