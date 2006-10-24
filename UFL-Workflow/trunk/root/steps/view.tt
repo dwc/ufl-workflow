@@ -2,6 +2,8 @@
 
 <h3>Step details</h3>
 <dl>
+  <dt>Name</dt>
+  <dd>[% step.name | html %]</dd>
   <dt>Process</dt>
 [% SET process = step.process %]
   <dd><a href="[% c.uri_for(c.controller('Processes').action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></dd>
