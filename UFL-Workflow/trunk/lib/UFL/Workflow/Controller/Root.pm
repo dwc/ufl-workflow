@@ -53,16 +53,7 @@ Display the home page.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $actions = $c->model('DBIC::Action')->search(
-        {
-            'step.role_id'      => { -in => [ map { $_->id } $c->user->obj->roles ] },
-            'status.is_initial' => 1,
-        },
-        {
-            join     => [ qw/step status/ ],
-            order_by => \q[me.update_time DESC, me.insert_time DESC],
-        },
-    );
+    my $actions  = $c->user->pending_actions;
     my $requests = $c->user->requests->search(
         undef,
         { order_by => \q[update_time DESC, insert_time DESC] },

@@ -116,6 +116,28 @@ sub can_decide_on {
     return ($action->status->is_initial and $self->has_role($action->step->role));
 }
 
+=head2 pending_actions
+
+Return a L<DBIx::Class::ResultSet> containing actions which are
+pending action from this user.
+
+=cut
+
+sub pending_actions {
+    my ($self) = @_;
+
+    return $self->result_source->schema->resultset('Action')->search(
+        {
+            'step.role_id'      => { -in => [ map { $_->id } $self->roles ] },
+            'status.is_initial' => 1,
+        },
+        {
+            join     => [ qw/step status/ ],
+            order_by => \q[me.update_time DESC, me.insert_time DESC],
+        },
+    );
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this user.
