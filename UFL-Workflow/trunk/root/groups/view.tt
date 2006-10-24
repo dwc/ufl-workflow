@@ -21,7 +21,7 @@
   <li><a href="[% c.uri_for(c.controller.action_for('view'), [ child_group.uri_args ]) | html %]">[% child_group.name | html %]</a></li>
   [% END %]
 </ul>
-[% END %]
+[% END -%]
 
 [% SET roles = group.roles %]
 [% IF roles %]

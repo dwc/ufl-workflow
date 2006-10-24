@@ -8,4 +8,4 @@
   <li><strong>Error</strong>: [% error | trim | html %]</li>
   [% END %]
 </ul>
-[% END -%]
+[% END %]

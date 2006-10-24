@@ -9,14 +9,14 @@
     <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/main.css') | html %]" />
   </head>
   <body>
-  <div id="container">
-    <div id="header">
-      <h1><a href="[% c.uri_for('/') | html %]">[% c.config.name | html %]<span></span></a></h1>
+    <div id="container">
+      <div id="header">
+        <h1><a href="[% c.uri_for('/') | html %]">[% c.config.name | html %]<span></span></a></h1>
 [% IF c.user_exists %]
-      <p>Logged in as <strong>[% c.user.username | html %]</strong> (<a href="[% c.uri_for('/logout') | html %]">Logout</a>)</p>
+        <p>Logged in as <strong>[% c.user.username | html %]</strong> (<a href="[% c.uri_for('/logout') | html %]">Logout</a>)</p>
 [% END %]
-    </div>
+      </div>
 
-[% FILTER indent('    ') %]
+[% FILTER indent('      ') %]
   [% INCLUDE includes/nav.tt %]
 [% END -%]

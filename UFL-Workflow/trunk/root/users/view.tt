@@ -6,6 +6,7 @@
   <dd>[% user.username | html %]</dd>
 </dl>
 <br style="clear:both" />
+
 <h3>Roles</h3>
 [% SET user_group_roles = user.user_group_roles %]
 [% IF user_group_roles %]
@@ -24,15 +25,13 @@
     </form>
   </li>
   [% END %]
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
 </ul>
 [% ELSE %]
 <p>None yet.</p>
-<ul>
-<li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
-</ul>
 [% END %]
-
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
+</ul>
 
 [% SET processes = user.processes %]
 [% IF processes %]
@@ -42,4 +41,4 @@
   <li><a href="[% c.uri_for(c.controller('Processes').action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
-[% END %]
+[% END -%]

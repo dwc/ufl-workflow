@@ -13,5 +13,5 @@
 
 <h3>Manage processes</h3>
 <ul>
-<li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new process</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new process</a></li>
 </ul>

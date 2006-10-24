@@ -14,7 +14,6 @@
     [% END %]
   [% END %]
 [% END -%]
-
 <label>[% field_label | html %]:
   <select name="[% field_name | html %]">
     <option value=""></option>

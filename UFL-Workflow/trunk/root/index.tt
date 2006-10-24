@@ -17,7 +17,7 @@
   </tr>
   [% END %]
 </table>
-[% END %]
+[% END -%]
 
 <h3>Your requests</h3>
 [% IF requests.count > 0 %]
