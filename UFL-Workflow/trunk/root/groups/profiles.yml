@@ -1,9 +1,9 @@
 add: &group
   - name
-  - [ NOT_BLANK ]
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
   - parent_group_id
   - [ INT ]
 edit: *group
 add_role:
   - name
-  - [ NOT_BLANK, [ NOT_REGEX, '^Administrator$' ] ]
+  - [ NOT_BLANK, [ LENGTH, 0, 32 ], [ NOT_REGEX, '^Administrator$' ] ]

@@ -1,10 +1,12 @@
 add: &process
   name:
     DEFAULT: A process name
+    LENGTH:  A shorter process name
 edit: *process
 add_step:
   name:
     DEFAULT: A step name
+    LENGTH:  A shorter step name
   role_id:
     DEFAULT: A role
 delete_step:

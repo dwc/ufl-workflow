@@ -1,8 +1,8 @@
 add:
   - title
-  - [ NOT_BLANK ]
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
   - description
-  - [ NOT_BLANK ]
+  - [ NOT_BLANK, [ LENGTH, 0, 1024 ] ]
 add_document:
   - document_id
   - [ INT ]
@@ -12,4 +12,4 @@ add_action:
   - status_id
   - [ NOT_BLANK, INT ]
   - comment
-  - []
+  - [ [ LENGTH, 0, 1024 ] ]

@@ -1,6 +1,7 @@
 add:
   username:
     DEFAULT: A username
+    LENGTH: A shorter username
 add_group_role: &role
   group_id:
     DEFAULT: A group

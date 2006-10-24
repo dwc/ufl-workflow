@@ -1,5 +1,5 @@
 [% IF form_errors %]
-<p>Please check that you've provided the following:</p>
+<p>Please provide the following:</p>
 <ul>
   [% FOREACH form_error IN form_errors %]
   <li>[% form_error | trim | html %]</li>

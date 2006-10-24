@@ -1,10 +1,12 @@
 add: &group
   name:
     DEFAULT: A group name
+    LENGTH:  A shorter group name
   parent_group_id:
     DEFAULT: A parent group
 edit: *group
 add_role:
   name:
     DEFAULT:   A role name
+    LENGTH:    A shorter role name
     NOT_REGEX: An available role name (Administrator is reserved)

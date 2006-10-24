@@ -1,6 +1,6 @@
 add:
   - username
-  - [ NOT_BLANK ]
+  - [ NOT_BLANK, [ LENGTH, 0, 16 ] ]
 add_group_role: &role
   - group_id
   - [ NOT_BLANK, INT ]
