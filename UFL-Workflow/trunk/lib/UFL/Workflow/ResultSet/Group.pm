@@ -6,7 +6,7 @@ use base qw/DBIx::Class::ResultSet/;
 
 =head1 NAME
 
-UFL::Workflow::ResultSet::Group - Group table class
+UFL::Workflow::ResultSet::Group - Group resultset class
 
 =head1 SYNOPSIS
 
