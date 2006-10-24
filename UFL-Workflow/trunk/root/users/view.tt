@@ -28,10 +28,7 @@
 </ul>
 [% ELSE %]
 <p>None yet.</p>
-[% END %]
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
-</ul>
+[% END -%]
 
 [% SET processes = user.processes %]
 [% IF processes %]
@@ -41,4 +38,9 @@
   <li><a href="[% c.uri_for(c.controller('Processes').action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
-[% END -%]
+[% END %]
+
+<h3>Manage user</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
+</ul>

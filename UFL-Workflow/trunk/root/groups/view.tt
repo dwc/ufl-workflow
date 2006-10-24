@@ -46,7 +46,7 @@
 </ul>
 [% END %]
 
-<h3>Manage</h3>
+<h3>Manage group</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ group.uri_args ]) | html %]">Edit this group</a></li>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add'), parent_group_id = group.id) | html %]">Add a child group</a></li>

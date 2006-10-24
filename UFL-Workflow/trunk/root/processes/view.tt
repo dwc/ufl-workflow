@@ -42,7 +42,7 @@
 <p>None yet.</p>
 [% END %]
 
-<h3>Manage</h3>
+<h3>Manage process</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ process.uri_args ]) | html %]">Edit this process</a></li>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]">Add new step</a></li>
