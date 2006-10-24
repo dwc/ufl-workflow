@@ -6,6 +6,7 @@
 [% SET creator = process.creator %]
   <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ creator.uri_args ]) | html %]">[% creator.username | html %]</a></dd>
 </dl>
+<br style="clear:both" />
 
 <h3>Steps</h3>
 [% SET step = process.first_step %]

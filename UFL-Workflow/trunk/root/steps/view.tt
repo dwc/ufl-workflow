@@ -21,6 +21,7 @@
 [% SET role = step.role %]
   <dd><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a></dd>
 </dl>
+<br style="clear:both" />
 
 <h3>Manage step</h3>
 <ul>

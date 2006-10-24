@@ -5,6 +5,7 @@
   <dt>Name</dt>
   <dd>[% role.name | html %]</dd>
 </dl>
+<br style="clear:both" />
 
 <h3>Groups</h3>
 [% SET groups = role.groups %]
