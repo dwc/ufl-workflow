@@ -44,18 +44,7 @@ sub for_user : Local Args(0) {
         { order_by => \q[update_time DESC, insert_time DESC] },
     );
 
-    my %groups = map { $_->id, 1 } $c->user->groups;
-    my $group_requests = $c->model('DBIC::Request')->search(
-        {
-            'user_group_roles.group_id' => { -in => [ keys %groups ] },
-            'submitter.id'              => { '!=' => $c->user->obj->id },
-        },
-        {
-            join     => { submitter => 'user_group_roles' },
-            order_by => \q[update_time DESC, insert_time DESC],
-            distinct => 1,
-        },
-    );
+    my $group_requests = $c->user->group_requests;
 
     $c->stash(
         user_requests  => $user_requests,

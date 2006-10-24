@@ -118,8 +118,9 @@ sub can_decide_on {
 
 =head2 pending_actions
 
-Return a L<DBIx::Class::ResultSet> containing actions which are
-pending action from this user.
+Return a L<DBIx::Class::ResultSet> containing
+L<UFL::Workflow::Schema::Action>s which are pending action from this
+user.
 
 =cut
 
@@ -136,6 +137,31 @@ sub pending_actions {
             order_by => \q[me.update_time DESC, me.insert_time DESC],
         },
     );
+}
+
+=head2 group_requests
+
+Return a L<DBIx::Class::ResultSet> containing
+L<UFL::Workflow::Schema::Request>s for groups of which this user is a
+member.
+
+=cut
+
+sub group_requests {
+    my ($self) = @_;
+
+    return $self->result_source->schema->resultset('Request')->search(
+        {
+            'user_group_roles.group_id' => { -in => [ map { $_->id } $self->groups  ] },
+            'submitter.id'              => { '!=' => $self->id },
+        },
+        {
+            join     => { submitter => 'user_group_roles' },
+            order_by => \q[update_time DESC, insert_time DESC],
+            distinct => 1,
+        },
+    );
+
 }
 
 =head2 uri_args
