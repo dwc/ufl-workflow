@@ -130,7 +130,7 @@ sub render : ActionClass('RenderView') {
                 errors   => $c->error,
                 template => 'error.tt',
             );
-            $c->clear_error;
+            $c->clear_errors;
         }
     }
 }
