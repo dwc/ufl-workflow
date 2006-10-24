@@ -24,11 +24,15 @@
     </form>
   </li>
   [% END %]
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
 </ul>
 [% ELSE %]
 <p>None yet.</p>
+<ul>
+<li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
+</ul>
 [% END %]
-<p><a class="add" href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></p>
+
 
 [% SET processes = user.processes %]
 [% IF processes %]

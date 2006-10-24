@@ -12,4 +12,6 @@
 [% END %]
 
 <h3>Manage users</h3>
-<p><a class="add" href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></p>
+<ul>
+<li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></li>
+</ul>

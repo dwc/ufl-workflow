@@ -42,7 +42,9 @@
 <p>None yet.</p>
 [% END %]
 [% IF request.is_open %]
-<p><a class="add" href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></p>
+<ul>
+<li class="add"><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></li>
+</ul>
 [% END %]
 
 <h3 id="actions">Actions</h3>

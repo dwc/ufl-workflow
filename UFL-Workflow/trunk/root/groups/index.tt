@@ -23,4 +23,6 @@
 [% END %]
 
 <h3>Manage groups</h3>
-<p><a class="add" href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></p>
+<ul>
+<li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></li>
+</ul>
