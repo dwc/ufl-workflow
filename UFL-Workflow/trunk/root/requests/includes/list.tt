@@ -1,6 +1,3 @@
-[% SET title = 'Requests' -%]
-
-<h3>All requests</h3>
 [% IF requests.count > 0 %]
 <table>
   <tr>

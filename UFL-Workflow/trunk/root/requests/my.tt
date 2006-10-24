@@ -1,0 +1,7 @@
+[% SET title = 'Your Requests' -%]
+
+<h3>Your requests</h3>
+[% INCLUDE requests/includes/list.tt requests = user_requests %]
+
+<h3>Your group requests</h3>
+[% INCLUDE requests/includes/list.tt requests = group_requests %]

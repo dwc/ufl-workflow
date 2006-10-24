@@ -20,21 +20,67 @@ L<Catalyst> controller component for managing requests.
 
 =head2 index
 
-Display a list of the user's current requests.
+Redirect to the list of requests.
 
 =cut
 
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
+    $c->res->redirect($c->uri_for($self->action_for('for_user')));
+}
+
+=head2 for_user
+
+Display a list of the current requests for the current user.
+
+=cut
+
+sub for_user : Local Args(0) {
+    my ($self, $c) = @_;
+
+    my $user_requests = $c->user->requests->search(
+        undef,
+        { order_by => \q[update_time DESC, insert_time DESC] },
+    );
+
+    my %groups = map { $_->id, 1 } $c->user->groups;
+    my $group_requests = $c->model('DBIC::Request')->search(
+        {
+            'user_group_roles.group_id' => { -in => [ keys %groups ] },
+            'submitter.id'              => { '!=' => $c->user->obj->id },
+        },
+        {
+            join     => { submitter => 'user_group_roles' },
+            order_by => \q[update_time DESC, insert_time DESC],
+            distinct => 1,
+        },
+    );
+
+    $c->stash(
+        user_requests  => $user_requests,
+        group_requests => $group_requests,
+        template       => 'requests/my.tt',
+    );
+}
+
+=head2 all
+
+Display a list of the current requests entered by everyone.
+
+=cut
+
+sub all : Local Args(0) {
+    my ($self, $c) = @_;
+
     my $requests = $c->model('DBIC::Request')->search(
         undef,
-        { order_by => \q[update_time DESC, insert_time DESC] }
+        { order_by => \q[update_time DESC, insert_time DESC] },
     );
 
     $c->stash(
         requests => $requests,
-        template => 'requests/index.tt',
+        template => 'requests/all.tt',
     );
 }
 
