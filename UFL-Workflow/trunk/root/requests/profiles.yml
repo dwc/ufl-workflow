@@ -4,6 +4,8 @@ add:
   - description
   - [ NOT_BLANK, [ LENGTH, 0, 1024 ] ]
 add_document:
+  - document
+  - [ NOT_BLANK ]
   - document_id
   - [ INT ]
 add_action:

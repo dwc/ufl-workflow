@@ -6,6 +6,8 @@ add:
     DEFAULT: A description
     LENGTH:  A shorter description
 add_document:
+  document:
+    DEFAULT: A document
   document_id:
     DEFAULT: A replacement document
 add_action:
