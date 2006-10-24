@@ -26,14 +26,16 @@
     <th>Added</th>
     <th>Updated</th>
   </tr>
+  [% SET i = 0 %]
   [% WHILE (document = documents.next) %]
     [% SET replacement = document.replacement %]
-  <tr>
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for('/documents', document.uri_args.join('/')) | html %]">[% document.title | html %]</a></td>
     <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for('/documents', replacement.uri_args.join('/')) | html %]">[% replacement.title | html %]</a>[% END %]</td>
     <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time | html %]</td>
     <td[% IF replacement %] class="replaced"[% END %]>[% document.update_time | html %]</td>
   </tr>
+    [% SET i = i + 1 %]
   [% END %]
 </table>
 [% ELSE %]
@@ -56,8 +58,9 @@
     <th>Added</th>
     <th>Updated</th>
   </tr>
+  [% SET i = 0 %]
   [% WHILE action %]
-  <tr>
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td>[% action.step.name | html %]</td>
     <td>[% action.status.name | html %]</td>
     <td>[% action.actor.username || '-' | html %]</td>
@@ -66,6 +69,7 @@
     <td>[% action.update_time | html %]</td>
   </tr>
     [% SET action = action.next_action %]
+    [% SET i = i + 1 %]
   [% END %]
 </table>
 

@@ -11,8 +11,9 @@
     <th>Added</th>
     <th>Updated</th>
   </tr>
+  [% SET i = 0 %]
   [% WHILE (request = requests.next) %]
-  <tr>
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td>[% request.submitter.username | html %]</td>
     <td><a href="[% c.uri_for(c.controller.action_for('view'), [ request.uri_args ]) | html %]">[% request.title | html %]</a></td>
     <td>[% request.process.name | html %]</td>
@@ -20,6 +21,7 @@
     <td>[% request.insert_time | html %]</td>
     <td>[% request.update_time | html %]</td>
   </tr>
+    [% SET i = i + 1 %]
   [% END %]
 </table>
 [% ELSE %]
