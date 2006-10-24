@@ -127,16 +127,19 @@ user.
 sub pending_actions {
     my ($self) = @_;
 
-    return $self->result_source->schema->resultset('Action')->search(
-        {
-            'step.role_id'      => { -in => [ map { $_->id } $self->roles ] },
-            'status.is_initial' => 1,
-        },
-        {
-            join     => [ qw/step status/ ],
-            order_by => \q[me.update_time DESC, me.insert_time DESC],
-        },
-    );
+    my @roles = $self->roles;
+    if (@roles) {
+        return $self->result_source->schema->resultset('Action')->search(
+            {
+                'step.role_id'      => { -in => [ map { $_->id } @roles ] },
+                'status.is_initial' => 1,
+            },
+            {
+                join     => [ qw/step status/ ],
+                order_by => \q[me.update_time DESC, me.insert_time DESC],
+            },
+        );
+    }
 }
 
 =head2 group_requests
@@ -150,21 +153,23 @@ member.
 sub group_requests {
     my ($self) = @_;
 
-    return $self->result_source->schema->resultset('Request')->search(
-        {
-            'submitter.id'              => { '!=' => $self->id },
-            -or => [
-                'group.id'              => { -in => [ map { $_->id } $self->groups  ] },
-                'group.parent_group_id' => { -in => [ map { $_->id } $self->groups  ] },
-            ],
-        },
-        {
-            join     => { submitter => { user_group_roles => 'group' } },
-            order_by => \q[update_time DESC, insert_time DESC],
-            distinct => 1,
-        },
-    );
-
+    my @groups = $self->groups;
+    if (@groups) {
+        return $self->result_source->schema->resultset('Request')->search(
+            {
+                'submitter.id'              => { '!=' => $self->id },
+                -or => [
+                    'group.id'              => { -in => [ map { $_->id } @groups  ] },
+                    'group.parent_group_id' => { -in => [ map { $_->id } @groups  ] },
+                ],
+            },
+            {
+                join     => { submitter => { user_group_roles => 'group' } },
+                order_by => \q[update_time DESC, insert_time DESC],
+                distinct => 1,
+            },
+        );
+    }
 }
 
 =head2 uri_args
