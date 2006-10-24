@@ -49,7 +49,7 @@ sub for_user : Local Args(0) {
     $c->stash(
         user_requests  => $user_requests,
         group_requests => $group_requests,
-        template       => 'requests/my.tt',
+        template       => 'requests/for_user.tt',
     );
 }
 
