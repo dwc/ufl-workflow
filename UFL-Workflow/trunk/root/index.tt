@@ -2,6 +2,7 @@
 
 [% IF actions.count > 0 %]
 <h3>Pending actions</h3>
+<p>The following is a list of requests pending your decision:</p>
 <table>
   <tr>
     <th>Request</th>
@@ -20,6 +21,7 @@
 
 <h3>Your requests</h3>
 [% IF requests.count > 0 %]
+<p>The following is a list of your requests and their current status:</p>
 <table>
   <tr>
     <th>Title</th>
