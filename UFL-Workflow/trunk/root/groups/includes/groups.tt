@@ -1,24 +1,25 @@
 [% DEFAULT
-   field.label = 'Group'
-   field.name  = 'group_id'
+   field_label = 'Group'
+   field_name  = 'group_id'
 -%]
 [% BLOCK group_list %]
   [% SET prefix = '' %]
-  [% SET i = 0; WHILE i < level; i; SET prefix = "$prefix&mdash; "; SET i = i + 1; END %]
+  [% SET i = 0; WHILE (i < l); i; SET prefix = "$prefix&mdash; "; SET i = i + 1; END %]
   [% WHILE (group = groups.next) %]
     [% SET child_groups = group.child_groups_rs %]
-<option value="[% group.id | html %]"[% IF group.id == field.value %] selected="selected"[% END %]>[% prefix %][% group.name | html %]</option>
+<option value="[% group.id | html %]"[% IF group.id == field_value %] selected="selected"[% END %]>[% prefix %][% group.name | html %]</option>
     [% IF child_groups.count > 0 %]
-      [% INCLUDE group_list groups = child_groups, level = level + 1 %]
+      [% SET l = l + 1 %]
+      [% INCLUDE group_list groups = child_groups %]
     [% END %]
   [% END %]
 [% END -%]
 
-<label>[% field.label | html %]:
-  <select name="[% field.name | html %]">
+<label>[% field_label | html %]:
+  <select name="[% field_name | html %]">
     <option value=""></option>
 [% FILTER indent('    ') %]
-  [% INCLUDE group_list level = 0 %]
+  [% INCLUDE group_list l = 0 %]
 [% END %]
   </select>
 </label>
