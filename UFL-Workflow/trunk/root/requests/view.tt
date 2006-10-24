@@ -2,19 +2,20 @@
 
 <h3>Request details</h3>
 <dl>
-  <dt>Process</dt>
+  <dt>Process:</dt>
   <dd>[% request.process.name | html %]</dd>
-  <dt>Status</dt>
+  <dt>Status:</dt>
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
-  <dt>Title</dt>
+  <dt>Title:</dt>
   <dd>[% request.title | html %]</dd>
-  <dt>Description</dt>
+  <dt>Description:</dt>
   <dd>[% request.description | html %]</dd>
-  <dt>Added</dt>
+  <dt>Added:</dt>
   <dd>[% request.insert_time | html %]</dd>
-  <dt>Updated</dt>
+  <dt>Updated:</dt>
   <dd>[% request.update_time | html %]</dd>
 </dl>
+<br style="clear:both" />
 
 <h3>Documents</h3>
 [% IF documents.count > 0 %]

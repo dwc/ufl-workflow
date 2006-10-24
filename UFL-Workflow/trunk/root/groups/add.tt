@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE groups/includes/group.tt field.value = c.req.param('parent_group_id') %]
 [% END -%]
-  <input type="submit" value="Add Group" />
+  <input type="submit" class="submit" value="Add Group" />
 </form>

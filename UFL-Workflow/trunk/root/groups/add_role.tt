@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE roles/includes/role.tt %]
 [% END -%]
-  <input type="submit" value="Add Role" />
+  <input type="submit" class="submit" value="Add Role" />
 </form>

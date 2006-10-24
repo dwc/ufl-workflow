@@ -5,7 +5,7 @@
   <dt>Username</dt>
   <dd>[% user.username | html %]</dd>
 </dl>
-
+<br style="clear:both" />
 <h3>Roles</h3>
 [% SET user_group_roles = user.user_group_roles %]
 [% IF user_group_roles %]

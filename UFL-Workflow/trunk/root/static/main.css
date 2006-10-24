@@ -1,7 +1,7 @@
 * {margin:0;padding:0}
 
 body {
-background:#FFF url(images/bg.jpg) repeat-x;
+background:#FFF url(images/bg.gif) repeat-x;
 color:#444;
 font:63.125%/200% 'Trebuchet MS', verdana, geneva, Arial, Helvetica, sans-serif;
 text-align:center;
@@ -23,7 +23,7 @@ font-size:1.2em;
 margin:2px 0 50px 45px
 }
 
-#header, #content, #nav {
+#container{
 width: 770px;
 margin: 0 auto;
 position: relative;
@@ -32,7 +32,7 @@ font-size:1.4em;
 
 #header h1{
 font-size:14px;
-height:40px;
+height:30px;
 /* \*/overflow: hidden;/* */
 }
 
@@ -94,9 +94,9 @@ text-align:left
 }
 
 #nav {
-height: 45px;
+display:block;
 margin-bottom: 20px;
-border-bottom: 3px solid #ccc;
+height: 30px;
 }
 #nav li {
 list-style:none;
@@ -106,24 +106,24 @@ display:inline;
 #nav li a {
 display:block;
 float:left;
-border:3px solid #ccc;
+border:3px solid #d1d1d1;
 border-width: 3px 3px 0;
 font-size:1em;
-margin:15px 10px 5px 0;
-padding:5px;
+margin:0 10px 5px 0;
+padding: 0 5px;
 text-align: left;
 }
 
 #nav li a:hover {
-background: #fff;
 color: #ff4a00;
-text-decoration:underline;
+border-bottom: 3px solid #555;
 }
 
 #nav li#active a{
-background: #fff;
 color: #000;
-text-decoration:underline;
+
+font-weight:700;
+border-bottom: 3px solid #000;
 }
 
 #note {
@@ -176,7 +176,7 @@ display:none;
 clear:both;
 display:block;
 margin:0 0 15px;
-width: 100%;
+width: 60%;
 font-size: 1em;
 }
 #content form.process-steps input, #content form.roles input{
@@ -212,4 +212,31 @@ background: url(images/add.gif) left center no-repeat;
 padding-left: 17px;
 text-decoration:underline;
 border:none;
+}
+
+.event {
+background: #eee;
+}
+#content dt {
+float: left;
+width: 100px;
+padding: 3px 0 3px 3px;
+border-bottom: 1px solid #ccc;
+text-align:left;
+font-weight:700;
+clear:left;
+}
+#content dd {
+width: 650px;
+text-align:left;
+float:right;
+padding: 3px 0;
+border-bottom: 1px solid #ccc;
+}
+
+dl#statuses dt {
+width: 250px;
+}
+dl#statuses dd {
+width: 500px;
 }

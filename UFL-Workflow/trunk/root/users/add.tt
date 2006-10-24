@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE users/includes/user.tt %]
 [% END -%]
-  <input type="submit" value="Add User" />
+  <input type="submit" class="submit" value="Add User" />
 </form>
