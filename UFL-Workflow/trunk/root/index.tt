@@ -17,32 +17,13 @@
   </tr>
   [% END %]
 </table>
-[% END -%]
+[% END %]
 
 <h3>Your requests</h3>
-[% IF requests.count > 0 %]
-<p>The following is a list of your requests and their current status:</p>
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Process</th>
-    <th>Status</th>
-    <th>Added</th>
-    <th>Updated</th>
-  </tr>
-  [% WHILE (request = requests.next) %]
-  <tr>
-    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ request.uri_args ]) | html %]">[% request.title | html %]</a></td>
-    <td>[% request.process.name | html %]</td>
-    <td>[% INCLUDE requests/includes/status.tt action = request.current_action -%]</td>
-    <td>[% request.insert_time | html %]</td>
-    <td>[% request.update_time | html %]</td>
-  </tr>
-  [% END %]
-</table>
-[% ELSE %]
-<p>None yet.</p>
-[% END %]
+[% INCLUDE requests/includes/list.tt comment = 'The following is a list of your requests and their current status:', requests = user_requests %]
+
+<h3>Your group requests</h3>
+[% INCLUDE requests/includes/list.tt comment = 'The following is a list of requests entered by members of your groups:', requests = group_requests %]
 
 <h3>Add new request</h3>
 [% IF processes.count > 0 %]
@@ -54,4 +35,4 @@
 </ul>
 [% ELSE %]
 <p>There are currently no processes to which you can add a request.</p>
-[% END %]
+[% END -%]

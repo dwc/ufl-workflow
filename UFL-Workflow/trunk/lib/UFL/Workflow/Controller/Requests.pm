@@ -27,30 +27,7 @@ Redirect to the list of requests.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    $c->res->redirect($c->uri_for($self->action_for('for_user')));
-}
-
-=head2 for_user
-
-Display a list of the current requests for the current user.
-
-=cut
-
-sub for_user : Local Args(0) {
-    my ($self, $c) = @_;
-
-    my $user_requests = $c->user->requests->search(
-        undef,
-        { order_by => \q[update_time DESC, insert_time DESC] },
-    );
-
-    my $group_requests = $c->user->group_requests;
-
-    $c->stash(
-        user_requests  => $user_requests,
-        group_requests => $group_requests,
-        template       => 'requests/for_user.tt',
-    );
+    $c->res->redirect($c->uri_for('/'));
 }
 
 =head2 all
