@@ -11,7 +11,7 @@
 [% IF parent_group %]
 <h3>Parent group</h3>
 <p><a href="[% c.uri_for(c.controller.action_for('view'), [ parent_group.uri_args ]) | html %]">[% parent_group.name | html %]</a></p>
-[% END %]
+[% END -%]
 
 [% SET child_groups = group.child_groups_rs %]
 [% IF child_groups.count > 0 %]
