@@ -109,6 +109,33 @@ sub current_step {
     return $self->current_action->step;
 }
 
+=head2 next_step
+
+Return the next L<UFL::Workflow::Schema::Step> associated with
+this request.
+
+=cut
+
+sub next_step {
+    my ($self) = @_;
+
+    my $next_step;
+
+    my $current_step = $self->current_step;
+
+    my $step = $self->process->first_step;
+    while ($step) {
+        if ($step->id == $current_step->id) {
+            $next_step = $step->next_step;
+            last;
+        }
+
+        $step = $step->next_step;
+    }
+
+    return $next_step;
+}
+
 =head2 is_open
 
 Return true if this request is open, i.e., the current step is pending

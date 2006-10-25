@@ -148,7 +148,7 @@ sub view : PathPart('') Chained('request') Args(0) {
     $c->stash(
         documents => $documents,
         statuses  => $statuses,
-        groups    => [ $request->current_step->groups ],
+        groups    => [ $request->next_step->groups ],
         template  => 'requests/view.tt',
     );
 }
