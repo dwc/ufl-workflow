@@ -115,16 +115,13 @@ sub can_decide_on {
 
     my $has_group_role = 0;
     if (my @groups = $action->groups) {
-        my $group_roles = $self->result_source->schema->resultset('GroupRole')->search({
+        my $user_group_roles = $self->user_group_roles->search({
             group_id => { -in => [ map { $_->id } @groups ] },
             role_id  => $action->step->role->id,
         });
 
-        while (my $group_role = $group_roles->next) {
-            if ($self->has_group_role($group_role)) {
-                $has_group_role = 1;
-                last;
-            }
+        if ($user_group_roles->count > 0) {
+            $has_group_role = 1;
         }
     }
 
