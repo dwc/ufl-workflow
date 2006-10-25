@@ -130,12 +130,7 @@ sub update_status {
 
         my $action;
         if ($status->continues_request) {
-            # Add the next step
-            my $step = $request->current_step;
-            while ($step and $step->prev_step_id != $self->step_id) {
-                $step = $step->next_step;
-            }
-
+            my $step = $request->next_step;
             if ($step) {
                 $action = $request->add_action({ step_id => $step->id });
             }

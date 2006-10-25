@@ -98,8 +98,9 @@ sub current_action {
 
 =head2 current_step
 
-Return the current L<UFL::Workflow::Schema::Step> associated with
-this request.
+Return the L<UFL::Workflow::Schema::Step> in the
+L<UFL::Workflow::Schema::Process> associated with the current
+L<UFL::Workflow::Schema::Action> on this request.
 
 =cut
 
@@ -119,21 +120,14 @@ this request.
 sub next_step {
     my ($self) = @_;
 
-    my $next_step;
+    my $action = $self->current_action;
 
-    my $current_step = $self->current_step;
-
-    my $step = $self->process->first_step;
-    while ($step) {
-        if ($step->id == $current_step->id) {
-            $next_step = $step->next_step;
-            last;
-        }
-
+    my $step = $self->current_step;
+    while ($step and $step->prev_step_id != $action->step_id) {
         $step = $step->next_step;
     }
 
-    return $next_step;
+    return $step;
 }
 
 =head2 is_open
