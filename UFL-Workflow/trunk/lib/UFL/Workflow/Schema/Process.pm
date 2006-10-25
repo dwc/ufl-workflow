@@ -80,6 +80,19 @@ sub last_step {
     return $last_step;
 }
 
+=head2 is_editable
+
+Return true if this process is editable: if there are no associated
+requests.
+
+=cut
+
+sub is_editable {
+    my ($self) = @_;
+
+    return ($self->requests->count == 0);
+}
+
 =head2 add_step
 
 Add a new step to the end of the chain for this process.
@@ -91,8 +104,8 @@ sub add_step {
 
     $self->throw_exception('You must provide a role and name for the step')
         unless ref $values eq 'HASH' and $values->{role_id} and $values->{name};
-    $self->throw_exception('Process has associated requests')
-        unless $self->requests->count == 0;
+    $self->throw_exception('Process cannot be edited')
+        unless $self->is_editable;
 
     my $new_step;
     $self->result_source->schema->txn_do(sub {
