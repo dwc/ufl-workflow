@@ -57,8 +57,8 @@ sub index : Path('') Args(0) {
     $c->forward($c->controller('Requests')->action_for('for_user'));
 
     $c->stash(
-        actions   => $actions,
-        template  => 'index.tt'
+        actions  => $actions,
+        template => 'index.tt'
     );
 }
 
