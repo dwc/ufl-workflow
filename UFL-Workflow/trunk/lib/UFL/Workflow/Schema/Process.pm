@@ -91,6 +91,8 @@ sub add_step {
 
     $self->throw_exception('You must provide a role and name for the step')
         unless ref $values eq 'HASH' and $values->{role_id} and $values->{name};
+    $self->throw_exception('Process has associated requests')
+        unless $self->requests->count == 0;
 
     my $new_step;
     $self->result_source->schema->txn_do(sub {

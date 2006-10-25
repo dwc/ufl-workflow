@@ -95,6 +95,8 @@ requests in an inconsistent state.
 sub delete {
     my ($self, @args) = @_;
 
+    $self->throw_exception('Process has associated requests')
+        if $self->process->requests->count > 0;
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
@@ -137,6 +139,8 @@ actions or is the first in the process, an exception is thrown.
 sub move_up {
     my ($self) = @_;
 
+    $self->throw_exception('Process has associated requests')
+        if $self->process->requests->count > 0;
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
@@ -178,6 +182,8 @@ actions or is the first in the process, an exception is thrown.
 sub move_down {
     my ($self) = @_;
 
+    $self->throw_exception('Process has associated requests')
+        if $self->process->requests->count > 0;
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
