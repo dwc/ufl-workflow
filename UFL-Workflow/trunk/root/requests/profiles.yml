@@ -6,7 +6,7 @@ add:
 add_document:
   - document
   - [ NOT_BLANK ]
-  - document_id
+  - replaced_document_id
   - [ INT ]
 add_action:
   - action_id

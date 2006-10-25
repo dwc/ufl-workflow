@@ -8,7 +8,7 @@
   <label>File: <input type="file" name="document" /></label>
 [% IF documents.count > 0 %]
   <label>Replaces:
-    <select name="document_id">
+    <select name="replaced_document_id">
       <option value=""></option>
   [% WHILE (document = documents.next) %]
       <option value="[% document.id | html %]">[% document.title | html %] ([% document.insert_time | html %])</option>

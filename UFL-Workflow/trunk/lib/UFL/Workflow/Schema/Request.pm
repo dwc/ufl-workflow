@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base qw/DBIx::Class/;
 use Digest::MD5 ();
+use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
 
@@ -159,17 +160,22 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 sub add_document {
     my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a title, extension, and contents for the document')
-        unless ref $values eq 'HASH' and $values->{title} and $values->{extension} and $values->{contents};
+    $self->throw_exception('You must provide a title, extension, contents, and destination for the document')
+        unless ref $values eq 'HASH' and $values->{title} and $values->{extension} and $values->{contents} and $values->{destination};
 
-    my $md5 = Digest::MD5::md5_hex(delete $values->{contents});
+    my $contents    = delete $values->{contents};
+    my $destination = delete $values->{destination};
+    die 'Destination must be a Path::Class::Dir object'
+        unless blessed $destination and $destination->isa('Path::Class::Dir');
+
     my $replaced_document_id = delete $values->{replaced_document_id};
 
     my $document;
     $self->result_source->schema->txn_do(sub {
+        my $md5 = Digest::MD5::md5_hex($contents);
         $document = $self->documents->find_or_create({
-            md5 => $md5,
             %$values,
+            md5 => $md5,
         });
 
         if ($replaced_document_id) {
@@ -179,6 +185,14 @@ sub add_document {
             $replaced_document->document_id($document->id);
             $replaced_document->update;
         }
+
+        # Copy the file into the destination
+        my $filename = $destination->file($document->uri_args);
+        $filename->parent->mkpath;
+        my $fh = IO::File->new($filename, 'w') or die "Error opening $filename: $!";
+        $fh->binmode(':raw');
+        $fh->print($contents);
+        $fh->close;
     });
 
     return $document;

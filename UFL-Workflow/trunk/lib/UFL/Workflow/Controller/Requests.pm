@@ -175,23 +175,14 @@ sub add_document : PathPart Chained('request') Args(0) {
             die 'File is not one of the allowed types'
                 unless grep { /^\Q$extension\E$/i } @extensions;
 
-            my $document;
-            $request->result_source->schema->txn_do(sub {
-                my %values = (
-                    title     => $title,
-                    extension => $extension,
-                    contents  => $upload->slurp,
-                );
-                if (my $replaced_document_id = $result->valid('document_id')) {
-                    $values{replaced_document_id} = $replaced_document_id;
-                }
-
-                $document = $request->add_document(\%values);
-
-                my $destination = $c->path_to('root', $c->config->{documents}->{destination}, $document->uri_args);
-                $destination->parent->mkpath;
-                $upload->copy_to($destination)
-                    or die 'Error copying document to destination directory';
+            my $destination = $c->path_to('root', $c->config->{documents}->{destination});
+            my $max_length = $c->model('DBIC::Document')->result_source->column_info('title')->{size};
+            my $document = $request->add_document({
+                title                 => substr($title, 0, $max_length),
+                extension             => $extension,
+                replaced_document_id  => $result->valid('replaced_document_id') || undef,
+                contents              => $upload->slurp,
+                destination           => $destination,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));

@@ -8,8 +8,8 @@ add:
 add_document:
   document:
     DEFAULT: A document
-  document_id:
-    DEFAULT: A replacement document
+  replaced_document_id:
+    DEFAULT: The document being replaced
 add_action:
   action_id:
     DEFAULT: An action
