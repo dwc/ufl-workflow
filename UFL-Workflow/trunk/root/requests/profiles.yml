@@ -13,5 +13,7 @@ add_action:
   - [ NOT_BLANK, INT ]
   - status_id
   - [ NOT_BLANK, INT ]
+  - group_id
+  - [ NOT_BLANK, INT ]
   - comment
   - [ [ LENGTH, 0, 1024 ] ]

@@ -72,6 +72,21 @@ Step table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
+=head2 groups
+
+Return a list of groups whose members can act on this step.
+
+=cut
+
+sub groups {
+    my ($self) = @_;
+
+    my @groups = $self->role->groups;
+    warn "### group_id = [" . $_->id . "]" for @groups;
+
+    return @groups;
+}
+
 =head2 delete
 
 Remove the specified step from the chain.  If any actions are

@@ -71,6 +71,14 @@ __PACKAGE__->belongs_to(
     'user_id',
 );
 
+__PACKAGE__->has_many(
+    action_groups => 'UFL::Workflow::Schema::ActionGroup',
+    { 'foreign.action_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->many_to_many('groups', 'action_groups', 'group');
+
 =head1 NAME
 
 UFL::Workflow::Schema::Action - Action table class
@@ -93,7 +101,7 @@ step.
 =cut
 
 sub update_status {
-    my ($self, $status, $actor, $comment) = @_;
+    my ($self, $status, $actor, $group, $comment) = @_;
 
     my $request = $self->request;
 
@@ -101,6 +109,10 @@ sub update_status {
         unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
     $self->throw_exception('You must provide an actor')
         unless blessed $actor and $actor->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('You must provide an group')
+        unless blessed $group and $group->isa('UFL::Workflow::Schema::Group');
+    $self->throw_exception('Actor cannot decide on this action')
+        unless $actor->can_decide_on($self);
     $self->throw_exception('Decision already made')
         unless $self->status->is_initial;
     $self->throw_exception('Action does not appear to be the current one')
@@ -110,7 +122,6 @@ sub update_status {
         $self->status($status);
         $self->actor($actor);
         $self->comment($comment);
-        $self->update;
 
         my $action;
         if ($status->continues_request) {
@@ -134,11 +145,12 @@ sub update_status {
 
         if ($action) {
             $self->next_action($action);
-            $self->update;
-
             $action->prev_action($self);
+            $action->add_to_groups($group);
             $action->update;
         }
+
+        $self->update;
     });
 }
 

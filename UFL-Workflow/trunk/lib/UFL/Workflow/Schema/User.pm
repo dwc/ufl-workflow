@@ -113,7 +113,22 @@ sub can_decide_on {
     $self->throw_exception('You must provide an action')
         unless blessed $action and $action->isa('UFL::Workflow::Schema::Action');
 
-    return ($action->status->is_initial and $self->has_role($action->step->role));
+    my $has_group_role = 0;
+    if (my @groups = $action->groups) {
+        my $group_roles = $self->result_source->schema->resultset('GroupRole')->search({
+            group_id => { -in => [ map { $_->id } @groups ] },
+            role_id  => $action->step->role->id,
+        });
+
+        while (my $group_role = $group_roles->next) {
+            if ($self->has_group_role($group_role)) {
+                $has_group_role = 1;
+                last;
+            }
+        }
+    }
+
+    return ($action->status->is_initial and $has_group_role);
 }
 
 =head2 pending_actions
@@ -127,15 +142,17 @@ user.
 sub pending_actions {
     my ($self) = @_;
 
-    my @roles = $self->roles;
-    if (@roles) {
+    my @groups = $self->groups;
+    my @roles  = $self->roles;
+    if (@groups and @roles) {
         return $self->result_source->schema->resultset('Action')->search(
             {
-                'step.role_id'      => { -in => [ map { $_->id } @roles ] },
-                'status.is_initial' => 1,
+                'action_groups.group_id' => { -in => [ map { $_->id } @groups ] },
+                'step.role_id'           => { -in => [ map { $_->id } @roles ] },
+                'status.is_initial'      => 1,
             },
             {
-                join     => [ qw/step status/ ],
+                join     => [ qw/action_groups step status/ ],
                 order_by => \q[me.update_time DESC, me.insert_time DESC],
             },
         );

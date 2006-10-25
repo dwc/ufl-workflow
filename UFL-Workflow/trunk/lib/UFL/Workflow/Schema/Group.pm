@@ -37,7 +37,14 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->has_many(
+    action_groups => 'UFL::Workflow::Schema::ActionGroup',
+    { 'foreign.group_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
 __PACKAGE__->many_to_many('roles', 'group_roles', 'role');
+__PACKAGE__->many_to_many('actions', 'action_groups', 'action');
 
 __PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Group');
 

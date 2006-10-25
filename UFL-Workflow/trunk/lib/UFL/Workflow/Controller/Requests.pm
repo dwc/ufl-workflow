@@ -148,6 +148,7 @@ sub view : PathPart('') Chained('request') Args(0) {
     $c->stash(
         documents => $documents,
         statuses  => $statuses,
+        groups    => [ $request->current_step->groups ],
         template  => 'requests/view.tt',
     );
 }
@@ -219,9 +220,10 @@ sub add_action : PathPart Chained('request') Args(0) {
         $request->result_source->schema->txn_do(sub {
             my $action = $request->actions->find($result->valid('action_id'));
             my $status = $c->model('DBIC::Status')->find($result->valid('status_id'));
-            $c->detach('/default') unless $action and $status;
+            my $group  = $c->model('DBIC::Group')->find($result->valid('group_id'));
+            $c->detach('/default') unless $action and $status and $group;
 
-            $action->update_status($status, $c->user->obj, $result->valid('comment'));
+            $action->update_status($status, $c->user->obj, $group, $result->valid('comment'));
         });
     }
 
