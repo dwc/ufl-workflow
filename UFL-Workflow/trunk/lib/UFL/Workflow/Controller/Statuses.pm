@@ -125,7 +125,7 @@ sub edit : PathPart Chained('status') Args(0) {
             # TODO: Unique check
             $status->update;
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $status->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $status->uri_args));
         }
     }
 

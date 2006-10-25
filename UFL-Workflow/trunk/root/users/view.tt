@@ -15,10 +15,10 @@
     [% SET role = user_group_role.role %]
     [% SET group = user_group_role.group %]
   <li>
-    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>
-    (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a>)
+    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
+    (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>)
     <br />
-    <form class="roles" action="[% c.uri_for(c.controller.action_for('delete_group_role'), [ user.uri_args ]) | html %]" method="post">
+    <form class="roles" action="[% c.uri_for(c.controller.action_for('delete_group_role'), user.uri_args) | html %]" method="post">
       <input type="hidden" name="group_id" value="[% group.id | html %]" />
       <input type="hidden" name="role_id" value="[% role.id | html %]" />
       <input type="submit" value="Remove" />
@@ -35,12 +35,12 @@
 <h3>Processes</h3>
 <ul>
   [% FOREACH process IN processes %]
-  <li><a href="[% c.uri_for(c.controller('Processes').action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller('Processes').action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
 [% END %]
 
 <h3>Manage user</h3>
 <ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]">Add this user to a role</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
 </ul>

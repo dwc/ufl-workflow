@@ -69,7 +69,7 @@ sub uri_args {
     # Based on Cache::FileCache
     my @path = unpack 'A2' x 2 . 'A*', $self->md5 . '.' . $self->extension;
 
-    return @path;
+    return \@path;
 }
 
 =head1 AUTHOR

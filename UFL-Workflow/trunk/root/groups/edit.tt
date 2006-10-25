@@ -1,6 +1,6 @@
 [% SET title = "Edit ${group.name}" -%]
 
-<form action="[% c.uri_for(c.controller.action_for('edit'), [ group.uri_args ]) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('edit'), group.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]
   [% INCLUDE groups/includes/group.tt field_value = group.parent_group.id %]

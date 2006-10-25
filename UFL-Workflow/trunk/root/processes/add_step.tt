@@ -1,6 +1,6 @@
 [% SET title = "Add Step to ${process.name} Process" -%]
 
-<form action="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]
   [% INCLUDE steps/includes/step.tt %]

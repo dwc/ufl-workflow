@@ -67,7 +67,7 @@ sub edit : PathPart Chained('role') Args(0) {
             # TODO: Unique check
             $role->update;
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $role->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
         }
     }
 

@@ -73,7 +73,7 @@
   [% IF c.user.can_decide_on(current_action) %]
 <h3>Decision</h3>
 <p>You can make a decision on the <strong>[% current_action.step.name | html %]</strong> step of this request.</p>
-<form action="[% c.uri_for(c.controller.action_for('add_action'), [ request.uri_args ]) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('add_action'), request.uri_args) | html %]" method="post">
   <input type="hidden" name="action_id" value="[% current_action.id | html %]" />
   <label>Set status to:
     <select name="status_id" id="status_id">
@@ -103,6 +103,6 @@
 [% IF request.is_open %]
 <h3>Manage request</h3>
 <ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add document</a></li>
 </ul>
 [% END %]

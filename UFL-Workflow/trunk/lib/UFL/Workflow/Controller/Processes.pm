@@ -51,7 +51,7 @@ sub add : Local {
                 name => $result->valid('name'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }
     }
 
@@ -107,7 +107,7 @@ sub edit : PathPart Chained('process') Args(0) {
             # TODO: Unique check
             $process->update;
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }
     }
 
@@ -133,7 +133,7 @@ sub add_step : PathPart Chained('process') Args(0) {
                 name    => $result->valid('name'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }
     }
 
@@ -168,7 +168,7 @@ sub delete_step : PathPart Chained('process') Args(0) {
         $step->delete;
     }
 
-    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
 }
 
 =head2 move_step_up
@@ -192,7 +192,7 @@ sub move_step_up : PathPart Chained('process') Args(0) {
         $step->move_up;
     }
 
-    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
 }
 
 =head2 move_step_down
@@ -216,7 +216,7 @@ sub move_step_down : PathPart Chained('process') Args(0) {
         $step->move_down;
     }
 
-    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $process->uri_args ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
 }
 
 =head1 AUTHOR

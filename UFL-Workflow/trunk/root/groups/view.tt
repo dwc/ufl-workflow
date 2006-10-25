@@ -10,7 +10,7 @@
 [% SET parent_group = group.parent_group %]
 [% IF parent_group %]
 <h3>Parent group</h3>
-<p><a href="[% c.uri_for(c.controller.action_for('view'), [ parent_group.uri_args ]) | html %]">[% parent_group.name | html %]</a></p>
+<p><a href="[% c.uri_for(c.controller.action_for('view'), parent_group.uri_args) | html %]">[% parent_group.name | html %]</a></p>
 [% END -%]
 
 [% SET child_groups = group.child_groups_rs %]
@@ -18,7 +18,7 @@
 <h3>Child groups</h3>
 <ul>
   [% WHILE (child_group = child_groups.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ child_group.uri_args ]) | html %]">[% child_group.name | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), child_group.uri_args) | html %]">[% child_group.name | html %]</a></li>
   [% END %]
 </ul>
 [% END -%]
@@ -29,13 +29,13 @@
 <ul>
   [% FOREACH role IN roles %]
   <li>
-    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>
+    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
     [% SET users = role.users %]
     [% IF users %]
     ([% users.size | html %] user[% users.size == 1 ? '' : 's' %])
     <ul>
       [% FOREACH user IN users %]
-      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ user.uri_args ]) | html %]">[% user.username | html %]</a></li>
+      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
       [% END %]
     </ul>
     [% ELSE %]
@@ -48,7 +48,7 @@
 
 <h3>Manage group</h3>
 <ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ group.uri_args ]) | html %]">Edit this group</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), group.uri_args) | html %]">Edit this group</a></li>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add'), parent_group_id = group.id) | html %]">Add a child group</a></li>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_role'), [ group.uri_args ]) | html %]">Add a role to this group</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_role'), group.uri_args) | html %]">Add a role to this group</a></li>
 </ul>

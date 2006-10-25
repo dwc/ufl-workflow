@@ -67,7 +67,7 @@ sub edit : PathPart Chained('step') Args(0) {
             # TODO: Unique check
             $step->update;
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $step->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $step->uri_args));
         }
     }
 

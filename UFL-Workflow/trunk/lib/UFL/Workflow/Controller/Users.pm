@@ -51,7 +51,7 @@ sub add : Local {
                 username => $result->valid('username'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
         }
     }
 
@@ -106,7 +106,7 @@ sub add_group_role : PathPart Chained('user') Args(0) {
             my $user = $c->stash->{user};
             $user->add_to_group_roles($group_role) unless $user->has_group_role($group_role);
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
         }
     }
 
@@ -160,7 +160,7 @@ sub delete_group_role : PathPart Chained('user') Args(0) {
         $user->remove_from_group_roles($group_role);
     }
 
-    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $user->uri_args ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
 }
 
 =head1 AUTHOR

@@ -4,7 +4,7 @@
 <h3>Current statuses</h3>
 <ul>
   [% WHILE (status = statuses.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ status.uri_args ]) | html %]">[% status.name | html %]</a>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), status.uri_args) | html %]">[% status.name | html %]</a>
     [% IF status.is_initial %] (initial status)[% END %]
     [% IF status.continues_request %] (continues to next step)[% END %]
     [% IF status.finishes_request %] (finishes request)[% END %]

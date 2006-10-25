@@ -104,7 +104,7 @@ sub add : Local {
                 description => $result->valid('description'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
     }
 
@@ -190,7 +190,7 @@ sub add_document : PathPart Chained('request') Args(0) {
                 destination           => $destination,
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
     }
 
@@ -221,7 +221,7 @@ sub add_action : PathPart Chained('request') Args(0) {
     die 'Request is not open' unless $request->is_open;
 
     my $result = $self->validate_form($c);
-    $c->detach('view', [ $request->uri_args ]) unless $result->success;
+    $c->detach('view', $request->uri_args) unless $result->success;
 
     $request->result_source->schema->txn_do(sub {
         my $action = $request->actions->find($result->valid('action_id'));
@@ -242,7 +242,7 @@ sub add_action : PathPart Chained('request') Args(0) {
         });
     });
 
-    return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
 
 =head1 AUTHOR

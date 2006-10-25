@@ -4,7 +4,7 @@
   [% WHILE (group = groups.next) %]
     [% SET child_groups = group.child_groups_rs %]
   <li>
-    <a href="[% c.uri_for(c.controller.action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a>
+    <a href="[% c.uri_for(c.controller.action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>
     [% IF child_groups.count > 0 %]
       [% FILTER indent('    ') %]
         [% INCLUDE group_list groups = child_groups %]

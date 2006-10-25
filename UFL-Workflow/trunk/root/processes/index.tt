@@ -4,7 +4,7 @@
 [% IF processes.count > 0 %]
 <ul>
   [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
 [% ELSE %]

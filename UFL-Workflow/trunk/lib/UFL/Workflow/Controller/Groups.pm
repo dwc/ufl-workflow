@@ -52,7 +52,7 @@ sub add : Local {
                 name            => $result->valid('name'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }
     }
 
@@ -109,7 +109,7 @@ sub edit : PathPart Chained('group') Args(0) {
                 name            => $result->valid('name'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }
     }
 
@@ -138,7 +138,7 @@ sub add_role : PathPart Chained('group') Args(0) {
                 name => $result->valid('name'),
             });
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), [ $group->uri_args ]));
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }
     }
 

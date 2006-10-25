@@ -12,7 +12,7 @@
 [% IF groups %]
 <ul>
   [% FOREACH group IN groups %]
-  <li><a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a></p>
+  <li><a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a></p>
   [% END %]
 </ul>
 [% ELSE %]
@@ -24,7 +24,7 @@
 [% IF users %]
 <ul>
   [% FOREACH user IN users %]
-  <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ user.uri_args ]) | html %]">[% user.username | html %]</a></p>
+  <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></p>
   [% END %]
 </ul>
 [% ELSE %]
@@ -33,5 +33,5 @@
 
 <h3>Manage role</h3>
 <ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ role.uri_args ]) | html %]">Edit this role</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), role.uri_args) | html %]">Edit this role</a></li>
 </ul>

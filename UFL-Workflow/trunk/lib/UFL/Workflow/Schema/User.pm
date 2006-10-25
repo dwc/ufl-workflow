@@ -195,7 +195,7 @@ Return the list of URI path arguments needed to identify this user.
 sub uri_args {
     my ($self) = @_;
 
-    return $self->username;
+    return [ $self->username ];
 }
 
 =head1 AUTHOR

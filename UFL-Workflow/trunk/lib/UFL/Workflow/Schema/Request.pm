@@ -212,7 +212,7 @@ sub add_document {
         }
 
         # Copy the file into the destination
-        my $filename = $destination->file($document->uri_args);
+        my $filename = $destination->file(@{ $document->uri_args });
         $filename->parent->mkpath;
         my $fh = IO::File->new($filename, 'w') or die "Error opening $filename: $!";
         $fh->binmode(':raw');
@@ -232,7 +232,7 @@ Return the list of URI path arguments needed to identify this request.
 sub uri_args {
     my ($self) = @_;
 
-    return $self->id;
+    return [ $self->id ];
 }
 
 =head1 AUTHOR

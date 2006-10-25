@@ -15,5 +15,5 @@
 
 <h3>Manage status</h3>
 <ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ status.uri_args ]) | html %]">Edit this status</li>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), status.uri_args) | html %]">Edit this status</li>
 </ul>

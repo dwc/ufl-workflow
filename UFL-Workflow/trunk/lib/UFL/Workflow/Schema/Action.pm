@@ -165,7 +165,7 @@ Return the list of URI path arguments needed to identify this action.
 sub uri_args {
     my ($self) = @_;
 
-    return $self->id;
+    return [ $self->id ];
 }
 
 =head1 AUTHOR

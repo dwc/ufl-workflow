@@ -2,7 +2,7 @@
 
 <p>Select the role from the list below. Note that roles are specific to a group.</p>
 
-<form action="[% c.uri_for(c.controller.action_for('add_group_role'), [ user.uri_args ]) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]
   [% INCLUDE groups/includes/groups.tt field_value = group.id %]
