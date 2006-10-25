@@ -89,6 +89,21 @@ sub update {
     }
 }
 
+=head2 can_decide_on
+
+Return true if this group can decide on the specified
+L<UFL::Workflow::Schema::Action>.
+
+=cut
+
+sub can_decide_on {
+    my ($self, $action) = @_;
+
+    $self->throw_exception('You must provide an action')
+        unless blessed $action and $action->isa('UFL::Workflow::Schema::Action');
+
+    return ($action->status->is_initial and grep { $action->step->role_id == $_->id } $self->roles);
+}
 =head2 add_role
 
 Add a role to this group.

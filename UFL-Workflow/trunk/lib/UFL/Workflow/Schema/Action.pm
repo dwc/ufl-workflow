@@ -122,6 +122,7 @@ sub update_status {
         $self->status($status);
         $self->actor($actor);
         $self->comment($comment);
+        $self->update;
 
         my $action;
         if ($status->continues_request) {
@@ -144,13 +145,15 @@ sub update_status {
         }
 
         if ($action) {
-            $self->next_action($action);
-            $action->prev_action($self);
+            $self->throw_exception('Invalid group for step')
+                unless $group->can_decide_on($action);
             $action->add_to_groups($group);
+            $action->prev_action($self);
             $action->update;
-        }
 
-        $self->update;
+            $self->next_action($action);
+            $self->update;
+        }
     });
 }
 
