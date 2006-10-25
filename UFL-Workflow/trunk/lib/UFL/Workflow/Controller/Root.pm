@@ -53,7 +53,7 @@ Display the home page.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $actions  = $c->user->pending_actions;
+    my $actions = $c->user->pending_actions;
     $c->forward($c->controller('Requests')->action_for('for_user'));
 
     $c->stash(
