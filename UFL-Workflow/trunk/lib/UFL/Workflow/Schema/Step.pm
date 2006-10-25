@@ -81,10 +81,7 @@ Return a list of groups whose members can act on this step.
 sub groups {
     my ($self) = @_;
 
-    my @groups = $self->role->groups;
-    warn "### group_id = [" . $_->id . "]" for @groups;
-
-    return @groups;
+    return $self->role->groups;
 }
 
 =head2 delete
