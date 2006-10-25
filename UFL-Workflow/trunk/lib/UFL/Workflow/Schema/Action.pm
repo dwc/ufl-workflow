@@ -101,22 +101,26 @@ step.
 =cut
 
 sub update_status {
-    my ($self, $status, $actor, $group, $comment) = @_;
+    my ($self, $values) = @_;
 
+    my $status  = delete $values->{status};
+    my $actor   = delete $values->{actor};
+    my $group   = delete $values->{group};
+    my $comment = delete $values->{comment};
     my $request = $self->request;
 
     $self->throw_exception('You must provide a status')
         unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
     $self->throw_exception('You must provide an actor')
         unless blessed $actor and $actor->isa('UFL::Workflow::Schema::User');
-    $self->throw_exception('You must provide an group')
-        unless blessed $group and $group->isa('UFL::Workflow::Schema::Group');
     $self->throw_exception('Actor cannot decide on this action')
         unless $actor->can_decide_on($self);
     $self->throw_exception('Decision already made')
         unless $self->status->is_initial;
     $self->throw_exception('Action does not appear to be the current one')
         unless $self->id == $request->current_action->id;
+    $self->throw_exception('You must provide a group')
+        if ($request->next_step and not (blessed $group and $group->isa('UFL::Workflow::Schema::Group')));
 
     $self->result_source->schema->txn_do(sub {
         $self->status($status);

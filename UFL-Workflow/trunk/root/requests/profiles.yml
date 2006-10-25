@@ -14,6 +14,6 @@ add_action:
   - status_id
   - [ NOT_BLANK, INT ]
   - group_id
-  - [ NOT_BLANK, INT ]
+  - [ INT ]
   - comment
   - [ [ LENGTH, 0, 1024 ] ]

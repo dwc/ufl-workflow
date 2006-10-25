@@ -145,10 +145,15 @@ sub view : PathPart('') Chained('request') Args(0) {
         { order_by   => 'name' },
     );
 
+    my @groups;
+    if (my $next_step = $request->next_step) {
+        @groups = $next_step->groups;
+    }
+
     $c->stash(
         documents => $documents,
         statuses  => $statuses,
-        groups    => [ $request->next_step->groups ],
+        groups    => @groups ? \@groups : undef,
         template  => 'requests/view.tt',
     );
 }
@@ -216,16 +221,26 @@ sub add_action : PathPart Chained('request') Args(0) {
     die 'Request is not open' unless $request->is_open;
 
     my $result = $self->validate_form($c);
-    if ($result->success) {
-        $request->result_source->schema->txn_do(sub {
-            my $action = $request->actions->find($result->valid('action_id'));
-            my $status = $c->model('DBIC::Status')->find($result->valid('status_id'));
-            my $group  = $c->model('DBIC::Group')->find($result->valid('group_id'));
-            $c->detach('/default') unless $action and $status and $group;
+    $c->detach('view', [ $request->uri_args ]) unless $result->success;
 
-            $action->update_status($status, $c->user->obj, $group, $result->valid('comment'));
+    $request->result_source->schema->txn_do(sub {
+        my $action = $request->actions->find($result->valid('action_id'));
+        my $status = $c->model('DBIC::Status')->find($result->valid('status_id'));
+        $c->detach('/default') unless $action and $status;
+
+        my $group;
+        if (my $group_id = $result->valid('group_id')) {
+            $group = $c->model('DBIC::Group')->find($group_id);
+            $c->detach('/default') unless $group;
+        }
+
+        $action->update_status({
+            status  => $status,
+            actor   => $c->user->obj,
+            group   => $group,
+            comment => $result->valid('comment'),
         });
-    }
+    });
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), [ $request->uri_args ]));
 }
