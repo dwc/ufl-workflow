@@ -176,9 +176,8 @@ sub add_document : PathPart Chained('request') Args(0) {
                 unless grep { /^\Q$extension\E$/i } @extensions;
 
             my $destination = $c->path_to('root', $c->config->{documents}->{destination});
-            my $max_length = $c->model('DBIC::Document')->result_source->column_info('title')->{size};
             my $document = $request->add_document({
-                title                 => substr($title, 0, $max_length),
+                title                 => $title,
                 extension             => $extension,
                 replaced_document_id  => $result->valid('replaced_document_id') || undef,
                 contents              => $upload->slurp,

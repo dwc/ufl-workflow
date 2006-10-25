@@ -172,10 +172,14 @@ sub add_document {
 
     my $document;
     $self->result_source->schema->txn_do(sub {
-        my $md5 = Digest::MD5::md5_hex($contents);
+        my $length = $self->documents->result_source->column_info('title')->{size};
+        my $title  = substr(delete $values->{title}, 0, $length);
+        my $md5    = Digest::MD5::md5_hex($contents);
+
         $document = $self->documents->find_or_create({
             %$values,
-            md5 => $md5,
+            title => $title,
+            md5   => $md5,
         });
 
         if ($replaced_document_id) {
