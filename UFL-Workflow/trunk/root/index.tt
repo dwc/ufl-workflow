@@ -9,30 +9,15 @@
     <th>Action</th>
     <th>Added</th>
   </tr>
+  [% SET i = 0 %]
   [% WHILE (action = actions.next) %]
-  <tr>
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ action.request.uri_args ]) | html %]#actions">[% action.request.title | html %]</a></td>
     <td>[% action.step.name | html %]</td>
     <td>[% action.insert_time | html %]</td>
   </tr>
   [% END %]
 </table>
-[% END %]
-
-<h3>Your requests</h3>
-[% INCLUDE requests/includes/list.tt comment = 'The following is a list of your requests and their current status:', requests = user_requests %]
-
-<h3>Your group requests</h3>
-[% INCLUDE requests/includes/list.tt comment = 'The following is a list of requests entered by members of your groups:', requests = group_requests %]
-
-<h3>Add new request</h3>
-[% IF processes.count > 0 %]
-<p>You can add a new request for one of the following processes:</p>
-<ul>
-  [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller('Requests').action_for('add'), process_id = process.id) | html %]">[% process.name | html %]</a></li>
-  [% END %]
-</ul>
-[% ELSE %]
-<p>There are currently no processes to which you can add a request.</p>
 [% END -%]
+
+[% INCLUDE requests/for_user.tt %]

@@ -54,25 +54,11 @@ sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $actions  = $c->user->pending_actions;
-
-    my $user_requests = $c->user->requests->search(
-        undef,
-        { order_by => \q[update_time DESC, insert_time DESC] },
-    );
-
-    my $group_requests = $c->user->group_requests;
-
-    my $processes = $c->model('DBIC::Process')->search(
-        undef,
-        { order_by => 'name' },
-    );
+    $c->forward($c->controller('Requests')->action_for('for_user'));
 
     $c->stash(
-        actions        => $actions,
-        user_requests  => $user_requests,
-        group_requests => $group_requests,
-        processes      => $processes,
-        template       => 'index.tt'
+        actions   => $actions,
+        template  => 'index.tt'
     );
 }
 
