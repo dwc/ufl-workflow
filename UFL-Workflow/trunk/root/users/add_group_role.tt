@@ -10,5 +10,5 @@
     [% INCLUDE roles/includes/roles.tt %]
   [% END %]
 [% END -%]
-  <input type="submit" value="Add Role" />
+  <input type="submit" class="submit" value="Add Role" />
 </form>

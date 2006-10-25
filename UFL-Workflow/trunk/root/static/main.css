@@ -1,4 +1,12 @@
-* {margin:0;padding:0}
+/*a.add {
+background:url(images/add.gif) left center no-repeat;
+border:none;
+padding-left:17px;
+text-decoration:underline;
+}
+*/
+
+* {margin:0;padding:0;}
 
 body {
 background:#FFF url(images/bg.gif) repeat-x;
@@ -7,39 +15,188 @@ font:63.125%/200% 'Trebuchet MS', verdana, geneva, Arial, Helvetica, sans-serif;
 text-align:center;
 }
 
-a:link,a:visited,a:active {
+a:link,a:visited {
 border-bottom:1px solid #0045c4;
 color:#0021a5;
-text-decoration:none
+text-decoration:none;
 }
 
-a:hover {
+a:hover,a:active {
 border-bottom:1px solid #ff4a00;
-color:#ff4a00
+color:#ff4a00;
+}
+
+dl#statuses dd {
+width:500px;
+}
+
+dl#statuses dt {
+width:250px;
 }
 
 form p {
 font-size:1.2em;
-margin:2px 0 50px 45px
+margin:2px 0 50px 45px;
 }
 
-#container{
-width: 770px;
-margin: 0 auto;
-position: relative;
+form.roles {
+margin:2px 0 10px;
+}
+
+form.roles input {
+clear:none;
+display:inline;
+float:left;
+width:120px;
+}
+
+h3 {
+background:#fff url(images/bg_dir_heading.gif) bottom repeat-x;
+border:3px double #ccc;
+clear:both;
+color:#333;
+font-size:1.2em;
+margin:15px 0 5px;
+padding:5px;
+text-align:left;
+}
+
+html>body form.roles {
+display:inline;
+float:left;
+}
+
+p,li,form,h4 {
+text-align:left;
+}
+
+select#group_id {
+width:250px;
+}
+
+select#status_id {
+width:100px;
+}
+
+#container {
 font-size:1.4em;
+margin:0 auto;
+width:770px;
 }
 
-#header h1{
+#content dd {
+border-bottom:1px solid #ccc;
+float:right;
+padding:3px 0;
+text-align:left;
+width:650px;
+}
+
+#content dt {
+border-bottom:1px solid #ccc;
+clear:left;
+float:left;
+font-weight:700;
+padding:3px 0 3px 3px;
+text-align:left;
+width:100px;
+}
+
+#content form.process-steps {
+margin:0 0 10px;
+padding:5px 0 10px;
+}
+
+#content form.process-steps input {
+display:inline;
+float:left;
+margin:0;
+padding:0;
+}
+
+#content form.process-steps-down {
+padding-bottom:30px;
+}
+
+#content h2 {
+display:none;
+}
+
+#content input,#content textarea {
+clear:both;
+display:block;
+font-size:1em;
+margin:0 0 15px;
+width:60%;
+}
+
+#content input.checkbox,#content label.radio input {
+display:inline;
+width:20px;
+}
+
+#content input.submit {
+width:120px;
+}
+
+#content label.radio {
+clear:both;
+display:block;
+height:1.4em;
+}
+
+#content li {
+clear:both;
+margin:5px 0;
+}
+
+#content p {
+clear:both;
+margin:0 5px 10px;
+}
+
+#content table {
+border-collapse:collapse;
+font-size:1em;
+margin:0 0 25px;
+width:100%;
+}
+
+#content td {
+padding:5px;
+}
+
+#content textarea {
+height:50px;
+margin:10px 0;
+}
+
+#content th {
+border-bottom:3px solid #aaa;
+padding:0 5px;
+text-align:left;
+}
+
+#content tr {
+border-bottom:1px solid #ccc;
+}
+
+#content ul,#content ol {
+margin:0 25px 10px;
+}
+
+#header {
+position:relative;
+width:770px;
+}
+
+#header h1 {
 font-size:14px;
 height:30px;
-/* \*/overflow: hidden;/* */
-}
-
-#header h1{
+margin-left:30px;
+overflow:hidden;
 position:relative;
-width: 105px;
-margin-left:30px
+width:105px;
 }
 
 #header h1 a span {
@@ -47,196 +204,76 @@ background:url(images/unitHeader.gif) no-repeat;
 cursor:hand;
 display:block;
 height:100%;
+left:0;
 position:absolute;
 top:0;
-left:0;
-width:100%
+width:100%;
 }
 
 #header p {
-position: absolute;
-right: 0;
-top: 5px;
-color: #fff;
-font-size: .9em;
+color:#fff;
+font-size:.9em;
+position:absolute;
+right:0;
+top:5px;
 }
 
 #header p a {
-color: #fff;
 border:none;
+color:#fff;
+padding:2px;
 text-decoration:underline;
-padding: 2px;
 }
 
 #header p a:hover {
-background: #fff;
-color: #000;
+background:#fff;
+color:#000;
 }
-
-#content h3 {
-background:#fff url(images/bg_dir_heading.gif) bottom repeat-x;
-border:3px double #ccc;
-color:#333;
-font-size:1.2em;
-margin:15px 0 5px;
-padding:5px;
-text-align: left;
-clear:both;
-}
-
-p,li,form,h4 {
-text-align:left
-}
-
 
 #header,.directories h3 {
-text-align:left
+text-align:left;
 }
 
 #nav {
 display:block;
-margin-bottom: 20px;
-height: 30px;
+height:30px;
+margin-bottom:20px;
 }
+
 #nav li {
-list-style:none;
 display:inline;
+list-style:none;
 }
 
 #nav li a {
+border:3px solid #d1d1d1;
+border-width:3px 3px 0;
 display:block;
 float:left;
-border:3px solid #d1d1d1;
-border-width: 3px 3px 0;
 font-size:1em;
 margin:0 10px 5px 0;
-padding: 0 5px;
-text-align: left;
+padding:0 5px;
+text-align:left;
 }
 
 #nav li a:hover {
-color: #ff4a00;
-border-bottom: 3px solid #555;
+border-bottom:3px solid #555;
+color:#ff4a00;
 }
 
-#nav li#active a{
-color: #000;
-
+#nav li#active a {
+border-bottom:3px solid #000;
+color:#000;
 font-weight:700;
-border-bottom: 3px solid #000;
 }
 
 #note {
 clear:both;
 font-size:1.2em;
 margin:0 auto;
-width:40em
-}
-
-#content table {
-border-collapse:collapse;
-font-size: 1em;
-width: 100%;
-margin: 0 0 25px;
-}
-
-#content tr {
-border-bottom: 1px solid #ccc;
-}
-
-#content th {
-padding: 0 5px;
-text-align: left;
-border-bottom: 3px solid #aaa;
-}
-
-#content td {
-padding: 5px;
-}
-
-#content p {
-margin: 0 5px 10px;
-clear:both;
-}
-
-#content ul, #content ol {
-margin: 0 25px 10px;
-}
-
-#content li {
-margin: 5px 0;
-clear:both;
-}
-
-#content h2 {
-display:none;
-}
-
-#content input, #content textarea {
-clear:both;
-display:block;
-margin:0 0 15px;
-width: 60%;
-font-size: 1em;
-}
-#content form.process-steps input, #content form.roles input{
-display:inline;
-clear:none;
-margin: 5px 10px 20px 0;
-float:left;
-}
-
-#content label.radio {
-clear:both;
-display:block;
-height: 1.4em;
-}
- #content input.checkbox, #content label.radio input  {
-display:inline;
-width: 20px;
- }
-#content form.process-steps-down {
-margin-left: 220px;
-}
-#content textarea {
-margin: 10px 0;
-height: 50px;
-}
-
-#content input.submit {
-width: 120px;
-}
-
-a.add {
-background: url(images/add.gif) left center no-repeat;
-padding-left: 17px;
-text-decoration:underline;
-border:none;
+width:40em;
 }
 
 .even {
-background: #eee;
-}
-#content dt {
-float: left;
-width: 100px;
-padding: 3px 0 3px 3px;
-border-bottom: 1px solid #ccc;
-text-align:left;
-font-weight:700;
-clear:left;
-}
-#content dd {
-width: 650px;
-text-align:left;
-float:right;
-padding: 3px 0;
-border-bottom: 1px solid #ccc;
-}
-
-dl#statuses dt {
-width: 250px;
-}
-dl#statuses dd {
-width: 500px;
+background:#eee;
 }

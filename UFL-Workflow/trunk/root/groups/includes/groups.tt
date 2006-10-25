@@ -15,7 +15,7 @@
   [% END %]
 [% END -%]
 <label>[% field_label | html %]:
-  <select name="[% field_name | html %]">
+  <select name="[% field_name | html %]" id="group_id">
     <option value=""></option>
 [% FILTER indent('    ') %]
   [% INCLUDE group_list l = 0 %]
