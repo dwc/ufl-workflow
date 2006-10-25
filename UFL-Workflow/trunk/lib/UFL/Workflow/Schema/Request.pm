@@ -162,8 +162,8 @@ sub add_action {
     my $new_action;
     $self->result_source->schema->txn_do(sub {
         my %values = (
-             status_id => $initial_status->id,
              %$values,
+             status_id => $initial_status->id,
         );
 
         $new_action = $self->actions->find_or_create(\%values);
