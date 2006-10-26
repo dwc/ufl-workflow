@@ -1,3 +1,7 @@
+[% DEFAULT
+   stylesheets = [ c.uri_for('/static/main.css') ]
+   scripts     = []
+-%]
 <?xml version="1.0" encoding="[% c.config.encoding || 'UTF-8' | html %]"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -6,7 +10,20 @@
     <title>[% title_parts.grep('.').join(' - ') | html %]</title>
     <meta name="generator" content="[% c.config.name _ ' ' _ c.VERSION %]" />
     <meta http-equiv="Content-Type" content="text/html; charset=[% c.config.encoding || 'UTF-8' | html %]" />
-    <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/main.css') | html %]" />
+[% FOREACH stylesheet IN stylesheets %]
+    <link rel="stylesheet" type="text/css" href="[% stylesheet | html %]" />
+[% END %]
+[% FOREACH script IN scripts %]
+    <script type="text/javascript" src="[% script | html %]"></script>
+[% END %]
+[% IF snippets %]
+    <script type="text/javascript">
+
+  [% FILTER indent('      ') %]
+    [% snippets.join("\n") | html %]
+  [% END %]
+    </script>
+[% END %]
   </head>
   <body>
     <div id="container">
