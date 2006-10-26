@@ -1,1 +1,3 @@
-[% action.status.name | html %] at [% action.step.name | html %] ([% action.groups.first.name | html -%]
+[% action.status.name | html %] at [% action.step.name | html -%]
+[% SET groups = action.groups -%]
+[% IF groups -%] ([% groups.first.name | html -%])[% END -%]
