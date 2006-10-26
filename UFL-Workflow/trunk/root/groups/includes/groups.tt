@@ -1,6 +1,7 @@
 [% DEFAULT
-   field_label = 'Group'
+   field_id    = ''
    field_name  = 'group_id'
+   field_label = 'Group'
 -%]
 [% BLOCK group_list %]
   [% SET prefix = '' %]
@@ -15,7 +16,7 @@
 [% END -%]
 
 <label>[% field_label | html %]:
-  <select name="[% field_name | html %]" id="group_id">
+  <select name="[% field_name | html %]"[% IF field_id %] id="[% field_id | html %]"[% END %]>
     <option value=""></option>
 [% FILTER indent('    ') %]
   [% INCLUDE group_list level = 0 %]
