@@ -49,14 +49,6 @@ p,li,form,h4 {
 text-align:left;
 }
 
-select#group_id {
-width:250px;
-}
-
-select#status_id {
-width:100px;
-}
-
 #container {
 font-size:1.4em;
 margin:0 auto;
@@ -81,9 +73,8 @@ text-align:left;
 width:100px;
 }
 
-#content form p {
-font-size:1.2em;
-margin:2px 0 50px 45px;
+#content form {
+margin-left: 5px;
 }
 
 #content form.process-steps {
@@ -114,11 +105,11 @@ margin: 2px 0 10px;
 display:none;
 }
 
-#content input,#content textarea {
+#content input,#content select,#content textarea {
 clear:both;
 display:block;
 font-size:1em;
-margin:0 0 15px;
+margin:0 0 10px;
 width:60%;
 }
 
@@ -172,7 +163,6 @@ padding:5px;
 
 #content textarea {
 height:50px;
-margin:10px 0;
 }
 
 #content th {

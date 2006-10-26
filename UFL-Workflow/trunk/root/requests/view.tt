@@ -91,7 +91,6 @@
     </select>
   </label>
     [% END %]
-  <br />
   <label>Comment: <textarea name="comment"></textarea></label>
   <input type="submit" class="submit" value="Submit Decision" />
 </form>
