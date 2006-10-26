@@ -96,7 +96,7 @@ sub delete {
     my ($self, @args) = @_;
 
     $self->throw_exception('Process cannot be edited')
-        if $self->process->is_editable > 0;
+        unless $self->process->is_editable;
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
@@ -140,7 +140,7 @@ sub move_up {
     my ($self) = @_;
 
     $self->throw_exception('Process cannot be edited')
-        if $self->process->is_editable > 0;
+        unless $self->process->is_editable;
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
@@ -183,7 +183,7 @@ sub move_down {
     my ($self) = @_;
 
     $self->throw_exception('Process cannot be edited')
-        if $self->process->is_editable > 0;
+        unless $self->process->is_editable;
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
