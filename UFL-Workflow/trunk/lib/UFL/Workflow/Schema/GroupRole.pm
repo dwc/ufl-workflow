@@ -29,6 +29,16 @@ __PACKAGE__->belongs_to(
     'role_id',
 );
 
+__PACKAGE__->has_many(
+    user_group_roles => 'UFL::Workflow::Schema::UserGroupRole',
+    {
+        'foreign.group_id' => 'self.group_id',
+        'foreign.role_id'  => 'self.role_id',
+    },
+);
+
+__PACKAGE__->many_to_many('users', 'user_group_roles', 'actor');
+
 =head1 NAME
 
 UFL::Workflow::Schema::GroupRole - Group-to-role table class
