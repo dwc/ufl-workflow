@@ -41,10 +41,11 @@
     [% SET step = next_step %]
   [% END %]
 </ol>
+<br style="clear:both" />
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
-<br style="clear:both;" />
+
 <h3>Manage process</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
