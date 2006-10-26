@@ -102,14 +102,18 @@ sub add : Local {
                 user_id     => $c->user->obj->id,
                 title       => $result->valid('title'),
                 description => $result->valid('description'),
+                group_id    => $result->valid('group_id'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
     }
 
+    my @groups = $process->first_step->role->groups;
+
     $c->stash(
         process  => $process,
+        groups   => \@groups,
         template => 'requests/add.tt',
     );
 }

@@ -134,16 +134,19 @@ Add a request that follows this process.
 sub add_request {
     my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a user, title, and description for the request')
-        unless ref $values eq 'HASH' and $values->{user_id} and $values->{title} and $values->{description};
+    $self->throw_exception('You must provide a user, title, description, and initial group for the request')
+        unless ref $values eq 'HASH' and $values->{user_id} and $values->{title} and $values->{description} and $values->{group_id};
+
+    my $group = $self->result_source->schema->resultset('Group')->find(delete $values->{group_id});
+    $self->throw_exception('Coult not find group')
+        unless $group;
 
     my $new_request;
     $self->result_source->schema->txn_do(sub {
         $new_request = $self->requests->find_or_create($values);
 
-        $new_request->add_action({
-            step_id => $self->first_step->id,
-        });
+        my $action = $new_request->add_action({ step_id  => $self->first_step->id });
+        $action->add_to_groups($group);
     });
 
     return $new_request;
