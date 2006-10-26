@@ -18,22 +18,24 @@
     [% SET role = step.role %]
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), step.uri_args) | html %]">[% step.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>)
+    [% IF process.is_editable %]
     <br />
     <form class="process-steps" action="[% c.uri_for(c.controller.action_for('delete_step'), process.uri_args) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
       <input type="submit" class="submit" value="Remove" />
     </form>
-    [% IF prev_step %]
+      [% IF prev_step %]
     <form class="process-steps" action="[% c.uri_for(c.controller.action_for('move_step_up'), process.uri_args) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
       <input type="submit" class="submit" value="Move Up &uarr;" />
     </form>
-    [% END %]
-    [% IF next_step %]
+      [% END %]
+      [% IF next_step %]
     <form class="process-steps process-steps-down" action="[% c.uri_for(c.controller.action_for('move_step_down'), process.uri_args) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />
       <input type="submit" class="submit" value="Move Down &darr;" />
     </form>
+      [% END %]
     [% END %]
   </li>
     [% SET step = next_step %]
@@ -46,5 +48,7 @@
 <h3>Manage process</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
+[% IF process.is_editable %]
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]">Add new step</a></li>
+[% END %]
 </ul>
