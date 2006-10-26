@@ -1,7 +1,7 @@
 [% SET title = 'Statuses' -%]
 
-[% IF statuses.count > 0 %]
 <h3>Current statuses</h3>
+[% IF statuses.count > 0 %]
 <ul>
   [% WHILE (status = statuses.next) %]
   <li><a href="[% c.uri_for(c.controller.action_for('view'), status.uri_args) | html %]">[% status.name | html %]</a>
