@@ -35,6 +35,7 @@ __PACKAGE__->has_many(
         'foreign.group_id' => 'self.group_id',
         'foreign.role_id'  => 'self.role_id',
     },
+    { cascade_delete => 0, cascade_copy => 0 },
 );
 
 __PACKAGE__->many_to_many('users', 'user_group_roles', 'actor');
