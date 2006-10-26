@@ -34,22 +34,6 @@ dl#statuses dt {
 width:250px;
 }
 
-form p {
-font-size:1.2em;
-margin:2px 0 50px 45px;
-}
-
-form.roles {
-margin:2px 0 10px;
-}
-
-form.roles input {
-clear:none;
-display:inline;
-float:left;
-width:120px;
-}
-
 h3 {
 background:#fff url(images/bg_dir_heading.gif) bottom repeat-x;
 border:3px double #ccc;
@@ -59,11 +43,6 @@ font-size:1.2em;
 margin:15px 0 5px;
 padding:5px;
 text-align:left;
-}
-
-html>body form.roles {
-display:inline;
-float:left;
 }
 
 p,li,form,h4 {
@@ -102,6 +81,11 @@ text-align:left;
 width:100px;
 }
 
+#content form p {
+font-size:1.2em;
+margin:2px 0 50px 45px;
+}
+
 #content form.process-steps {
 margin:0 0 10px;
 padding:5px 0 10px;
@@ -116,6 +100,14 @@ padding:0;
 
 #content form.process-steps-down {
 padding-bottom:30px;
+}
+
+#content form.roles input {
+clear:none;
+display:inline;
+float:left;
+width:auto;
+margin: 2px 0 10px;
 }
 
 #content h2 {
