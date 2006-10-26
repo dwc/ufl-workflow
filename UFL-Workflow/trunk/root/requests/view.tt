@@ -68,6 +68,19 @@
     [% SET action = action.next_action %]
     [% SET i = i + 1 %]
   [% END %]
+  [% SET step = request.next_step %]
+  [% WHILE step %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td>[% step.name | html %]</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+    [% SET step = step.next_step %]
+    [% SET i = i + 1 %]
+  [% END %]
 </table>
 
   [% IF c.user.can_decide_on(current_action) %]
