@@ -6,5 +6,5 @@
   [% INCLUDE steps/includes/step.tt %]
   [% INCLUDE roles/includes/roles.tt %]
 [% END -%]
-  <input type="submit" value="Add Step" />
+  <input type="submit" class="submit" value="Add Step" />
 </form>

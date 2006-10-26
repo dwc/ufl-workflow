@@ -20,7 +20,7 @@
     <form class="roles" action="[% c.uri_for(c.controller.action_for('delete_group_role'), user.uri_args) | html %]" method="post">
       <input type="hidden" name="group_id" value="[% group.id | html %]" />
       <input type="hidden" name="role_id" value="[% role.id | html %]" />
-      <input type="submit" value="Remove" />
+      <input type="submit" class="submit" value="Remove" />
     </form>
   </li>
   [% END %]

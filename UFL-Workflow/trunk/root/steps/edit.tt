@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE steps/includes/step.tt %]
 [% END -%]
-  <input type="submit" value="Edit Step" />
+  <input type="submit" class="submit" value="Edit Step" />
 </form>

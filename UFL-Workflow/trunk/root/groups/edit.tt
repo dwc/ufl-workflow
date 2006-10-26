@@ -5,5 +5,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE groups/includes/group.tt field_value = group.parent_group.id %]
 [% END -%]
-  <input type="submit" value="Edit Group" />
+  <input type="submit" class="submit" value="Edit Group" />
 </form>
