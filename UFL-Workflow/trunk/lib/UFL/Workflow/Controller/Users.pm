@@ -112,6 +112,7 @@ sub add_group_role : PathPart Chained('user') Args(0) {
 
     my $groups = $c->model('DBIC::Group')->root_groups;
 
+    # Show the roles once a group is selected
     if (my $group_id = $c->req->param('group_id')) {
         $group_id =~ s/\D//g;
         $c->detach('/default') unless $group_id;
