@@ -1,0 +1,4 @@
+[% SET title = 'All Requests' -%]
+
+<h3>All requests</h3>
+[% INCLUDE requests/includes/list.tt requests %]

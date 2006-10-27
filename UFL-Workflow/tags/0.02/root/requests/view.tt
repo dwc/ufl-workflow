@@ -1,0 +1,123 @@
+[% SET
+   title = request.title
+   status_id = 'status_id'
+   group_id = 'group_id'
+   scripts = [
+     c.uri_for('/static/javascript/prototype.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/AddAction.js'),
+   ]
+   snippets = [
+     "new UFL.Workflow.Form.AddAction('${c.uri_for(c.controller('Requests').action_for('list_groups'), request.uri_args)}', '$status_id', '$group_id');",
+   ]
+-%]
+
+<h3>Request details</h3>
+<dl>
+  <dt>Process:</dt>
+  <dd>[% request.process.name | html %]</dd>
+  <dt>Status:</dt>
+  <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
+  <dt>Title:</dt>
+  <dd>[% request.title | html %]</dd>
+  <dt>Description:</dt>
+  <dd>[% request.description | html %]</dd>
+  <dt>Added:</dt>
+  <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
+</dl>
+<br style="clear:both" />
+
+<h3>Documents</h3>
+[% IF documents.count > 0 %]
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Replacement</th>
+    <th>Added</th>
+  </tr>
+  [% SET i = 0 %]
+  [% WHILE (document = documents.next) %]
+    [% SET replacement = document.replacement %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for('/documents', document.uri_args.join('/')) | html %]">[% document.title | html %]</a></td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for('/documents', replacement.uri_args.join('/')) | html %]">[% replacement.title | html %]</a>[% END %]</td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time.strftime(datetime_format) | html %]</td>
+  </tr>
+    [% SET i = i + 1 %]
+  [% END %]
+</table>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<h3 id="actions">Actions</h3>
+[% SET action = request.first_action %]
+[% SET current_action = request.current_action %]
+[% IF action %]
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Status</th>
+    <th>Group</th>
+    <th>User</th>
+    <th>Comment</th>
+    <th>Added</th>
+  </tr>
+  [% SET i = 0 %]
+  [% WHILE action %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td>[% action.step.name | html %]</td>
+    <td>[% action.status.name | html %]</td>
+    <td>[% action.groups.first.name | html %]</td>
+    <td>[% action.actor.username || '-' | html %]</td>
+    <td>[% action.comment || '-' | html %]</td>
+    <td>[% action.insert_time.strftime(datetime_format) | html %]</td>
+  </tr>
+    [% SET action = action.next_action %]
+    [% SET i = i + 1 %]
+  [% END %]
+  [% SET step = request.next_step %]
+  [% WHILE step %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td>[% step.name | html %]</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+    [% SET step = step.next_step %]
+    [% SET i = i + 1 %]
+  [% END %]
+</table>
+
+  [% IF c.user.can_decide_on(current_action) %]
+<h3>Decision</h3>
+<p>You can make a decision on the <strong>[% current_action.step.name | html %]</strong> step of this request.</p>
+<form action="[% c.uri_for(c.controller.action_for('add_action'), request.uri_args) | html %]" method="post">
+  <input type="hidden" name="action_id" value="[% current_action.id | html %]" />
+  <label>Set status to:
+    <select name="status_id" id="[% status_id | html %]">
+      <option value=""></option>
+    [% WHILE (status = statuses.next) %]
+      <option value="[% status.id | html %]">[% status.name | html %]</option>
+    [% END %]
+    </select>
+  </label>
+  <label>Send to group:
+    <select name="group_id" id="[% group_id | html %]">
+    </select>
+  </label>
+  <label>Comment: <textarea name="comment"></textarea></label>
+  <input type="submit" class="submit" value="Submit Decision" />
+</form>
+  [% END %]
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+[% IF request.is_open %]
+<h3>Manage request</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add document</a></li>
+</ul>
+[% END %]
