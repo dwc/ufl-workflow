@@ -1,5 +1,7 @@
 [% SET title = "Add Role to ${group.name}" -%]
 
+<h3>Role details</h3>
+<p>To add a new role to the <strong>[% group.name | html %]</strong> group, provide a name. You may add users to the role after it is created via the <a href="[% c.uri_for(c.controller('Users').action_for('index')) | html %]">user management area</a>.</p>
 <form action="[% c.uri_for(c.controller.action_for('add_role'), group.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]

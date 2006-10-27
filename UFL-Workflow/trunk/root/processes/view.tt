@@ -2,9 +2,13 @@
 
 <h3>Process details</h3>
 <dl>
+  <dt>Name</dt>
+  <dd>[% process.name | html %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]
   <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.username | html %]</a></dd>
+  <dt>Added</dt>
+  <dd>[% process.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
 

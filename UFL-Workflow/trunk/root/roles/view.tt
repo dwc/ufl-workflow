@@ -4,6 +4,8 @@
 <dl>
   <dt>Name</dt>
   <dd>[% role.name | html %]</dd>
+  <dt>Added</dt>
+  <dd>[% role.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
 

@@ -1,5 +1,6 @@
 [% SET title = "Add Document to ${request.title}" -%]
 
+<h3>Document details</h3>
 <p>Upload your document using the form below. Documents above 10 MB in size are not recommended.</p>
 [% SET extensions = c.config.documents.accepted_extensions.sort %]
 <p>At this time, documents of type [% FOREACH extension IN extensions %]<code>[% extension | html %]</code>[% IF extension != extensions.last %], [% END %][% END %] are accepted.</p>

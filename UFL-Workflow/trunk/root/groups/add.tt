@@ -1,5 +1,7 @@
 [% SET title = 'Add Group' -%]
 
+<h3>Group details</h3>
+<p>To add a new group, provide the name of the group and, optionally, a parent group. Members of parent groups see requests for their constituent groups.</p>
 <form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
 
 [% FILTER indent('  ') %]

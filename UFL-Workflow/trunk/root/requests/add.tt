@@ -1,5 +1,7 @@
 [% SET title = "Add Request to ${process.name}" -%]
 
+<h3>Request details</h3>
+<p>To add a new request which follows the <strong>[% process.name | html %]</strong> process, enter a title, description, and initial group for review. After the request is added, you can attach documents and view its progress.</p>
 <form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
 
 [% FILTER indent('  ') %]
