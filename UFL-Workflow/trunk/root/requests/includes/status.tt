@@ -1,3 +1,6 @@
+[% DEFAULT show_group = 0 %]
 [% action.status.name | html %] at [% action.step.name | html -%]
-[% SET groups = action.groups -%]
-[% IF groups -%] ([% groups.first.name | html -%])[% END -%]
+[% IF show_group %]
+  [% SET groups = action.groups %]
+  [% IF groups %]<br />([% groups.first.name | html -%])[% END %]
+[% END -%]

@@ -11,7 +11,7 @@
     <select name="replaced_document_id">
       <option value=""></option>
   [% WHILE (document = documents.next) %]
-      <option value="[% document.id | html %]">[% document.title | html %] ([% document.insert_time | html %])</option>
+      <option value="[% document.id | html %]">[% document.title | html %] ([% document.insert_time.strftime(datetime_format) | html %])</option>
   [% END %]
     </select>
   </label>

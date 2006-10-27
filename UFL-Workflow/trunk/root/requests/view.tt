@@ -22,9 +22,9 @@
   <dt>Description:</dt>
   <dd>[% request.description | html %]</dd>
   <dt>Added:</dt>
-  <dd>[% request.insert_time | html %]</dd>
+  <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated:</dt>
-  <dd>[% request.update_time | html %]</dd>
+  <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
 
@@ -35,7 +35,6 @@
     <th>Title</th>
     <th>Replacement</th>
     <th>Added</th>
-    <th>Updated</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE (document = documents.next) %]
@@ -43,8 +42,7 @@
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for('/documents', document.uri_args.join('/')) | html %]">[% document.title | html %]</a></td>
     <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for('/documents', replacement.uri_args.join('/')) | html %]">[% replacement.title | html %]</a>[% END %]</td>
-    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time | html %]</td>
-    <td[% IF replacement %] class="replaced"[% END %]>[% document.update_time | html %]</td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time.strftime(datetime_format) | html %]</td>
   </tr>
     [% SET i = i + 1 %]
   [% END %]
@@ -65,7 +63,6 @@
     <th>User</th>
     <th>Comment</th>
     <th>Added</th>
-    <th>Updated</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE action %]
@@ -75,8 +72,7 @@
     <td>[% action.groups.first.name | html %]</td>
     <td>[% action.actor.username || '-' | html %]</td>
     <td>[% action.comment || '-' | html %]</td>
-    <td>[% action.insert_time | html %]</td>
-    <td>[% action.update_time | html %]</td>
+    <td>[% action.insert_time.strftime(datetime_format) | html %]</td>
   </tr>
     [% SET action = action.next_action %]
     [% SET i = i + 1 %]
@@ -85,7 +81,6 @@
   [% WHILE step %]
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td>[% step.name | html %]</td>
-    <td>-</td>
     <td>-</td>
     <td>-</td>
     <td>-</td>

@@ -15,7 +15,7 @@
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) | html %]#actions">[% request.title | html %]</a></td>
     <td>[% action.step.name | html %]</td>
-    <td>[% action.insert_time | html %]</td>
+    <td>[% action.insert_time.strftime(datetime_format) | html %]</td>
   </tr>
   [% END %]
 </table>

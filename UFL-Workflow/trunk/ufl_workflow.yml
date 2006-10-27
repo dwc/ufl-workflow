@@ -32,3 +32,5 @@ Model::DBIC:
 View::TT:
   PRE_CHOMP: 1
   WRAPPER:   wrapper.tt
+  VARIABLES:
+    datetime_format: %a, %B %e, %Y %l:%M %p
