@@ -153,6 +153,19 @@ sub uri_args {
     return [ $self->id ];
 }
 
+=head2 to_json
+
+Return a hash suitable for conversion to JSON which represents this
+group.
+
+=cut
+
+sub to_json {
+    my ($self) = @_;
+
+    return { id => $self->id, name => $self->name };
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

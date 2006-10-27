@@ -249,6 +249,33 @@ sub add_action : PathPart Chained('request') Args(0) {
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
 
+=head2 list_groups
+
+List groups that are valid for the request and the specified status
+via L<JSON>.
+
+=cut
+
+sub list_groups : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $status_id = $c->req->param('status_id');
+    $status_id =~ s/\D//g;
+    $c->detach('/default') unless $status_id;
+
+    my $status = $c->model('DBIC::Status')->find($status_id);
+    $c->detach('/default') unless $status;
+
+    my $request = $c->stash->{request};
+
+    my @groups = $request->groups_for_status($status);
+    $c->stash(groups => [ map { $_->to_json } @groups ]);
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/groups/ ]);
+    $c->forward($view);
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

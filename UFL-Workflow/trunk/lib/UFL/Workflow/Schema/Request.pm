@@ -143,6 +143,37 @@ sub is_open {
     return $self->current_action->status->is_initial;
 }
 
+=head2 groups_for_status
+
+Return a list of L<UFL::Workflow::Schema::Group>s which can act on the
+request given that the status of the current
+L<UFL::Workflow::Schema::Action> is being set to the specified
+L<UFL::Workflow::Schema::Status>.
+
+=cut
+
+sub groups_for_status {
+    my ($self, $status) = @_;
+
+    $self->throw_exception('You must provide an status')
+        unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
+
+    my $step = $self->current_step;
+    if ($status->continues_request) {
+        $step = $self->next_step;
+    }
+    elsif ($status->finishes_request) {
+        $step = undef;
+    }
+
+    my @groups;
+    if ($step) {
+        @groups = $step->role->groups;
+    }
+
+    return @groups;
+}
+
 =head2 add_action
 
 Add a new action to this request.
