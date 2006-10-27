@@ -38,6 +38,12 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->has_many(
+    user_group_roles => 'UFL::Workflow::Schema::UserGroupRole',
+    { 'foreign.group_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->has_many(
     action_groups => 'UFL::Workflow::Schema::ActionGroup',
     { 'foreign.group_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },

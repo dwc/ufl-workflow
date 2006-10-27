@@ -25,14 +25,15 @@
 </ul>
 [% END -%]
 
-[% SET roles = group.roles %]
-[% IF roles %]
+[% SET group_roles = group.group_roles %]
+[% IF group_roles %]
 <h3>Users by role</h3>
 <ul>
-  [% FOREACH role IN roles %]
+  [% FOREACH group_role IN group_roles %]
+    [% SET role = group_role.role %]
+    [% SET users = group_role.users %]
   <li>
     <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
-    [% SET users = role.users %]
     [% IF users %]
     ([% users.size | html %] user[% users.size == 1 ? '' : 's' %])
     <ul>
