@@ -261,15 +261,16 @@ sub list_groups : PathPart Chained('request') Args(0) {
 
     my $status_id = $c->req->param('status_id');
     $status_id =~ s/\D//g;
-    $c->detach('/default') unless $status_id;
 
-    my $status = $c->model('DBIC::Status')->find($status_id);
-    $c->detach('/default') unless $status;
+    if ($status_id) {
+        my $status = $c->model('DBIC::Status')->find($status_id);
+        if ($status) {
+            my $request = $c->stash->{request};
 
-    my $request = $c->stash->{request};
-
-    my @groups = $request->groups_for_status($status);
-    $c->stash(groups => [ map { $_->to_json } @groups ]);
+            my @groups = $request->groups_for_status($status);
+            $c->stash(groups => [ map { $_->to_json } @groups ]);
+        }
+    }
 
     my $view = $c->view('JSON');
     $view->expose_stash([ qw/groups/ ]);
