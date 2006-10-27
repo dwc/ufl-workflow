@@ -119,8 +119,6 @@ sub update_status {
         unless $self->status->is_initial;
     $self->throw_exception('Action does not appear to be the current one')
         unless $self->id == $request->current_action->id;
-    $self->throw_exception('You must provide a group')
-        if ($request->next_step and not (blessed $group and $group->isa('UFL::Workflow::Schema::Group')));
 
     $self->result_source->schema->txn_do(sub {
         $self->status($status);
@@ -144,9 +142,9 @@ sub update_status {
         }
 
         if ($action) {
-            $self->throw_exception('Invalid group for step')
-                unless $group->can_decide_on($action);
-            $action->add_to_groups($group);
+            $action->assign_to_group($group);
+
+            # Update pointers
             $action->prev_action($self);
             $action->update;
 
@@ -154,6 +152,23 @@ sub update_status {
             $self->update;
         }
     });
+}
+
+=head2 assign_to_group
+
+Assign this action to the specified L<UFL::Workflow::Schema::Group>.
+
+=cut
+
+sub assign_to_group {
+    my ($self, $group) = @_;
+
+    $self->throw_exception('You must provide a group')
+        unless blessed $group and $group->isa('UFL::Workflow::Schema::Group');
+    $self->throw_exception('Invalid group for step')
+        unless $group->can_decide_on($self);
+
+    $self->set_groups($group);
 }
 
 =head2 uri_args
