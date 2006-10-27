@@ -12,6 +12,7 @@ authentication:
   dbic:
     user_class:           DBIC::User
     user_field:           username
+    auto_create_user:     1
 
 authorization:
   dbic:

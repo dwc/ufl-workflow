@@ -47,6 +47,8 @@ __PACKAGE__->many_to_many('group_roles', 'user_group_roles', 'group_role');
 __PACKAGE__->many_to_many('groups', 'user_group_roles', 'group');
 __PACKAGE__->many_to_many('roles', 'user_group_roles', 'role');
 
+__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::User');
+
 =head1 NAME
 
 UFL::Workflow::Schema::User - User table class
