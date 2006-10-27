@@ -7,6 +7,7 @@ UFL.Workflow.Form.AddAction.prototype = {
   initialize: function(url, statusId, groupId) {
     var me = this;
     Event.observe(window, "load", function() {
+      Element.hide($(groupId).parentNode);
       new Form.Element.EventObserver(statusId, function() { me.getActionGroups(url, $(statusId), $(groupId)) });
     });
   },
@@ -19,11 +20,12 @@ UFL.Workflow.Form.AddAction.prototype = {
 
         var json = me.evalJSON(req);
         if (json && json.groups && json.groups.length > 0) {
-          Element.show(groupSelect.parentNode);
           for (var i = 0; i < json.groups.length; i++) {
             var group = json.groups[i];
             groupSelect.options[i] = new Option(group.name, group.id);
           }
+
+          Element.show(groupSelect.parentNode);
         }
         else {
           Element.hide(groupSelect.parentNode);
