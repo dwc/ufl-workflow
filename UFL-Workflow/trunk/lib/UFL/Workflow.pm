@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Catalyst qw/
     ConfigLoader
+    Setenv
     Authentication
     +UFL::Workflow::Plugin::Authentication::Credential::Passthrough
     Authentication::Store::DBIC

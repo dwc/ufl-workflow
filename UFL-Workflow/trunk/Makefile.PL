@@ -13,6 +13,7 @@ requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::FillInForm';
+requires 'Catalyst::Plugin::Setenv';
 requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
