@@ -190,17 +190,17 @@ sub add_action {
     $self->throw_exception('Could not find initial status')
         unless $initial_status;
 
-    my $new_action;
+    my $action;
     $self->result_source->schema->txn_do(sub {
         my %values = (
              %$values,
              status_id => $initial_status->id,
         );
 
-        $new_action = $self->actions->find_or_create(\%values);
+        $action = $self->actions->find_or_create(\%values);
     });
 
-    return $new_action;
+    return $action;
 }
 
 =head2 add_document

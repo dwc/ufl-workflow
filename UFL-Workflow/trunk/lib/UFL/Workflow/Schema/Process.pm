@@ -107,22 +107,22 @@ sub add_step {
     $self->throw_exception('Process cannot be edited')
         unless $self->is_editable;
 
-    my $new_step;
+    my $step;
     $self->result_source->schema->txn_do(sub {
         my $last_step = $self->last_step;
 
         my %values = %$values;
         $values{prev_step_id} = $last_step->id
             if $last_step;
-        $new_step = $self->steps->find_or_create(\%values);
+        $step = $self->steps->find_or_create(\%values);
 
         if ($last_step) {
-            $last_step->next_step_id($new_step->id);
+            $last_step->next_step_id($step->id);
             $last_step->update;
         }
     });
 
-    return $new_step;
+    return $step;
 }
 
 =head2 add_request
@@ -141,15 +141,15 @@ sub add_request {
     $self->throw_exception('Coult not find group')
         unless $group;
 
-    my $new_request;
+    my $request;
     $self->result_source->schema->txn_do(sub {
-        $new_request = $self->requests->find_or_create($values);
+        $request = $self->requests->find_or_create($values);
 
-        my $action = $new_request->add_action({ step_id  => $self->first_step->id });
+        my $action = $request->add_action({ step_id  => $self->first_step->id });
         $action->add_to_groups($group);
     });
 
-    return $new_request;
+    return $request;
 }
 
 =head2 uri_args
