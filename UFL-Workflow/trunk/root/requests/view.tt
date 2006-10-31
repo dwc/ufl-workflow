@@ -62,7 +62,7 @@
     <th>Group</th>
     <th>User</th>
     <th>Comment</th>
-    <th>Added</th>
+    <th>Updated</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE action %]
@@ -72,7 +72,7 @@
     <td>[% action.groups.first.name | html %]</td>
     <td>[% action.actor.username || '-' | html %]</td>
     <td>[% action.comment || '-' | html %]</td>
-    <td>[% action.insert_time.strftime(datetime_format) | html %]</td>
+    <td>[% action.update_time.strftime(datetime_format) | html %]</td>
   </tr>
     [% SET action = action.next_action %]
     [% SET i = i + 1 %]
