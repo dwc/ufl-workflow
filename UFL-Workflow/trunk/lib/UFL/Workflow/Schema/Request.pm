@@ -155,7 +155,7 @@ L<UFL::Workflow::Schema::Status>.
 sub groups_for_status {
     my ($self, $status) = @_;
 
-    $self->throw_exception('You must provide an status')
+    $self->throw_exception('You must provide a status')
         unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
 
     my $step = $self->current_step;
@@ -212,8 +212,11 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 sub add_document {
     my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a title, extension, contents, and destination for the document')
-        unless ref $values eq 'HASH' and $values->{title} and $values->{extension} and $values->{contents} and $values->{destination};
+    $self->throw_exception('You must provide a user, title, extension, contents, and destination for the document')
+        unless ref $values eq 'HASH' and $values->{user} and $values->{title} and $values->{extension} and $values->{contents} and $values->{destination};
+
+    my $user = delete $values->{user};
+    die 'User cannot manage request' unless $user->can_manage($self);
 
     my $contents    = delete $values->{contents};
     my $destination = delete $values->{destination};

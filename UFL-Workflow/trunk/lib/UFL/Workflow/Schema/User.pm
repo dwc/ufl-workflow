@@ -130,6 +130,22 @@ sub can_decide_on {
     return ($action->status->is_initial and $has_group_role);
 }
 
+=head2 can_manage
+
+Return true if this user can manage the specified
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub can_manage {
+    my ($self, $request) = @_;
+
+    $self->throw_exception('You must provide a request')
+        unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
+
+    return ($request->is_open and $self->id == $request->user_id);
+}
+
 =head2 pending_actions
 
 Return a L<DBIx::Class::ResultSet> containing

@@ -115,7 +115,7 @@
 <p>None yet.</p>
 [% END %]
 
-[% IF request.is_open %]
+[% IF c.user.can_manage(request) %]
 <h3>Manage request</h3>
 <ul>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add document</a></li>

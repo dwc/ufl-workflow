@@ -172,7 +172,7 @@ sub add_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
-    die 'Request is not open' unless $request->is_open;
+    die 'User cannot manage request' unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
@@ -187,6 +187,7 @@ sub add_document : PathPart Chained('request') Args(0) {
 
             my $destination = $c->path_to('root', $c->config->{documents}->{destination});
             my $document = $request->add_document({
+                user                  => $c->user->obj,
                 title                 => $title,
                 extension             => $extension,
                 replaced_document_id  => $result->valid('replaced_document_id') || undef,
