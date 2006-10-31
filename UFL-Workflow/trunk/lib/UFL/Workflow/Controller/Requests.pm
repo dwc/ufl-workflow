@@ -98,11 +98,14 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
+            my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
+            $c->detach('/default') unless $group;
+
             my $request = $process->add_request({
-                user_id     => $c->user->obj->id,
+                user        => $c->user->obj,
                 title       => $result->valid('title'),
                 description => $result->valid('description'),
-                group_id    => $result->valid('group_id'),
+                group       => $group,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));

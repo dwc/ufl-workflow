@@ -3,6 +3,7 @@ package UFL::Workflow::Schema::Process;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
+use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
 
@@ -135,15 +136,22 @@ sub add_request {
     my ($self, $values) = @_;
 
     $self->throw_exception('You must provide a user, title, description, and initial group for the request')
-        unless ref $values eq 'HASH' and $values->{user_id} and $values->{title} and $values->{description} and $values->{group_id};
+        unless ref $values eq 'HASH' and $values->{title} and $values->{description};
 
-    my $group = $self->result_source->schema->resultset('Group')->find(delete $values->{group_id});
-    $self->throw_exception('Coult not find group')
-        unless $group;
+    my $user  = delete $values->{user};
+    my $group = delete $values->{group};
+
+    $self->throw_exception('You must provide a user')
+        unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('You must provide a group')
+        unless blessed $group and $group->isa('UFL::Workflow::Schema::Group');
 
     my $request;
     $self->result_source->schema->txn_do(sub {
-        $request = $self->requests->find_or_create($values);
+        $request = $self->requests->find_or_create({
+            %$values,
+            user_id => $user->id,
+        });
 
         my $action = $request->add_action({ step_id  => $self->first_step->id });
         $action->add_to_groups($group);
