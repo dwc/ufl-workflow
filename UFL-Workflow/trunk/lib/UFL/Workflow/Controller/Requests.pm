@@ -210,14 +210,14 @@ sub add_document : PathPart Chained('request') Args(0) {
     );
 }
 
-=head2 add_action
+=head2 update_status
 
 Add an action to this request, i.e., a decision by one of the users
 with the role on the current step.
 
 =cut
 
-sub add_action : PathPart Chained('request') Args(0) {
+sub update_status : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     die 'Method must be POST' unless $c->req->method eq 'POST';
@@ -228,23 +228,20 @@ sub add_action : PathPart Chained('request') Args(0) {
     my $result = $self->validate_form($c);
     $c->detach('view', $request->uri_args) unless $result->success;
 
-    $request->result_source->schema->txn_do(sub {
-        my $action = $request->actions->find($result->valid('action_id'));
-        my $status = $c->model('DBIC::Status')->find($result->valid('status_id'));
-        $c->detach('/default') unless $action and $status;
+    my $status = $c->model('DBIC::Status')->find($result->valid('status_id'));
+    $c->detach('/default') unless $status;
 
-        my $group;
-        if (my $group_id = $result->valid('group_id')) {
-            $group = $c->model('DBIC::Group')->find($group_id);
-            $c->detach('/default') unless $group;
-        }
+    my $group;
+    if (my $group_id = $result->valid('group_id')) {
+        $group = $c->model('DBIC::Group')->find($group_id);
+        $c->detach('/default') unless $group;
+    }
 
-        $action->update_status({
-            status  => $status,
-            actor   => $c->user->obj,
-            group   => $group,
-            comment => $result->valid('comment'),
-        });
+    $request->update_status({
+        status  => $status,
+        actor   => $c->user->obj,
+        group   => $group,
+        comment => $result->valid('comment'),
     });
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));

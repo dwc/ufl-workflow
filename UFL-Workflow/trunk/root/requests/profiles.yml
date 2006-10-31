@@ -10,9 +10,7 @@ add_document:
   - [ NOT_BLANK ]
   - replaced_document_id
   - [ INT ]
-add_action:
-  - action_id
-  - [ NOT_BLANK, INT ]
+update_status:
   - status_id
   - [ NOT_BLANK, INT ]
   - group_id

@@ -257,6 +257,18 @@ sub add_document {
     return $document;
 }
 
+=head2 update_status
+
+Update the status of the current L<UFL::Workflow::Schema::Action>.
+
+=cut
+
+sub update_status {
+    my ($self, $values) = @_;
+
+    $self->current_action->update_status($values);
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this request.

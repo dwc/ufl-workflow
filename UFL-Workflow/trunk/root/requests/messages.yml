@@ -12,9 +12,7 @@ add_document:
     DEFAULT: A document
   replaced_document_id:
     DEFAULT: The document being replaced
-add_action:
-  action_id:
-    DEFAULT: An action
+update_status:
   status_id:
     DEFAULT: A status
   group_id:
