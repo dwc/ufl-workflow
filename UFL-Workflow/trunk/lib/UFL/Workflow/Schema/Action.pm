@@ -93,65 +93,6 @@ Action table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
-=head2 update_status
-
-Update the status of this action, driving the process to the next
-step.
-
-=cut
-
-sub update_status {
-    my ($self, $values) = @_;
-
-    my $status  = delete $values->{status};
-    my $actor   = delete $values->{actor};
-    my $group   = delete $values->{group};
-    my $comment = delete $values->{comment};
-
-    $self->throw_exception('You must provide a status')
-        unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
-    $self->throw_exception('You must provide an actor')
-        unless blessed $actor and $actor->isa('UFL::Workflow::Schema::User');
-    $self->throw_exception('Actor cannot decide on this action')
-        unless $actor->can_decide_on($self);
-    $self->throw_exception('Decision already made')
-        unless $self->status->is_initial;
-
-    my $request = $self->request;
-    $self->result_source->schema->txn_do(sub {
-        $self->status($status);
-        $self->actor($actor);
-        $self->comment($comment);
-        $self->update;
-
-        my $action;
-        if ($status->continues_request) {
-            my $step = $request->next_step;
-            if ($step) {
-                $action = $request->add_action($step);
-            }
-        }
-        elsif ($status->finishes_request) {
-            # Done
-        }
-        else {
-            # Add a copy of the current step
-            $action = $request->add_action($self->step);
-        }
-
-        if ($action) {
-            $action->assign_to_group($group);
-
-            # Update pointers
-            $action->prev_action($self);
-            $action->update;
-
-            $self->next_action($action);
-            $self->update;
-        }
-    });
-}
-
 =head2 assign_to_group
 
 Assign this action to the specified L<UFL::Workflow::Schema::Group>.

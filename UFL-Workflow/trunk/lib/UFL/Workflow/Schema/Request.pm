@@ -274,16 +274,65 @@ sub add_document {
 
 =head2 update_status
 
-Update the status of the current L<UFL::Workflow::Schema::Action>.
+Update the status of the current L<UFL::Workflow::Schema::Action>,
+driving the request to the next step.
 
 =cut
 
 sub update_status {
     my ($self, $values) = @_;
 
-    die 'Request is not open' unless $self->is_open;
+    $self->throw_exception('Request is not open')
+        unless $self->is_open;
 
-    $self->current_action->update_status($values);
+    my $status  = delete $values->{status};
+    my $actor   = delete $values->{actor};
+    my $group   = delete $values->{group};
+    my $comment = delete $values->{comment};
+
+    my $current_action = $self->current_action;
+
+    $self->throw_exception('You must provide a status')
+        unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
+    $self->throw_exception('You must provide an actor')
+        unless blessed $actor and $actor->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('Actor cannot decide on this action')
+        unless $actor->can_decide_on($current_action);
+    $self->throw_exception('Decision already made')
+        unless $current_action->status->is_initial;
+
+    $self->result_source->schema->txn_do(sub {
+        $current_action->status($status);
+        $current_action->actor($actor);
+        $current_action->comment($comment);
+        $current_action->update;
+
+        my $action;
+        if ($status->continues_request) {
+            my $step = $self->next_step;
+            if ($step) {
+                $action = $self->add_action($step);
+            }
+        }
+        elsif ($status->finishes_request) {
+            # Done
+        }
+        else {
+            # Add a copy of the current step
+            $action = $self->add_action($current_action->step);
+        }
+
+        if ($action) {
+            $action->assign_to_group($group);
+
+            # Update pointers
+            $action->prev_action($current_action);
+            $action->update;
+
+            $current_action->next_action($action);
+            $current_action->update;
+        }
+    });
 }
 
 =head2 uri_args
