@@ -13,15 +13,17 @@
 
 <h3>Request details</h3>
 <dl>
-  <dt>Process:</dt>
+  <dt>Process</dt>
   <dd>[% request.process.name | html %]</dd>
-  <dt>Status:</dt>
+  <dt>Status</dt>
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
-  <dt>Title:</dt>
+  <dt>Title</dt>
   <dd>[% request.title | html %]</dd>
-  <dt>Description:</dt>
+  <dt>Description</dt>
   <dd>[% request.description | html %]</dd>
-  <dt>Added:</dt>
+  <dt>Submitter</dt>
+  <dd>[% request.submitter.username | html %]</dd>
+  <dt>Added</dt>
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
