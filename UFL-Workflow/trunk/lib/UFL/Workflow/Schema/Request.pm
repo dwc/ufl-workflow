@@ -212,18 +212,22 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 sub add_document {
     my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a user, title, extension, contents, and destination for the document')
-        unless ref $values eq 'HASH' and $values->{user} and $values->{title} and $values->{extension} and $values->{contents} and $values->{destination};
+    $self->throw_exception('You must provide a title and extension')
+        unless ref $values eq 'HASH' and $values->{title} and $values->{extension};
 
-    my $user = delete $values->{user};
-    die 'User cannot manage request' unless $user->can_manage($self);
-
-    my $contents    = delete $values->{contents};
-    my $destination = delete $values->{destination};
-    die 'Destination must be a Path::Class::Dir object'
-        unless blessed $destination and $destination->isa('Path::Class::Dir');
-
+    my $user                 = delete $values->{user};
+    my $contents             = delete $values->{contents};
+    my $destination          = delete $values->{destination};
     my $replaced_document_id = delete $values->{replaced_document_id};
+
+    $self->throw_exception('You must provide a user')
+        unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('You must provide the document contents')
+        unless $contents;
+    $self->throw_exception('You must provide a destination directory')
+        unless blessed $destination and $destination->isa('Path::Class::Dir');
+    $self->throw_exception('User cannot manage request')
+        unless $user->can_manage($self);
 
     my $document;
     $self->result_source->schema->txn_do(sub {
