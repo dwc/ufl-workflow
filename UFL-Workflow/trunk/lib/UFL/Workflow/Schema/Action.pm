@@ -107,7 +107,6 @@ sub update_status {
     my $actor   = delete $values->{actor};
     my $group   = delete $values->{group};
     my $comment = delete $values->{comment};
-    my $request = $self->request;
 
     $self->throw_exception('You must provide a status')
         unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
@@ -118,6 +117,7 @@ sub update_status {
     $self->throw_exception('Decision already made')
         unless $self->status->is_initial;
 
+    my $request = $self->request;
     $self->result_source->schema->txn_do(sub {
         $self->status($status);
         $self->actor($actor);
