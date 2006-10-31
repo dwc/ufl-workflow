@@ -117,8 +117,6 @@ sub update_status {
         unless $actor->can_decide_on($self);
     $self->throw_exception('Decision already made')
         unless $self->status->is_initial;
-    $self->throw_exception('Action does not appear to be the current one')
-        unless $self->id == $request->current_action->id;
 
     $self->result_source->schema->txn_do(sub {
         $self->status($status);
