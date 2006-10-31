@@ -128,7 +128,7 @@ sub update_status {
         if ($status->continues_request) {
             my $step = $request->next_step;
             if ($step) {
-                $action = $request->add_action({ step_id => $step->id });
+                $action = $request->add_action($step);
             }
         }
         elsif ($status->finishes_request) {
@@ -136,7 +136,7 @@ sub update_status {
         }
         else {
             # Add a copy of the current step
-            $action = $request->add_action({ step_id => $self->step_id });
+            $action = $request->add_action($self->step);
         }
 
         if ($action) {

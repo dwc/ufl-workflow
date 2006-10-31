@@ -153,8 +153,8 @@ sub add_request {
             user_id => $user->id,
         });
 
-        my $action = $request->add_action({ step_id  => $self->first_step->id });
-        $action->add_to_groups($group);
+        my $action = $request->add_action($self->first_step);
+        $action->assign_to_group($group);
     });
 
     return $request;
