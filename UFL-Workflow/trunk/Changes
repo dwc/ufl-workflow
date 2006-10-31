@@ -5,6 +5,7 @@ This file documents the revision history for UFL::Workflow.
         - Allow document attachment only when request is open and when
           the current user is the submitter
         - Refactor descision making to Schema::Request
+        - Pass objects to model methods instead of IDs
 
 0.02  Fri Oct 27 12:15:48 EDT 2006
         - Rename application from UFL::Curriculum to UFL::Workflow

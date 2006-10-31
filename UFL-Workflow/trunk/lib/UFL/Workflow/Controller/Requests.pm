@@ -188,14 +188,20 @@ sub add_document : PathPart Chained('request') Args(0) {
             die 'File is not one of the allowed types'
                 unless grep { /^\Q$extension\E$/i } @extensions;
 
+            my $replaced_document;
+            if (my $replaced_document_id = $result->valid('replaced_document_id')) {
+                $replaced_document = $request->documents->find($replaced_document_id);
+                $c->detach('/default') unless $replaced_document;
+            }
+
             my $destination = $c->path_to('root', $c->config->{documents}->{destination});
             my $document = $request->add_document({
-                user                  => $c->user->obj,
-                title                 => $title,
-                extension             => $extension,
-                replaced_document_id  => $result->valid('replaced_document_id') || undef,
-                contents              => $upload->slurp,
-                destination           => $destination,
+                user              => $c->user->obj,
+                title             => $title,
+                extension         => $extension,
+                replaced_document => $replaced_document,
+                contents          => $upload->slurp,
+                destination       => $destination,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));

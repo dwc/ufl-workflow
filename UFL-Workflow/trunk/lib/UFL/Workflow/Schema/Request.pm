@@ -192,12 +192,10 @@ sub add_action {
 
     my $action;
     $self->result_source->schema->txn_do(sub {
-        my %values = (
+        $action = $self->actions->find_or_create({
             %$values,
             status_id => $initial_status->id,
-        );
-
-        $action = $self->actions->find_or_create(\%values);
+        });
     });
 
     return $action;
@@ -215,10 +213,10 @@ sub add_document {
     $self->throw_exception('You must provide a title and extension')
         unless ref $values eq 'HASH' and $values->{title} and $values->{extension};
 
-    my $user                 = delete $values->{user};
-    my $contents             = delete $values->{contents};
-    my $destination          = delete $values->{destination};
-    my $replaced_document_id = delete $values->{replaced_document_id};
+    my $user              = delete $values->{user};
+    my $contents          = delete $values->{contents};
+    my $destination       = delete $values->{destination};
+    my $replaced_document = delete $values->{replaced_document};
 
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
@@ -241,10 +239,7 @@ sub add_document {
             md5   => $md5,
         });
 
-        if ($replaced_document_id) {
-            my $replaced_document = $self->documents->find($replaced_document_id);
-            die 'Replaced document not found' unless $replaced_document;
-
+        if ($replaced_document) {
             $replaced_document->document_id($document->id);
             $replaced_document->update;
         }
