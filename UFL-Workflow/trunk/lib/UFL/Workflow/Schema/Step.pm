@@ -100,7 +100,6 @@ sub delete {
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
-    # Not using txn_do for $self->next::method
     my $schema = $self->result_source->schema;
     eval {
         $schema->txn_begin;
@@ -124,8 +123,8 @@ sub delete {
         $schema->txn_commit;
     };
     if (my $error = $@) {
-        eval { $schema->txn_rollback; $self->throw_exception($error) };
-        $self->throw_exception($@) if $@;
+        $schema->txn_rollback;
+        $self->throw_exception($error);
     }
 }
 

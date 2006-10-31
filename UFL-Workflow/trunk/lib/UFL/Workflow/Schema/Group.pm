@@ -78,7 +78,6 @@ the check passes, update the record.
 sub update {
     my ($self, @args) = @_;
 
-    # Not using txn_do for $self->next::method
     my $schema = $self->result_source->schema;
     eval {
         $schema->txn_begin;
@@ -90,8 +89,8 @@ sub update {
         $schema->txn_commit;
     };
     if (my $error = $@) {
-        eval { $schema->txn_rollback; $self->throw_exception($error) };
-        $self->throw_exception($@) if $@;
+        $schema->txn_rollback;
+        $self->throw_exception($error);
     }
 }
 
