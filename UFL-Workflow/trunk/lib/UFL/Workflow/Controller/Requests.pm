@@ -68,14 +68,17 @@ Display a list of the current requests entered by everyone.
 sub all : Local Args(0) {
     my ($self, $c) = @_;
 
-    my $requests = $c->model('DBIC::Request')->search(
+    my $processes = $c->model('DBIC::Process')->search(
         undef,
-        { order_by => \q[update_time DESC, insert_time DESC] },
+        {
+            order_by => 'me.name, requests.insert_time DESC, requests.update_time DESC',
+            prefetch => 'requests',
+        },
     );
 
     $c->stash(
-        requests => $requests,
-        template => 'requests/all.tt',
+        processes => $processes,
+        template  => 'requests/all.tt',
     );
 }
 
