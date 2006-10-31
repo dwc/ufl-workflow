@@ -266,6 +266,8 @@ Update the status of the current L<UFL::Workflow::Schema::Action>.
 sub update_status {
     my ($self, $values) = @_;
 
+    die 'Request is not open' unless $self->is_open;
+
     $self->current_action->update_status($values);
 }
 

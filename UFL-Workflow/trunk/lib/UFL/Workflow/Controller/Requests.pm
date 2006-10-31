@@ -223,7 +223,6 @@ sub update_status : PathPart Chained('request') Args(0) {
     die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $request = $c->stash->{request};
-    die 'Request is not open' unless $request->is_open;
 
     my $result = $self->validate_form($c);
     $c->detach('view', $request->uri_args) unless $result->success;
