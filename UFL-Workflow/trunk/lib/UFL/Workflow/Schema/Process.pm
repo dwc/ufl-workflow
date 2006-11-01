@@ -103,8 +103,13 @@ Add a new step to the end of the chain for this process.
 sub add_step {
     my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a role and name for the step')
-        unless ref $values eq 'HASH' and $values->{role_id} and $values->{name};
+    $self->throw_exception('You must provide a name for the step')
+        unless ref $values eq 'HASH' and $values->{name};
+
+    my $role = delete $values->{role};
+
+    $self->throw_exception('You must provide a role')
+        unless blessed $role and $role->isa('UFL::Workflow::Schema::Role');
     $self->throw_exception('Process cannot be edited')
         unless $self->is_editable;
 
@@ -112,13 +117,16 @@ sub add_step {
     $self->result_source->schema->txn_do(sub {
         my $last_step = $self->last_step;
 
-        my %values = %$values;
-        $values{prev_step_id} = $last_step->id
-            if $last_step;
-        $step = $self->steps->find_or_create(\%values);
+        $step = $self->steps->find_or_create({
+            %$values,
+            role_id => $role->id,
+        });
 
         if ($last_step) {
-            $last_step->next_step_id($step->id);
+            $step->prev_step($last_step);
+            $step->update;
+
+            $last_step->next_step($step);
             $last_step->update;
         }
     });

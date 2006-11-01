@@ -123,9 +123,12 @@ sub add_step : PathPart Chained('process') Args(0) {
         if ($result->success) {
             my $process = $c->stash->{process};
 
+            my $role = $c->model('DBIC::Role')->find($result->valid('role_id'));
+            $c->detach('/default') unless $role;
+
             my $step = $process->add_step({
-                role_id => $result->valid('role_id'),
-                name    => $result->valid('name'),
+                role => $role,
+                name => $result->valid('name'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
