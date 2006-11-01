@@ -58,14 +58,9 @@ sub edit : PathPart Chained('role') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $role = $c->stash->{role};
-
-            my $values = $result->valid;
-            foreach my $key (keys %$values) {
-                $role->$key($values->{$key}) if $role->can($key);
-            }
-
-            # TODO: Unique check
-            $role->update;
+            $role->update({
+                name => $result->valid('name'),
+            });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
         }

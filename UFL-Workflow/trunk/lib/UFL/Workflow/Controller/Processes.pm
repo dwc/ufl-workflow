@@ -98,14 +98,9 @@ sub edit : PathPart Chained('process') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->stash->{process};
-
-            my $values = $result->valid;
-            foreach my $key (keys %$values) {
-                $process->$key($values->{$key}) if $process->can($key);
-            }
-
-            # TODO: Unique check
-            $process->update;
+            $process->update({
+                name => $result->valid('name'),
+            });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }
