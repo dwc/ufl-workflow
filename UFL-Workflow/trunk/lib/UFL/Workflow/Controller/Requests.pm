@@ -115,7 +115,10 @@ sub add : Local {
         }
     }
 
-    my @groups = $process->first_step->role->groups;
+    my @groups;
+    if (my $first_step = $process->first_step) {
+        @groups = $first_step->role->groups;
+    }
 
     $c->stash(
         process  => $process,
