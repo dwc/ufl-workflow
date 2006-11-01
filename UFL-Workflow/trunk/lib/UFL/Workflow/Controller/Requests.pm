@@ -71,8 +71,8 @@ sub all : Local Args(0) {
     my $processes = $c->model('DBIC::Process')->search(
         undef,
         {
-            order_by => 'me.name, requests.insert_time DESC, requests.update_time DESC',
             prefetch => 'requests',
+            order_by => 'me.name, requests.insert_time DESC, requests.update_time DESC',
         },
     );
 
