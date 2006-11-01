@@ -28,8 +28,8 @@ groups.
 sub root_groups {
     my ($self, $attrs) = @_;
 
-    $attrs->{order_by} ||= 'me.name';
     $attrs->{prefetch} ||= 'child_groups';
+    $attrs->{order_by} ||= 'me.name';
 
     return $self->search(
         { 'me.parent_group_id' => undef },
