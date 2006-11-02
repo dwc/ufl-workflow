@@ -1,0 +1,12 @@
+add:
+  name:
+    DEFAULT: A status name
+    LENGTH:  A shorter status name
+  is_initial:
+    DEFAULT: Whether the status is the initial one for new actions
+  action:
+    DEFAULT: Whether the status continues or finishes the request
+edit:
+  name:
+    DEFAULT: A status name
+    LENGTH:  A shorter status name

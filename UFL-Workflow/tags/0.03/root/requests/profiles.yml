@@ -1,0 +1,19 @@
+add:
+  - title
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
+  - description
+  - [ NOT_BLANK, [ LENGTH, 0, 1024 ] ]
+  - group_id
+  - [ NOT_BLANK, INT ]
+add_document:
+  - document
+  - [ NOT_BLANK ]
+  - replaced_document_id
+  - [ INT ]
+update_status:
+  - status_id
+  - [ NOT_BLANK, INT ]
+  - group_id
+  - [ INT ]
+  - comment
+  - [ [ LENGTH, 0, 1024 ] ]

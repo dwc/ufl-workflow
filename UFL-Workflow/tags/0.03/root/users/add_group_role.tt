@@ -1,0 +1,30 @@
+[% SET title = "Add a Role to ${user.username}'s Account" -%]
+
+[% SET action = c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) %]
+[% IF roles %]
+<h3>Group</h3>
+<dl>
+  <dt>Group</dt>
+  <dd>[% group.name | html %] (<a href="[% action | html %]">Choose a different group</a>)</dd>
+</dl>
+<br style="clear:both" />
+
+<h3>Role</h3>
+<form action="[% action | html %]" method="post">
+  <input type="hidden" name="group_id" value="[% group.id | html %]" />
+
+[% FILTER indent('  ') %]
+  [% INCLUDE roles/includes/roles.tt %]
+[% END -%]
+  <input type="submit" class="submit" value="Add Role" />
+</form>
+[% ELSE %]
+<h3>Group</h3>
+<p>First, choose the group to which <strong>[% user.username | html %]</strong> belongs.</p>
+<form action="[% action | html %]" method="get">
+[% FILTER indent('  ') %]
+  [% INCLUDE groups/includes/groups.tt %]
+[% END -%]
+  <input type="submit" class="submit" value="Select Group" />
+</form>
+[% END %]
