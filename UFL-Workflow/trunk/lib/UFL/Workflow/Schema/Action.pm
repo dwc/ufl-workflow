@@ -33,7 +33,7 @@ __PACKAGE__->add_columns(
     },
     comment => {
         data_type   => 'varchar',
-        size        => 1024,
+        size        => 16384,
         is_nullable => 1,
     },
 );

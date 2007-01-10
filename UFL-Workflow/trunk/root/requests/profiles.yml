@@ -2,7 +2,7 @@ add:
   - title
   - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
   - description
-  - [ NOT_BLANK, [ LENGTH, 0, 1024 ] ]
+  - [ NOT_BLANK, [ LENGTH, 0, 16384 ] ]
   - group_id
   - [ NOT_BLANK, INT ]
 add_document:
@@ -16,4 +16,4 @@ update_status:
   - group_id
   - [ INT ]
   - comment
-  - [ [ LENGTH, 0, 1024 ] ]
+  - [ [ LENGTH, 0, 16384 ] ]

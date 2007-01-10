@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.04
+        - Extend description/comment columns to 16 KB
+        - Add description field to processes
+
 0.03  Thu Nov  2 14:59:01 EST 2006
         - Refactor check for managing request
         - Allow document attachment only when request is open and when
