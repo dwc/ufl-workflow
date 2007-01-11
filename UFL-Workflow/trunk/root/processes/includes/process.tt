@@ -1,2 +1,2 @@
 <label>Name: <input type="text" name="name" value="[% process.name | html %]" maxlength="32" /></label>
-<label>Description: <textarea name="description">[% process.description | html %]</textarea></label>
+<label>Description: <textarea name="description">[% process.description | html | escape_newlines %]</textarea></label>
