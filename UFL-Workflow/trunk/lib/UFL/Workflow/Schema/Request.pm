@@ -236,12 +236,12 @@ sub add_document {
 
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('User cannot manage request')
+        unless $user->can_manage($self);
     $self->throw_exception('You must provide the document contents')
         unless $contents;
     $self->throw_exception('You must provide a destination directory')
         unless blessed $destination and $destination->isa('Path::Class::Dir');
-    $self->throw_exception('User cannot manage request')
-        unless $user->can_manage($self);
 
     my $document;
     $self->result_source->schema->txn_do(sub {
