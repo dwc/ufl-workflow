@@ -7,8 +7,10 @@ UFL.Workflow.Form.AddAction.prototype = {
   initialize: function(url, statusId, groupId) {
     var me = this;
     Event.observe(window, "load", function() {
-      Element.hide($(groupId).parentNode);
-      new Form.Element.EventObserver(statusId, function() { me.getActionGroups(url, $(statusId), $(groupId)) });
+      if ($(groupId) && $(statusId)) {
+        Element.hide($(groupId).parentNode);
+        new Form.Element.EventObserver(statusId, function() { me.getActionGroups(url, $(statusId), $(groupId)) });
+      }
     });
   },
   getActionGroups: function(url, statusSelect, groupSelect) {
