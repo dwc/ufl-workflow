@@ -12,6 +12,7 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
+    # Replacement
     document_id => {
         data_type   => 'integer',
         is_nullable => 1,
