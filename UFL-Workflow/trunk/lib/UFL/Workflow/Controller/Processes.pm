@@ -47,9 +47,7 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $process = $c->user->processes->find_or_create({
-                name => $result->valid('name'),
-            });
+            my $process = $c->user->processes->find_or_create($result->valid);
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }
@@ -98,9 +96,7 @@ sub edit : PathPart Chained('process') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->stash->{process};
-            $process->update({
-                name => $result->valid('name'),
-            });
+            $process->update($result->valid);
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }

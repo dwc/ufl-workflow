@@ -4,6 +4,8 @@
 <dl>
   <dt>Name</dt>
   <dd>[% process.name | html %]</dd>
+  <dt>Description</dt>
+  <dd>[% process.description || '-' | html %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]
   <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.username | html %]</a></dd>
