@@ -1,7 +1,7 @@
 This file documents the revision history for UFL::Workflow.
 
 0.04
-        - Extend description/comment columns to 16 KB
+        - Extend description/comment columns to 8 KB
         - Add description field to processes
 
 0.03  Thu Nov  2 14:59:01 EST 2006
