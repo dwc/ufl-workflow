@@ -106,13 +106,10 @@ Add a new step to the end of the chain for this process.
 =cut
 
 sub add_step {
-    my ($self, $values) = @_;
+    my ($self, $name, $role) = @_;
 
     $self->throw_exception('You must provide a name for the step')
-        unless ref $values eq 'HASH' and $values->{name};
-
-    my $role = delete $values->{role};
-
+        unless $name;
     $self->throw_exception('You must provide a role')
         unless blessed $role and $role->isa('UFL::Workflow::Schema::Role');
     $self->throw_exception('Process cannot be edited')
@@ -123,7 +120,7 @@ sub add_step {
         my $last_step = $self->last_step;
 
         $step = $self->steps->find_or_create({
-            %$values,
+            name    => $name,
             role_id => $role->id,
         });
 
