@@ -2,6 +2,9 @@ add: &process
   name:
     DEFAULT: A process name
     LENGTH:  A shorter process name
+  description:
+    DEFAULT: A process description
+    LENGTH:  A shorter process description
 edit: *process
 add_step:
   name:
