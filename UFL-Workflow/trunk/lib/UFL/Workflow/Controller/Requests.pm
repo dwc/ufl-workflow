@@ -104,12 +104,12 @@ sub add : Local {
             my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
 
-            my $request = $process->add_request({
-                user        => $c->user->obj,
-                title       => $result->valid('title'),
-                description => $result->valid('description'),
-                group       => $group,
-            });
+            my $request = $process->add_request(
+                $result->valid('title'),
+                $result->valid('description'),
+                $c->user->obj,
+                $group,
+            );
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }

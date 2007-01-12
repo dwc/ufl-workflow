@@ -143,28 +143,25 @@ Add a request that follows this process.
 =cut
 
 sub add_request {
-    my ($self, $values) = @_;
+    my ($self, $title, $description, $user, $initial_group) = @_;
 
-    $self->throw_exception('You must provide a user, title, description, and initial group for the request')
-        unless ref $values eq 'HASH' and $values->{title} and $values->{description};
-
-    my $user  = delete $values->{user};
-    my $group = delete $values->{group};
-
+    $self->throw_exception('You must provide a title and description for the request')
+        unless $title and $description;
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
     $self->throw_exception('You must provide a group')
-        unless blessed $group and $group->isa('UFL::Workflow::Schema::Group');
+        unless blessed $initial_group and $initial_group->isa('UFL::Workflow::Schema::Group');
 
     my $request;
     $self->result_source->schema->txn_do(sub {
         $request = $self->requests->find_or_create({
-            %$values,
-            user_id => $user->id,
+            user_id     => $user->id,
+            title       => $title,
+            description => $description,
         });
 
         my $action = $request->add_action($self->first_step);
-        $action->assign_to_group($group);
+        $action->assign_to_group($initial_group);
     });
 
     return $request;
