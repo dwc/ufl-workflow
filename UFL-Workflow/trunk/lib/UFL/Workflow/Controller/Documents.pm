@@ -34,7 +34,7 @@ sub document : PathPart('documents') Chained('/') CaptureArgs(1) {
     $c->stash(document => $document);
 }
 
-=head2 view
+=head2 download
 
 Send the stashed document to the user.
 
