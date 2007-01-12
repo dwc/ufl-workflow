@@ -36,6 +36,8 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Status');
+
 =head1 NAME
 
 UFL::Workflow::Schema::Status - Status table class

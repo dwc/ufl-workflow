@@ -145,23 +145,6 @@ sub is_open {
     return $self->current_action->status->is_initial;
 }
 
-=head2 initial_status
-
-Return the L<UFL::Workflow::Schema::Status> used as the initial status
-for new L<UFL::Workflow::Schema::Action>s on this request.
-
-=cut
-
-sub initial_status {
-    my ($self) = @_;
-
-    my $initial_status = $self->result_source->schema->resultset('Status')->search({ is_initial => 1 })->first;
-    $self->throw_exception('Could not find initial status')
-        unless $initial_status;
-
-    return $initial_status;
-}
-
 =head2 groups_for_status
 
 Return a list of L<UFL::Workflow::Schema::Group>s which can act on the
@@ -206,7 +189,7 @@ sub add_action {
     $self->throw_exception('You must provide a step for the action')
         unless blessed $step and $step->isa('UFL::Workflow::Schema::Step');
 
-    my $initial_status = $self->initial_status;
+    my $initial_status = $self->result_source->schema->resultset('Status')->initial_status;
 
     my $action;
     $self->result_source->schema->txn_do(sub {
