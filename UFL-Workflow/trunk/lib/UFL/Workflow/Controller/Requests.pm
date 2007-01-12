@@ -197,13 +197,13 @@ sub add_document : PathPart Chained('request') Args(0) {
                 $c->detach('/default') unless $replaced_document;
             }
 
-            my $document = $request->add_document({
-                user              => $c->user->obj,
-                filename          => $filename,
-                replaced_document => $replaced_document,
-                contents          => $upload->slurp,
-                destination       => $c->config->{documents}->{destination},
-            });
+            my $document = $request->add_document(
+                $c->user->obj,
+                $filename,
+                $upload->slurp,
+                $c->config->{documents}->{destination},
+                $replaced_document,
+            );
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }

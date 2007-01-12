@@ -226,23 +226,14 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 =cut
 
 sub add_document {
-    my ($self, $values) = @_;
+    my ($self, $user, $filename, $contents, $destination, $replaced_document) = @_;
 
-    $self->throw_exception('You must provide a filename and destination')
-        unless ref $values eq 'HASH' and $values->{filename} and $values->{destination};
-
-    my $filename          = delete $values->{filename};
-    my $user              = delete $values->{user};
-    my $contents          = delete $values->{contents};
-    my $destination       = delete $values->{destination};
-    my $replaced_document = delete $values->{replaced_document};
-
+    $self->throw_exception('You must provide a filename, the contents, and a destination directory')
+        unless $filename and $contents and $destination;
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
     $self->throw_exception('User cannot manage request')
         unless $user->can_manage($self);
-    $self->throw_exception('You must provide the document contents')
-        unless $contents;
 
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;
@@ -254,7 +245,6 @@ sub add_document {
         my $length = $self->documents->result_source->column_info('name')->{size};
 
         $document = $self->documents->find_or_create({
-            %$values,
             name      => substr($name, 0, $length),
             extension => $extension,
             type      => $type,
