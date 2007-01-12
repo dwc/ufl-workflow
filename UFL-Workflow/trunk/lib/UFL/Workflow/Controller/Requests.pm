@@ -246,12 +246,8 @@ sub update_status : PathPart Chained('request') Args(0) {
         $c->detach('/default') unless $group;
     }
 
-    $request->update_status({
-        status  => $status,
-        actor   => $c->user->obj,
-        group   => $group,
-        comment => $result->valid('comment'),
-    });
+    my $comment = $result->valid('comment');
+    $request->update_status($status, $c->user->obj, $group, $comment);
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }

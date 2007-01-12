@@ -276,15 +276,10 @@ driving the request to the next step.
 =cut
 
 sub update_status {
-    my ($self, $values) = @_;
+    my ($self, $status, $actor, $group, $comment) = @_;
 
     $self->throw_exception('Request is not open')
         unless $self->is_open;
-
-    my $status  = delete $values->{status};
-    my $actor   = delete $values->{actor};
-    my $group   = delete $values->{group};
-    my $comment = delete $values->{comment};
 
     my $current_action = $self->current_action;
 
