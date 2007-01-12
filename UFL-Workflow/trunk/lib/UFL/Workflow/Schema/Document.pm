@@ -17,13 +17,17 @@ __PACKAGE__->add_columns(
         data_type   => 'integer',
         is_nullable => 1,
     },
-    title => {
+    name => {
         data_type => 'varchar',
-        size      => 32,
+        size      => 64,
     },
     extension => {
         data_type => 'varchar',
         size      => 8,
+    },
+    type => {
+        data_type => 'varchar',
+        size      => 64,
     },
     md5 => {
         data_type => 'varchar',
@@ -57,6 +61,21 @@ Document table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
+=head2 path
+
+Return the obfuscated path for this document (currently based on MD5).
+
+=cut
+
+sub path {
+    my ($self) = @_;
+
+    # Based on Cache::FileCache
+    my @path = unpack 'A2' x 2 . 'A*', $self->md5 . '.' . $self->extension;
+
+    return @path;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this
@@ -67,10 +86,7 @@ document.
 sub uri_args {
     my ($self) = @_;
 
-    # Based on Cache::FileCache
-    my @path = unpack 'A2' x 2 . 'A*', $self->md5 . '.' . $self->extension;
-
-    return \@path;
+    return [ $self->id ];
 }
 
 =head1 AUTHOR

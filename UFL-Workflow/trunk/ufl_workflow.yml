@@ -5,7 +5,7 @@ logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
 encoding:   UTF-8
 
 documents:
-  destination:         documents
+  destination:         __path_to(documents)__
   accepted_extensions: [ doc, pdf, odt, txt ]
 
 authentication:

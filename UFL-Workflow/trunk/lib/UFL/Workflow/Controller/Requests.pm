@@ -186,13 +186,10 @@ sub add_document : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
-            my $filename = $upload->basename;
-            my ($title, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
-            $extension = lc $extension;
-
+            my $filename   = $upload->basename;
             my @extensions = @{ $c->config->{documents}->{accepted_extensions} || [] };
             die 'File is not one of the allowed types'
-                unless grep { /^\Q$extension\E$/i } @extensions;
+                unless grep { $filename =~ /\.\Q$_\E$/i } @extensions;
 
             my $replaced_document;
             if (my $replaced_document_id = $result->valid('replaced_document_id')) {
@@ -200,14 +197,12 @@ sub add_document : PathPart Chained('request') Args(0) {
                 $c->detach('/default') unless $replaced_document;
             }
 
-            my $destination = $c->path_to('root', $c->config->{documents}->{destination});
             my $document = $request->add_document({
                 user              => $c->user->obj,
-                title             => $title,
-                extension         => $extension,
+                filename          => $filename,
                 replaced_document => $replaced_document,
                 contents          => $upload->slurp,
-                destination       => $destination,
+                destination       => $c->config->{documents}->{destination},
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));

@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base qw/DBIx::Class/;
 use Digest::MD5 ();
+use MIME::Types ();
+use Path::Class::File ();
 use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
@@ -226,9 +228,10 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 sub add_document {
     my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a title and extension')
-        unless ref $values eq 'HASH' and $values->{title} and $values->{extension};
+    $self->throw_exception('You must provide a filename and destination')
+        unless ref $values eq 'HASH' and $values->{filename} and $values->{destination};
 
+    my $filename          = delete $values->{filename};
     my $user              = delete $values->{user};
     my $contents          = delete $values->{contents};
     my $destination       = delete $values->{destination};
@@ -240,19 +243,22 @@ sub add_document {
         unless $user->can_manage($self);
     $self->throw_exception('You must provide the document contents')
         unless $contents;
-    $self->throw_exception('You must provide a destination directory')
-        unless blessed $destination and $destination->isa('Path::Class::Dir');
+
+    my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
+    $extension = lc $extension;
+    my $type   = MIME::Types->new->mimeTypeOf($extension);
+    die "Unknown type for extension [$extension]" unless $type;
 
     my $document;
     $self->result_source->schema->txn_do(sub {
-        my $length = $self->documents->result_source->column_info('title')->{size};
-        my $title  = substr(delete $values->{title}, 0, $length);
-        my $md5    = Digest::MD5::md5_hex($contents);
+        my $length = $self->documents->result_source->column_info('name')->{size};
 
         $document = $self->documents->find_or_create({
             %$values,
-            title => $title,
-            md5   => $md5,
+            name      => substr($name, 0, $length),
+            extension => $extension,
+            type      => $type,
+            md5       => Digest::MD5::md5_hex($contents),
         });
 
         if ($replaced_document) {
@@ -261,7 +267,7 @@ sub add_document {
         }
 
         # Copy the file into the destination
-        my $filename = $destination->file(@{ $document->uri_args });
+        my $filename = Path::Class::File->new($destination, $document->path);
         $filename->parent->mkpath;
         my $fh = IO::File->new($filename, 'w') or die "Error opening $filename: $!";
         $fh->binmode(':raw');
