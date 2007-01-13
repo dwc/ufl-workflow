@@ -42,6 +42,10 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->resultset_attributes({
+    order_by => 'me.name',
+});
+
 =head1 NAME
 
 UFL::Workflow::Schema::Process - Process table class

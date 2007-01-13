@@ -5,15 +5,3 @@
 
 <h3>Your group requests</h3>
 [% INCLUDE requests/includes/list.tt requests = group_requests, comment = 'The following is a list of requests entered by members of your groups:', show_process = 1 %]
-
-<h3>Add new request</h3>
-[% IF processes.count > 0 %]
-<p>You can add a new request for one of the following processes:</p>
-<ul>
-  [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller('Requests').action_for('add'), process_id = process.id) | html %]">[% process.name | html %]</a></li>
-  [% END %]
-</ul>
-[% ELSE %]
-<p>There are currently no processes to which you can add a request.</p>
-[% END %]

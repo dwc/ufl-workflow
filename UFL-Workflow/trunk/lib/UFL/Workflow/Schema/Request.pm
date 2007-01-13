@@ -52,6 +52,10 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->resultset_attributes({
+    order_by => \q[me.update_time DESC, me.insert_time DESC],
+});
+
 =head1 NAME
 
 UFL::Workflow::Schema::Request - Request table class

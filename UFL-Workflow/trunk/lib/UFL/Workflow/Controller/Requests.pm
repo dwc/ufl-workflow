@@ -39,22 +39,12 @@ Display a list of the current requests for the current user.
 sub for_user : Local Args(0) {
     my ($self, $c) = @_;
 
-    my $user_requests = $c->user->requests->search(
-        undef,
-        { order_by => \q[update_time DESC, insert_time DESC] },
-    );
-
+    my $user_requests  = $c->user->requests;
     my $group_requests = $c->user->group_requests;
-
-    my $processes = $c->model('DBIC::Process')->search(
-        undef,
-        { order_by => 'name' },
-    );
 
     $c->stash(
         user_requests  => $user_requests,
         group_requests => $group_requests,
-        processes      => $processes,
         template       => 'requests/for_user.tt',
     );
 }
@@ -70,10 +60,7 @@ sub all : Local Args(0) {
 
     my $processes = $c->model('DBIC::Process')->search(
         undef,
-        {
-            prefetch => 'requests',
-            order_by => 'me.name, requests.insert_time DESC, requests.update_time DESC',
-        },
+        { prefetch => 'requests' },
     );
 
     $c->stash(

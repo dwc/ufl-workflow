@@ -174,6 +174,22 @@ sub pending_actions {
     }
 }
 
+=head2 recent_requests
+
+Return a L<DBIx::Class::ResultSet> containing the
+L<UFL::Workflow::Schema::Request>s entered by this user that have been
+updated within the past week.
+
+=cut
+
+sub recent_requests {
+    my ($self) = @_;
+
+    return $self->requests->search({
+        update_time => \q[>= CURRENT TIMESTAMP - 7 DAYS],
+    });
+}
+
 =head2 group_requests
 
 Return a L<DBIx::Class::ResultSet> containing
