@@ -93,6 +93,27 @@ Action table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
+=head2 statuses
+
+Return a L<DBIx::Class::ResultSet> of valid statuses for this action.
+
+=cut
+
+sub statuses {
+    my ($self) = @_;
+
+    my $statuses = $self->result_source->schema->resultset('Status')->search(
+        { is_initial => 0 },
+        { order_by   => 'name' },
+    );
+
+    unless ($self->step->prev_step_id) {
+        $statuses = $statuses->search({ recycles_request => 0 });
+    }
+
+    return $statuses;
+}
+
 =head2 assign_to_group
 
 Assign this action to the specified L<UFL::Workflow::Schema::Group>.

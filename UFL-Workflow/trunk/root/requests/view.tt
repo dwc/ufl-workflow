@@ -93,6 +93,7 @@
 </table>
 
   [% IF c.user.can_decide_on(current_action) %]
+    [% SET statuses = current_action.statuses %]
 <h3>Decision</h3>
 <p>You can make a decision on the <strong>[% current_action.step.name | html %]</strong> step of this request.</p>
 <form action="[% c.uri_for(c.controller.action_for('update_status'), request.uri_args) | html %]" method="post">

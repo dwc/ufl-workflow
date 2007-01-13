@@ -153,10 +153,6 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $request   = $c->stash->{request};
     my $documents = $request->documents->search(undef, { order_by => 'insert_time' });
-    my $statuses  = $c->model('DBIC::Status')->search(
-        { is_initial => 0 },
-        { order_by   => 'name' },
-    );
 
     my @groups;
     if (my $next_step = $request->next_step) {
@@ -165,7 +161,6 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     $c->stash(
         documents => $documents,
-        statuses  => $statuses,
         groups    => @groups ? \@groups : undef,
         template  => 'requests/view.tt',
     );
