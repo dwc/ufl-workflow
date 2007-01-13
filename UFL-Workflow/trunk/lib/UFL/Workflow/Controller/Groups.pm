@@ -134,9 +134,7 @@ sub add_role : PathPart Chained('group') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $group = $c->stash->{group};
-            my $role = $group->add_role({
-                name => $result->valid('name'),
-            });
+            my $role  = $group->add_role($result->valid('name'));
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }

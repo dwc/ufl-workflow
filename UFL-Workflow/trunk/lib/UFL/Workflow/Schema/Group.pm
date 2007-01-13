@@ -135,11 +135,14 @@ Add a role to this group.
 =cut
 
 sub add_role {
-    my ($self, $values) = @_;
+    my ($self, $name) = @_;
 
     my $role;
     $self->result_source->schema->txn_do(sub {
-        $role = $self->result_source->schema->resultset('Role')->find_or_create($values);
+        $role = $self->result_source->schema->resultset('Role')->find_or_create({
+            name => $name,
+        });
+
         $self->add_to_roles($role);
     });
 
