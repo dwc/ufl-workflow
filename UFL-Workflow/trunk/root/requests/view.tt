@@ -25,6 +25,8 @@
   <dd>[% request.submitter.username | html %]</dd>
   <dt>Added</dt>
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
+  <dt>Updated</dt>
+  <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
 

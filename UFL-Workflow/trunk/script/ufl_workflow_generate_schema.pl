@@ -8,6 +8,7 @@ use lib "$FindBin::Bin/../lib";
 use UFL::Workflow::Schema;
 
 my $type = $ARGV[0] || 'DB2';
+my $separator = $ARGV[1] || '%';
 
 my $schema = UFL::Workflow::Schema->connect;
 my @statements = $schema->storage->deployment_statements($schema, $type, undef, undef, { add_drop_table => 1 });
@@ -44,6 +45,19 @@ END_OF_SQL
         chomp $create;
         push @statements, $drop, $create;
     }
+
+    push @statements, 'DROP TRIGGER requests_action_u;';
+    s/;/$separator/g for @statements;
+
+    push @statements, <<"END_OF_SQL";
+CREATE TRIGGER requests_action_u
+AFTER UPDATE ON actions
+REFERENCING NEW as n
+FOR EACH ROW MODE DB2SQL
+BEGIN ATOMIC
+  UPDATE requests SET $field_name = CURRENT TIMESTAMP WHERE id = n.request_id;
+END$separator
+END_OF_SQL
 }
 
 print "--\n";
