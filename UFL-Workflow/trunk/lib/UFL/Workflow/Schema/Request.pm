@@ -112,6 +112,19 @@ sub current_step {
     return $self->current_action->step;
 }
 
+=head2 prev_step
+
+Return the prev L<UFL::Workflow::Schema::Step> associated with
+this request.
+
+=cut
+
+sub prev_step {
+    my ($self) = @_;
+
+    return $self->current_step->prev_step;
+}
+
 =head2 next_step
 
 Return the next L<UFL::Workflow::Schema::Step> associated with
@@ -122,14 +135,7 @@ this request.
 sub next_step {
     my ($self) = @_;
 
-    my $action = $self->current_action;
-
-    my $step = $self->current_step;
-    while ($step and $step->prev_step_id != $action->step_id) {
-        $step = $step->next_step;
-    }
-
-    return $step;
+    return $self->current_step->next_step;
 }
 
 =head2 is_open
@@ -160,12 +166,15 @@ sub groups_for_status {
     $self->throw_exception('You must provide a status')
         unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
 
-    my $step = $self->current_step;
+    my $step;
     if ($status->continues_request) {
         $step = $self->next_step;
     }
-    elsif ($status->finishes_request) {
-        $step = undef;
+    elsif ($status->reassigns_request) {
+        $step = $self->current_step;
+    }
+    elsif ($status->recycles_request) {
+        $step = $self->prev_step;
     }
 
     my @groups;
@@ -281,22 +290,26 @@ sub update_status {
         $current_action->comment($comment);
         $current_action->update;
 
-        my $action;
+        my $step;
         if ($status->continues_request) {
-            my $step = $self->next_step;
-            if ($step) {
-                $action = $self->add_action($step);
-            }
+            $step = $self->next_step;
+        }
+        elsif ($status->recycles_request) {
+            $step = $self->prev_step;
+            die "No previous step found for recycle" unless $step;
         }
         elsif ($status->finishes_request) {
             # Done
         }
         else {
             # Add a copy of the current step
-            $action = $self->add_action($current_action->step);
+            $step = $current_action->step;
         }
 
-        if ($action) {
+        if ($step) {
+            my $action = $self->add_action($step);
+
+            $group ||= $current_action->groups->first;
             $action->assign_to_group($group);
 
             # Update pointers

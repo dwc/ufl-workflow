@@ -21,6 +21,14 @@ __PACKAGE__->add_columns(
         data_type     => 'boolean',
         default_value => 0,
     },
+    reassigns_request => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
+    recycles_request => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
     finishes_request => {
         data_type     => 'boolean',
         default_value => 0,

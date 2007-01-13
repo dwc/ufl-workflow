@@ -40,6 +40,8 @@ INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
 
 INSERT INTO statuses (name, is_initial) VALUES ('Pending', 1);
 INSERT INTO statuses (name, continues_request) VALUES ('Approved', 1);
+INSERT INTO statuses (name, reassigns_request) VALUES ('Transferred', 1);
+INSERT INTO statuses (name, recycles_request) VALUES ('Recycled', 1);
 INSERT INTO statuses (name, finishes_request) VALUES ('Denied', 1);
 INSERT INTO statuses (name) VALUES ('Tabled');
 
