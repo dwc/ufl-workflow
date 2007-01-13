@@ -7,7 +7,7 @@
 <h4>Process description</h4>
 <p>[% process.description | html %]</p>
 [% END %]
-<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('add_request'), process.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]
   [% INCLUDE requests/includes/request.tt %]

@@ -216,6 +216,46 @@ sub move_step_down : PathPart Chained('process') Args(0) {
     return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
 }
 
+=head2 add_request
+
+Add a request that follows the specified process.
+
+=cut
+
+sub add_request : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    my $process = $c->stash->{process};
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
+            $c->detach('/default') unless $group;
+
+            my $request = $process->add_request(
+                $result->valid('title'),
+                $result->valid('description'),
+                $c->user->obj,
+                $group,
+            );
+
+            return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
+        }
+    }
+
+    my @groups;
+    if (my $first_step = $process->first_step) {
+        @groups = $first_step->role->groups;
+    }
+
+    $c->stash(
+        process  => $process,
+        groups   => \@groups,
+        template => 'processes/add_request.tt',
+    );
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

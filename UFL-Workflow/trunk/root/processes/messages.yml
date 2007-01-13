@@ -19,3 +19,12 @@ move_step_up: &move
   step_id:
     DEFAULT: A step
 move_step_down: *move
+add_request:
+  title:
+    DEFAULT: A title
+    LENGTH:  A shorter title
+  description:
+    DEFAULT: A description
+    LENGTH:  A shorter description
+  group_id:
+    DEFAULT: A group

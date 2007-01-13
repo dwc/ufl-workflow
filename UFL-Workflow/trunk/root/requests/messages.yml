@@ -1,12 +1,3 @@
-add:
-  title:
-    DEFAULT: A title
-    LENGTH:  A shorter title
-  description:
-    DEFAULT: A description
-    LENGTH:  A shorter description
-  group_id:
-    DEFAULT: A group
 add_document:
   document:
     DEFAULT: A document

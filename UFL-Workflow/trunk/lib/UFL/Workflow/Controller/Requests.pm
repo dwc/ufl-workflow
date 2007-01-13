@@ -69,51 +69,6 @@ sub all : Local Args(0) {
     );
 }
 
-=head2 add
-
-Add a request that follows the specified process.
-
-=cut
-
-sub add : Local {
-    my ($self, $c) = @_;
-
-    my $process_id = $c->req->param('process_id');
-    $process_id =~ s/\D//g;
-    $c->detach('/default') unless $process_id;
-
-    my $process = $c->model('DBIC::Process')->find($process_id);
-    $c->detach('/default') unless $process;
-
-    if ($c->req->method eq 'POST') {
-        my $result = $self->validate_form($c);
-        if ($result->success) {
-            my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
-            $c->detach('/default') unless $group;
-
-            my $request = $process->add_request(
-                $result->valid('title'),
-                $result->valid('description'),
-                $c->user->obj,
-                $group,
-            );
-
-            return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
-        }
-    }
-
-    my @groups;
-    if (my $first_step = $process->first_step) {
-        @groups = $first_step->role->groups;
-    }
-
-    $c->stash(
-        process  => $process,
-        groups   => \@groups,
-        template => 'requests/add.tt',
-    );
-}
-
 =head2 request
 
 Fetch the specified request.

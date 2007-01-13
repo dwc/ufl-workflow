@@ -16,3 +16,10 @@ move_step_up: &move
   - step_id
   - [ NOT_BLANK, INT ]
 move_step_down: *move
+add_request:
+  - title
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
+  - description
+  - [ NOT_BLANK, [ LENGTH, 0, 8192 ] ]
+  - group_id
+  - [ NOT_BLANK, INT ]

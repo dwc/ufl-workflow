@@ -6,6 +6,8 @@ This file documents the revision history for UFL::Workflow.
         - Refactor document handling
         - Improve document handling to use URLs not tied to filesystem
         - Add support for reassigning and recycling requests
+        - Move /requests/add to /processes/add_request for consistency
+          with other Chained actions
 
 0.03  Thu Nov  2 14:59:01 EST 2006
         - Refactor check for managing request

@@ -22,8 +22,13 @@ __PACKAGE__->setup;
 
 __PACKAGE__->deny_access_unless(
     "/$_",
-    [ qw/Administrator/ ]
+    [ qw/Administrator/ ],
 ) for qw/groups processes roles statuses steps users/;
+
+__PACKAGE__->allow_access_if(
+    '/processes/add_request',
+    sub { $_[0]->user_exists },
+);
 
 =head1 NAME
 

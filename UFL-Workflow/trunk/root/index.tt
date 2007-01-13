@@ -29,7 +29,7 @@
 <p>You can add a new request for one of the following processes:</p>
 <ul>
   [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller('Requests').action_for('add'), process_id = process.id) | html %]">[% process.name | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller('Processes').action_for('add_request'), process.uri_args) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
 [% ELSE %]
