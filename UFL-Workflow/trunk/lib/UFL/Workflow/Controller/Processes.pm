@@ -47,7 +47,7 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $process = $c->user->processes->find_or_create({
+            my $process = $c->user->processes->create({
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
             });

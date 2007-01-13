@@ -202,7 +202,7 @@ sub add_action {
 
     my $action;
     $self->result_source->schema->txn_do(sub {
-        $action = $self->actions->find_or_create({
+        $action = $self->actions->create({
             step_id   => $step->id,
             status_id => $initial_status->id,
         });
@@ -236,7 +236,7 @@ sub add_document {
     $self->result_source->schema->txn_do(sub {
         my $length = $self->documents->result_source->column_info('name')->{size};
 
-        $document = $self->documents->find_or_create({
+        $document = $self->documents->create({
             name      => substr($name, 0, $length),
             extension => $extension,
             type      => $type,

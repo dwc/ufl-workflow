@@ -47,7 +47,7 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $group = $c->model('DBIC::Group')->find_or_create({
+            my $group = $c->model('DBIC::Group')->create({
                 parent_group_id => $result->valid('parent_group_id') || undef,
                 name            => $result->valid('name'),
             });

@@ -119,7 +119,7 @@ sub add_step {
     $self->result_source->schema->txn_do(sub {
         my $last_step = $self->last_step;
 
-        $step = $self->steps->find_or_create({
+        $step = $self->steps->create({
             name    => $name,
             role_id => $role->id,
         });
@@ -154,7 +154,7 @@ sub add_request {
 
     my $request;
     $self->result_source->schema->txn_do(sub {
-        $request = $self->requests->find_or_create({
+        $request = $self->requests->create({
             user_id     => $user->id,
             title       => $title,
             description => $description,
