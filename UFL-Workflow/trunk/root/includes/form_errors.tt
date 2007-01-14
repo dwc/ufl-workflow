@@ -1,4 +1,4 @@
-[% IF form_errors %]
+[% IF form_errors.size > 0 %]
 <p>Please provide the following:</p>
 <ul>
   [% FOREACH form_error IN form_errors %]
