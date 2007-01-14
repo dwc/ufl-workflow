@@ -85,7 +85,7 @@ sub update {
         $self->next::method(@args);
 
         $self->throw_exception('Parent group cannot be the same as the group')
-            if $self->id == $self->parent_group_id;
+            if $self->parent_group_id and $self->id == $self->parent_group_id;
         $schema->txn_commit;
     };
     if (my $error = $@) {
