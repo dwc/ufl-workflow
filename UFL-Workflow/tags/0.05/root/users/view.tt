@@ -1,0 +1,47 @@
+[% SET title = user.username -%]
+
+<h3>User details</h3>
+<dl>
+  <dt>Username</dt>
+  <dd>[% user.username | html %]</dd>
+  <dt>Added</dt>
+  <dd>[% user.insert_time.strftime(datetime_format) | html %]</dd>
+</dl>
+<br style="clear:both" />
+
+<h3>Roles</h3>
+[% SET user_group_roles = user.user_group_roles %]
+[% IF user_group_roles %]
+<ul>
+  [% FOREACH user_group_role IN user_group_roles %]
+    [% SET role = user_group_role.role %]
+    [% SET group = user_group_role.group %]
+  <li>
+    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
+    (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>)
+    <form class="roles" action="[% c.uri_for(c.controller.action_for('delete_group_role'), user.uri_args) | html %]" method="post">
+      <input type="hidden" name="group_id" value="[% group.id | html %]" />
+      <input type="hidden" name="role_id" value="[% role.id | html %]" />
+      <input type="submit" class="submit" value="Remove" />
+    </form>
+  </li>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END -%]
+
+[% SET processes = user.processes %]
+[% IF processes %]
+<h3>Processes</h3>
+<ul>
+  [% FOREACH process IN processes %]
+  <li><a href="[% c.uri_for(c.controller('Processes').action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></li>
+  [% END %]
+</ul>
+[% END %]
+
+<h3>Manage user</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
+</ul>
