@@ -18,29 +18,6 @@ L<Catalyst> controller component for managing requests.
 
 =head1 METHODS
 
-=head2 index
-
-Show a list of requests matching the specified criteria.
-
-=cut
-
-sub index : Path('') Args(0) {
-    my ($self, $c) = @_;
-
-    my $result = $self->validate_form($c);
-    if ($result->success) {
-        my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
-        $c->stash(group => $group);
-    }
-
-    my $groups = $c->model('DBIC::Group')->root_groups;
-
-    $c->stash(
-        groups    => $groups,
-        template  => 'requests/index.tt',
-    );
-}
-
 =head2 for_user
 
 Display a list of the current requests for the current user.
@@ -57,6 +34,29 @@ sub for_user : Local Args(0) {
         user_requests  => $user_requests,
         group_requests => $group_requests,
         template       => 'requests/for_user.tt',
+    );
+}
+
+=head2 reports
+
+Show a list of requests matching the specified criteria.
+
+=cut
+
+sub reports : Local Args(0) {
+    my ($self, $c) = @_;
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
+        $c->stash(group => $group);
+    }
+
+    my $groups = $c->model('DBIC::Group')->root_groups;
+
+    $c->stash(
+        groups    => $groups,
+        template  => 'requests/reports.tt',
     );
 }
 
