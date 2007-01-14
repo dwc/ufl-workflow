@@ -1,0 +1,15 @@
+[% SET title = 'Requests' -%]
+
+<form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
+  <p>Show requests for 
+[% FILTER indent('  ') %]
+  [% INCLUDE groups/includes/groups.tt field_label = 'group' field_value = group.id %]
+[% END %]
+  </p>
+  <input type="submit" value="Generate report" />
+</form>
+
+[% IF group %]
+<h3>[% title | html %] for [% group.name | html %]</h3>
+  [% INCLUDE requests/includes/list.tt requests = group.requests, show_process = 1 %]
+[% END %]

@@ -1,0 +1,34 @@
+This file documents the revision history for UFL::Workflow.
+
+0.04  Sat Jan 13 23:09:43 EST 2007
+        - Extend description/comment columns to 8 KB
+        - Add description field to processes
+        - Refactor document handling
+        - Improve document handling to use URLs not tied to filesystem
+        - Add support for reassigning and recycling requests
+        - Move /requests/add to /processes/add_request for consistency
+          with other Chained actions
+        - Add trigger to update requests when a related action is
+          updated
+        - Remove all requests in favor of requests by group
+
+0.03  Thu Nov  2 14:59:01 EST 2006
+        - Refactor check for managing request
+        - Allow document attachment only when request is open and when
+          the current user is the submitter
+        - Refactor descision making to Schema::Request
+        - Pass objects to model methods instead of IDs
+        - Move status updating to Schema::Request
+
+0.02  Fri Oct 27 12:15:48 EDT 2006
+        - Rename application from UFL::Curriculum to UFL::Workflow
+        - Move database authentication information to local
+          configuration file
+        - Normalize groups and roles to make roles more flexible
+        - Add parent-child relationship to groups
+        - Add request assignment at each step (to a group)
+        - Add automatic registration of new users upon login
+        - Apply UF template
+
+0.01  Fri Sep 29 16:51:33 EDT 2006
+        - Initial revision
