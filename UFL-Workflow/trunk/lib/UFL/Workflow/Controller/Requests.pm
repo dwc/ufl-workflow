@@ -47,8 +47,8 @@ sub reports : Local Args(0) {
     my ($self, $c) = @_;
 
     my $result = $self->validate_form($c);
-    if ($result->success) {
-        my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
+    if ($result->success and my $group_id = $result->valid('group_id')) {
+        my $group = $c->model('DBIC::Group')->find($group_id);
         $c->stash(group => $group);
     }
 
