@@ -20,14 +20,25 @@ L<Catalyst> controller component for managing requests.
 
 =head2 index
 
-Redirect to the list of requests.
+Show a list of requests matching the specified criteria.
 
 =cut
 
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    $c->res->redirect($c->uri_for($self->action_for('for_user')));
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
+        $c->stash(group => $group);
+    }
+
+    my $groups = $c->model('DBIC::Group')->root_groups;
+
+    $c->stash(
+        groups    => $groups,
+        template  => 'requests/index.tt',
+    );
 }
 
 =head2 for_user
@@ -46,26 +57,6 @@ sub for_user : Local Args(0) {
         user_requests  => $user_requests,
         group_requests => $group_requests,
         template       => 'requests/for_user.tt',
-    );
-}
-
-=head2 all
-
-Display a list of the current requests entered by everyone.
-
-=cut
-
-sub all : Local Args(0) {
-    my ($self, $c) = @_;
-
-    my $processes = $c->model('DBIC::Process')->search(
-        undef,
-        { prefetch => 'requests' },
-    );
-
-    $c->stash(
-        processes => $processes,
-        template  => 'requests/all.tt',
     );
 }
 

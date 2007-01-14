@@ -1,3 +1,6 @@
+index:
+  group_id:
+    DEFAULT: A group
 add_document:
   document:
     DEFAULT: A document

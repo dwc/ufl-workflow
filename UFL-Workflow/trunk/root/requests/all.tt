@@ -1,8 +1,0 @@
-[% SET title = 'All Requests' -%]
-
-<h3>All requests</h3>
-[% WHILE (process = processes.next) %]
-
-<h4>Requests for [% process.name | html %]</h4>
-[% INCLUDE requests/includes/list.tt requests = process.requests_rs %]
-[% END %]

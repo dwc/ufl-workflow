@@ -1,3 +1,6 @@
+index:
+  - group_id
+  - [ INT ]
 add_document:
   - document
   - [ NOT_BLANK ]

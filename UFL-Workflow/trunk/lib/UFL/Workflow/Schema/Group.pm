@@ -149,6 +149,29 @@ sub add_role {
     return $role;
 }
 
+=head2 requests
+
+Return a L<DBIx::Class::ResultSet> containing the
+L<UFL::Workflow::Schema::Request>s entered by members of this group.
+
+=cut
+
+sub requests {
+    my ($self) = @_;
+
+    my $rs = $self->result_source->schema->resultset('Request')->search(
+        {
+            'group.id' => $self->id,
+        },
+        {
+            join     => { submitter => { user_group_roles => 'group' } },
+            distinct => 1,
+        },
+    );
+
+    return $rs;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this group.
