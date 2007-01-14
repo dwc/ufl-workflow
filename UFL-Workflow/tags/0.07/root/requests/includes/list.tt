@@ -1,0 +1,37 @@
+[% DEFAULT
+   show_process = 0
+-%]
+
+[% IF requests.count > 0 %]
+  [% IF comment %]
+<p>[% comment | html %]</p>
+  [% END %]
+<table>
+  <tr>
+    <th>Submitter</th>
+    <th>Title</th>
+[% IF show_process %]
+    <th>Process</th>
+[% END %]
+    <th>Status</th>
+    <th>Added</th>
+    <th>Updated</th>
+  </tr>
+  [% SET i = 0 %]
+  [% WHILE (request = requests.next) %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td>[% request.submitter.username | html %]</td>
+    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) | html %]">[% request.title | html %]</a></td>
+[% IF show_process %]
+    <td>[% request.process.name | html %]</td>
+[% END %]
+    <td>[% INCLUDE requests/includes/status.tt action = request.current_action, show_group = 1 -%]</td>
+    <td>[% request.insert_time.strftime(datetime_format) | html %]</td>
+    <td>[% request.update_time.strftime(datetime_format) | html %]</td>
+  </tr>
+    [% SET i = i + 1 %]
+  [% END %]
+</table>
+[% ELSE %]
+<p>None yet.</p>
+[% END -%]
