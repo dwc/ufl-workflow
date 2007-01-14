@@ -71,8 +71,7 @@ sub login {
         and return 0 unless $user;
 
     unless (blessed $user and $user->isa('Catalyst:::Plugin::Authentication::User')) {
-        # C::P::A::Store::DBIC's get_user dies without error when the table doesn't exist
-        my $user_obj = eval { $c->get_user($user) };
+        my $user_obj = $c->get_user($user);
         if ($user_obj) {
             $user = $user_obj;
         }

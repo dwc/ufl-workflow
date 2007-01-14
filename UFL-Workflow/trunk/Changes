@@ -1,5 +1,8 @@
 This file documents the revision history for UFL::Workflow.
 
+0.05  Sun Jan 14 01:18:26 EST 2007
+        - Don't eat errors in Authentication::Credential::Passthrough
+
 0.04  Sat Jan 13 23:09:43 EST 2007
         - Extend description/comment columns to 8 KB
         - Add description field to processes
