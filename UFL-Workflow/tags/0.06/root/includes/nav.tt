@@ -1,0 +1,15 @@
+[% BLOCK nav_link %]
+<li[% IF c.req.uri.match("^$uri") %] id="active"[% END %]><a href="[% uri | html %]">[% label | html %]</a></li>
+[% END -%]
+
+<ul id="nav">
+[% FILTER indent('  ') %]
+  [% IF c.check_user_roles('Administrator') %]
+    [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses' ] %]
+      [% INCLUDE nav_link uri = c.uri_for(c.controller(name).action_for('index')), label = name %]
+    [% END %]
+  [% END %]
+  [% INCLUDE nav_link, uri = c.uri_for(c.controller('Requests').action_for('for_user')), label = 'Your requests' %]
+  [% INCLUDE nav_link, uri = c.uri_for(c.controller('Requests').action_for('reports')), label = 'Reports' %]
+[% END %]
+</ul>
