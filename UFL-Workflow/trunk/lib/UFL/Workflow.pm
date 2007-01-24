@@ -16,7 +16,7 @@ use Catalyst qw/
     Unicode::Encoding
 /;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08_01';
 
 __PACKAGE__->setup;
 
@@ -26,9 +26,9 @@ __PACKAGE__->deny_access_unless(
 ) for qw/groups processes roles statuses steps users/;
 
 __PACKAGE__->allow_access_if(
-    '/processes/add_request',
+    "/processes/$_",
     sub { $_[0]->user_exists },
-);
+) for qw/process add_request/;
 
 =head1 NAME
 
