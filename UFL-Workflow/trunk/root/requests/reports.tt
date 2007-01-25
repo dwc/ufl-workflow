@@ -11,5 +11,5 @@
 
 [% IF group %]
 <h3>[% title | html %] for [% group.name | html %]</h3>
-  [% INCLUDE requests/includes/list.tt requests = group.requests, show_process = 1 %]
+  [% INCLUDE requests/includes/list.tt requests = group.open_requests, show_process = 1 %]
 [% END %]

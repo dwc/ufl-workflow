@@ -152,7 +152,8 @@ sub add_role {
 =head2 requests
 
 Return a L<DBIx::Class::ResultSet> containing the
-L<UFL::Workflow::Schema::Request>s entered by members of this group.
+L<UFL::Workflow::Schema::Request>s waiting on action by a member of
+this group.
 
 =cut
 
@@ -164,8 +165,32 @@ sub requests {
             'group.id' => $self->id,
         },
         {
-            join     => { submitter => { user_group_roles => 'group' } },
+            join     => { actions => { action_groups => 'group' } },
             distinct => 1,
+        },
+    );
+
+    return $rs;
+}
+
+=head2 open_requests
+
+Return a L<DBIx::Class::ResultSet> containing the open (i.e., pending)
+L<UFL::Workflow::Schema::Request>s waiting on action by a member of
+this group.
+
+=cut
+
+sub open_requests {
+    my ($self) = @_;
+
+    my $rs = $self->requests->search(
+        {
+            'actions.next_action_id' => undef,
+            'status.is_initial'      => 1,
+        },
+        {
+            join => { actions => 'status' },
         },
     );
 
