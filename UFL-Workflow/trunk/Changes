@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.09
+        - Fix bug in request view where the list wasn't being updated
+          due to missing hook
+
 0.08  Wed Jan 24 20:53:57 EST 2007
         - Add missing ACL for /processes/add_request
         - Fix /requests/reports to report requests pending action by
