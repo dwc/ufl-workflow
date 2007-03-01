@@ -7,6 +7,29 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use UFL::Workflow::Schema;
 
+=head1 NAME
+
+ufl_workflow_generate_schema.pl - Generate the schema for UFL::Workflow
+
+=head1 SYNOPSIS
+
+    ./script/ufl_workflow_generate_schema.pl | db2 -vtd%
+
+=head1 DESCRIPTION
+
+Generate the SQL statements for L<UFL::Workflow::Schema>.
+
+=head1 AUTHOR
+
+Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
 my $type = $ARGV[0] || 'DB2';
 my $separator = $ARGV[1] || '%';
 
