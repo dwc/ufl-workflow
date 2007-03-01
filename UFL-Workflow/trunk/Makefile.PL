@@ -4,7 +4,7 @@ name     'UFL-Workflow';
 all_from 'lib/UFL/Workflow.pm';
 
 requires 'Carp';
-requires 'Catalyst' => '5.7001';
+requires 'Catalyst' => '5.7006';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Model::DBIC::Schema';
 requires 'Catalyst::Plugin::Authentication';
