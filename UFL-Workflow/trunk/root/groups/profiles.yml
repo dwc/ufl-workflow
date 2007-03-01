@@ -6,4 +6,4 @@ add: &group
 edit: *group
 add_role:
   - name
-  - [ NOT_BLANK, [ LENGTH, 0, 32 ], [ NOT_REGEX, '^Administrator$' ] ]
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ], [ NOT_REGEX, '^Administrator$' ] ]

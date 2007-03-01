@@ -1,1 +1,1 @@
-<label>Name: <input type="text" name="name" value="[% role.name | html %]" maxlength="32" /></label>
+<label>Name: <input type="text" name="name" value="[% role.name | html %]" maxlength="64" /></label>

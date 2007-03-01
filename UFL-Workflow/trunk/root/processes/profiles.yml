@@ -1,12 +1,12 @@
 add: &process
   - name
-  - [ NOT_BLANK, [ LENGTH, 0, 32 ] ]
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
   - description
   - [ [ LENGTH, 0, 8192 ] ]
 edit: *process
 add_step:
   - name
-  - [ NOT_BLANK, [ LENGTH, 0, 32 ] ]
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
   - role_id
   - [ NOT_BLANK, INT ]
 delete_step:
