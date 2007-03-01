@@ -45,7 +45,7 @@ sub prepare_request {
             || 'REMOTE_USER';
 
         my $username = $ENV{$key};
-        if (not $username and ($ENV{HARNESS_ACTIVE} or ref($c->engine) =~ /::HTTP::/)) {
+        if (not $username and ($ENV{HARNESS_ACTIVE} or ref($c->engine) =~ /::HTTP\b/)) {
             $username = $ENV{USER};
         }
 
