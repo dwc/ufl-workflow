@@ -4,6 +4,7 @@ This file documents the revision history for UFL::Workflow.
         - Update Authentication::Credential::Passthrough regex to
           catch non-Restarter built-in server
         - Update Catalyst scripts
+        - Extend name columns to 64 characters
 
 0.09  Fri Feb 16 20:24:59 EST 2007
         - Fix bug in request view where the list wasn't being updated
