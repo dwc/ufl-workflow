@@ -328,7 +328,7 @@ sub update_status {
         }
         else {
             # Add a copy of the current step
-            $step = $current_action->step;
+            $step = $self->current_step;
         }
 
         if ($step) {
