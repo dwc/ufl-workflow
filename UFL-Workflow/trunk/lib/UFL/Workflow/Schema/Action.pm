@@ -107,10 +107,6 @@ sub statuses {
         { order_by   => 'name' },
     );
 
-    unless ($self->step->prev_step_id) {
-        $statuses = $statuses->search({ recycles_request => 0 });
-    }
-
     return $statuses;
 }
 

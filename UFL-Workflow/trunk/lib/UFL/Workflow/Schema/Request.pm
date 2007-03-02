@@ -102,6 +102,20 @@ sub current_action {
     return $current_action;
 }
 
+=head2 first_step
+
+Return the L<UFL::Workflow::Schema::Step> in the
+L<UFL::Workflow::Schema::Process> associated with the first
+L<UFL::Workflow::Schema::Action> on this request.
+
+=cut
+
+sub first_step {
+    my ($self) = @_;
+
+    return $self->first_action->step;
+}
+
 =head2 current_step
 
 Return the L<UFL::Workflow::Schema::Step> in the
@@ -299,8 +313,15 @@ sub update_status {
             $step = $self->next_step;
         }
         elsif ($status->recycles_request) {
+            # Recycling defaults to going back one step
             $step = $self->prev_step;
-            die "No previous step found for recycle" unless $step;
+
+            # But allow recycling on the first step
+            if ($self->current_step->id == $self->first_step->id) {
+                $step = $self->current_step;
+            }
+
+            die "No step found for recycle" unless $step;
         }
         elsif ($status->finishes_request) {
             # Done
