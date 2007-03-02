@@ -24,7 +24,13 @@ UFL.Workflow.Form.AddAction.prototype = {
         if (json && json.groups && json.groups.length > 0) {
           for (var i = 0; i < json.groups.length; i++) {
             var group = json.groups[i];
-            groupSelect.options[i] = new Option(group.name, group.id);
+
+            var o = new Option(group.name, group.id);
+            if (json.selected_group && group.id == json.selected_group.id) {
+              o.selected = true;
+            }
+
+            groupSelect.options[i] = o;
           }
 
           Element.show(groupSelect.parentNode);

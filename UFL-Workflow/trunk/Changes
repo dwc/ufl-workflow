@@ -6,6 +6,8 @@ This file documents the revision history for UFL::Workflow.
         - Update Catalyst scripts
         - Extend name columns to 64 characters
         - Allow recycling on the first step
+        - Where applicable, automatically select parent group when
+          updating request status
 
 0.09  Fri Feb 16 20:24:59 EST 2007
         - Fix bug in request view where the list wasn't being updated
