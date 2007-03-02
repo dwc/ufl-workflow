@@ -334,6 +334,7 @@ sub update_status {
         if ($step) {
             my $action = $self->add_action($step);
 
+            # Fallback to current group if none was specified (e.g. tabling)
             $group ||= $current_action->groups->first;
             $action->assign_to_group($group);
 
