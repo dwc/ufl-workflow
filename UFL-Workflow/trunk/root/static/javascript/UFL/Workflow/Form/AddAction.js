@@ -6,7 +6,7 @@ UFL.Workflow.Form.AddAction = Class.create();
 UFL.Workflow.Form.AddAction.prototype = {
   initialize: function(url, statusId, groupId) {
     var me = this;
-    Event.observe(window, "load", function() {
+    Event.observe(window, 'load', function() {
       if ($(groupId) && $(statusId)) {
         Element.hide($(groupId).parentNode);
         new Form.Element.EventObserver(statusId, function() { me.getActionGroups(url, $(statusId), $(groupId)) });
@@ -34,7 +34,7 @@ UFL.Workflow.Form.AddAction.prototype = {
         }
       },
       onFailure: function(req) {
-        alert("Error loading groups: " + req.responseText);
+        alert('Error loading groups: ' + req.responseText);
       }
     });
   },
