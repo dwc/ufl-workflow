@@ -23,6 +23,10 @@ See L<UFL::Workflow>.
 
 L<Template> view component.
 
+=head1 SEE ALSO
+
+L<Catalyst::View::TT>
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

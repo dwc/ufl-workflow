@@ -16,7 +16,13 @@ See L<UFL::Workflow>.
 
 L<JSON> view component.
 
+=head1 SEE ALSO
+
+L<Catalyst::View::JSON>
+
 =head1 AUTHOR
+
+Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
 
 =head1 LICENSE
 
