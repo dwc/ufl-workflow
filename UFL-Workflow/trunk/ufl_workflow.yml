@@ -23,12 +23,6 @@ authorization:
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
-  connect_info:
-    -
-      RaiseError:         1
-      PrintError:         0
-      ShowErrorStatement: 1
-      TraceLevel:         0
 
 View::TT:
   PRE_CHOMP: 1
