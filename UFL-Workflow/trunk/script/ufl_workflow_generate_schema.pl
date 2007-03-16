@@ -32,6 +32,7 @@ it under the same terms as Perl itself.
 
 my $type = $ARGV[0] || 'DB2';
 my $separator = $ARGV[1] || '%';
+my $user = $ARGV[2] || 'dbzwap02';
 
 my $schema = UFL::Workflow::Schema->connect;
 my @statements = $schema->storage->deployment_statements($schema, $type, undef, undef, { add_drop_table => 1 });
@@ -42,9 +43,21 @@ if ($type eq 'DB2') {
 
     foreach my $source_name ($schema->sources) {
         my $source = $schema->source($source_name);
+        my $table_name = $source->from;
+
+        # Grant permissions
+        my $grant = <<"END_OF_SQL";
+GRANT DELETE, INSERT, SELECT, UPDATE
+ON TABLE $table_name
+TO USER $user;
+END_OF_SQL
+
+        chomp $grant;
+        push @statements, $grant;
+
+        # Set up triggers
         next unless $source->has_column($field_name);
 
-        my $table_name = $source->from;
         my $trigger_name = "${table_name}_u";
         if (length $trigger_name > 18) {
             my $new_trigger_name = $trigger_name;
@@ -53,8 +66,6 @@ if ($type eq 'DB2') {
             warn "Shortening trigger [$trigger_name] to [$new_trigger_name]";
             $trigger_name = $new_trigger_name;
         }
-
-        my $l = length($trigger_name);
 
         my $drop = "DROP TRIGGER $trigger_name;";
         my $create = <<"END_OF_SQL";
@@ -69,9 +80,11 @@ END_OF_SQL
         push @statements, $drop, $create;
     }
 
-    push @statements, 'DROP TRIGGER requests_action_u;';
+    # Set the separator (due to the requests_action_u trigger)
     s/;/$separator/g for @statements;
 
+    # Set up one more trigger to update the request timestamp when the action is updated
+    push @statements, "DROP TRIGGER requests_action_u$separator";
     push @statements, <<"END_OF_SQL";
 CREATE TRIGGER requests_action_u
 AFTER UPDATE ON actions
