@@ -1,6 +1,8 @@
 reports:
   group_id:
     DEFAULT: A group
+  status_id:
+    DEFAULT: A status
 add_document:
   document:
     DEFAULT: A document

@@ -47,16 +47,35 @@ sub reports : Local Args(0) {
     my ($self, $c) = @_;
 
     my $result = $self->validate_form($c);
-    if ($result->success and my $group_id = $result->valid('group_id')) {
-        my $group = $c->model('DBIC::Group')->find($group_id);
-        $c->stash(group => $group);
+    if ($result->success) {
+        if (my $group_id = $result->valid('group_id')) {
+            my $selected_group = $c->model('DBIC::Group')->find($group_id);
+            $c->stash(selected_group => $selected_group);
+
+            my %query = ('action_groups.group_id' => $selected_group->id);
+
+            if (my $status_ids = $result->valid('status_id')) {
+                $query{'actions.status_id'} = { -in => $status_ids };
+            }
+
+            my $requests = $c->model('DBIC::Request')->search(
+                %query,
+                {
+                    join => { actions => 'action_groups' },
+                },
+            );
+
+            $c->stash(requests => $requests);
+        }
     }
 
     my $groups = $c->model('DBIC::Group')->root_groups;
+    my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(
-        groups    => $groups,
-        template  => 'requests/reports.tt',
+        groups   => $groups,
+        statuses => $statuses,
+        template => 'requests/reports.tt',
     );
 }
 

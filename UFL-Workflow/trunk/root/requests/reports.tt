@@ -3,13 +3,19 @@
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
   <p>Show requests for 
 [% FILTER indent('  ') %]
-  [% INCLUDE groups/includes/groups.tt field_label = 'group' field_value = group.id %]
+  [% INCLUDE groups/includes/groups.tt field_label = 'group', field_value = group.id %]
+[% END %]
+  </p>
+  <p>with status:
+    <label>All <input type="checkbox" class="checkbox" name="status_id" value="0" checked="checked" /></label>
+[% WHILE (status = statuses.next) %]
+    <label>[% status.name | html %] <input type="checkbox" class="checkbox" name="status_id" value="[% status.id | html %]" /></label>
 [% END %]
   </p>
   <input type="submit" value="Generate report" />
 </form>
 
-[% IF group %]
+[% IF selected_group %]
 <h3>[% title | html %] for [% group.name | html %]</h3>
-  [% INCLUDE requests/includes/list.tt requests = group.open_requests, show_process = 1 %]
+  [% INCLUDE requests/includes/list.tt show_process = 1 %]
 [% END %]

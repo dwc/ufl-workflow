@@ -1,6 +1,8 @@
 reports:
   - group_id
   - [ INT ]
+  - status_id
+  - []
 add_document:
   - document
   - [ NOT_BLANK ]
