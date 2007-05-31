@@ -111,6 +111,11 @@ margin: 2px 0 10px;
 display:none;
 }
 
+#content fieldset {
+border:0;
+margin-bottom:5px;
+}
+
 #content input,#content select,#content textarea {
 clear:both;
 display:block;
