@@ -1,5 +1,10 @@
 [% SET title = 'Users' -%]
 
+<h3>Manage users</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></li>
+</ul>
+
 <h3>Current users</h3>
 [% IF users.count > 0 %]
 <ul>
@@ -11,7 +16,4 @@
 <p>None yet.</p>
 [% END %]
 
-<h3>Manage users</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></li>
-</ul>
+
