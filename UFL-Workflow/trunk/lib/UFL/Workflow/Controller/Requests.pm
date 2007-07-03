@@ -46,36 +46,29 @@ Show a list of requests matching the specified criteria.
 sub reports : Local Args(0) {
     my ($self, $c) = @_;
 
+
     my $result = $self->validate_form($c);
-    if ($result->success) {
-        if (my $group_id = $result->valid('group_id')) {
-            my $selected_group = $c->model('DBIC::Group')->find($group_id);
-            $c->stash(selected_group => $selected_group);
+    my $group_id = $result->valid('group_id');
 
-            my %query = ('action_groups.group_id' => $selected_group->id);
-
-            if (my $status_ids = $result->valid('status_id')) {
-                $query{'actions.status_id'} = { -in => $status_ids };
-            }
-
-            my $requests = $c->model('DBIC::Request')->search(
-                %query,
-                {
-                    join => { actions => 'action_groups' },
-                },
-            );
-
-            $c->stash(requests => $requests);
-        }
+    if (($result->success) and ($group_id == 0)) {
+    my $requests = $c->model('DBIC::Request')->all;
+    $c->stash(requests => $requests);
+    }
+    elsif ($result->success and my $group_id = $result->valid('group_id')) {
+    my $group = $c->model('DBIC::Group')->find($group_id);
+    $c->stash(group => $group);  
     }
 
+
     my $groups = $c->model('DBIC::Group')->root_groups;
-    my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
+    my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'id' });
+    my $process_type = $result->valid('process_type');
 
     $c->stash(
-        groups   => $groups,
-        statuses => $statuses,
-        template => 'requests/reports.tt',
+        groups    => $groups,
+        statuses  => $statuses,
+        process_type => $process_type,
+        template  => 'requests/reports.tt',
     );
 }
 
@@ -219,22 +212,11 @@ sub list_groups : PathPart Chained('request') Args(0) {
 
             my @groups = $request->groups_for_status($status);
             $c->stash(groups => [ map { $_->to_json } @groups ]);
-
-            my $current_group = $request->current_action->groups->first;
-            if (my $parent_group = $current_group->parent_group) {
-                # Default to the parent group
-                foreach my $group (@groups) {
-                    if ($group->id == $parent_group->id) {
-                        $c->stash(selected_group => $group->to_json);
-                        last;
-                    }
-                }
-            }
         }
     }
 
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/groups selected_group/ ]);
+    $view->expose_stash([ qw/groups/ ]);
     $c->forward($view);
 }
 
