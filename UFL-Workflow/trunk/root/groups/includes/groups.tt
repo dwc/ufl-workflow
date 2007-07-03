@@ -17,7 +17,7 @@
 
 <label>[% field_label | html %]:
   <select name="[% field_name | html %]"[% IF field_id %] id="[% field_id | html %]"[% END %]>
-    <option value=""></option>
+    <option value="0"></option>
 [% FILTER indent('    ') %]
   [% INCLUDE group_list level = 0 %]
 [% END %]
