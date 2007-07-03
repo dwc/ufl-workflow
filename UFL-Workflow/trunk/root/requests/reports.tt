@@ -13,5 +13,5 @@
   <input type="submit" value="Generate report" />
 </form>
 
-<h3>[% title | html %] for [% selected_group.name | html %]</h3>
+<h3>[% title | html %] for [% selected_group ? selected_group.name : 'All Groups' | html %]</h3>
 [% INCLUDE requests/includes/list.tt show_process = 1 %]
