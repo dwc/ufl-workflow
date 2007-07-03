@@ -67,7 +67,6 @@ sub reports : Local Args(0) {
                 join => { actions => 'action_groups' },
             },
         );
-        $c->log->debug($requests->count);
 
         $c->stash(requests => $requests);
     }
