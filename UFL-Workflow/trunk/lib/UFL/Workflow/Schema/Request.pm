@@ -97,7 +97,10 @@ L<UFL::Workflow::Schema::Process>.
 sub current_action {
     my ($self) = @_;
 
-    my $current_action = $self->actions->search({ next_action_id => undef })->first;
+    my $current_action = $self->actions->search(
+        { next_action_id => undef },
+        { prefetch => [ qw/step status/ ] },
+    )->first;
 
     return $current_action;
 }
