@@ -2,10 +2,12 @@
    show_process = 0
 -%]
 
-[% IF requests.count > 0 %]
+[% SET num_requests = requests.count %]
+[% IF num_requests > 0 %]
   [% IF comment %]
 <p>[% comment | html %]</p>
   [% END %]
+<p>Found [% num_requests | html %] request[% num_requests == 1 ? '' : 's' %].</p>
 <table>
   <tr>
     <th>Submitter</th>
@@ -33,5 +35,5 @@
   [% END %]
 </table>
 [% ELSE %]
-<p>None yet.</p>
+<p>No requests found.</p>
 [% END -%]

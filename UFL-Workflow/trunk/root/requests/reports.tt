@@ -14,6 +14,4 @@
 </form>
 
 <h3>[% title | html %] for [% selected_group ? selected_group.name : 'All Groups' | html %]</h3>
-[% SET num_requests = requests.count %]
-<p>Found [% num_requests | html %] request[% num_requests == 1 ? '' : 's' %].</p>
 [% INCLUDE requests/includes/list.tt show_process = 1 %]
