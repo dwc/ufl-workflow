@@ -74,7 +74,7 @@ sub reports : Local Args(0) {
         my $requests = $c->model('DBIC::Request')->search(
             \%query,
             {
-                prefetch => [ 'submitter', 'process' ],
+                prefetch => [ qw/submitter process/ ],
                 order_by => \q[me.update_time DESC, me.insert_time DESC],
                 %attrs,
             },
