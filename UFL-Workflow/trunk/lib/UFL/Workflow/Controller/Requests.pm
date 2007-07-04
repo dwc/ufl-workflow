@@ -76,6 +76,7 @@ sub reports : Local Args(0) {
             {
                 prefetch => [ qw/submitter process/ ],
                 order_by => \q[me.update_time DESC, me.insert_time DESC],
+                distinct => 1,
                 %attrs,
             },
         );
