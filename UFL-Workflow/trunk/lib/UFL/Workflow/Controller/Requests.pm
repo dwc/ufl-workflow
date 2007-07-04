@@ -49,22 +49,34 @@ sub reports : Local Args(0) {
     my $result = $self->validate_form($c);
     if ($result->success) {
         my %query;
+        my %attrs;
 
+        # Constrain based on the selected group
         if (my $group_id = $result->valid('group_id')) {
             my $selected_group = $c->model('DBIC::Group')->find($group_id);
             $c->stash(selected_group => $selected_group);
 
             $query{'action_groups.group_id'} = $selected_group->id;
+            $attrs{join} ||= { actions => 'action_groups' };
         }
 
+        # Constrain based on the selected status or statuses
         if (my $status_ids = $result->valid('status_id')) {
             $query{'actions.status_id'} = { -in => $status_ids };
+
+            # Latest actions only
+            my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
+            $query{'actions.id'} = { -in => \@action_ids };
+
+            $attrs{join} ||= 'actions';
         }
 
         my $requests = $c->model('DBIC::Request')->search(
             \%query,
             {
-                join => { actions => 'action_groups' },
+                prefetch => [ 'submitter', 'process' ],
+                order_by => \q[me.update_time DESC, me.insert_time DESC],
+                %attrs,
             },
         );
 

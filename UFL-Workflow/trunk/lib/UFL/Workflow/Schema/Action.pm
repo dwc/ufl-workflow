@@ -110,6 +110,21 @@ sub statuses {
     return $statuses;
 }
 
+=head2 current_actions
+
+Return a L<DBIx::Class::ResultSet> of current actions across all
+L<UFL::Workflow::Schema::Request>s.
+
+=cut
+
+sub current_actions {
+    my ($self) = @_;
+
+    my $current_actions = $self->search({ next_action_id => undef });
+
+    return $current_actions;
+}
+
 =head2 assign_to_group
 
 Assign this action to the specified L<UFL::Workflow::Schema::Group>.
