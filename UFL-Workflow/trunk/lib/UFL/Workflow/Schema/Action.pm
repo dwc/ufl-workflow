@@ -79,6 +79,8 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->many_to_many('groups', 'action_groups', 'group');
 
+__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Action');
+
 =head1 NAME
 
 UFL::Workflow::Schema::Action - Action table class
@@ -108,21 +110,6 @@ sub statuses {
     );
 
     return $statuses;
-}
-
-=head2 current_actions
-
-Return a L<DBIx::Class::ResultSet> of current actions across all
-L<UFL::Workflow::Schema::Request>s.
-
-=cut
-
-sub current_actions {
-    my ($self) = @_;
-
-    my $current_actions = $self->search({ next_action_id => undef });
-
-    return $current_actions;
 }
 
 =head2 assign_to_group
