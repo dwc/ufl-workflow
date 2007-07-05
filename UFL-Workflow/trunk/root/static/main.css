@@ -79,6 +79,18 @@ text-align:left;
 width:100px;
 }
 
+#content fieldset {
+border:0;
+margin:5px 0 10px;
+}
+
+#content fieldset.date_range input {
+clear:none;
+display:inline;
+width:4em;
+margin:0;
+}
+
 #content form {
 margin-left: 5px;
 }
@@ -104,16 +116,11 @@ clear:none;
 display:inline;
 float:left;
 width:auto;
-margin: 2px 0 10px;
+margin:2px 0 10px;
 }
 
 #content h2 {
 display:none;
-}
-
-#content fieldset {
-border:0;
-margin-bottom:5px;
 }
 
 #content input,#content select,#content textarea {
