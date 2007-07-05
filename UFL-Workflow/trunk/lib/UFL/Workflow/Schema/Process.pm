@@ -22,6 +22,10 @@ __PACKAGE__->add_columns(
         size        => 8192,
         is_nullable => 1,
     },
+    enabled => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
 );
 __PACKAGE__->add_standard_columns;
 
