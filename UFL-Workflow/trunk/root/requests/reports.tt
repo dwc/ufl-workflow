@@ -10,6 +10,19 @@
     <label><input type="checkbox" class="checkbox" name="status_id" value="[% status.id | html %]" /> [% status.name | html %]</label><br />
 [% END %]
   </fieldset>
+  <fieldset id="update_time">
+    <legend>Updated:</legend>
+    <label>Start time:
+      <input type="text" name="start_time_month" value="[% start_time.month | html %]" />/
+      <input type="text" name="start_time_day" value="[% start_time.day | html %]" />/
+      <input type="text" name="start_time_year" value="[% start_time.year | html %]" />
+    </label>
+    <label> End time:
+      <input type="text" name="end_time_month" value="[% future_time.month | html %]" />/
+      <input type="text" name="end_time_day" value="[% future_time.day | html %]" />/
+      <input type="text" name="end_time_year" value="[% future_time.year | html %]" />
+    </label>
+  </fieldset>
   <input type="submit" value="Generate report" />
 </form>
 

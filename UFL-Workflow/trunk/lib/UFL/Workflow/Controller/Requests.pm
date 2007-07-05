@@ -85,6 +85,8 @@ sub reports : Local Args(0) {
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(
+        start_time   => DateTime->now,
+        future_time  => DateTime->now->add( days => 30 ),
         groups   => $groups,
         statuses => $statuses,
         template => 'requests/reports.tt',
