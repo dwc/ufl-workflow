@@ -3,6 +3,10 @@ reports:
     DEFAULT: A group
   status_id:
     DEFAULT: A status
+  start_time:
+    DEFAULT: A start date
+  end_time:
+    DEFAULT: An end date
 add_document:
   document:
     DEFAULT: A document

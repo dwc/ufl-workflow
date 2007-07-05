@@ -3,18 +3,10 @@ reports:
   - [ INT ]
   - status_id
   - []
-  - start_time_month
-  - [ INT ]
-  - start_time_day
-  - [ INT ]
-  - start_time_year
-  - [ INT ]
-  - end_time_month
-  - [ INT ]
-  - end_time_day
-  - [ INT ]
-  - end_time_year
-  - [ INT ]
+  - { start_time: [start_time_year, start_time_month, start_time_day] }
+  - [ DATE ]
+  - { end_time: [end_time_year, end_time_month, end_time_day] }
+  - [ DATE ]
 add_document:
   - document
   - [ NOT_BLANK ]

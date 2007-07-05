@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base qw/UFL::Workflow::BaseController/;
 
+
 =head1 NAME
 
 UFL::Workflow::Controller::Requests - Requests controller component
@@ -63,6 +64,20 @@ sub reports : Local Args(0) {
             $query{'actions.status_id'} = { -in => $status_ids };
         }
 
+        my @update_times;
+
+        if (my $start_time = $result->valid('start_time')) {
+            push @update_times, { '>=' => $start_time };
+        }
+
+        if (my $end_time = $result->valid('end_time')) {
+            push @update_times, { '<=' => $end_time };
+        }
+
+        if (@update_times) {
+            $query{'me.update_time'} = [ -and => @update_times ];
+        }
+
         # Latest actions only
         my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
         my $requests = $c->model('DBIC::Request')->search(
@@ -85,11 +100,11 @@ sub reports : Local Args(0) {
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(
-        start_time   => DateTime->now,
-        future_time  => DateTime->now->add( days => 30 ),
-        groups   => $groups,
-        statuses => $statuses,
-        template => 'requests/reports.tt',
+        start_time => DateTime->now->subtract( days => 30 ),
+        end_time   => DateTime->now,
+        groups     => $groups,
+        statuses   => $statuses,
+        template   => 'requests/reports.tt',
     );
 }
 
