@@ -80,11 +80,12 @@ sub reports : Local Args(0) {
 
         # Latest actions only
         my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
+        if (@action_ids) {
+            $query{'actions.id'} => { -in => \@action_ids };
+        }
+
         my $requests = $c->model('DBIC::Request')->search(
-            {
-                'actions.id' => { -in => \@action_ids },
-                %query,
-            },
+            \%query,
             {
                 join     => { actions => 'action_groups' },
                 prefetch => [ qw/submitter process/ ],
