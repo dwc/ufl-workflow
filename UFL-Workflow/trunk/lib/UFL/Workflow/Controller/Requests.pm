@@ -47,61 +47,58 @@ sub reports : Local Args(0) {
     my ($self, $c) = @_;
 
     my $result = $self->validate_form($c);
-    if ($result->success) {
-        my %query;
+    my %query;
 
-        # Constrain based on the selected group
-        if (my $group_id = $result->valid('group_id')) {
-            my $selected_group = $c->model('DBIC::Group')->find($group_id);
-            $c->stash(selected_group => $selected_group);
+    # Constrain based on the selected group
+    if (my $group_id = $result->valid('group_id')) {
+        my $selected_group = $c->model('DBIC::Group')->find($group_id);
+        $c->stash(selected_group => $selected_group);
 
-            $query{'action_groups.group_id'} = $selected_group->id;
-        }
-
-        # Constrain based on the selected status or statuses
-        if (my $status_ids = $result->valid('status_id')) {
-            $query{'actions.status_id'} = { -in => $status_ids };
-        }
-
-        # Constrain based on a date range
-        my @update_times;
-        if (my $start_date = $result->valid('start_date')) {
-            push @update_times, { '>=' => $start_date };
-        }
-
-        if (my $end_date = $result->valid('end_date')) {
-            push @update_times, { '<=' => $end_date };
-        }
-
-        if (@update_times) {
-            $query{'me.update_time'} = [ -and => @update_times ];
-        }
-
-        # Latest actions only
-        my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
-        if (@action_ids) {
-            $query{'actions.id'} => { -in => \@action_ids };
-        }
-
-        my $requests = $c->model('DBIC::Request')->search(
-            \%query,
-            {
-                join     => { actions => 'action_groups' },
-                prefetch => [ qw/submitter process/ ],
-                order_by => \q[me.update_time DESC, me.insert_time DESC],
-                distinct => 1,
-            },
-        );
-
-        $c->stash(requests => $requests);
+        $query{'action_groups.group_id'} = $selected_group->id;
     }
+
+    # Constrain based on the selected status or statuses
+    if (my $status_ids = $result->valid('status_id')) {
+        $query{'actions.status_id'} = { -in => $status_ids };
+    }
+
+    # Constrain based on a date range
+    my @update_times;
+    if (my $start_date = $result->valid('start_date')) {
+        push @update_times, { '>=' => $start_date };
+    }
+
+    if (my $end_date = $result->valid('end_date')) {
+        push @update_times, { '<=' => $end_date };
+    }
+
+    if (@update_times) {
+        $query{'me.update_time'} = [ -and => @update_times ];
+    }
+
+    # Latest actions only
+    my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
+    if (@action_ids) {
+        $query{'actions.id'} => { -in => \@action_ids };
+    }
+
+    my $requests = $c->model('DBIC::Request')->search(
+        \%query,
+        {
+            join     => { actions => 'action_groups' },
+            prefetch => [ qw/submitter process/ ],
+            order_by => \q[me.update_time DESC, me.insert_time DESC],
+            distinct => 1,
+        },
+    );
 
     my $groups = $c->model('DBIC::Group')->root_groups;
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(
-        start_time => DateTime->now->subtract( days => 30 ),
+        start_time => DateTime->now->subtract(days => 30),
         end_time   => DateTime->now,
+        requests   => $requests,
         groups     => $groups,
         statuses   => $statuses,
         template   => 'requests/reports.tt',
