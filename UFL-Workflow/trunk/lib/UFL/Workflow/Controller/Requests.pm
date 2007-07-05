@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use base qw/UFL::Workflow::BaseController/;
 
-
 =head1 NAME
 
 UFL::Workflow::Controller::Requests - Requests controller component
