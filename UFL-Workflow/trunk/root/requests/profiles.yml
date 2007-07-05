@@ -2,10 +2,10 @@ reports:
   - group_id
   - [ INT ]
   - status_id
-  - []
-  - { start_time: [start_time_year, start_time_month, start_time_day] }
+  - [ INT ]
+  - { start_date: [ start_date_year, start_date_month, start_date_day ] }
   - [ DATE ]
-  - { end_time: [end_time_year, end_time_month, end_time_day] }
+  - { end_date: [ end_date_year, end_date_month, end_date_day ] }
   - [ DATE ]
 add_document:
   - document

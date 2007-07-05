@@ -3,9 +3,9 @@ reports:
     DEFAULT: A group
   status_id:
     DEFAULT: A status
-  start_time:
+  start_date:
     DEFAULT: A start date
-  end_time:
+  end_date:
     DEFAULT: An end date
 add_document:
   document:

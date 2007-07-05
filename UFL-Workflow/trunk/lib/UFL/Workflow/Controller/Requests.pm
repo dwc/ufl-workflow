@@ -64,14 +64,14 @@ sub reports : Local Args(0) {
             $query{'actions.status_id'} = { -in => $status_ids };
         }
 
+        # Constrain based on a date range
         my @update_times;
-
-        if (my $start_time = $result->valid('start_time')) {
-            push @update_times, { '>=' => $start_time };
+        if (my $start_date = $result->valid('start_date')) {
+            push @update_times, { '>=' => $start_date };
         }
 
-        if (my $end_time = $result->valid('end_time')) {
-            push @update_times, { '<=' => $end_time };
+        if (my $end_date = $result->valid('end_date')) {
+            push @update_times, { '<=' => $end_date };
         }
 
         if (@update_times) {

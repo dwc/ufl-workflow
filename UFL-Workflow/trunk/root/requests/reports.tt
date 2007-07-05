@@ -12,13 +12,13 @@
   </fieldset>
   <fieldset id="updated" class="date_range">
     <legend>Updated between:</legend>
-    <input type="text" name="start_time_month" value="[% start_time.month | html %]" />/
-    <input type="text" name="start_time_day" value="[% start_time.day | html %]" />/
-    <input type="text" name="start_time_year" value="[% start_time.year | html %]" />
+    <input type="text" name="start_date_month" value="[% start_date.month | html %]" />/
+    <input type="text" name="start_date_day" value="[% start_date.day | html %]" />/
+    <input type="text" name="start_date_year" value="[% start_date.year | html %]" />
     and
-    <input type="text" name="end_time_month" value="[% end_time.month | html %]" />/
-    <input type="text" name="end_time_day" value="[% end_time.day | html %]" />/
-    <input type="text" name="end_time_year" value="[% end_time.year | html %]" />
+    <input type="text" name="end_date_month" value="[% end_date.month | html %]" />/
+    <input type="text" name="end_date_day" value="[% end_date.day | html %]" />/
+    <input type="text" name="end_date_year" value="[% end_date.year | html %]" />
   </fieldset>
   <input type="submit" class="submit" value="Generate report" />
 </form>
