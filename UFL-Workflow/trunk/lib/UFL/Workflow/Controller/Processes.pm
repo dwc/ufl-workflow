@@ -50,6 +50,7 @@ sub add : Local {
             my $process = $c->user->processes->create({
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
+                enabled     => $result->valid('enabled'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -102,6 +103,7 @@ sub edit : PathPart Chained('process') Args(0) {
             $process->update({
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
+                enabled     => $result->valid('enabled'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -236,6 +238,7 @@ sub add_request : PathPart Chained('process') Args(0) {
             my $request = $process->add_request(
                 $result->valid('title'),
                 $result->valid('description'),
+                $result->valid('enabled'),
                 $c->user->obj,
                 $group,
             );
