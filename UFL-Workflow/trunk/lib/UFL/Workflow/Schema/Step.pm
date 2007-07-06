@@ -26,7 +26,7 @@ __PACKAGE__->add_columns(
     name => {
         data_type => 'varchar',
         size      => 64,
-    },
+    }
 );
 __PACKAGE__->add_standard_columns;
 
