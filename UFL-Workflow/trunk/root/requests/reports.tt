@@ -1,4 +1,9 @@
-[% SET title = 'Requests' -%]
+[% SET title = 'Requests' 
+   scripts = [
+     c.uri_for('/static/javascript/prototype.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Reports.js'),
+   ]
+-%]
 
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
 [% FILTER indent('  ') %]
@@ -10,6 +15,11 @@
     <label><input type="checkbox" class="checkbox" name="status_id" value="[% status.id | html %]" /> [% status.name | html %]</label><br />
 [% END %]
   </fieldset>
+  <select id="dateSpan" name="dateRange">
+    <option value=""></option>
+    <option value="3-27-2007">Previous Month</option>
+    <option value="2-27-2007">Previous 2 Months</option>
+  </select>
   <fieldset id="updated" class="date_range">
     <legend>Updated between:</legend>
     <input type="text" name="start_date_month" value="[% start_date.month | html %]" />/
