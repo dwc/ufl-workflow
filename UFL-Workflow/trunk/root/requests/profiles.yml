@@ -1,8 +1,9 @@
 reports:
   - group_id
   - [ INT ]
+  # Should be INT, but FormValidator::Simple barfs on multivalues currently
   - status_id
-  - [ INT ]
+  - []
   - { start_date: [ start_date_year, start_date_month, start_date_day ] }
   - [ DATE ]
   - { end_date: [ end_date_year, end_date_month, end_date_day ] }
