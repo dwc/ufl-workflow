@@ -1,7 +1,8 @@
-[% SET title = 'Requests' 
+[% SET
+   title = 'Requests' 
    scripts = [
      c.uri_for('/static/javascript/prototype.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/Reports.js'),
+#     c.uri_for('/static/javascript/UFL/Workflow/Form/Reports.js'),
    ]
 -%]
 
