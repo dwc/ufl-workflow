@@ -97,12 +97,12 @@ sub reports : Local Args(0) {
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(
-        start_date => DateTime->now->subtract(days => 30),
+        start_date => DateTime->now->subtract(months => 1),
         end_date   => DateTime->now,
         past_day   => DateTime->now->subtract(days => 1),
-        past_week  => DateTime->now->subtract(days => 7),
-        past_month => DateTime->now->subtract(days => 30),
-        past_year  => DateTime->now->subtract(days => 365),
+        past_week  => DateTime->now->subtract(weeks => 1),
+        past_month => DateTime->now->subtract(months => 1),
+        past_year  => DateTime->now->subtract(years => 1),
         requests   => $requests,
         groups     => $groups,
         statuses   => $statuses,
