@@ -1,5 +1,10 @@
 [% SET title = "${status.name} Status" -%]
 
+<h3>Manage status</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), status.uri_args) | html %]">Edit this status</a></li>
+</ul>
+
 <h3>Status details</h3>
 <dl id="statuses">
   <dt>Name</dt>
@@ -11,9 +16,3 @@
   <dt>Finishes requests?</dt>
   <dd>[% status.finishes_request ? 'Yes' : 'No' | html %]</dd>
 </dl>
-<br style="clear:both" />
-
-<h3>Manage status</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), status.uri_args) | html %]">Edit this status</li>
-</ul>

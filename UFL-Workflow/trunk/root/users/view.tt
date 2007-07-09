@@ -1,5 +1,10 @@
 [% SET title = user.username -%]
 
+<h3>Manage user</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
+</ul>
+
 <h3>User details</h3>
 <dl>
   <dt>Username</dt>
@@ -40,8 +45,3 @@
   [% END %]
 </ul>
 [% END %]
-
-<h3>Manage user</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
-</ul>

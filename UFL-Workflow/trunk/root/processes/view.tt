@@ -1,5 +1,13 @@
 [% SET title = "${process.name} Process" -%]
 
+<h3>Manage process</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
+[% IF process.is_editable %]
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]">Add new step</a></li>
+[% END %]
+</ul>
+
 <h3>Process details</h3>
 <dl>
   <dt>Name</dt>
@@ -53,11 +61,3 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
-
-<h3>Manage process</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
-[% IF process.is_editable %]
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]">Add new step</a></li>
-[% END %]
-</ul>
