@@ -16,16 +16,20 @@
     <label><input type="checkbox" class="checkbox" name="status_id" value="[% status.id | html %]" /> [% status.name | html %]</label><br />
 [% END %]
   </fieldset>
-  <select id="dateSpan" name="dateRange">
-    <option value=""></option>
-    <option value="[% past_day.year | html %]-[% past_day.month | html %]-[% past_day.day | html %]">The past day</option>
-    <option value="[% past_week.year | html %]-[% past_week.month | html %]-[% past_week.day | html %]">The past week</option>
-    <option value="[% past_month.year | html %]-[% past_month.month | html %]-[% past_month.day | html %]">The past month</option>
-    <option value="[% past_year.year | html %]-[% past_year.month | html %]-[% past_year.day | html %]">The past year</option>
-  </select>
   <fieldset id="updated" class="date_range">
-    <legend>Updated between:</legend>
-    <input type="text" name="start_date_month" value="[% start_date.month | html %]" />/
+    <legend>Updated:</legend>
+    <label>During:
+      <select id="date_span">
+        <option value=""></option>
+        <option value="[% past_day.ymd | html %]">The past day</option>
+        <option value="[% past_week.ymd | html %]">The past week</option>
+        <option value="[% past_month.ymd | html %]">The past month</option>
+        <option value="[% past_year.ymd | html %]">The past year</option>
+      </select>
+    </label>
+    or
+    <label for="start_date_month">between:</label>
+    <input type="text" name="start_date_month" id="start_date_month" value="[% start_date.month | html %]" />/
     <input type="text" name="start_date_day" value="[% start_date.day | html %]" />/
     <input type="text" name="start_date_year" value="[% start_date.year | html %]" />
     and
