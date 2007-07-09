@@ -18,8 +18,10 @@
   </fieldset>
   <select id="dateSpan" name="dateRange">
     <option value=""></option>
-    <option value="3-27-2007">Previous Month</option>
-    <option value="2-27-2007">Previous 2 Months</option>
+    <option value="[% past_day.year | html %]-[% past_day.month | html %]-[% past_day.day | html %]">The past day</option>
+    <option value="[% past_week.year | html %]-[% past_week.month | html %]-[% past_week.day | html %]">The past week</option>
+    <option value="[% past_month.year | html %]-[% past_month.month | html %]-[% past_month.day | html %]">The past month</option>
+    <option value="[% past_year.year | html %]-[% past_year.month | html %]-[% past_year.day | html %]">The past year</option>
   </select>
   <fieldset id="updated" class="date_range">
     <legend>Updated between:</legend>

@@ -1,9 +1,12 @@
 function setDate(dateRange) {
-    console.log("Date Range Selected: " + dateRange);
+    if(dateRange) {
+        var startDates = dateRange.split('-', 3);
+        document.forms[0].start_date_year.value  = startDates[0];
+        document.forms[0].start_date_month.value = startDates[1];
+        document.forms[0].start_date_day.value   = startDates[2];
+    }
 }
 
 $(document).ready(function(){
-   console.log("Document Ready");
    $('#dateSpan').change(function(){setDate(this.value)});
-   console.log("Change Event Inserted");
 });
