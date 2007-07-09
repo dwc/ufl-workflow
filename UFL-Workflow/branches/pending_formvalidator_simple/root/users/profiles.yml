@@ -1,9 +1,0 @@
-add:
-  - username
-  - [ NOT_BLANK, [ LENGTH, 0, 16 ] ]
-add_group_role: &role
-  - group_id
-  - [ NOT_BLANK, INT ]
-  - role_id
-  - [ NOT_BLANK, INT ]
-delete_group_role: *role
