@@ -84,13 +84,6 @@ border:0;
 margin:5px 0 10px;
 }
 
-#content fieldset.date_range input {
-clear:none;
-display:inline;
-width:4em;
-margin:0;
-}
-
 #content form {
 margin-left: 5px;
 }
@@ -141,6 +134,20 @@ margin:0;
 #content input.checkbox {
 margin-right:8px;
 margin-bottom:1px;
+}
+
+#content input.year {
+width:4em;
+}
+
+#content input.month, #content input.day {
+width:2em;
+}
+
+#content .date input, #content .date_range input {
+clear:none;
+display:inline;
+margin:0;
 }
 
 #content label.radio input {

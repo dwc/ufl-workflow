@@ -17,7 +17,7 @@
     <label><input type="checkbox" class="checkbox" name="status_id" value="[% status.id | html %]" /> [% status.name | html %]</label><br />
 [% END %]
   </fieldset>
-  <fieldset id="updated" class="date_range">
+  <fieldset id="updated">
     <legend>Updated:</legend>
     <label>During:
       <select id="date_span">
@@ -28,15 +28,16 @@
         <option value="[% past_year.ymd | html %]">The past year</option>
       </select>
     </label>
-    or
-    <label for="start_date_month">between:</label>
-    <input type="text" name="start_date_month" id="start_date_month" value="[% start_date.month | html %]" />/
-    <input type="text" name="start_date_day" value="[% start_date.day | html %]" />/
-    <input type="text" name="start_date_year" value="[% start_date.year | html %]" />
-    and
-    <input type="text" name="end_date_month" value="[% end_date.month | html %]" />/
-    <input type="text" name="end_date_day" value="[% end_date.day | html %]" />/
-    <input type="text" name="end_date_year" value="[% end_date.year | html %]" />
+    <div class="date_range">
+      <label for="start_date_month">or between:</label>
+      <input type="text" name="start_date_month" id="start_date_month" class="month" value="[% start_date.month | html %]" /> /
+      <input type="text" name="start_date_day" class="day" value="[% start_date.day | html %]" /> /
+      <input type="text" name="start_date_year" class="year" value="[% start_date.year | html %]" />
+      and
+      <input type="text" name="end_date_month" class="month" value="[% end_date.month | html %]" /> /
+      <input type="text" name="end_date_day" class="day" value="[% end_date.day | html %]" /> /
+      <input type="text" name="end_date_year" class="year" value="[% end_date.year | html %]" />
+    </div><!-- .date_range -->
   </fieldset>
   <input type="submit" class="submit" value="Generate report" />
 </form>
