@@ -7,7 +7,10 @@ use Carp qw/croak/;
 use FormValidator::Simple;
 use FormValidator::Simple::ProfileManager::YAML;
 
-__PACKAGE__->mk_accessors(qw/_path/);
+__PACKAGE__->mk_accessors(qw/_path datetime_class/);
+
+# For FormValidator::Simple
+our $DEFAULT_DATETIME_CLASS = 'DateTime';
 
 =head1 NAME
 
@@ -26,17 +29,18 @@ validation code.
 
 =head2 new
 
-Create a new controller, also instantiating the associated form
-validation stuff.
+Create a new controller, also setting up various data for validation.
 
 =cut
 
 sub new {
     my $self = shift->SUPER::new(@_);
-    my $c = $_[0];
+    my ($c, $config) = @_;
 
     my $path = $c->path_to('root', $self->path_prefix($c));
     $self->_path($path);
+
+    $self->datetime_class($config->{datetime_class} || $DEFAULT_DATETIME_CLASS);
 
     return $self;
 }
@@ -95,6 +99,7 @@ sub validate_form {
     my $manager   = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
     my $validator = FormValidator::Simple->new;
     $validator->set_messages($messages_file);
+    $validator->set_option(datetime_class => $self->datetime_class);
 
     my $name    = $c->action->name;
     my $profile = $manager->get_profile($name);

@@ -73,22 +73,18 @@ sub reports : Local Args(0) {
     }
 
     # Constrain based on a date range
+    # XXX: Remove formatter junk when DBIx::Class gets support for objects
+    my $formatter = $c->model('DBIC')->storage->datetime_parser_type;
+    eval "require $formatter"; die $@ if $@;
     if (my $start_date = $result->valid('start_date')) {
+        $start_date->set_formatter($formatter);
         $requests = $requests->search({ 'me.update_time' => { '>=' => $start_date } });
     }
 
     if (my $end_date = $result->valid('end_date')) {
-        # Temp fix. Had to do all this work because of timestamp issue.
-        my $end_date_length = length($end_date);
-        my $end_date = substr($end_date, 0, ($end_date_length-9));
-        my ($end_date_year,$end_date_month,$end_date_day) = split(/\-/,$end_date);
-        my $end_date = DateTime->new( year   => $end_date_year,
-                                      month  => $end_date_month,
-                                      day    => $end_date_day,
-                                    );
+        $end_date->set_formatter($formatter);
         $end_date->add(days => 1);
-        $end_date .= " 00:00:00";
-        #$requests = $requests->search({ 'me.update_time' => { '<=' => $end_date } });
+        $requests = $requests->search({ 'me.update_time' => { '<' => $end_date } });
     }
 
     # Latest actions only
