@@ -78,7 +78,17 @@ sub reports : Local Args(0) {
     }
 
     if (my $end_date = $result->valid('end_date')) {
-        $requests = $requests->search({ 'me.update_time' => { '<=' => $end_date } });
+        # Temp fix. Had to do all this work because of timestamp issue.
+        my $end_date_length = length($end_date);
+        my $end_date = substr($end_date, 0, ($end_date_length-9));
+        my ($end_date_year,$end_date_month,$end_date_day) = split(/\-/,$end_date);
+        my $end_date = DateTime->new( year   => $end_date_year,
+                                      month  => $end_date_month,
+                                      day    => $end_date_day,
+                                    );
+        $end_date->add(days => 1);
+        $end_date .= " 00:00:00";
+        #$requests = $requests->search({ 'me.update_time' => { '<=' => $end_date } });
     }
 
     # Latest actions only
