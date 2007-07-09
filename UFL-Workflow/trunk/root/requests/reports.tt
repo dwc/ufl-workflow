@@ -7,6 +7,7 @@
 -%]
 
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
+  <input type="hidden" name="submitted" value="1" />
 [% FILTER indent('  ') %]
   [% INCLUDE groups/includes/groups.tt field_value = group.id %]
 [% END -%]
