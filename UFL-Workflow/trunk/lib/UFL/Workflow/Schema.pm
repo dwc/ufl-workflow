@@ -127,6 +127,54 @@ END_OF_SQL
     return @statements;
 }
 
+=head2 export_statements
+
+Generate the C<EXPORT> statements for all tables on this
+L<DBIx::Class::Schema>. This currently supports DB2 only.
+
+=cut
+
+sub export_statements {
+    my ($schema, $separator) = @_;
+
+    $separator ||= ';';
+
+    my @statements;
+    foreach my $source_name ($schema->sources) {
+        my $source = $schema->source($source_name);
+        my $table_name = $source->from;
+
+        my $export = "EXPORT TO $table_name.del OF DEL SELECT * FROM $table_name$separator";
+        push @statements, $export;
+    }
+
+    return @statements;
+}
+
+=head2 import_statements
+
+Generate the C<IMPORT> statements for all tables on this
+L<DBIx::Class::Schema>. This currently supports DB2 only.
+
+=cut
+
+sub import_statements {
+    my ($schema, $separator) = @_;
+
+    $separator ||= ';';
+
+    my @statements;
+    foreach my $source_name ($schema->sources) {
+        my $source = $schema->source($source_name);
+        my $table_name = $source->from;
+
+        my $import = "IMPORT FROM $table_name.del OF DEL MODIFIED BY DELPRIORITYCHAR USEDEFAULTS REPLACE INTO $table_name$separator";
+        push @statements, $import;
+    }
+
+    return @statements;
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.edu<gt>
