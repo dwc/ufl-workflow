@@ -5,6 +5,7 @@ This file documents the revision history for UFL::Workflow.
           date
         - BaseController: Add support for object inflation for dates
           from form validation
+        - Refactor schema generation
 
 0.10  Mon Mar  5 17:54:05 EST 2007
         - Update Authentication::Credential::Passthrough regex to

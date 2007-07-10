@@ -26,6 +26,7 @@ requires 'DBIx::Class' => '0.07000';
 requires 'Digest::MD5';
 requires 'FormValidator::Simple';
 requires 'FormValidator::Simple::ProfileManager::YAML';
+requires 'Getopt::Long';
 requires 'Module::Find';  # For load_classes
 requires 'NEXT';
 requires 'Scalar::Util';
