@@ -3,11 +3,11 @@
    status_id = 'status_id'
    group_id = 'group_id'
    scripts = [
-     c.uri_for('/static/javascript/prototype.js'),
+     c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/AddAction.js'),
    ]
    snippets = [
-     "new UFL.Workflow.Form.AddAction('${c.uri_for(c.controller('Requests').action_for('list_groups'), request.uri_args)}', '$status_id', '$group_id');",
+     "UFL.Workflow.Form.AddAction.load('${c.uri_for(c.controller('Requests').action_for('list_groups'), request.uri_args)}', '$status_id', '$group_id');",
    ]
 -%]
 
