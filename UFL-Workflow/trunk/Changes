@@ -8,6 +8,8 @@ This file documents the revision history for UFL::Workflow.
         - Refactor schema generation
         - Add script to synchronize data from one schema to another
         - Add Textile support for process description
+        - Automatically choose first group for initial request
+          assignment if there's only one
 
 0.10  Mon Mar  5 17:54:05 EST 2007
         - Update Authentication::Credential::Passthrough regex to

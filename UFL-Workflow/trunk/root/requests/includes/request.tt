@@ -1,6 +1,9 @@
 <input type="hidden" name="process_id" value="[% process.id | html %]" />
 <label>Title: <input type="text" name="title" value="[% request.title | html %]" maxlength="64" /></label>
 <label>Description: <textarea name="description">[% request.description | html | escape_newlines %]</textarea></label>
+[% IF groups.size == 1 %]
+<input type="hidden" name="group_id" value="[% groups.first.id | html %]" />
+[% ELSE %]
 <label>Send to group:
   <select name="group_id" id="group_id">
 [% FOREACH group IN groups %]
@@ -8,3 +11,4 @@
 [% END %]
   </select>
 </label>
+[% END %]
