@@ -1,3 +1,4 @@
+[% USE Textile %]
 [% SET title = "${process.name} Process" -%]
 
 <h3>Manage process</h3>
@@ -22,7 +23,7 @@
 </dl>
 <br style="clear:both" />
 <h4>Description</h4>
-<p>[% description || 'None yet.' | html %]
+[%+ process.description || 'None yet.' | textile %]
 
 <h3>Steps</h3>
 [% SET step = process.first_step %]

@@ -1,12 +1,15 @@
+[% USE Textile %]
 [% SET title = "Add Request to ${process.name}" -%]
 
-<h3>Request details</h3>
-<p>To add a new request which follows the <strong>[% process.name | html %]</strong> process, enter a title, description, and initial group for review. After the request is added, you can attach documents and view its progress.</p>
+<h3>[% process.name | html %]</h3>
 [% IF process.description %]
 
-<h4>Process description</h4>
-<p>[% process.description | html %]</p>
-[% END %]
+<h4>Instructions</h4>
+[% process.description | textile %]
+[% ELSE %]
+<p>To add a new request which follows the <strong>[% process.name | html %]</strong> process, enter a title, description, and initial group for review. After the request is added, you can attach documents and view its progress.</p>
+[% END -%]
+
 <form action="[% c.uri_for(c.controller.action_for('add_request'), process.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]

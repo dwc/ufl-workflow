@@ -30,6 +30,7 @@ requires 'Getopt::Long';
 requires 'Module::Find';  # For load_classes
 requires 'NEXT';
 requires 'Scalar::Util';
+requires 'Template::Plugin::Textile';
 requires 'YAML';
 
 build_requires 'Catalyst::Test';
