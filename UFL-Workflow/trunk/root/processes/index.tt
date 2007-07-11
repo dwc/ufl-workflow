@@ -9,7 +9,7 @@
 [% IF processes.count > 0 %]
 <ul>
   [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% IF process.enabled %] Enabled [% ELSE %] Disabled [% END %])</li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% process.enabled ? 'Enabled' : 'Disabled' %])</li>
   [% END %]
 </ul>
 [% ELSE %]

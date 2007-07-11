@@ -12,10 +12,8 @@
 <dl>
   <dt>Name</dt>
   <dd>[% process.name | html %]</dd>
-  <dt>Description</dt>
-  <dd>[% process.description || '-' | html %]</dd>
   <dt>Enabled</dt>
-  <dd>[% IF process.enabled %] Enabled [% ELSE %] Disabled [% END %]</dd>
+  <dd>[% process.enabled ? 'Yes' : 'No' %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]
   <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.username | html %]</a></dd>
@@ -23,6 +21,8 @@
   <dd>[% process.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
+<h4>Description</h4>
+<p>[% description || 'None yet.' | html %]
 
 <h3>Steps</h3>
 [% SET step = process.first_step %]
