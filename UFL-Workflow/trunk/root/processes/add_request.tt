@@ -5,7 +5,7 @@
 [% IF process.description %]
 
 <h4>Instructions</h4>
-[% process.description | textile %]
+[%+ process.description | textile %]
 [% ELSE %]
 <p>To add a new request which follows the <strong>[% process.name | html %]</strong> process, enter a title, description, and initial group for review. After the request is added, you can attach documents and view its progress.</p>
 [% END -%]
