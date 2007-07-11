@@ -228,6 +228,7 @@ sub add_request : PathPart Chained('process') Args(0) {
     my ($self, $c) = @_;
 
     my $process = $c->stash->{process};
+    die 'Process is not enabled' unless $process->enabled;
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
