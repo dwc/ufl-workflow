@@ -239,7 +239,7 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 =cut
 
 sub add_document {
-    my ($self, $user, $filename, $contents, $destination, $replaced_document) = @_;
+    my ($self, $user, $filename, $contents, $destination, $accepted_extensions, $replaced_document_id) = @_;
 
     $self->throw_exception('You must provide a filename, the contents, and a destination directory')
         unless $filename and $contents and $destination;
@@ -248,9 +248,14 @@ sub add_document {
     $self->throw_exception('User cannot manage request')
         unless $user->can_manage($self);
 
+    my @extensions = @{ $accepted_extensions || [] };
+    die 'File is not one of the allowed types'
+        unless grep { $filename =~ /\.\Q$_\E$/i } @extensions;
+
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;
-    my $type   = MIME::Types->new->mimeTypeOf($extension);
+
+    my $type = MIME::Types->new->mimeTypeOf($extension);
     die "Unknown type for extension [$extension]" unless $type;
 
     my $document;
@@ -264,7 +269,10 @@ sub add_document {
             md5       => Digest::MD5::md5_hex($contents),
         });
 
-        if ($replaced_document) {
+        if ($replaced_document_id) {
+            my $replaced_document = $self->documents->find($replaced_document_id);
+            die 'Replaced document not found' unless $replaced_document;
+
             $replaced_document->document_id($document->id);
             $replaced_document->update;
         }

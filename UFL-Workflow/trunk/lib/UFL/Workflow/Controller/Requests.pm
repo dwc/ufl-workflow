@@ -200,23 +200,13 @@ sub add_document : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
-            my $filename   = $upload->basename;
-            my @extensions = @{ $c->config->{documents}->{accepted_extensions} || [] };
-            die 'File is not one of the allowed types'
-                unless grep { $filename =~ /\.\Q$_\E$/i } @extensions;
-
-            my $replaced_document;
-            if (my $replaced_document_id = $result->valid('replaced_document_id')) {
-                $replaced_document = $request->documents->find($replaced_document_id);
-                $c->detach('/default') unless $replaced_document;
-            }
-
             my $document = $request->add_document(
                 $c->user->obj,
-                $filename,
+                $upload->basename,
                 $upload->slurp,
                 $c->config->{documents}->{destination},
-                $replaced_document,
+                $c->config->{documents}->{accepted_extensions},
+                $result->valid('replaced_document_id'),
             );
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));

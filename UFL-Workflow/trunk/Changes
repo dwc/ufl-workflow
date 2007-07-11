@@ -15,6 +15,7 @@ This file documents the revision history for UFL::Workflow.
         - Return 404 when a document's associated file isn't readable
           (doesn't exist, permissions problems, etc.)
         - Move pending actions to its own page
+        - Refactor document uploading
 
 0.10  Mon Mar  5 17:54:05 EST 2007
         - Update Authentication::Credential::Passthrough regex to
