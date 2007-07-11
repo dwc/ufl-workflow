@@ -53,12 +53,10 @@ Display the home page.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $actions   = $c->user->pending_actions;
     my $requests  = $c->user->recent_requests;
     my $processes = $c->model('DBIC::Process')->search({ 'enabled' => 1 });
 
     $c->stash(
-        actions   => $actions,
         requests  => $requests,
         processes => $processes,
         template  => 'index.tt'

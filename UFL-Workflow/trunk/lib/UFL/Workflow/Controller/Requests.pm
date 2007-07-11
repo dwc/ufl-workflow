@@ -53,6 +53,23 @@ sub by_group : Local Args(0) {
     );
 }
 
+=head2 pending_decision
+
+Display a list of requests pending action by the current user.
+
+=cut
+
+sub pending_decision : Local Args(0) {
+    my ($self, $c) = @_;
+
+    my $actions   = $c->user->pending_actions;
+
+    $c->stash(
+        actions  => $actions,
+        template => 'requests/pending_decision.tt',
+    );
+}
+
 =head2 reports
 
 Show a list of requests matching the specified criteria.
