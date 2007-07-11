@@ -78,20 +78,13 @@ the check passes, update the record.
 sub update {
     my ($self, @args) = @_;
 
-    my $schema = $self->result_source->schema;
-    eval {
-        $schema->txn_begin;
+    my $next = $self->next::can;
+    $self->result_source->schema->txn_do(sub {
+        $next->($self, @args);
 
-        $self->next::method(@args);
-
-        $self->throw_exception('Parent group cannot be the same as the group')
+        die 'Parent group cannot be the same as the group'
             if $self->parent_group_id and $self->id == $self->parent_group_id;
-        $schema->txn_commit;
-    };
-    if (my $error = $@) {
-        $schema->txn_rollback;
-        $self->throw_exception($error);
-    }
+    });
 }
 
 =head2 has_role
