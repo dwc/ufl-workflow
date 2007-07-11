@@ -46,6 +46,8 @@ sub download : PathPart('download') Chained('document') Args(0) {
     my $document = $c->stash->{document};
 
     my $path = Path::Class::Dir->new($c->config->{documents}->{destination}, $document->path);
+    $c->detach('/default') unless -r $path;
+
     my $stat = stat $path;
 
     $c->res->headers->content_type($document->type);
