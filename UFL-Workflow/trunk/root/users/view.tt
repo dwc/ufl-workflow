@@ -9,7 +9,7 @@
 <dl>
   <dt>Username</dt>
   <dd>[% user.username | html %]</dd>
-  <dt>Added</dt>
+  <dt>Created</dt>
   <dd>[% user.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />

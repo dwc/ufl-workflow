@@ -11,7 +11,7 @@
 <dl>
   <dt>Name</dt>
   <dd>[% group.name | html %]</dd>
-  <dt>Added</dt>
+  <dt>Created</dt>
   <dd>[% group.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />

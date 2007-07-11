@@ -16,7 +16,7 @@
     <th>Process</th>
 [% END %]
     <th>Status</th>
-    <th>Added</th>
+    <th>Created</th>
     <th>Updated</th>
   </tr>
   [% SET i = 0 %]

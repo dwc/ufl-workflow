@@ -8,7 +8,7 @@
   <tr>
     <th>Request</th>
     <th>Action</th>
-    <th>Added</th>
+    <th>Created</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE (action = actions.next) %]

@@ -14,15 +14,15 @@
 
 <h3>Request details</h3>
 <dl>
+  <dt>Title</dt>
+  <dd>[% request.title | html %]</dd>
   <dt>Process</dt>
   <dd>[% request.process.name | html %]</dd>
   <dt>Status</dt>
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
-  <dt>Title</dt>
-  <dd>[% request.title | html %]</dd>
   <dt>Submitter</dt>
   <dd>[% request.submitter.username | html %]</dd>
-  <dt>Added</dt>
+  <dt>Created</dt>
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
   <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
@@ -37,7 +37,7 @@
   <tr>
     <th>Title</th>
     <th>Replacement</th>
-    <th>Added</th>
+    <th>Created</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE (document = documents.next) %]
