@@ -7,9 +7,10 @@ This file documents the revision history for UFL::Workflow.
           from form validation
         - Refactor schema generation
         - Add script to synchronize data from one schema to another
-        - Add Textile support for process description
+        - Add Textile support for process descriptions
         - Automatically choose first group for initial request
           assignment if there's only one
+        - Add Textile support for request descriptions
 
 0.10  Mon Mar  5 17:54:05 EST 2007
         - Update Authentication::Credential::Passthrough regex to

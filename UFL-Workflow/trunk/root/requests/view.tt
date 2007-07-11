@@ -1,3 +1,4 @@
+[% USE Textile %]
 [% SET
    title = request.title
    status_id = 'status_id'
@@ -19,8 +20,6 @@
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
   <dt>Title</dt>
   <dd>[% request.title | html %]</dd>
-  <dt>Description</dt>
-  <dd>[% request.description | html %]</dd>
   <dt>Submitter</dt>
   <dd>[% request.submitter.username | html %]</dd>
   <dt>Added</dt>
@@ -29,6 +28,8 @@
   <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
+<h4>Description</h4>
+[% request.description | textile %]
 
 <h3>Documents</h3>
 [% IF documents.count > 0 %]
