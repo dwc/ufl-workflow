@@ -244,6 +244,16 @@ sub add_request : PathPart Chained('process') Args(0) {
                 $group,
             );
 
+            if (my $upload = $c->req->upload('document')) {
+                my $document = $request->add_document(
+                    $c->user->obj,
+                    $upload->basename,
+                    $upload->slurp,
+                    $c->config->{documents}->{destination},
+                    $c->config->{documents}->{accepted_extensions},
+                );
+            }
+
             return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
         }
     }

@@ -28,3 +28,5 @@ add_request:
     LENGTH:  A shorter description
   group_id:
     DEFAULT: A group
+  document:
+    DEFAULT: A document
