@@ -113,7 +113,7 @@ clear:both;
 display:block;
 font-size:1em;
 margin:0 0 10px;
-width:60%;
+width:80%;
 }
 
 #content input.checkbox,#content label.radio input {
@@ -180,7 +180,7 @@ text-align:left;
 }
 
 #content textarea {
-height:20em;
+height:15em;
 }
 
 #content th {
