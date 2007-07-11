@@ -236,23 +236,27 @@ sub add_request : PathPart Chained('process') Args(0) {
             my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
 
-            my $request = $process->add_request(
-                $result->valid('title'),
-                $result->valid('description'),
-                $result->valid('enabled'),
-                $c->user->obj,
-                $group,
-            );
-
-            if (my $upload = $c->req->upload('document')) {
-                my $document = $request->add_document(
+            # Use a transaction so e.g. if the document is bad the request isn't added
+            my $request;
+            $c->model('DBIC')->schema->txn_do(sub {
+                $request = $process->add_request(
+                    $result->valid('title'),
+                    $result->valid('description'),
+                    $result->valid('enabled'),
                     $c->user->obj,
-                    $upload->basename,
-                    $upload->slurp,
-                    $c->config->{documents}->{destination},
-                    $c->config->{documents}->{accepted_extensions},
+                   $group,
                 );
-            }
+
+                if (my $upload = $c->req->upload('document')) {
+                    my $document = $request->add_document(
+                        $c->user->obj,
+                        $upload->basename,
+                        $upload->slurp,
+                        $c->config->{documents}->{destination},
+                        $c->config->{documents}->{accepted_extensions},
+                    );
+                }
+            });
 
             return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
         }
