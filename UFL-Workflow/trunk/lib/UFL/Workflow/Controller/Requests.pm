@@ -28,12 +28,28 @@ sub for_user : Local Args(0) {
     my ($self, $c) = @_;
 
     my $user_requests  = $c->user->requests;
+
+    $c->stash(
+        user_requests => $user_requests,
+        template      => 'requests/for_user.tt',
+    );
+}
+
+=head2 by_group
+
+Display a list of the current requests based on the groups of the
+current user.
+
+=cut
+
+sub by_group : Local Args(0) {
+    my ($self, $c) = @_;
+
     my $group_requests = $c->user->group_requests;
 
     $c->stash(
-        user_requests  => $user_requests,
         group_requests => $group_requests,
-        template       => 'requests/for_user.tt',
+        template       => 'requests/by_group.tt',
     );
 }
 

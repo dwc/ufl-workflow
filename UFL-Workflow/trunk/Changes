@@ -11,6 +11,7 @@ This file documents the revision history for UFL::Workflow.
         - Automatically choose first group for initial request
           assignment if there's only one
         - Add Textile support for request descriptions
+        - Split /requests/for_user into two pages
 
 0.10  Mon Mar  5 17:54:05 EST 2007
         - Update Authentication::Credential::Passthrough regex to

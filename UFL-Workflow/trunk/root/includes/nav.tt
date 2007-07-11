@@ -10,6 +10,7 @@
     [% END %]
   [% END %]
   [% INCLUDE nav_link, uri = c.uri_for(c.controller('Requests').action_for('for_user')), label = 'Your requests' %]
+  [% INCLUDE nav_link, uri = c.uri_for(c.controller('Requests').action_for('by_group')), label = 'Group requests' %]
   [% INCLUDE nav_link, uri = c.uri_for(c.controller('Requests').action_for('reports')), label = 'Reports' %]
 [% END %]
 </ul>
