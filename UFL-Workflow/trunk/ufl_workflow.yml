@@ -41,7 +41,7 @@ View::Email:
   sender:
     method: Test
 
-View::TT:
+View::HTML:
   PRE_CHOMP: 1
   WRAPPER:   wrapper.tt
   VARIABLES: &tt_variables

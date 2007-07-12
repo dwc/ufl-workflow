@@ -14,7 +14,7 @@ View for sending template-generated email from L<UFL::Workflow>.
 
 =head1 SEE ALSO
 
-L<Catalyst::View::TT>
+L<Catalyst::View::Email>
 
 =head1 AUTHOR
 

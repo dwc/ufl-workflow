@@ -1,4 +1,4 @@
-package UFL::Workflow::View::TT;
+package UFL::Workflow::View::HTML;
 
 use strict;
 use warnings;
@@ -13,7 +13,7 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-UFL::Workflow::View::TT - TT view component
+UFL::Workflow::View::HTML - HTML view component, using Template Toolkit
 
 =head1 SYNOPSIS
 
