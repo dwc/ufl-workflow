@@ -9,7 +9,8 @@
 [% IF processes.count > 0 %]
 <ul>
   [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% process.enabled ? 'Enabled' : 'Disabled' %])</li>
+    [% SET num_requests = process.requests_rs.count %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% process.enabled ? 'Enabled' : 'Disabled' %], [% num_requests | html %] request[% num_requests == 1 ? '' : 's' %])</li>
   [% END %]
 </ul>
 [% ELSE %]
