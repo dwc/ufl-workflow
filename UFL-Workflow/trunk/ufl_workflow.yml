@@ -1,8 +1,9 @@
 --- #YAML:1.0
 # Do not use tabs for indentation or label/value separation!
-name:       Workflow
-logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
-encoding:   UTF-8
+name:         Workflow
+logout_uri:   http://login.gatorlink.ufl.edu/quit.cgi
+encoding:     UTF-8
+default_view: HTML
 
 documents:
   destination:         __path_to(documents)__
