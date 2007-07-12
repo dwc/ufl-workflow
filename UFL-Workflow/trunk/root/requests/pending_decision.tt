@@ -1,8 +1,8 @@
 [% SET title = 'Requests Pending Decision' -%]
 
 [% SET num_actions = actions.count %]
-[% IF num_actions > 0 %]
 <h3>Pending decisions</h3>
+[% IF num_actions > 0 %]
 <p>There [% num_actions == 1 ? 'is' : 'are' %] currently [% num_actions %] request[% num_actions == 1 ? '' : 's' %] pending your decision.</p>
 <table>
   <tr>
@@ -21,4 +21,6 @@
     [% SET i = i + 1 %]
   [% END %]
 </table>
-[% END -%]
+[% ELSE %]
+<p>There aren't any requests that currently require your attention.</p>
+[% END %]
