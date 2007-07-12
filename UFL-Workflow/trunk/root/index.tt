@@ -1,7 +1,8 @@
 [% SET title = '' -%]
 
-<h3>Your requests</h3>
+<h3>Recent requests</h3>
 [% INCLUDE requests/includes/list.tt comment = 'The following is a list of your recently updated requests and their current status:', show_process = 1 %]
+<p>You can also see <a href="[% c.uri_for(c.controller('Requests').action_for('for_user')) | html %]">all your requests</a>, regardless of when they were last updated.</p>
 
 <h3>Add new request</h3>
 [% IF processes.count > 0 %]

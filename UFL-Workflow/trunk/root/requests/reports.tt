@@ -43,4 +43,4 @@
 </form>
 
 <h3>[% title | html %] for [% selected_group ? selected_group.name : 'all groups' | html %]</h3>
-[% INCLUDE requests/includes/list.tt show_process = 1 %]
+[% INCLUDE requests/includes/list.tt show_submitter = 1, show_process = 1 %]
