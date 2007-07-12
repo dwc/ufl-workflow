@@ -45,8 +45,8 @@ View::Email:
 View::HTML:
   PRE_CHOMP: 1
   WRAPPER:   wrapper.tt
-  VARIABLES: &tt_variables
+  VARIABLES: &ttvariables
     datetime_format: %a, %B %e, %Y %l:%M %p
 
 View::Text:
-  VARIABLES: *tt_variables
+  VARIABLES: *ttvariables
