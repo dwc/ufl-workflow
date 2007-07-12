@@ -33,8 +33,19 @@ Model::DBIC:
       ShowErrorStatement: 1
       TraceLevel:         0
 
+View::Email:
+  default_view:    Text
+  content_type:    text/plain
+  stash_key:       email
+  template_prefix: email
+  sender:
+    method: Test
+
 View::TT:
   PRE_CHOMP: 1
   WRAPPER:   wrapper.tt
-  VARIABLES:
+  VARIABLES: &tt_variables
     datetime_format: %a, %B %e, %Y %l:%M %p
+
+View::Text:
+  VARIABLES: *tt_variables

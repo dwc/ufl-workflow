@@ -136,6 +136,13 @@ Render a view and finish up before sending the response.
 sub end : Private {
     my ($self, $c) = @_;
 
+    # If we're using the stub email sender, flush any messages to the console
+    if ($c->view('Email')->mailer->mailer eq 'Test') {
+        require Email::Send::Test;
+        $c->log->_dump(Email::Send::Test->emails);
+        Email::Send::Test->clear;
+    }
+
     $c->forward('render');
     $c->fillform if $c->stash->{fillform};
 }

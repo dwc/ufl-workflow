@@ -250,8 +250,13 @@ sub update_status : PathPart Chained('request') Args(0) {
         $c->detach('/default') unless $group;
     }
 
-    my $comment = $result->valid('comment');
-    $request->update_status($status, $c->user->obj, $group, $comment);
+    $c->model('DBIC')->schema->txn_do(sub {
+        my $comment = $result->valid('comment');
+        $request->update_status($status, $c->user->obj, $group, $comment);
+
+        $self->send_change_email($c, $request, $c->user->obj, $comment);
+        $self->send_action_email($c, $request, $c->user->obj, $comment);
+    });
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
@@ -293,6 +298,67 @@ sub list_groups : PathPart Chained('request') Args(0) {
     my $view = $c->view('JSON');
     $view->expose_stash([ qw/groups selected_group/ ]);
     $c->forward($view);
+}
+
+=head2 send_change_email
+
+Send notification that a L<UFL::Workflow::Schema::Request> has changed
+to the submitter and to users who have previously acted on it.
+
+=cut
+
+sub send_change_email {
+    my ($self, $c, $request, $actor, $comment) = @_;
+
+    # TODO: Check groups
+    my @past_users;
+    my $step = $request->current_step;
+    while ($step = $step->prev_step) {
+        push @past_users, $step->role->users;
+    }
+
+    $c->stash(
+        request => $request,
+        actor   => $actor,
+        comment => $comment,
+        email   => {
+            to       => join(', ', map { $_->username . '@ufl.edu' } @past_users),
+            from     => 'webmaster@ufl.edu',
+            subject  => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
+            template => 'text_plain/change.tt',
+        },
+    );
+
+    $c->forward($c->view('Email'));
+}
+
+=head2 send_action_email
+
+Send notification that a L<UFL::Workflow::Schema::Request> must be
+acted upon to those users who can act on it based on their
+L<UFL::Workflow::Schema::Group>s and L<UFL::Workflow::Schema::Role>s.
+
+=cut
+
+sub send_action_email {
+    my ($self, $c, $request, $actor, $comment) = @_;
+
+    # TODO: Check groups
+    my @current_users = $request->current_step->role->users;
+
+    $c->stash(
+        request => $request,
+        actor   => $actor,
+        comment => $comment,
+        email   => {
+            to       => join(', ', map { $_->username . '@ufl.edu' } @current_users),
+            from     => 'webmaster@ufl.edu',
+            subject  => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
+            template => 'text_plain/action.tt',
+        },
+    );
+
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR

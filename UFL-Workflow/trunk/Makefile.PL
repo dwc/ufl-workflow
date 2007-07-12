@@ -17,6 +17,7 @@ requires 'Catalyst::Plugin::Setenv';
 requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
+requires 'Catalyst::View::Email' => '0.02';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::TT';
 requires 'Class::Accessor::Fast';
