@@ -328,21 +328,19 @@ to the submitter and to users who have previously acted on it.
 sub send_change_email {
     my ($self, $c, $request, $actor, $comment) = @_;
 
-    # TODO: Check groups
-    my @past_users;
-    my $step = $request->current_step;
-    while ($step = $step->prev_step) {
-        push @past_users, $step->role->users;
-    }
+    my $past_actors = $request->past_actors;
 
     $c->stash(
         request => $request,
         actor   => $actor,
         comment => $comment,
-        email   => {
-            to       => join(', ', map { $_->username . '@ufl.edu' } @past_users),
-            from     => 'webmaster@ufl.edu',
-            subject  => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
+        email => {
+            header  => [
+                From    => 'webmaster@ufl.edu',
+                To      => join(', ', map { $_->email } $past_actors->all),
+                Cc      => $request->submitter->email,
+                Subject => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
+            ],
             template => 'text_plain/change.tt',
         },
     );
@@ -361,17 +359,18 @@ L<UFL::Workflow::Schema::Group>s and L<UFL::Workflow::Schema::Role>s.
 sub send_action_email {
     my ($self, $c, $request, $actor, $comment) = @_;
 
-    # TODO: Check groups
-    my @current_users = $request->current_step->role->users;
+    my $possible_actors = $request->possible_actors;
 
     $c->stash(
         request => $request,
         actor   => $actor,
         comment => $comment,
         email   => {
-            to       => join(', ', map { $_->username . '@ufl.edu' } @current_users),
-            from     => 'webmaster@ufl.edu',
-            subject  => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
+            header => [
+                To      => join(', ', map { $_->email } $possible_actors->all),
+                From    => 'webmaster@ufl.edu',
+                Subject => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
+            ],
             template => 'text_plain/action.tt',
         },
     );
