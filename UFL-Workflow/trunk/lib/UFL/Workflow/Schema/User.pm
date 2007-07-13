@@ -14,6 +14,10 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 16,
     },
+    email => {
+        data_type => 'varchar',
+        size      => 64,
+    },
 );
 __PACKAGE__->add_standard_columns;
 
