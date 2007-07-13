@@ -97,12 +97,22 @@ L<UFL::Workflow::Schema::Process>.
 sub current_action {
     my ($self) = @_;
 
-    my $current_action = $self->actions->search(
-        { next_action_id => undef },
-        { prefetch => [ qw/step status/ ] },
-    )->first;
+    my $current_action = $self->actions->search({ next_action_id => undef })->first;
 
     return $current_action;
+}
+
+=head2 prev_action
+
+Return the previous L<UFL::Workflow::Schema::Action> entered for this
+request.
+
+=cut
+
+sub prev_action {
+    my ($self) = @_;
+
+    return $self->current_action->prev_action;
 }
 
 =head2 first_step
