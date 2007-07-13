@@ -341,7 +341,7 @@ sub send_change_email {
                 Cc      => $request->submitter->email,
                 Subject => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
             ],
-            template => 'text_plain/change.tt',
+            template => 'text_plain/changed_request.tt',
         },
     );
 
@@ -371,7 +371,7 @@ sub send_action_email {
                 From    => 'webmaster@ufl.edu',
                 Subject => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
             ],
-            template => 'text_plain/action.tt',
+            template => 'text_plain/new_action.tt',
         },
     );
 
