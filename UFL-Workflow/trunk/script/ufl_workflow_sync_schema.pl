@@ -47,7 +47,7 @@ sub main {
     die usage() unless GetOptions(
         'from|f=s'      => \$from,
         'to|t=s'        => \$to,
-        'type|T=s'      => \$type,
+        'type=s'        => \$type,
         'separator|s=s' => \$separator,
         'user|u=s'      => \$user,
         'help|h'        => \$help,
@@ -57,7 +57,7 @@ sub main {
     my $schema = UFL::Workflow::Schema->connect;
 
     my %options = (add_drop_table => 1, separator => $separator);
-    my @statements = $schema->deployment_statements($schema, $type, undef, undef, \%options);
+    my @statements = $schema->deployment_statements($type, undef, undef, \%options);
 
     # Break the schema export, creation, and import into three passes
     my (@first_pass_statements, @second_pass_statements, @third_pass_statements);
@@ -87,6 +87,7 @@ sub main {
 
         push @third_pass_statements, $schema->grant_statements($user, $separator);
         push @third_pass_statements, $schema->trigger_statements($separator);
+        push @third_pass_statements, $schema->sequence_statements($separator);
     }
 
     print "--\n";

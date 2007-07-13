@@ -42,7 +42,7 @@ sub main {
     my $user      = 'dbzwap02';
     my $help      = 0;
     die usage() unless GetOptions(
-        'type|T=s'      => \$type,
+        'type=s'        => \$type,
         'separator|s=s' => \$separator,
         'user|u=s'      => \$user,
         'help|h'        => \$help,
@@ -52,7 +52,7 @@ sub main {
     my $schema = UFL::Workflow::Schema->connect;
 
     my %options = (add_drop_table => 1, separator => $separator);
-    my @statements = $schema->deployment_statements($schema, $type, undef, undef, \%options);
+    my @statements = $schema->deployment_statements($type, undef, undef, \%options);
 
     if ($type eq 'DB2') {
         push @statements, $schema->grant_statements($user, $separator);

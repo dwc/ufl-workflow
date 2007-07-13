@@ -33,7 +33,7 @@ sub deployment_statements {
     my $self = shift;
     my $separator = delete $_[-1]->{separator};
 
-    my @statements = $self->storage->deployment_statements(@_);
+    my @statements = $self->storage->deployment_statements($self, @_);
     s/;/$separator/g for @statements;
 
     return @statements;
@@ -135,16 +135,17 @@ L<DBIx::Class::Schema>. This currently supports DB2 only.
 =cut
 
 sub export_statements {
-    my ($schema, $separator) = @_;
+    my ($self, $separator) = @_;
 
     $separator ||= ';';
 
     my @statements;
-    foreach my $source_name ($schema->sources) {
-        my $source = $schema->source($source_name);
+    foreach my $source_name ($self->sources) {
+        my $source = $self->source($source_name);
         my $table_name = $source->from;
+        my @columns = $source->columns;
 
-        my $export = "EXPORT TO $table_name.del OF DEL SELECT * FROM $table_name$separator";
+        my $export = "EXPORT TO $table_name.del OF DEL SELECT " . join(", ", @columns) . " FROM $table_name$separator";
         push @statements, $export;
     }
 
@@ -159,17 +160,49 @@ L<DBIx::Class::Schema>. This currently supports DB2 only.
 =cut
 
 sub import_statements {
-    my ($schema, $separator) = @_;
+    my ($self, $separator) = @_;
 
     $separator ||= ';';
 
     my @statements;
-    foreach my $source_name ($schema->sources) {
-        my $source = $schema->source($source_name);
+    foreach my $source_name ($self->sources) {
+        my $source = $self->source($source_name);
         my $table_name = $source->from;
 
         my $import = "IMPORT FROM $table_name.del OF DEL MODIFIED BY DELPRIORITYCHAR USEDEFAULTS REPLACE INTO $table_name$separator";
         push @statements, $import;
+    }
+
+    return @statements;
+}
+
+=head2 sequence_statements
+
+Generate the statements necessary for updating the sequences for all
+tables on this L<DBIx::Class::Schema>. This currently supports DB2
+only.
+
+=cut
+
+sub sequence_statements {
+    my ($self, $separator) = @_;
+
+    $separator ||= ';';
+
+    my @statements;
+    foreach my $source_name ($self->sources) {
+        my $source = $self->source($source_name);
+        my $table_name = $source->from;
+
+        my @primary_columns = $source->primary_columns;
+        foreach my $primary_column (@primary_columns) {
+            my $column_info = $source->column_info($primary_column);
+            if ($column_info->{is_auto_increment}) {
+                # DB2 allows only numeric constants here
+                my $select = qq[SELECT 'db2 "ALTER TABLE $table_name ALTER COLUMN $primary_column RESTART WITH ' || RTRIM(CAST(MAX($primary_column) + 1 AS CHAR(16))) || '"' FROM $table_name$separator];
+                push @statements, $select;
+            }
+        }
     }
 
     return @statements;
