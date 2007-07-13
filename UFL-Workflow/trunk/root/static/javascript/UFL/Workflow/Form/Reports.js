@@ -1,3 +1,5 @@
+var groups = new Array();
+
 function setDate(dateRange) {
     if (dateRange) {
         var startDates = dateRange.split('-', 3);
@@ -7,6 +9,58 @@ function setDate(dateRange) {
     }
 }
 
+function click(object,option,condition) {
+    if(option && object) {
+        switch(option) {
+            case "clear":
+                if(condition) {
+                    if(object.value == condition) {
+                        object.value = '';
+                    }
+                }
+                else {
+                    object.value = '';
+                }	    
+            break;	
+        }
+    }
+}
+
+function keyupGroupSearch(object) {
+    var input = object.value.toLowerCase();
+    var results = Array();
+    groupResult = document.getElementById("group_result");	
+    options = groupResult.options;	
+    options.length = 0;
+	
+    for(group in groups){
+        groupName = groups[group].toLowerCase();
+        
+        if(groupName.indexOf(input) > -1){
+            var option = new Option(groups[group], group);
+            options[options.length] = option;
+        }
+    }
+}
+				
+function clickGroupListAll(object) {
+    groupResult = document.getElementById("group_result");	
+    options = groupResult.options;
+    options.length = 0;
+	
+    for(group in groups){
+        var option = new Option(groups[group], group);
+        options[options.length] = option;
+    }
+}
+
+function initialize() {
+    // groups = jquery json request and array load [json_id][json_value] 
+}
+
 $(document).ready(function() {
    $('#date_span').change(function() { setDate(this.value) });
+   $("#group_search").click(function(){ click(this,'clear','Search for group name');});
+   $("#group_search").keyup(function(){ keyupGroupSearch(this); });
+   $("#group_list_all").click(function(){ clickGroupListAll(this);});
 });

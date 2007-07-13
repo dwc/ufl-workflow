@@ -8,7 +8,7 @@
      c.uri_for('/static/javascript/UFL/Workflow/Form/AddAction.js'),
    ]
    snippets = [
-     "UFL.Workflow.Form.AddAction.load('${c.uri_for(c.controller('Requests').action_for('list_groups'), request.uri_args)}', '$status_id', '$group_id');",
+     "UFL.Workflow.Form.AddAction.load('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
    ]
 -%]
 
