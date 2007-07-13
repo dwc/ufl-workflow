@@ -261,14 +261,14 @@ sub update_status : PathPart Chained('request') Args(0) {
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
 
-=head2 list_groups
+=head2 list_action_groups
 
-List groups that are valid for the request and the specified status
+List groups that are valid for the action,  request, and the specified status
 via L<JSON>.
 
 =cut
 
-sub list_groups : PathPart Chained('request') Args(0) {
+sub list_action_groups : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $status_id = $c->req->param('status_id');
@@ -299,6 +299,38 @@ sub list_groups : PathPart Chained('request') Args(0) {
     $view->expose_stash([ qw/groups selected_group/ ]);
     $c->forward($view);
 }
+
+=head2 list_groups
+
+List groups that are valid for the request via L<JSON>.
+
+=cut
+
+sub list_groups : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $request = $c->stash->{request};
+
+    my @groups = $request->groups;
+    $c->stash(groups => [ map { $_->to_json } @groups ]);
+
+    my $current_group = $request->current_action->groups->first;
+    if (my $parent_group = $current_group->parent_group) {
+        # Default to the parent group
+         foreach my $group (@groups) {
+             if ($group->id == $parent_group->id) {
+                 $c->stash(selected_group => $group->to_json);
+                 last;
+             }
+         }
+    }
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/groups selected_group/ ]);
+    $c->forward($view);    
+}
+
+
 
 =head2 send_change_email
 
