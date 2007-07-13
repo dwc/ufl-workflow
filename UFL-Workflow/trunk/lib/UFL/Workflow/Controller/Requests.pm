@@ -263,8 +263,8 @@ sub update_status : PathPart Chained('request') Args(0) {
 
 =head2 list_action_groups
 
-List groups that are valid for the action,  request, and the specified status
-via L<JSON>.
+List groups that are valid for the action, request, and the specified
+status via L<JSON>.
 
 =cut
 
@@ -329,8 +329,6 @@ sub list_groups : PathPart Chained('request') Args(0) {
     $view->expose_stash([ qw/groups selected_group/ ]);
     $c->forward($view);    
 }
-
-
 
 =head2 send_change_email
 
