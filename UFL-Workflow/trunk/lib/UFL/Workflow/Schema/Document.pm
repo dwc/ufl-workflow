@@ -47,6 +47,10 @@ __PACKAGE__->belongs_to(
     { join_type => 'left' },
 );
 
+__PACKAGE__->resultset_attributes({
+    order_by => \q[me.update_time DESC, me.insert_time DESC],
+});
+
 =head1 NAME
 
 UFL::Workflow::Schema::Document - Document table class

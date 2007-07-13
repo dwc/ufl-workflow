@@ -170,19 +170,7 @@ Display basic information on the stashed request.
 sub view : PathPart('') Chained('request') Args(0) {
     my ($self, $c) = @_;
 
-    my $request   = $c->stash->{request};
-    my $documents = $request->documents->search(undef, { order_by => 'insert_time' });
-
-    my @groups;
-    if (my $next_step = $request->next_step) {
-        @groups = $next_step->groups;
-    }
-
-    $c->stash(
-        documents => $documents,
-        groups    => @groups ? \@groups : undef,
-        template  => 'requests/view.tt',
-    );
+    $c->stash(template  => 'requests/view.tt');
 }
 
 =head2 add_document

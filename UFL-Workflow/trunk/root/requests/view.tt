@@ -32,6 +32,7 @@
 [% request.description | textile %]
 
 <h3>Documents</h3>
+[% SET documents = request.documents_rs %]
 [% IF documents.count > 0 %]
 <table>
   <tr>
