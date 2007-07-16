@@ -29,7 +29,7 @@ function click(object,option,condition) {
 function keyupGroupSearch(object) {
     var input = object.value.toLowerCase();
     var results = Array();
-    groupResult = document.getElementById("group_result");	
+    groupResult = document.getElementById("group_id");	
     options = groupResult.options;	
     options.length = 0;
 	
@@ -44,7 +44,7 @@ function keyupGroupSearch(object) {
 }
 				
 function clickGroupListAll(object) {
-    groupResult = document.getElementById("group_result");	
+    groupResult = document.getElementById("group_id");	
     options = groupResult.options;
     options.length = 0;
 	
