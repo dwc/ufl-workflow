@@ -182,6 +182,18 @@ sub is_open {
     return $self->current_action->status->is_initial;
 }
 
+=head2 groups
+
+Return a list of L<UFL::Workflow::Schema::Group>s.
+
+=cut
+
+sub groups {
+    my ($self) = @_;
+
+    return $self->groups;
+}
+
 =head2 groups_for_status
 
 Return a list of L<UFL::Workflow::Schema::Group>s which can act on the
