@@ -54,8 +54,18 @@ function clickGroupListAll(object) {
     }
 }
 
-function initialize() {
+function initialize(url) {
     // groups = jquery json request and array load [json_id][json_value] 
+    $.getJSON(url, 
+        function(req) {
+            
+            var json = req;
+            if(json && json.groups && json.groups.length > 0) {
+                for(group in json.groups){
+                    groups[group] = json.groups[group].name;
+                }
+            }
+        });
 }
 
 $(document).ready(function() {
