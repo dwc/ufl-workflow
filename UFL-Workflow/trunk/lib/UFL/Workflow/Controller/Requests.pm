@@ -294,27 +294,17 @@ List groups that are valid for the request via L<JSON>.
 
 =cut
 
-sub list_groups : PathPart Chained('request') Args(0) {
+sub list_groups : Local Args(0) {
     my ($self, $c) = @_;
 
-    my $request = $c->stash->{request};
+    my @groups = $c->model("DBIC::Group")->search(
+        undef, 
+        { distinct => 1, } ,);
 
-    my @groups = $request->groups;
     $c->stash(groups => [ map { $_->to_json } @groups ]);
 
-    my $current_group = $request->current_action->groups->first;
-    if (my $parent_group = $current_group->parent_group) {
-        # Default to the parent group
-         foreach my $group (@groups) {
-             if ($group->id == $parent_group->id) {
-                 $c->stash(selected_group => $group->to_json);
-                 last;
-             }
-         }
-    }
-
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/groups selected_group/ ]);
+    $view->expose_stash([ qw/groups/ ]);
     $c->forward($view);    
 }
 
