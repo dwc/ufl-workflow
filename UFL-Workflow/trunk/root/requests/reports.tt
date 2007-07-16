@@ -17,7 +17,7 @@
         <div class="view_all">
             <input class="submit" type="button" id="group_list_all" value="View All Groups" />
         </div>
-        <select id="group_result" size="5"></select>    
+        <select id="group_id" size="5"></select>    
     </label>
 [% END -%]
   <fieldset id="status">
