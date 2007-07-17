@@ -8,7 +8,7 @@ use FormValidator::Simple;
 use FormValidator::Simple::ProfileManager::YAML;
 use Module::Find ();
 
-__PACKAGE__->mk_accessors(qw/_path datetime_class/);
+__PACKAGE__->mk_accessors(qw/profiles_file messages_file datetime_class/);
 
 # For FormValidator::Simple
 our $DEFAULT_DATETIME_CLASS = 'DateTime';
@@ -39,44 +39,17 @@ sub new {
     my ($c, $config) = @_;
 
     my $path = $c->path_to('root', $self->path_prefix($c));
-    $self->_path($path);
+    if (-d $path) {
+        $self->profiles_file($path->file('profiles.yml'))
+            unless $self->profiles_file;
+        $self->messages_file($path->file('messages.yml'))
+            unless $self->messages_file;
+    }
 
     $self->datetime_class($DEFAULT_DATETIME_CLASS)
         unless $self->datetime_class;
 
     return $self;
-}
-
-=head2 profiles_file
-
-Return a L<Path::Class> object referring to the form validation
-profile definition file for this controller.
-
-=cut
-
-sub profiles_file {
-    my ($self) = @_;
-
-    return unless -d $self->_path;
-
-    my $filename = $self->config->{profiles_file} || 'profiles.yml';
-    return $self->_path->file($filename);
-}
-
-=head2 messages_file
-
-Return a L<Path::Class> object referring to the form validation
-messages definition file for this controller.
-
-=cut
-
-sub messages_file {
-    my ($self) = @_;
-
-    return unless -d $self->_path;
-
-    my $filename = $self->config->{messages_file} || 'messages.yml';
-    return $self->_path->file($filename);
 }
 
 =head2 validate_form
