@@ -291,7 +291,7 @@ sub send_new_request_email {
     $c->stash(
         request => $request,
         email => {
-            from     => 'webmaster@ufl.edu',
+            from     => $c->config->{email}->{administrative_address},
             to       => join(', ', map { $_->email } $possible_actors->all),
             subject  => '[Request ' . $request->id . '] New: "' . $request->title . '"',
             header   => [

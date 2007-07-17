@@ -49,7 +49,7 @@ sub add : Local {
         if ($result->success) {
             my $user = $c->model('DBIC::User')->find_or_create({
                 username => $result->valid('username'),
-                email    => $result->valid('username') . '@' . $c->config->{default_domain},
+                email    => $result->valid('username') . '@' . $c->config->{email}->{domain},
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));

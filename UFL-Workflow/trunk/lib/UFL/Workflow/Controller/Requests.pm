@@ -322,7 +322,7 @@ sub send_changed_request_email {
         actor   => $actor,
         comment => $comment,
         email => {
-            from     => 'webmaster@ufl.edu',
+            from     => $c->config->{email}->{administrative_address},
             to       => join(', ', map { $_->email } $past_actors->all),
             subject  => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
             header   => [
@@ -354,7 +354,7 @@ sub send_new_action_email {
         actor   => $actor,
         comment => $comment,
         email   => {
-            from     => 'webmaster@ufl.edu',
+            from     => $c->config->{email}->{administrative_address},
             to       => join(', ', map { $_->email } $possible_actors->all),
             subject  => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
             header   => [
