@@ -244,7 +244,7 @@ sub add_request : PathPart Chained('process') Args(0) {
                     $result->valid('description'),
                     $result->valid('enabled'),
                     $c->user->obj,
-                   $group,
+                    $group,
                 );
 
                 if (my $upload = $c->req->upload('document')) {
