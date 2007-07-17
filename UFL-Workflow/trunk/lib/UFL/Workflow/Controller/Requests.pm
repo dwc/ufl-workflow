@@ -208,7 +208,7 @@ sub add_document : PathPart Chained('request') Args(0) {
 
     $c->stash(
         documents => $documents,
-        template  => 'requests/add_document.tt'
+        template  => 'requests/add_document.tt',
     );
 }
 
@@ -322,7 +322,7 @@ sub send_change_email {
         actor   => $actor,
         comment => $comment,
         email => {
-            header  => [
+            header => [
                 From    => 'webmaster@ufl.edu',
                 To      => join(', ', map { $_->email } $past_actors->all),
                 Cc      => $request->submitter->email,

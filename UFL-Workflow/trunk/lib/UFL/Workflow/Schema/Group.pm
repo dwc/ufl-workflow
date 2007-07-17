@@ -153,7 +153,7 @@ this group.
 sub requests {
     my ($self) = @_;
 
-    my $rs = $self->result_source->schema->resultset('Request')->search(
+    my $requests = $self->result_source->schema->resultset('Request')->search(
         {
             'group.id' => $self->id,
         },
@@ -163,7 +163,7 @@ sub requests {
         },
     );
 
-    return $rs;
+    return $requests;
 }
 
 =head2 open_requests
@@ -177,7 +177,7 @@ this group.
 sub open_requests {
     my ($self) = @_;
 
-    my $rs = $self->requests->search(
+    my $open_requests = $self->requests->search(
         {
             'actions.next_action_id' => undef,
             'status.is_initial'      => 1,
@@ -187,7 +187,7 @@ sub open_requests {
         },
     );
 
-    return $rs;
+    return $open_requests;
 }
 
 =head2 uri_args

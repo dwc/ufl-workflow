@@ -164,9 +164,9 @@ sub pending_actions {
     my @groups = $self->groups;
     my @roles  = $self->roles;
 
-    my $rs;
+    my $pending_actions;
     if (@groups and @roles) {
-        $rs = $self->result_source->schema->resultset('Action')->search(
+        $pending_actions = $self->result_source->schema->resultset('Action')->search(
             {
                 'action_groups.group_id' => { -in => [ map { $_->id } @groups ] },
                 'step.role_id'           => { -in => [ map { $_->id } @roles ] },
@@ -179,7 +179,7 @@ sub pending_actions {
         );
     }
 
-    return $rs;
+    return $pending_actions;
 }
 
 =head2 recent_requests
@@ -193,11 +193,11 @@ updated within the past week.
 sub recent_requests {
     my ($self) = @_;
 
-    my $rs = $self->requests->search({
+    my $recent_requests = $self->requests->search({
         update_time => \q[>= CURRENT TIMESTAMP - 7 DAYS],
     });
 
-    return $rs;
+    return $recent_requests;
 }
 
 =head2 group_requests
@@ -213,9 +213,9 @@ sub group_requests {
 
     my @groups = $self->groups;
 
-    my $rs;
+    my $group_requests;
     if (@groups) {
-        $rs = $self->result_source->schema->resultset('Request')->search(
+        $group_requests = $self->result_source->schema->resultset('Request')->search(
             {
                 'submitter.id'              => { '!=' => $self->id },
                 -or => [
@@ -231,7 +231,7 @@ sub group_requests {
         );
     }
 
-    return $rs;
+    return $group_requests;
 }
 
 =head2 uri_args

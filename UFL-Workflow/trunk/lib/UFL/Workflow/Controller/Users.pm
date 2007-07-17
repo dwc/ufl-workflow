@@ -31,7 +31,7 @@ sub index : Path('') Args(0) {
 
     $c->stash(
         users    => $users,
-        template => 'users/index.tt'
+        template => 'users/index.tt',
     );
 }
 
@@ -134,7 +134,7 @@ sub add_group_role : PathPart Chained('user') Args(0) {
 
     $c->stash(
         groups   => $groups,
-        template => 'users/add_group_role.tt'
+        template => 'users/add_group_role.tt',
     );
 }
 

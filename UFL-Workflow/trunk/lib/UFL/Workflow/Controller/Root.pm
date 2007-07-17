@@ -59,7 +59,7 @@ sub index : Path('') Args(0) {
     $c->stash(
         requests  => $requests,
         processes => $processes,
-        template  => 'index.tt'
+        template  => 'index.tt',
     );
 }
 

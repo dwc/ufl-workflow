@@ -60,7 +60,7 @@ sub add : Local {
 
     $c->stash(
         groups   => $groups,
-        template => 'groups/add.tt'
+        template => 'groups/add.tt',
     );
 }
 
@@ -117,7 +117,7 @@ sub edit : PathPart Chained('group') Args(0) {
 
     $c->stash(
         groups   => $groups,
-        template => 'groups/edit.tt'
+        template => 'groups/edit.tt',
     );
 }
 
