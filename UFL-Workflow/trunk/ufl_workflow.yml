@@ -10,9 +10,7 @@ email:
   administrative_address: webmaster@ufl.edu
   domain:                 ufl.edu
 
-documents:
-  destination:         __path_to(documents)__
-  accepted_extensions: [ doc, pdf, odt, txt ]
+documents: &documents
 
 authentication:
   dbic:
@@ -26,6 +24,10 @@ authorization:
     role_field:           name
     role_rel:             user_group_roles
     user_role_user_field: user_id
+
+Controller::Documents:
+  destination:         __path_to(documents)__
+  accepted_extensions: [ doc, pdf, odt, txt ]
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema

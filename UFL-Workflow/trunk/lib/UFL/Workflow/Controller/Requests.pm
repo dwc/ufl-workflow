@@ -189,8 +189,8 @@ sub add_document : PathPart Chained('request') Args(0) {
                 $c->user->obj,
                 $upload->basename,
                 $upload->slurp,
-                $c->config->{documents}->{destination},
-                $c->config->{documents}->{accepted_extensions},
+                $c->controller('Documents')->destination,
+                $c->controller('Documents')->accepted_extensions,
                 $result->valid('replaced_document_id'),
             );
 

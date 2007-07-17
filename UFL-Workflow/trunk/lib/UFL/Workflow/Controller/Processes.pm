@@ -252,8 +252,8 @@ sub add_request : PathPart Chained('process') Args(0) {
                         $c->user->obj,
                         $upload->basename,
                         $upload->slurp,
-                        $c->config->{documents}->{destination},
-                        $c->config->{documents}->{accepted_extensions},
+                        $c->controller('Documents')->destination,
+                        $c->controller('Documents')->accepted_extensions,
                     );
                 }
 

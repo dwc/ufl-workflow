@@ -54,6 +54,9 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
+[% IF c.user.can_manage(request) %]
+<p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>
+[% END -%]
 
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
@@ -113,11 +116,4 @@
   [% END %]
 [% ELSE %]
 <p>None yet.</p>
-[% END %]
-
-[% IF c.user.can_manage(request) %]
-<h3>Manage request</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add document</a></li>
-</ul>
 [% END %]

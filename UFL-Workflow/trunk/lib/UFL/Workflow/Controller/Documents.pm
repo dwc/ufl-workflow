@@ -5,6 +5,8 @@ use warnings;
 use base qw/UFL::Workflow::BaseController/;
 use File::stat;
 
+__PACKAGE__->mk_accessors(qw/destination accepted_extensions/);
+
 =head1 NAME
 
 UFL::Workflow::Controller::Documents - Documents controller component
@@ -45,7 +47,7 @@ sub download : PathPart('download') Chained('document') Args(0) {
 
     my $document = $c->stash->{document};
 
-    my $path = Path::Class::Dir->new($c->config->{documents}->{destination}, $document->path);
+    my $path = Path::Class::Dir->new($self->destination, $document->path);
     $c->detach('/default') unless -r $path;
 
     my $stat = stat $path;
