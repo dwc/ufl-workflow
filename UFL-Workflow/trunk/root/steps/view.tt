@@ -1,5 +1,10 @@
 [% SET title = step.name -%]
 
+<h3>Manage step</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), step.uri_args) | html %]">Edit this step</a></li>
+</ul>
+
 <h3>Step details</h3>
 <dl>
   <dt>Name</dt>
@@ -21,9 +26,3 @@
 [% SET role = step.role %]
   <dd><a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a></dd>
 </dl>
-<br style="clear:both" />
-
-<h3>Manage step</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), step.uri_args) | html %]">Edit this step</a></li>
-</ul>

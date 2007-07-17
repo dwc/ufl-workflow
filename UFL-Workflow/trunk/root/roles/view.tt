@@ -1,5 +1,10 @@
 [% SET title = "${role.name} Role" -%]
 
+<h3>Manage role</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), role.uri_args) | html %]">Edit this role</a></li>
+</ul>
+
 <h3>Role details</h3>
 <dl>
   <dt>Name</dt>
@@ -34,8 +39,3 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
-
-<h3>Manage role</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), role.uri_args) | html %]">Edit this role</a></li>
-</ul>
