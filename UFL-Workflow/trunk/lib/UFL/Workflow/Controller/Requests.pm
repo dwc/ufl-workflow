@@ -242,8 +242,8 @@ sub update_status : PathPart Chained('request') Args(0) {
         my $comment = $result->valid('comment');
         $request->update_status($status, $c->user->obj, $group, $comment);
 
-        $self->send_change_email($c, $request, $c->user->obj, $comment);
-        $self->send_action_email($c, $request, $c->user->obj, $comment);
+        $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
+        $self->send_new_action_email($c, $request, $c->user->obj, $comment);
     });
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
@@ -297,7 +297,7 @@ List groups via L<JSON>.
 sub list_groups : Local Args(0) {
     my ($self, $c) = @_;
 
-    my @groups = $c->model("DBIC::Group")->search(undef, { distinct => 1 });
+    my @groups = $c->model('DBIC::Group')->search(undef, { distinct => 1 });
     $c->stash(groups => [ map { $_->to_json } @groups ]);
 
     my $view = $c->view('JSON');
@@ -305,14 +305,14 @@ sub list_groups : Local Args(0) {
     $c->forward($view);
 }
 
-=head2 send_change_email
+=head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed
 to the submitter and to users who have previously acted on it.
 
 =cut
 
-sub send_change_email {
+sub send_changed_request_email {
     my ($self, $c, $request, $actor, $comment) = @_;
 
     my $past_actors = $request->past_actors;
@@ -335,7 +335,7 @@ sub send_change_email {
     $c->forward($c->view('Email'));
 }
 
-=head2 send_action_email
+=head2 send_new_action_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> must be
 acted upon to those users who can act on it based on their
@@ -343,7 +343,7 @@ L<UFL::Workflow::Schema::Group>s and L<UFL::Workflow::Schema::Role>s.
 
 =cut
 
-sub send_action_email {
+sub send_new_action_email {
     my ($self, $c, $request, $actor, $comment) = @_;
 
     my $possible_actors = $request->possible_actors;

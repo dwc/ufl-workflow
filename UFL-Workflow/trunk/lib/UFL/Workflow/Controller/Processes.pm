@@ -256,6 +256,8 @@ sub add_request : PathPart Chained('process') Args(0) {
                         $c->config->{documents}->{accepted_extensions},
                     );
                 }
+
+                $self->send_new_request_email($c, $request);
             });
 
             return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
@@ -272,6 +274,34 @@ sub add_request : PathPart Chained('process') Args(0) {
         groups   => \@groups,
         template => 'processes/add_request.tt',
     );
+}
+
+=head2 send_new_request_email
+
+Send notification that a new L<UFL::Workflow::Schema::Request> has
+been entered to those who can act on it.
+
+=cut
+
+sub send_new_request_email {
+    my ($self, $c, $request) = @_;
+
+    my $possible_actors = $request->possible_actors;
+
+    $c->stash(
+        request => $request,
+        email => {
+            header => [
+                From    => 'webmaster@ufl.edu',
+                To      => join(', ', map { $_->email } $possible_actors->all),
+                Cc      => $request->submitter->email,
+                Subject => '[Request ' . $request->id . '] New: "' . $request->title . '"',
+            ],
+            template => 'text_plain/new_request.tt',
+        },
+    );
+
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR
