@@ -29,7 +29,7 @@ requires 'Digest::MD5';
 requires 'FormValidator::Simple';
 requires 'FormValidator::Simple::ProfileManager::YAML';
 requires 'Getopt::Long';
-requires 'Module::Find';  # For load_classes
+requires 'Module::Find';
 requires 'NEXT';
 requires 'Scalar::Util';
 requires 'Template::Plugin::Textile';
