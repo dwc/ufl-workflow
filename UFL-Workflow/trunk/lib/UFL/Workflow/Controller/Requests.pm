@@ -322,11 +322,11 @@ sub send_changed_request_email {
         actor   => $actor,
         comment => $comment,
         email => {
-            header => [
-                From          => 'webmaster@ufl.edu',
-                To            => join(', ', map { $_->email } $past_actors->all),
+            from     => 'webmaster@ufl.edu',
+            to       => join(', ', map { $_->email } $past_actors->all),
+            subject  => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
+            header   => [
                 Cc            => $request->submitter->email,
-                Subject       => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/changed_request.tt',
@@ -354,10 +354,10 @@ sub send_new_action_email {
         actor   => $actor,
         comment => $comment,
         email   => {
-            header => [
-                To           => join(', ', map { $_->email } $possible_actors->all),
-                From         => 'webmaster@ufl.edu',
-                Subject      => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
+            from     => 'webmaster@ufl.edu',
+            to       => join(', ', map { $_->email } $possible_actors->all),
+            subject  => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
+            header   => [
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/new_action.tt',
