@@ -98,6 +98,7 @@ sub validate_form {
     # XXX: Would love to instantiate these in new, but FVS holds some class data
     my $manager   = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
     my $validator = FormValidator::Simple->new;
+    $validator->load_plugin('UFL::Workflow::Plugin::FormValidator::DateAllowingBlank');
     $validator->set_messages($messages_file);
     $validator->set_option(datetime_class => $self->datetime_class);
 

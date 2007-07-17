@@ -90,43 +90,40 @@ sub reports : Local Args(0) {
         },
     );
 
-    # XXX: Hack for FormValidator::Simple not allowing blank DATE fields
-    if ($c->req->param('submitted')) {
-        my $result = $self->validate_form($c);
+    my $result = $self->validate_form($c);
 
-        # Constrain requests based on the selected group
-        if (my $group_id = $result->valid('group_id')) {
-            my $selected_group = $c->model('DBIC::Group')->find($group_id);
-            $c->stash(selected_group => $selected_group);
+    # Constrain requests based on the selected group
+    if (my $group_id = $result->valid('group_id')) {
+        my $selected_group = $c->model('DBIC::Group')->find($group_id);
+        $c->stash(selected_group => $selected_group);
 
-            $requests = $requests->search({ 'action_groups.group_id' => $selected_group->id });
-        }
+        $requests = $requests->search({ 'action_groups.group_id' => $selected_group->id });
+    }
 
-        # Constrain requests based on the selected status or statuses
-        if (my $status_ids = $result->valid('status_id')) {
-            $requests = $requests->search({ 'actions.status_id' => { -in => $status_ids } });
-        }
+    # Constrain requests based on the selected status or statuses
+    if (my $status_ids = $result->valid('status_id')) {
+        $requests = $requests->search({ 'actions.status_id' => { -in => $status_ids } });
+    }
 
-        # Constrain requests based on a date range
-        # XXX: Remove formatter junk when DBIx::Class gets support for objects
-        my $formatter = $c->model('DBIC')->storage->datetime_parser_type;
-        eval "require $formatter"; die $@ if $@;
-        if (my $start_date = $result->valid('start_date')) {
-            $start_date->set_formatter($formatter);
-            $requests = $requests->search({ 'me.update_time' => { '>=' => $start_date } });
-        }
+    # Constrain requests based on a date range
+    # XXX: Remove formatter junk when DBIx::Class gets support for objects
+    my $formatter = $c->model('DBIC')->storage->datetime_parser_type;
+    eval "require $formatter"; die $@ if $@;
+    if (my $start_date = $result->valid('start_date')) {
+        $start_date->set_formatter($formatter);
+        $requests = $requests->search({ 'me.update_time' => { '>=' => $start_date } });
+    }
 
-        if (my $end_date = $result->valid('end_date')) {
-            $end_date->set_formatter($formatter);
-            $end_date->add(days => 1);
-            $requests = $requests->search({ 'me.update_time' => { '<' => $end_date } });
-        }
+    if (my $end_date = $result->valid('end_date')) {
+        $end_date->set_formatter($formatter);
+        $end_date->add(days => 1);
+        $requests = $requests->search({ 'me.update_time' => { '<' => $end_date } });
+    }
 
-        # Look at latest actions only
-        my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
-        if (@action_ids) {
-            $requests = $requests->search({ 'actions.id' => { -in => \@action_ids } });
-        }
+    # Look at latest actions only
+    my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
+    if (@action_ids) {
+        $requests = $requests->search({ 'actions.id' => { -in => \@action_ids } });
     }
 
     my $groups = $c->model('DBIC::Group')->root_groups;
