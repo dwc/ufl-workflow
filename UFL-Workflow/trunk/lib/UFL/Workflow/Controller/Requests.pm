@@ -62,7 +62,7 @@ Display a list of requests pending action by the current user.
 sub pending_decision : Local Args(0) {
     my ($self, $c) = @_;
 
-    my $actions   = $c->user->pending_actions;
+    my $actions = $c->user->pending_actions;
 
     $c->stash(
         actions  => $actions,
@@ -167,7 +167,7 @@ Display basic information on the stashed request.
 sub view : PathPart('') Chained('request') Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template  => 'requests/view.tt');
+    $c->stash(template => 'requests/view.tt');
 }
 
 =head2 add_document
