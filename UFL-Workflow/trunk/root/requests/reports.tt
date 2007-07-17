@@ -4,21 +4,19 @@
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Reports.js'),
    ]
-  snippets = [
+   snippets = [
      "initialize('${c.uri_for(c.controller('Requests').action_for('list_groups'), request.uri_args)}');",
    ]
 -%]
 
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
-[% FILTER indent('  ') %]
-    <label>Groups:
-        <input type="text" id="group_search" value="Search for group name"><br />
-        <div class="view_all">
-            <input class="submit" type="button" id="group_list_all" value="View All Groups" />
-        </div>
-        <select id="group_id" size="5"></select>    
-    </label>
-[% END -%]
+  <label>Groups:
+    <input type="text" id="group_search" value="Search for group name"><br />
+    <div class="view_all">
+      <input class="submit" type="button" id="group_list_all" value="View All Groups" />
+    </div>
+    <select id="group_id" size="5"></select>    
+  </label>
   <fieldset id="status">
     <legend>Status:</legend>
 [% WHILE (status = statuses.next) %]
