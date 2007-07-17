@@ -290,22 +290,19 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
 
 =head2 list_groups
 
-List groups that are valid for the request via L<JSON>.
+List groups via L<JSON>.
 
 =cut
 
 sub list_groups : Local Args(0) {
     my ($self, $c) = @_;
 
-    my @groups = $c->model("DBIC::Group")->search(
-        undef, 
-        { distinct => 1, } ,);
-
+    my @groups = $c->model("DBIC::Group")->search(undef, { distinct => 1 });
     $c->stash(groups => [ map { $_->to_json } @groups ]);
 
     my $view = $c->view('JSON');
     $view->expose_stash([ qw/groups/ ]);
-    $c->forward($view);    
+    $c->forward($view);
 }
 
 =head2 send_change_email

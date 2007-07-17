@@ -387,7 +387,7 @@ sub update_status {
                 $step = $self->current_step;
             }
 
-            die "No step found for recycle" unless $step;
+            die 'No step found for recycle' unless $step;
         }
         elsif ($status->finishes_request) {
             # Done
