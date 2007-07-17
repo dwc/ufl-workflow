@@ -26,15 +26,6 @@ authorization:
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
-  connect_info:
-    - dbi:SQLite:dbname=__path_to(ufl_workflow.db)__
-    - 
-    - 
-    -
-      RaiseError:         1
-      PrintError:         0
-      ShowErrorStatement: 1
-      TraceLevel:         0
 
 View::Email:
   default_view:    Text
