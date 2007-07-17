@@ -2,7 +2,7 @@ package UFL::Workflow::BaseController;
 
 use strict;
 use warnings;
-use base qw/Catalyst::Controller Class::Accessor::Fast/;
+use base qw/Catalyst::Controller/;
 use Carp qw/croak/;
 use FormValidator::Simple;
 use FormValidator::Simple::ProfileManager::YAML;
@@ -41,7 +41,8 @@ sub new {
     my $path = $c->path_to('root', $self->path_prefix($c));
     $self->_path($path);
 
-    $self->datetime_class($config->{datetime_class} || $DEFAULT_DATETIME_CLASS);
+    $self->datetime_class($DEFAULT_DATETIME_CLASS)
+        unless $self->datetime_class;
 
     return $self;
 }
