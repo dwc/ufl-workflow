@@ -414,6 +414,19 @@ sub update_status {
     });
 }
 
+=head2 message_id
+
+Return a string suitable for identifying this request in C<Message-Id>
+or C<In-Reply-To> email headers.
+
+=cut
+
+sub message_id {
+    my ($self, $base) = @_;
+
+    return 'request-' . $self->id . '@' . $base;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this request.

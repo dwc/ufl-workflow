@@ -292,10 +292,11 @@ sub send_new_request_email {
         request => $request,
         email => {
             header => [
-                From    => 'webmaster@ufl.edu',
-                To      => join(', ', map { $_->email } $possible_actors->all),
-                Cc      => $request->submitter->email,
-                Subject => '[Request ' . $request->id . '] New: "' . $request->title . '"',
+                From         => 'webmaster@ufl.edu',
+                To           => join(', ', map { $_->email } $possible_actors->all),
+                Cc           => $request->submitter->email,
+                Subject      => '[Request ' . $request->id . '] New: "' . $request->title . '"',
+                'Message-Id' => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/new_request.tt',
         },
