@@ -27,7 +27,11 @@ authorization:
 
 Controller::Documents:
   destination:         __path_to(documents)__
+
+Controller::Processes: &requestdocuments
   accepted_extensions: [ doc, pdf, odt, txt ]
+
+Controller::Requests: *requestdocuments
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema

@@ -294,7 +294,7 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 =cut
 
 sub add_document {
-    my ($self, $user, $filename, $contents, $destination, $accepted_extensions, $replaced_document_id) = @_;
+    my ($self, $user, $filename, $contents, $destination, $replaced_document_id) = @_;
 
     $self->throw_exception('You must provide a filename, the contents, and a destination directory')
         unless $filename and $contents and $destination;
@@ -302,10 +302,6 @@ sub add_document {
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
     $self->throw_exception('User cannot manage request')
         unless $user->can_manage($self);
-
-    my @extensions = @{ $accepted_extensions || [] };
-    die 'File is not one of the allowed types'
-        unless grep { $filename =~ /\.\Q$_\E$/i } @extensions;
 
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;

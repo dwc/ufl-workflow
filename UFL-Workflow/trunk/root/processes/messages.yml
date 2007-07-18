@@ -29,4 +29,5 @@ add_request:
   group_id:
     DEFAULT: A group
   document:
-    DEFAULT: A document
+    DEFAULT:   A document
+    EXTENSION: A document with one of the allowed types

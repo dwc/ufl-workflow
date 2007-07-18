@@ -2,7 +2,7 @@ package UFL::Workflow::Controller::Processes;
 
 use strict;
 use warnings;
-use base qw/UFL::Workflow::BaseController/;
+use base qw/UFL::Workflow::BaseController::Uploads/;
 
 =head1 NAME
 
@@ -253,7 +253,6 @@ sub add_request : PathPart Chained('process') Args(0) {
                         $upload->basename,
                         $upload->slurp,
                         $c->controller('Documents')->destination,
-                        $c->controller('Documents')->accepted_extensions,
                     );
                 }
 

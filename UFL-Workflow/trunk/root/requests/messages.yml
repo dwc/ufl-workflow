@@ -9,7 +9,8 @@ reports:
     DEFAULT: An end date
 add_document:
   document:
-    DEFAULT: A document
+    DEFAULT:   A document
+    EXTENSION: A document with one of the allowed types
   replaced_document_id:
     DEFAULT: The document being replaced
 update_status:

@@ -5,7 +5,7 @@ use warnings;
 use base qw/UFL::Workflow::BaseController/;
 use File::stat;
 
-__PACKAGE__->mk_accessors(qw/destination accepted_extensions/);
+__PACKAGE__->mk_accessors(qw/destination/);
 
 =head1 NAME
 

@@ -2,7 +2,7 @@ package UFL::Workflow::Controller::Requests;
 
 use strict;
 use warnings;
-use base qw/UFL::Workflow::BaseController/;
+use base qw/UFL::Workflow::BaseController::Uploads/;
 
 =head1 NAME
 
@@ -190,7 +190,6 @@ sub add_document : PathPart Chained('request') Args(0) {
                 $upload->basename,
                 $upload->slurp,
                 $c->controller('Documents')->destination,
-                $c->controller('Documents')->accepted_extensions,
                 $result->valid('replaced_document_id'),
             );
 
