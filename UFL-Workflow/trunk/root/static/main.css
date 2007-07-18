@@ -112,20 +112,8 @@ display:none;
 clear:both;
 display:block;
 font-size:1em;
-margin:0 0 10px;
+margin:0 0 10px 0;
 width:80%;
-}
-
-#content input.checkbox,#content label.radio input {
-display:inline;
-height:14px;
-width:14px;
-margin:0;
-}
-
-#content input.checkbox {
-margin-right:8px;
-margin-bottom:1px;
 }
 
 #content input.year {
@@ -142,9 +130,25 @@ display:inline;
 margin:0;
 }
 
-#content label.radio input {
-margin-right:2px;
+#content label.checkbox {
+margin-right:12px;
+}
+
+#content label.checkbox input,#content label.radio input {
+display:inline;
+height:14px;
+width:14px;
+margin:0;
+}
+
+#content label.checkbox input {
+margin-right:4px;
 margin-bottom:2px;
+}
+
+#content label.radio input {
+margin-right:0;
+margin-bottom:-2px;
 }
 
 #content input.submit {

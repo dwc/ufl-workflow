@@ -9,6 +9,7 @@
    ]
 -%]
 
+<h3>Search for requests</h3>
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
   <fieldset id="group">
     <legend>Groups:</legend>
@@ -21,7 +22,7 @@
   <fieldset id="status">
     <legend>Status:</legend>
 [% WHILE (status = statuses.next) %]
-    <label><input type="checkbox" class="checkbox" name="status_id" value="[% status.id | html %]" /> [% status.name | html %]</label><br />
+    <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" /> [% status.name | html %]</label>
 [% END %]
   </fieldset>
   <fieldset id="updated">
