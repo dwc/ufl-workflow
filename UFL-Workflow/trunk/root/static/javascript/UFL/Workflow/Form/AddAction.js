@@ -23,12 +23,12 @@ UFL.Workflow.Form.AddAction.prototype.getActionGroups = function(url, statusSele
             for (var i = 0; i < json.groups.length; i++) {
                 var group = json.groups[i];
 
-                var o = new Option(group.name, group.id);
+                var option = new Option(group.name, group.id);
                 if (json.selected_group && group.id == json.selected_group.id) {
-                    o.selected = true;
+                    option.selected = true;
                 }
 
-                groupSelect.get(0).options[i] = o;
+                groupSelect.get(0).options[i] = option;
             }
 
             groupSelect.parent().show();
