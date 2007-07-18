@@ -35,7 +35,9 @@ function keyupGroupSearch(object) {
 
         if (groupName.indexOf(input) > -1) {
             var option = new Option(groups[group], group);
-            groupSelect.append(option);
+
+            var options = groupSelect.get(0).options;
+            options[options.length] = option;
         }
     }
 }
@@ -45,7 +47,9 @@ function clickGroupListAll(object) {
 
     for (group in groups) {
         var option = new Option(groups[group], group);
-        groupSelect.append(option);
+
+        var options = groupSelect.get(0).options;
+        options[options.length] = option;
     }
 }
 
