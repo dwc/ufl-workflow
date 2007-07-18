@@ -9,68 +9,59 @@ function setDate(dateRange) {
     }
 }
 
-function click(object,option,condition) {
-    if(option && object) {
+function click(object, option, condition) {
+    if (option && object) {
         switch(option) {
             case "clear":
-                if(condition) {
-                    if(object.value == condition) {
-                        object.value = '';
+                if (condition) {
+                    if (object.value == condition) {
+                        object.value = "";
                     }
                 }
                 else {
-                    object.value = '';
-                }	    
-            break;	
+                    object.value = "";
+                }
+            break;
         }
     }
 }
 
 function keyupGroupSearch(object) {
+    var groupSelect = $("#group_id").empty();
+
     var input = object.value.toLowerCase();
-    var results = Array();
-    groupResult = document.getElementById("group_id");	
-    options = groupResult.options;	
-    options.length = 0;
-	
-    for(group in groups){
-        groupName = groups[group].toLowerCase();
-        
-        if(groupName.indexOf(input) > -1){
+    for (group in groups) {
+        var groupName = groups[group].toLowerCase();
+
+        if (groupName.indexOf(input) > -1) {
             var option = new Option(groups[group], group);
-            options[options.length] = option;
+            groupSelect.append(option);
         }
     }
 }
-				
+
 function clickGroupListAll(object) {
-    groupResult = document.getElementById("group_id");	
-    options = groupResult.options;
-    options.length = 0;
-	
-    for(group in groups){
+    var groupSelect = $("#group_id").empty();
+
+    for (group in groups) {
         var option = new Option(groups[group], group);
-        options[options.length] = option;
+        groupSelect.append(option);
     }
 }
 
 function initialize(url) {
-    // groups = jquery json request and array load [json_id][json_value] 
-    $.getJSON(url, 
-        function(req) {
-            
-            var json = req;
-            if(json && json.groups && json.groups.length > 0) {
-                for(group in json.groups){
-                    groups[group] = json.groups[group].name;
-                }
+    $.getJSON(url, function(json) {
+        if (json && json.groups && json.groups.length > 0) {
+            for (group in json.groups) {
+                groups[group] = json.groups[group].name;
             }
-        });
+        }
+    });
 }
 
 $(document).ready(function() {
-   $('#date_span').change(function() { setDate(this.value) });
-   $("#group_search").click(function(){ click(this,'clear','Search for group name');});
-   $("#group_search").keyup(function(){ keyupGroupSearch(this); });
-   $("#group_list_all").click(function(){ clickGroupListAll(this);});
+    $('#date_span').change(function() { setDate(this.value) });
+    $("#group_name").click(function() { click(this, 'clear', 'Search for group'); });
+    $("#group_name").keyup(function() { keyupGroupSearch(this) });
+    $("#group_list_all").click(function() { clickGroupListAll(this) });
 });
