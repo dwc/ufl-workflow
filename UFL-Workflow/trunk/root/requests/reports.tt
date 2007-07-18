@@ -12,7 +12,7 @@
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get">
   <fieldset id="group">
     <legend>Groups:</legend>
-    <input type="text" id="group_name" value="Search for group" />
+    <input type="text" name="group_name" id="group_name" value="Search for group" />
     <select name="group_id" id="group_id" size="5" multiple="multiple">
       <option value="">&nbsp;</option>
     </select>
@@ -27,7 +27,7 @@
   <fieldset id="updated">
     <legend>Updated:</legend>
     <label>During:
-      <select id="date_span">
+      <select name="date_range" id="date_span">
         <option value=""></option>
         <option value="[% past_day.ymd | html %]">The past day</option>
         <option value="[% past_week.ymd | html %]">The past week</option>
