@@ -2,48 +2,39 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.AddAction = {
-
-  load: function(url, statusId, groupId) {
+UFL.Workflow.Form.AddAction = function(url, statusId, groupId) {
     var me = this;
+
     $(document).ready(function() {
-
-      var status = document.getElementById(statusId);
-      var group = document.getElementById(groupId);
-
-      if(group && status) {
-       $(group).parent().hide();
-       $(status).change(function() { me.getActionGroups(url, statusId, groupId) });
-      }
+        var statusSelect = $("#" + statusId);
+        var groupSelect = $("#" + groupId);
+        if (groupSelect && statusSelect) {
+            groupSelect.parent().hide();
+            statusSelect.change(function() { me.getActionGroups(url, statusSelect, groupSelect) });
+        }
     });
-  },
-  getActionGroups: function(url, statusSelect, groupSelect) {
-    var me = this;
-    var statusSelect = document.getElementById(statusSelect);
-    var groupSelect = document.getElementById(groupSelect);
+};
 
-    $.getJSON(url,
-      $(statusSelect).serialize(),
-      function(req) {
-       $(groupSelect).length = 0;
+UFL.Workflow.Form.AddAction.prototype.getActionGroups = function(url, statusSelect, groupSelect) {
+    $.getJSON(url, statusSelect.serialize(), function(json) {
+        groupSelect.empty();
 
-        var json = req;
         if (json && json.groups && json.groups.length > 0) {
-          for (var i = 0; i < json.groups.length; i++) {
-            var group = json.groups[i];
+            for (var i = 0; i < json.groups.length; i++) {
+                var group = json.groups[i];
 
-            var o = new Option(group.name, group.id);
-            if (json.selected_group && group.id == json.selected_group.id) {
-              o.selected = true;
+                var o = new Option(group.name, group.id);
+                if (json.selected_group && group.id == json.selected_group.id) {
+                    o.selected = true;
+                }
+
+                groupSelect.get(0).options[i] = o;
             }
-            groupSelect.options[i] = o;
-          }
 
-          $(groupSelect).parent().show();
+            groupSelect.parent().show();
         }
         else {
-          $(groupSelect).parent().hide();
+            groupSelect.parent().hide();
         }
     });
-  }
 };
