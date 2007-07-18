@@ -116,12 +116,16 @@ margin:0 0 10px 0;
 width:80%;
 }
 
-#content input.year {
-width:4em;
+#content input.submit {
+width:auto;
 }
 
-#content input.month, #content input.day {
+#content input.day, #content input.month {
 width:2em;
+}
+
+#content input.year {
+width:4em;
 }
 
 #content .date input, #content .date_range input {
@@ -149,10 +153,6 @@ margin-bottom:2px;
 #content label.radio input {
 margin-right:0;
 margin-bottom:-2px;
-}
-
-#content input.submit {
-width:auto;
 }
 
 #content label.radio {
