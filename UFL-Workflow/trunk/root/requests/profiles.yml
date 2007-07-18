@@ -1,7 +1,7 @@
 reports:
+  # group_id and status_id should be INT, but FormValidator::Simple barfs on multivalues currently
   - group_id
-  - [ INT ]
-  # Should be INT, but FormValidator::Simple barfs on multivalues currently
+  - []
   - status_id
   - []
   - { start_date: [ start_date_year, start_date_month, start_date_day ] }

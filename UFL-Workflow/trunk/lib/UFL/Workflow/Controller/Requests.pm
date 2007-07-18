@@ -93,11 +93,11 @@ sub reports : Local Args(0) {
     my $result = $self->validate_form($c);
 
     # Constrain requests based on the selected group
-    if (my $group_id = $result->valid('group_id')) {
-        my $selected_group = $c->model('DBIC::Group')->find($group_id);
-        $c->stash(selected_group => $selected_group);
+    if (my $group_ids = $result->valid('group_id')) {
+        $requests = $requests->search({ 'action_groups.group_id' => { -in => $group_ids } });
 
-        $requests = $requests->search({ 'action_groups.group_id' => $selected_group->id });
+        my $selected_groups = $c->model('DBIC::Group')->search({ id => { -in => $group_ids } });
+        $c->stash(selected_groups => $selected_groups);
     }
 
     # Constrain requests based on the selected status or statuses
