@@ -1,11 +1,11 @@
 var groups = new Array();
 
-function setDate(dateRange) {
-    if (dateRange) {
-        var startDates = dateRange.split('-', 3);
-        document.forms[0].start_date_year.value  = parseInt(startDates[0], 10);
-        document.forms[0].start_date_month.value = parseInt(startDates[1], 10);
-        document.forms[0].start_date_day.value   = parseInt(startDates[2], 10);
+function setDate(date) {
+    if (date) {
+        var dateParts = date.split('-', 3);
+        document.forms[0].start_date_year.value  = parseInt(dateParts[0], 10);
+        document.forms[0].start_date_month.value = parseInt(dateParts[1], 10);
+        document.forms[0].start_date_day.value   = parseInt(dateParts[2], 10);
     }
 }
 
@@ -64,7 +64,7 @@ function initialize(url) {
 }
 
 $(document).ready(function() {
-    $('#date_span').change(function() { setDate(this.value) });
+    $('#start_date').change(function() { setDate(this.value) });
     $("#group_name").click(function() { click(this, 'clear', 'Search for group'); });
     $("#group_name").keyup(function() { keyupGroupSearch(this) });
     $("#group_list_all").click(function() { clickGroupListAll(this) });

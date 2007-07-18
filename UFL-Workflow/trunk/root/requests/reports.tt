@@ -27,7 +27,7 @@
   <fieldset id="updated">
     <legend>Updated:</legend>
     <label>During:
-      <select name="date_range" id="date_span">
+      <select name="start_date" id="start_date">
         <option value=""></option>
         <option value="[% past_day.ymd | html %]">The past day</option>
         <option value="[% past_week.ymd | html %]">The past week</option>
