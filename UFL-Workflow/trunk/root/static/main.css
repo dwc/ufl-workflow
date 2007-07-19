@@ -147,13 +147,12 @@ width:14px;
 margin:0;
 }
 
-#content label.checkbox input {
+#content label.checkbox input, #content label.radio input {
 margin-right:4px;
 margin-bottom:2px;
 }
 
 #content label.radio input {
-margin-right:0;
 margin-bottom:-2px;
 }
 
