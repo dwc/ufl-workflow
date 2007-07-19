@@ -38,9 +38,9 @@ text-align:left;
 }
 
 h4 {
-font-size: 1.05em;
-text-align: left;
-padding: 5px;
+font-size:1.05em;
+text-align:left;
+padding:5px;
 }
 
 p,li,form {
@@ -73,11 +73,13 @@ width:100px;
 
 #content fieldset {
 border:0;
+border-bottom:1px solid #eee;
 margin:5px 0 10px;
+padding-bottom:5px;
 }
 
 #content form {
-margin-left: 5px;
+margin-left:5px;
 }
 
 #content form.process-steps {
