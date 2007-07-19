@@ -47,12 +47,13 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            $c->log->debug($result->valid('is_initial'));
             my $is_initial        = ($result->valid('is_initial') == 1);
             my $continues_request = ($result->valid('action') eq 'continue');
+            my $reassigns_request = ($result->valid('action') eq 'reassign');
+            my $recycles_request  = ($result->valid('action') eq 'recycle');
             my $finishes_request  = ($result->valid('action') eq 'finish');
-            ($continues_request, $finishes_request) = (0, 0) if $is_initial;
-            $finishes_request = 0 if $continues_request;
+            ($continues_request, $reassigns_request, $recycles_request, $finishes_request) = (0, 0, 0, 0)
+                if $is_initial;
 
             my $initial_status_count = $c->model('DBIC::Status')->search({ is_initial => 1 })->count;
             if ($is_initial and $initial_status_count > 0) {
@@ -63,6 +64,8 @@ sub add : Local {
                 name              => $result->valid('name'),
                 is_initial        => $is_initial,
                 continues_request => $continues_request,
+                reassigns_request => $reassigns_request,
+                recycles_request  => $recycles_request,
                 finishes_request  => $finishes_request,
             });
 
