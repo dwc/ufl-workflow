@@ -20,6 +20,7 @@ This file documents the revision history for UFL::Workflow.
         - Add basic email support
         - Rename View::TT to View::HTML to be explicit about its
           function
+        - Add /roles/add_user
 
 0.10  Mon Mar  5 17:54:05 EST 2007
         - Update Authentication::Credential::Passthrough regex to

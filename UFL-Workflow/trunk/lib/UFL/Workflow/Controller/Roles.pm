@@ -69,6 +69,46 @@ sub edit : PathPart Chained('role') Args(0) {
     $c->stash(template => 'roles/edit.tt');
 }
 
+=head2 add_user
+
+Add a user to the stashed role.
+
+=cut
+
+sub add_user : PathPart Chained('role') Args(0) {
+    my ($self, $c) = @_;
+
+    my $role = $c->stash->{role};
+
+    my $users  = $c->model('DBIC::User')->search(undef, { order_by => 'username' });
+    my $groups = $c->model('DBIC::Group')->search(
+        { 'group_roles.role_id' => $role->id },
+        { join => 'group_roles' },
+    );
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $user  = $users->find($result->valid('user_id'));
+            my $group = $groups->find($result->valid('group_id'));
+            $c->detach('/default') unless $user and $group;
+
+            $user->user_group_roles->find_or_create({
+                group_id => $group->id,
+                role_id  => $role->id,
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
+        }
+    }
+
+    $c->stash(
+        users    => $users,
+        groups   => $groups,
+        template => 'roles/add_user.tt',
+    );
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

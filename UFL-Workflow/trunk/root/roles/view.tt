@@ -3,6 +3,7 @@
 <h3>Manage role</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), role.uri_args) | html %]">Edit this role</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('add_user'), role.uri_args) | html %]">Grant this role to a user</a></li>
 </ul>
 
 <h3>Role details</h3>
