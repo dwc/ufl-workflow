@@ -121,15 +121,7 @@ sub add_group_role : PathPart Chained('user') Args(0) {
         my $group = $c->model('DBIC::Group')->find($group_id);
         $c->detach('/default') unless $group;
 
-        my $roles = $c->model('DBIC::Role')->search(
-            { 'group_roles.group_id' => $group->id },
-            { join => 'group_roles' },
-        );
-
-        $c->stash(
-            group => $group,
-            roles => $roles,
-        );
+        $c->stash(group => $group);
     }
 
     $c->stash(

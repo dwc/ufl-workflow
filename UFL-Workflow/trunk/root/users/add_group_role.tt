@@ -1,7 +1,7 @@
 [% SET title = "Add a Role to ${user.username}'s Account" -%]
 
 [% SET action = c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) %]
-[% IF roles %]
+[% IF group %]
 <h3>Group</h3>
 <dl>
   <dt>Group</dt>
@@ -13,9 +13,9 @@
 <form action="[% action | html %]" method="post">
   <input type="hidden" name="group_id" value="[% group.id | html %]" />
 
-[% FILTER indent('  ') %]
-  [% INCLUDE roles/includes/roles.tt %]
-[% END -%]
+  [% FILTER indent('  ') %]
+    [% INCLUDE roles/includes/roles.tt roles = group.roles_rs %]
+  [% END -%]
   <input type="submit" class="submit" value="Add Role" />
 </form>
 [% ELSE %]
