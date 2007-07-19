@@ -161,6 +161,10 @@ display:block;
 height:1.4em;
 }
 
+#content legend {
+color:#444;
+}
+
 #content li {
 clear:both;
 margin:5px 0;

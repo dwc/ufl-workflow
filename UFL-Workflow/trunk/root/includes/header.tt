@@ -13,6 +13,9 @@
 [% FOREACH stylesheet IN stylesheets %]
     <link rel="stylesheet" type="text/css" href="[% stylesheet | html %]" />
 [% END %]
+    <!--[if IE]>
+      <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/ie.css') | html %]" />
+    <![endif]-->
 [% FOREACH script IN scripts %]
     <script type="text/javascript" src="[% script | html %]"></script>
 [% END %]
