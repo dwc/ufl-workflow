@@ -126,7 +126,7 @@ sub reports : Local Args(0) {
         $requests = $requests->search({ 'actions.id' => { -in => \@action_ids } });
     }
 
-    my $groups = $c->model('DBIC::Group')->root_groups;
+    my $groups   = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(

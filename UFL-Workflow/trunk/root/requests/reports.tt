@@ -5,7 +5,7 @@
      c.uri_for('/static/javascript/UFL/Workflow/Form/Reports.js'),
    ]
    snippets = [
-     "initialize('${c.uri_for(c.controller('Requests').action_for('list_groups'), request.uri_args)}');",
+     "new UFL.Workflow.Form.Reports('${c.uri_for(c.controller('Requests').action_for('list_groups'))}');",
    ]
 -%]
 
@@ -15,7 +15,9 @@
     <legend>Groups:</legend>
     <input type="text" name="group_name" id="group_name" value="Search for group" />
     <select name="group_id" id="group_id" size="5" multiple="multiple">
-      <option value="">&nbsp;</option>
+[% WHILE (group = groups.next) %]
+      <option value="[% group.id | html %]">[% group.name | html %]</option>
+[% END %]
     </select>
     <input type="button" id="group_list_all" class="submit" value="View all groups" />
   </fieldset>
