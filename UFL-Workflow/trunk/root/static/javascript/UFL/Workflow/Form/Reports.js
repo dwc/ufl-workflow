@@ -2,15 +2,14 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.Reports = function(url) {
+UFL.Workflow.Form.Reports = function() {
     var me = this;
     var groups = new Array();
 
     $(document).ready(function() {
-        $('#start_date').change(function() { me.setDate(this.value) });
+        $("#start_date").change(function() { me.setDate(this.value) });
         $("#group_name").click(function() { me.click(this, 'clear', 'Search for group'); });
         $("#group_name").keyup(function() { me.keyupGroupSearch(this) });
-        $("#group_list_all").click(function() { me.clickGroupListAll(this) });
 
         var groupSelect  = document.getElementById("group_id").options;
         if(groupSelect && groupSelect.length > 0) {

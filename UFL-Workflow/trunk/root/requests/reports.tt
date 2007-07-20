@@ -19,7 +19,6 @@
       <option value="[% group.id | html %]">[% group.name | html %]</option>
 [% END %]
     </select>
-    <input type="button" id="group_list_all" class="submit" value="View all groups" />
   </fieldset>
   <fieldset id="status">
     <legend>Status:</legend>
