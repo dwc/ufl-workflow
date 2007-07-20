@@ -4,7 +4,7 @@ if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
 UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
     var me = this;
-    var values = new Array();
+    var allOptions = new Array();
 
     $(document).ready(function() {
         var results = $("#" + resultsId);
@@ -16,7 +16,7 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
                 for (var i = 0; i < options.length; i++) {
                     var option = options[i];
                     if (option.value != undefined) {
-                        values[option.value] = option.text;
+                        allOptions.push({ value: option.value, text: option.text });
                     }
                 }
             }
@@ -46,14 +46,15 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
     this.search = function(results, query) {
         results.empty();
 
-        var input = query.get(0).value.toLowerCase();
-        for (value in values) {
-            var name = values[value].toLowerCase();
-            if (name.indexOf(input) > -1) {
-                var option = new Option(values[value], value);
+        var options = results.get(0).options;
 
-                var options = results.get(0).options;
-                options[options.length] = option;
+        var input = query.get(0).value.toLowerCase();
+        for (var i = 0; i < allOptions.length; i++) {
+            var option = allOptions[i];
+
+            var name = option.text.toLowerCase();
+            if (name.indexOf(input) > -1) {
+                options[options.length] = new Option(option.text, option.value);
             }
         }
     };
