@@ -21,6 +21,10 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
                 }
             }
 
+            if (query.get(0).value != defaultValue) {
+                me.search(results, query);
+            }
+
             query.click(function() { me.clearQuery(query, defaultValue); });
             query.keyup(function() { me.search(results, query) });
         }
