@@ -11,15 +11,15 @@ UFL.Workflow.Form.Reports = function() {
         $("#group_name").click(function() { me.click(this, 'clear', 'Search for group'); });
         $("#group_name").keyup(function() { me.keyupGroupSearch(this) });
 
-        var groupSelect  = document.getElementById("group_id").options;
-        if(groupSelect && groupSelect.length > 0) {
-            for (group in groupSelect) {
-                if(groupSelect[group].value != undefined) {
-                    groups[groupSelect[group].value] = groupSelect[group].text;
+        var groupOptions = $("#group_id").get(0).options;
+        if (groupOptions && groupOptions.length > 0) {
+            for (var i = 0; i < groupOptions.length; i++) {
+                var groupOption = groupOptions[i];
+                if (groupOption.value != undefined) {
+                    groups[groupOption.value] = groupOption.text;
                 }
             }
         }
-
     });
 
     this.setDate = function(date) {
@@ -54,24 +54,12 @@ UFL.Workflow.Form.Reports = function() {
         var input = object.value.toLowerCase();
         for (group in groups) {
             var groupName = groups[group].toLowerCase();
-
-                if (groupName.indexOf(input) > -1) {
+            if (groupName.indexOf(input) > -1) {
                 var option = new Option(groups[group], group);
 
                 var options = groupSelect.get(0).options;
                 options[options.length] = option;
             }
-        }
-    };
-
-    this.clickGroupListAll = function(object) {
-        var groupSelect = $("#group_id").empty();
-
-        for (group in groups) {
-            var option = new Option(groups[group], group);
-
-            var options = groupSelect.get(0).options;
-            options[options.length] = option;
         }
     };
 }
