@@ -6,19 +6,21 @@ UFL.Workflow.Form.Reports = function(url) {
     var me = this;
     var groups = new Array();
 
-    $.getJSON(url, function(json) {
-        if (json && json.groups && json.groups.length > 0) {
-            for (group in json.groups) {
-                groups[group] = json.groups[group].name;
-            }
-        }
-    });
-
     $(document).ready(function() {
         $('#start_date').change(function() { me.setDate(this.value) });
         $("#group_name").click(function() { me.click(this, 'clear', 'Search for group'); });
         $("#group_name").keyup(function() { me.keyupGroupSearch(this) });
         $("#group_list_all").click(function() { me.clickGroupListAll(this) });
+
+        var groupSelect  = document.getElementById("group_id").options;
+        if(groupSelect && groupSelect.length > 0) {
+            for (group in groupSelect) {
+                if(groupSelect[group].value != undefined) {
+                    groups[groupSelect[group].value] = groupSelect[group].text;
+                }
+            }
+        }
+
     });
 
     this.setDate = function(date) {
