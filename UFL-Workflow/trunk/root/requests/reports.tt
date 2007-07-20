@@ -5,7 +5,7 @@
      c.uri_for('/static/javascript/UFL/Workflow/Form/Reports.js'),
    ]
    snippets = [
-     "new UFL.Workflow.Form.Reports('${c.uri_for(c.controller('Requests').action_for('list_groups'))}');",
+     "new UFL.Workflow.Form.Reports();",
    ]
 -%]
 
