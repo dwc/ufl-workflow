@@ -46,7 +46,7 @@
   <fieldset id="status">
     <legend>Status:</legend>
 [% WHILE (status = statuses.next) %]
-    <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" />[% status.name | html %]</label>
+    <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" />&nbsp;[% status.name | html %]</label>
 [% END %]
   </fieldset>
   <fieldset id="updated">
