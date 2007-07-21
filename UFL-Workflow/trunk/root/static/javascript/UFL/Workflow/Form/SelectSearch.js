@@ -2,12 +2,11 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, theDefaultValue) {
+UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
     var me = this;
     var allOptions = new Array();
     var resultsSelect;
     var queryInput;
-    var defaultValue = theDefaultValue;
 
     $(document).ready(function() {
         resultsSelect = $("#" + resultsId);

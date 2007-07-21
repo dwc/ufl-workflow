@@ -2,9 +2,8 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.StatusGroupAssignment = function(theUrl, statusId, groupId) {
+UFL.Workflow.Form.StatusGroupAssignment = function(url, statusId, groupId) {
     var me = this;
-    var url = theUrl;
     var statusSelect;
     var groupSelect;
 
