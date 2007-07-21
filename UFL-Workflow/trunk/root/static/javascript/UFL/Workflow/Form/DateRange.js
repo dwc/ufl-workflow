@@ -21,9 +21,6 @@ UFL.Workflow.Form.DateRange = function(selectId, startYearId, startMonthId, star
 
         if (startYearInput && startMonthInput && startDayInput && endYearInput && endMonthInput && endDayInput) {
             $("#" + selectId).change(function() { me.setDate(this.value) });
-            startYearInput.focus(function() { me.clearInput(this, yearDefaultValue) });
-            startMonthInput.focus(function() { me.clearInput(this, monthDefaultValue) });
-            startDayInput.focus(function() { me.clearInput(this, dayDefaultValue) });
         }
     });
 
