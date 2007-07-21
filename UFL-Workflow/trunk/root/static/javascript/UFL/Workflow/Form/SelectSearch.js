@@ -2,29 +2,32 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
+UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, theDefaultValue) {
     var me = this;
     var allOptions = new Array();
+    var resultsSelect;
+    var queryInput;
+    var defaultValue = theDefaultValue;
 
     $(document).ready(function() {
-        var results = $("#" + resultsId);
-        var query = $("#" + queryId);
+        resultsSelect = $("#" + resultsId);
+        queryInput = $("#" + queryId);
 
-        if (results && query) {
-            // XXX: Options are broken on IE with results.children().clone().get()
-            var options = results.get(0).options;
+        if (resultsSelect && queryInput) {
+            // XXX: Options are broken on IE with resultsSelect.children().clone().get()
+            var options = resultsSelect.get(0).options;
             if (options) {
                 for (var i = 0; i < options.length; i++) {
                     allOptions[i] = cloneOption(options[i]);
                 }
             }
 
-            if (query.get(0).value != defaultValue) {
-                me.search(results, query);
+            if (queryInput.get(0).value != defaultValue) {
+                me.search();
             }
 
-            query.click(function() { me.clearQuery(query, defaultValue); });
-            query.keyup(function() { me.search(results, query) });
+            queryInput.click(me.clearQuery);
+            queryInput.keyup(me.search);
         }
     });
 
@@ -39,25 +42,25 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
         return clone;
     }
 
-    this.clearQuery = function(query, defaultValue) {
-        var object = query.get(0);
+    this.clearQuery = function() {
+        var input = queryInput.get(0);
 
         if (defaultValue) {
-            if (object.value == defaultValue) {
-                object.value = "";
+            if (input.value == defaultValue) {
+                input.value = "";
             }
         }
         else {
-            object.value = "";
+            input.value = "";
         }
-    };
+    }
 
-    this.search = function(results, query) {
-        results.empty();
+    this.search = function() {
+        resultsSelect.empty();
 
-        var options = results.get(0).options;
+        var options = resultsSelect.get(0).options;
 
-        var input = query.get(0).value.toLowerCase();
+        var input = queryInput.get(0).value.toLowerCase();
         for (var i = 0; i < allOptions.length; i++) {
             var option = allOptions[i];
 
@@ -66,5 +69,5 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
                 options[options.length] = new Option(option.text, option.value, option.defaultSelected, option.selected);
             }
         }
-    };
+    }
 }
