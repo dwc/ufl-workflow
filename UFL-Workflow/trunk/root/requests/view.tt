@@ -5,10 +5,10 @@
    group_id = 'group_id'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/AddAction.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/StatusGroupAssignment.js'),
    ]
    snippets = [
-     "new UFL.Workflow.Form.AddAction('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
+     "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
    ]
 -%]
 
