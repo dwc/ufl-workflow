@@ -27,7 +27,6 @@ UFL.Workflow.Form.DateRange = function(selectId, startYearId, startMonthId, star
     this.setDate = function(dateRange) {
         if (dateRange) {
             var dates = dateRange.split(',', 2);
-            alert(dates[0] + ' and ' + dates[1]);
             var startDateParts = dates[0].split('-', 3);
             var endDateParts = dates[1].split('-', 3);
 
