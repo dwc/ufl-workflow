@@ -11,13 +11,11 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
         var query = $("#" + queryId);
 
         if (results && query) {
+            // XXX: Options are broken on IE with results.children().clone().get()
             var options = results.get(0).options;
             if (options) {
                 for (var i = 0; i < options.length; i++) {
-                    var option = options[i];
-                    if (option.value != undefined) {
-                        allOptions.push({ value: option.value, text: option.text });
-                    }
+                    allOptions[i] = cloneOption(options[i]);
                 }
             }
 
@@ -29,6 +27,17 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
             query.keyup(function() { me.search(results, query) });
         }
     });
+
+    function cloneOption(option) {
+        var clone = {
+            text: option.text,
+            value: option.value,
+            defaultSelected: option.defaultSelected,
+            selected: option.selected
+        };
+
+        return clone;
+    }
 
     this.clearQuery = function(query, defaultValue) {
         var object = query.get(0);
@@ -54,7 +63,7 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
 
             var name = option.text.toLowerCase();
             if (name.indexOf(input) > -1) {
-                options[options.length] = new Option(option.text, option.value);
+                options[options.length] = new Option(option.text, option.value, option.defaultSelected, option.selected);
             }
         }
     };
