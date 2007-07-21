@@ -31,10 +31,10 @@ UFL.Workflow.Form.DateRange = function(selectId, startYearId, startMonthId, star
             var endDateParts = dates[1].split('-', 3);
 
             startYearInput.get(0).value = parseInt(startDateParts[0], 10);
-            startMonthInput.get(0).value = parseInt(startDateParts[1], 10);
+            startMonthInput.get(0).selectedIndex = parseInt(startDateParts[1], 10);
             startDayInput.get(0).value = parseInt(startDateParts[2], 10);
             endYearInput.get(0).value = parseInt(endDateParts[0], 10);
-            endMonthInput.get(0).value = parseInt(endDateParts[1], 10);
+            endMonthInput.get(0).selectedIndex = parseInt(endDateParts[1], 10);
             endDayInput.get(0).value = parseInt(endDateParts[2], 10);
         }
     }

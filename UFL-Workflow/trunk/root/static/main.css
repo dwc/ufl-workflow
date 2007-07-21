@@ -114,7 +114,7 @@ display:none;
 clear:both;
 display:block;
 font-size:1em;
-margin:0 0 10px 0;
+margin:0 0 10px;
 width:80%;
 }
 
@@ -122,8 +122,14 @@ width:80%;
 width:auto;
 }
 
-#content input.day, #content input.month {
+#content input.day {
 width:2em;
+}
+
+#content select.month {
+width:auto;
+display:inline;
+margin:0;
 }
 
 #content input.year {

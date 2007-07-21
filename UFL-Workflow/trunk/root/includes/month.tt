@@ -1,0 +1,28 @@
+[% DEFAULT
+   field_id = 'month'
+   field_name = 'month'
+   field_label = ''
+   months = [
+     'January',
+     'February',
+     'March',
+     'April',
+     'May',
+     'June',
+     'July',
+     'August',
+     'September',
+     'October',
+     'November',
+     'December',
+   ]
+-%]
+
+[% IF field_label %]<label>[% field_label | html %][% END %]
+  <select name="[% field_name | html %]" id="[% field_id | html %]" class="month">
+    <option value=""></option>
+[% FOREACH month IN months %]
+    <option value="[% loop.count | html %]"[% IF loop.count == date.month %] selected="selected"[% END %]>[% month | html %]</option>
+[% END %]
+  </select>
+[% IF field_label %]</label>[% END %]
