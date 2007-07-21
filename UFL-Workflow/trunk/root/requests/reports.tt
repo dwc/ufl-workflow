@@ -52,7 +52,7 @@
       </select>
     </label>
     <div class="date_range">
-      <label for="start_date_month">or between:</label>
+      <label for="[% start_date_month_id | html %]">or between:</label>
 [% FILTER indent('      ') %]
   [% INCLUDE includes/date.tt month_field_name = "start_date_month", month_field_id = start_date_month_id, day_field_name = "start_date_day", day_field_id = start_date_day_id, year_field_name = "start_date_year", year_field_id = start_date_year_id %]
 [% END %]
