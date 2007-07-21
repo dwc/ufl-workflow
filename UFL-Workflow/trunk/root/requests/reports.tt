@@ -3,7 +3,7 @@
    group_id = 'group_id'
    group_name_id = 'group_name'
    group_name_default = 'Search for a group'
-   date_id = 'date'
+   date_range_id = 'date_range'
    start_date_year_id = 'start_date_year'
    start_date_month_id = 'start_date_month'
    start_date_day_id = 'start_date_day'
@@ -28,7 +28,7 @@
      "new UFL.Workflow.Form.Input('$end_date_month_id', '$month_default');",
      "new UFL.Workflow.Form.Input('$end_date_day_id', '$day_default');",
      "new UFL.Workflow.Form.SelectSearch('$group_id', '$group_name_id', '$group_name_default');",
-     "new UFL.Workflow.Form.DateRange('$date_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
+     "new UFL.Workflow.Form.DateRange('$date_range_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
    ]
 -%]
 
@@ -52,7 +52,7 @@
   <fieldset id="updated">
     <legend>Updated:</legend>
     <label>During:
-      <select name="date" id="[% date_id | html %]">
+      <select name="date_range" id="[% date_range_id | html %]">
         <option value=""></option>
         <option value="[% past_day.ymd | html %],[% end_date.ymd %]">The past day</option>
         <option value="[% past_week.ymd | html %],[% end_date.ymd %]">The past week</option>
