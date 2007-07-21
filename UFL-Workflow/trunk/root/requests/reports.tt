@@ -43,21 +43,21 @@
     <label>During:
       <select name="date" id="[% date_id | html %]">
         <option value=""></option>
-        <option value="[% past_day.ymd | html %]">The past day</option>
-        <option value="[% past_week.ymd | html %]">The past week</option>
-        <option value="[% past_month.ymd | html %]">The past month</option>
-        <option value="[% past_year.ymd | html %]">The past year</option>
+        <option value="[% past_day.ymd | html %],[% end_date.ymd %]">The past day</option>
+        <option value="[% past_week.ymd | html %],[% end_date.ymd %]">The past week</option>
+        <option value="[% past_month.ymd | html %],[% end_date.ymd %]">The past month</option>
+        <option value="[% past_year.ymd | html %],[% end_date.ymd %]">The past year</option>
       </select>
     </label>
     <div class="date_range">
       <label for="start_date_month">or between:</label>
-      <input type="text" name="start_date_month" id="[% start_date_month_id | html %]" class="month" value="[% start_date.month | html %]" /> /
-      <input type="text" name="start_date_day" id="[% start_date_day_id | html %]" class="day" value="[% start_date.day | html %]" /> /
-      <input type="text" name="start_date_year" id="[% start_date_year_id | html %]" class="year" value="[% start_date.year | html %]" />
+      <input type="text" name="start_date_month" id="[% start_date_month_id | html %]" class="month" /> /
+      <input type="text" name="start_date_day" id="[% start_date_day_id | html %]" class="day" /> /
+      <input type="text" name="start_date_year" id="[% start_date_year_id | html %]" class="year" />
       and
-      <input type="text" name="end_date_month" id="[% end_date_month_id | html %]" class="month" value="[% end_date.month | html %]" /> /
-      <input type="text" name="end_date_day" id="[% end_date_day_id | html %]" class="day" value="[% end_date.day | html %]" /> /
-      <input type="text" name="end_date_year" id="[% end_date_year_id | html %]" class="year" value="[% end_date.year | html %]" />
+      <input type="text" name="end_date_month" id="[% end_date_month_id | html %]" class="month" /> /
+      <input type="text" name="end_date_day" id="[% end_date_day_id | html %]" class="day" /> /
+      <input type="text" name="end_date_year" id="[% end_date_year_id | html %]" class="year" />
     </div><!-- .date_range -->
   </fieldset>
   <input type="submit" class="submit" value="Generate report" />

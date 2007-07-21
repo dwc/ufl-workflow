@@ -7,24 +7,39 @@ UFL.Workflow.Form.DateRange = function(selectId, startYearId, startMonthId, star
     var startYearInput;
     var startMonthInput;
     var startDayInput;
+    var endYearInput;
+    var endMonthInput;
+    var endDayInput;
 
     $(document).ready(function() {
         startYearInput = $("#" + startYearId);
         startMonthInput = $("#" + startMonthId);
         startDayInput = $("#" + startDayId);
+        endYearInput = $("#" + endYearId);
+        endMonthInput = $("#" + endMonthId);
+        endDayInput = $("#" + endDayId);
 
-        if (startYearInput && startMonthInput && startDayInput) {
+        if (startYearInput && startMonthInput && startDayInput && endYearInput && endMonthInput && endDayInput) {
             $("#" + selectId).change(function() { me.setDate(this.value) });
+            startYearInput.focus(function() { me.clearInput(this, yearDefaultValue) });
+            startMonthInput.focus(function() { me.clearInput(this, monthDefaultValue) });
+            startDayInput.focus(function() { me.clearInput(this, dayDefaultValue) });
         }
     });
 
-    this.setDate = function(date) {
-        if (date) {
-            var dateParts = date.split('-', 3);
+    this.setDate = function(dateRange) {
+        if (dateRange) {
+            var dates = dateRange.split(',', 2);
+            alert(dates[0] + ' and ' + dates[1]);
+            var startDateParts = dates[0].split('-', 3);
+            var endDateParts = dates[1].split('-', 3);
 
-            startYearInput.get(0).value = parseInt(dateParts[0], 10);
-            startMonthInput.get(0).value = parseInt(dateParts[1], 10);
-            startDayInput.get(0).value = parseInt(dateParts[2], 10);
+            startYearInput.get(0).value = parseInt(startDateParts[0], 10);
+            startMonthInput.get(0).value = parseInt(startDateParts[1], 10);
+            startDayInput.get(0).value = parseInt(startDateParts[2], 10);
+            endYearInput.get(0).value = parseInt(endDateParts[0], 10);
+            endMonthInput.get(0).value = parseInt(endDateParts[1], 10);
+            endDayInput.get(0).value = parseInt(endDateParts[2], 10);
         }
     }
 }
