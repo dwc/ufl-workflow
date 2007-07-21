@@ -25,7 +25,6 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
                 me.search();
             }
 
-            queryInput.click(me.clearQuery);
             queryInput.keyup(me.search);
         }
     });
@@ -39,19 +38,6 @@ UFL.Workflow.Form.SelectSearch = function(resultsId, queryId, defaultValue) {
         };
 
         return clone;
-    }
-
-    this.clearQuery = function() {
-        var input = queryInput.get(0);
-
-        if (defaultValue) {
-            if (input.value == defaultValue) {
-                input.value = "";
-            }
-        }
-        else {
-            input.value = "";
-        }
     }
 
     this.search = function() {

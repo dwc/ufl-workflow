@@ -130,6 +130,10 @@ width:2em;
 width:4em;
 }
 
+#content input.inactive {
+color:#ccc;
+}
+
 #content .date input, #content .date_range input {
 clear:none;
 display:inline;

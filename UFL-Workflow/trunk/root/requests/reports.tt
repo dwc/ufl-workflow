@@ -10,12 +10,23 @@
    end_date_year_id = 'end_date_year'
    end_date_month_id = 'end_date_month'
    end_date_day_id = 'end_date_day'
+   year_default = 'YYYY'
+   month_default = 'MM'
+   day_default = 'DD'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
    ]
    snippets = [
+     "new UFL.Workflow.Form.Input('$group_name_id', '$group_name_default');",
+     "new UFL.Workflow.Form.Input('$start_date_year_id', '$year_default');",
+     "new UFL.Workflow.Form.Input('$start_date_month_id', '$month_default');",
+     "new UFL.Workflow.Form.Input('$start_date_day_id', '$day_default');",
+     "new UFL.Workflow.Form.Input('$end_date_year_id', '$year_default');",
+     "new UFL.Workflow.Form.Input('$end_date_month_id', '$month_default');",
+     "new UFL.Workflow.Form.Input('$end_date_day_id', '$day_default');",
      "new UFL.Workflow.Form.SelectSearch('$group_id', '$group_name_id', '$group_name_default');",
      "new UFL.Workflow.Form.DateRange('$date_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
    ]
@@ -51,13 +62,13 @@
     </label>
     <div class="date_range">
       <label for="start_date_month">or between:</label>
-      <input type="text" name="start_date_month" id="[% start_date_month_id | html %]" class="month" /> /
-      <input type="text" name="start_date_day" id="[% start_date_day_id | html %]" class="day" /> /
-      <input type="text" name="start_date_year" id="[% start_date_year_id | html %]" class="year" />
+      <input type="text" name="start_date_month" id="[% start_date_month_id | html %]" class="month" value="[% month_default | html %]" /> /
+      <input type="text" name="start_date_day" id="[% start_date_day_id | html %]" class="day" value="[% day_default | html %]"  /> /
+      <input type="text" name="start_date_year" id="[% start_date_year_id | html %]" class="year" value="[% year_default | html %]"  />
       and
-      <input type="text" name="end_date_month" id="[% end_date_month_id | html %]" class="month" /> /
-      <input type="text" name="end_date_day" id="[% end_date_day_id | html %]" class="day" /> /
-      <input type="text" name="end_date_year" id="[% end_date_year_id | html %]" class="year" />
+      <input type="text" name="end_date_month" id="[% end_date_month_id | html %]" class="month" value="[% month_default | html %]" /> /
+      <input type="text" name="end_date_day" id="[% end_date_day_id | html %]" class="day" value="[% day_default | html %]"  /> /
+      <input type="text" name="end_date_year" id="[% end_date_year_id | html %]" class="year" value="[% year_default | html %]"  />
     </div><!-- .date_range -->
   </fieldset>
   <input type="submit" class="submit" value="Generate report" />
