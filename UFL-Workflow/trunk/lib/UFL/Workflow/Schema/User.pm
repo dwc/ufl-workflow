@@ -161,23 +161,20 @@ user.
 sub pending_actions {
     my ($self) = @_;
 
-    my @groups = $self->groups;
-    my @roles  = $self->roles;
-
-    my $pending_actions;
-    if (@groups and @roles) {
-        $pending_actions = $self->result_source->schema->resultset('Action')->search(
-            {
-                'action_groups.group_id' => { -in => [ map { $_->id } @groups ] },
-                'step.role_id'           => { -in => [ map { $_->id } @roles ] },
-                'status.is_initial'      => 1,
-            },
-            {
-                join     => [ qw/action_groups step status/ ],
-                order_by => \q[me.update_time DESC, me.insert_time DESC],
-            },
-        );
-    }
+    my $actions = $self->result_source->schema->resultset('Action');
+    my $pending_actions = $actions->search(
+       {
+           'user_group_role.group_id' => { -in => [ map { $_->id } $self->groups ] },
+           'user_group_role.role_id'  => { -in => [ map { $_->id } $self->roles ] },
+           'status.is_initial'        => 1,
+           'step.role_id'             => \q[= user_group_role.role_id],
+       },
+       {
+           join     => [ { action_groups => 'user_group_role' }, 'status', 'step' ],
+           distinct => 1,
+           order_by => \q[me.update_time DESC, me.insert_time DESC],
+       },
+    );
 
     return $pending_actions;
 }
