@@ -241,24 +241,7 @@ who can act on this request in its current state.
 sub possible_actors {
     my ($self) = @_;
 
-    my $current_action = $self->current_action;
-
-    # Find the actors based on the assigned groups and the step-required role
-    my @groups = $current_action->groups;
-    my $role   = $current_action->step->role;
-
-    my $possible_actors = $self->result_source->schema->resultset('User')->search(
-        {
-            'user_group_roles.group_id' => { -in => [ map { $_->id } @groups ] },
-            'user_group_roles.role_id'  => $role->id,
-        },
-        {
-            join     => 'user_group_roles',
-            distinct => 1,
-        },
-    );
-
-    return $possible_actors;
+    return $self->current_action->possible_actors;
 }
 
 =head2 add_action

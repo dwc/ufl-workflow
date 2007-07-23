@@ -29,6 +29,16 @@ __PACKAGE__->belongs_to(
     'group_id',
 );
 
+__PACKAGE__->belongs_to(
+    group_role => 'UFL::Workflow::Schema::GroupRole',
+    { 'foreign.group_id' => 'self.group_id' },
+);
+
+__PACKAGE__->belongs_to(
+    user_group_role => 'UFL::Workflow::Schema::UserGroupRole',
+    { 'foreign.group_id' => 'self.group_id' },
+);
+
 =head1 NAME
 
 UFL::Workflow::Schema::ActionGroup - Action-to-group table class
