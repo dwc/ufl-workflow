@@ -226,7 +226,9 @@ who have previously acted on this request.
 sub past_actors {
     my ($self) = @_;
 
-    my $past_actors = $self->actions->related_resultset('actor')->search(undef, { distinct => 1 });
+    my $past_actors = $self->actions
+        ->related_resultset('actor')
+        ->search(undef, { distinct => 1 });
 
     return $past_actors;
 }

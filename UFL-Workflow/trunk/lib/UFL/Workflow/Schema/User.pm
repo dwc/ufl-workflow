@@ -161,20 +161,25 @@ user.
 sub pending_actions {
     my ($self) = @_;
 
-    my $actions = $self->result_source->schema->resultset('Action');
-    my $pending_actions = $actions->search(
-       {
-           'user_group_role.group_id' => { -in => [ map { $_->id } $self->groups ] },
-           'user_group_role.role_id'  => { -in => [ map { $_->id } $self->roles ] },
-           'status.is_initial'        => 1,
-           'step.role_id'             => \q[= user_group_role.role_id],
-       },
-       {
-           join     => [ { action_groups => 'user_group_role' }, 'status', 'step' ],
-           distinct => 1,
-           order_by => \q[me.update_time DESC, me.insert_time DESC],
-       },
-    );
+    my @groups = $self->groups;
+    my @roles  = $self->roles;
+
+    my $pending_actions;
+    if (@groups and @roles) {
+        $pending_actions = $self->result_source->schema->resultset('Action')->search(
+            {
+                'user_group_role.group_id' => { -in => [ map { $_->id } @groups ] },
+                'user_group_role.role_id'  => { -in => [ map { $_->id } @roles ] },
+                'status.is_initial'        => 1,
+                'step.role_id'             => \q[= user_group_role.role_id],
+            },
+            {
+                join     => [ { action_groups => 'user_group_role' }, 'status', 'step' ],
+                distinct => 1,
+                order_by => \q[update_time DESC, insert_time DESC],
+            },
+        );
+    }
 
     return $pending_actions;
 }
@@ -216,14 +221,14 @@ sub group_requests {
             {
                 'submitter.id'              => { '!=' => $self->id },
                 -or => [
-                    'group.id'              => { -in => [ map { $_->id } @groups  ] },
-                    'group.parent_group_id' => { -in => [ map { $_->id } @groups  ] },
+                    'group.id'              => { -in => [ map { $_->id } @groups ] },
+                    'group.parent_group_id' => { -in => [ map { $_->id } @groups ] },
                 ],
             },
             {
                 join     => { submitter => { user_group_roles => 'group' } },
-                order_by => \q[update_time DESC, insert_time DESC],
                 distinct => 1,
+                order_by => \q[update_time DESC, insert_time DESC],
             },
         );
     }
