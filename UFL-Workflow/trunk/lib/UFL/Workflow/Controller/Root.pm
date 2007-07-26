@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
 
-__PACKAGE__->config->{namespace} = '';
+__PACKAGE__->config(namespace => '');
 
 =head1 NAME
 
