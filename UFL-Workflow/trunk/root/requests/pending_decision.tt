@@ -26,5 +26,5 @@
   [% END %]
 </table>
 [% ELSE %]
-<p>There aren't any requests that currently require your attention.</p>
+<p>No requests require your attention.</p>
 [% END %]
