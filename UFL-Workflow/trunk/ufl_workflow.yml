@@ -35,6 +35,16 @@ Controller::Requests: *requestdocuments
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
+  # Placeholder connect_info for make test
+  connect_info:
+    - dbi:SQLite:dbname=__path_to(ufl_workflow.db)__
+    - 
+    - 
+    -
+      RaiseError:         1
+      PrintError:         0
+      ShowErrorStatement: 1
+      TraceLevel:         0
 
 View::Email:
   default_view:    Text
