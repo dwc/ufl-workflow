@@ -1,0 +1,20 @@
+[% USE Textile %]
+[% SET title = "Add Request to ${process.name}" -%]
+
+<h3>[% process.name | html %]</h3>
+[% IF process.description %]
+
+<h4>Instructions</h4>
+[%+ process.description | textile %]
+[% ELSE %]
+<p>To add a new request which follows the <strong>[% process.name | html %]</strong> process, enter a title, description, and initial group for review. After the request is added, you can attach documents and view its progress.</p>
+[% END -%]
+
+<form action="[% c.uri_for(c.controller.action_for('add_request'), process.uri_args) | html %]" enctype="multipart/form-data" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE requests/includes/request.tt %]
+[% END -%]
+  <label>Document: <input type="file" name="document" /></label>
+  <input type="submit" class="submit" value="Add Request" />
+</form>

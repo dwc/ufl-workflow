@@ -1,0 +1,25 @@
+A new request is awaiting your attention:
+
+Title
+    [% request.title %]
+Process
+    [% request.process.name %]
+Status
+    [% INCLUDE requests/includes/status.tt action = request.current_action %]
+Submitter
+    [% request.submitter.username %]
+Created
+    [% request.insert_time.strftime(datetime_format) %]
+Updated
+    [% request.update_time.strftime(datetime_format) %]
+
+The change was entered by [% actor.username %].[% IF comment %] Their comment:
+
+[% comment | indent('    ') %]
+[% END -%]
+
+To see the most recent status, visit:
+
+[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) %]
+
+[% INCLUDE email/includes/footer.tt -%]
