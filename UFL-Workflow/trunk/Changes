@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.11
+0.11  Mon Aug  6 16:15:49 EDT 2007
         - Extend reporting feature to allow selection on status and
           date
         - BaseController: Add support for object inflation for dates
