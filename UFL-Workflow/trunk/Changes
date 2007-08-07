@@ -5,6 +5,8 @@ This file documents the revision history for UFL::Workflow.
         - Ensure dates are displayed in emails by reSELECTing the
           request
         - Refactor email templates
+        - Don't send "pending decision" emails when the request is
+          closed
 
 0.11  Mon Aug  6 16:20:19 EDT 2007
         - Extend reporting feature to allow selection on status and

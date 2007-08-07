@@ -241,7 +241,9 @@ sub update_status : PathPart Chained('request') Args(0) {
         $request->discard_changes;
 
         $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
-        $self->send_new_action_email($c, $request, $c->user->obj, $comment);
+        if ($request->is_open) {
+            $self->send_new_action_email($c, $request, $c->user->obj, $comment);
+        }
     });
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
