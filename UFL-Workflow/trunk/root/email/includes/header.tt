@@ -1,3 +1,7 @@
+[% IF c.config.email.note -%]
+NOTE: [% c.config.email.note %]
+[% END -%]
+
 Title
     [% request.title %]
 Process
