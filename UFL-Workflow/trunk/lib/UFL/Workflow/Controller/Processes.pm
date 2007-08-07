@@ -288,6 +288,7 @@ been entered to those who can act on it.
 sub send_new_request_email {
     my ($self, $c, $request) = @_;
 
+    my $submitter       = $request->submitter;
     my $possible_actors = $request->possible_actors;
 
     $c->stash(
@@ -297,7 +298,8 @@ sub send_new_request_email {
             to       => join(', ', map { $_->email } $possible_actors->all),
             subject  => '[Request ' . $request->id . '] New: "' . $request->title . '"',
             header   => [
-                Cc           => $request->submitter->email,
+                'Reply-To'   => $submitter->email,
+                Cc           => $submitter->email,
                 'Message-Id' => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/new_request.tt',

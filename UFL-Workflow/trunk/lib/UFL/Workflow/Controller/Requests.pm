@@ -303,6 +303,7 @@ sub send_changed_request_email {
             to       => join(', ', map { $_->email } $past_actors->all),
             subject  => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
             header   => [
+                'Reply-To'    => $actor->email,
                 Cc            => $request->submitter->email,
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),
             ],
@@ -335,6 +336,7 @@ sub send_new_action_email {
             to       => join(', ', map { $_->email } $possible_actors->all),
             subject  => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
             header   => [
+                'Reply-To'    => $actor->email,
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/new_action.tt',
