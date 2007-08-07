@@ -3,6 +3,7 @@ This file documents the revision history for UFL::Workflow.
 0.13
         - Look at all actions instead of the latest only for
           /requests/reports
+        - s/administrative_address/admin_address/g
 
 0.12  Tue Aug  7 13:40:37 EDT 2007
         - Fix email spacing
