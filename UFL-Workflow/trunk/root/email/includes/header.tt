@@ -1,6 +1,6 @@
 [% USE wrap -%]
 [% IF c.config.email.note -%]
-NOTE: [% wrap(c.config.email.note, 72) %]
+NOTE: [% wrap(c.config.email.note) %]
 [% END -%]
 
 Title
