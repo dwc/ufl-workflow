@@ -1,3 +1,7 @@
+To see the most recent status, visit:
+
+[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) %]
+
 ----------------------------------------------------------------------
 This is an automatically generated email sent from [% c.config.name %].
 Please DO NOT REPLY to [% email.from %].

@@ -1,5 +1,11 @@
 This file documents the revision history for UFL::Workflow.
 
+0.12
+        - Fix email spacing
+        - Ensure dates are displayed in emails by reSELECTing the
+          request
+        - Refactor email templates
+
 0.11  Mon Aug  6 16:20:19 EDT 2007
         - Extend reporting feature to allow selection on status and
           date

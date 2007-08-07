@@ -237,6 +237,9 @@ sub update_status : PathPart Chained('request') Args(0) {
         my $comment = $result->valid('comment');
         $request->update_status($status, $c->user->obj, $group, $comment);
 
+        # Make sure we get update_time
+        $request->discard_changes;
+
         $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
         $self->send_new_action_email($c, $request, $c->user->obj, $comment);
     });

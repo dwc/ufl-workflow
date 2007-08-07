@@ -247,6 +247,9 @@ sub add_request : PathPart Chained('process') Args(0) {
                     $group,
                 );
 
+                # Make sure we get insert_time and update_time
+                $request->discard_changes;
+
                 if (my $upload = $c->req->upload('document')) {
                     my $document = $request->add_document(
                         $c->user->obj,
