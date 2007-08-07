@@ -23,7 +23,16 @@
 </dl>
 <br style="clear:both" />
 <h4>Description</h4>
-[%+ process.description || 'None yet.' | textile %]
+[% IF process.description %]
+<div class="description">
+
+  [% FILTER indent('  ') %]
+    [% process.description.replace('^h[12346]\.', 'h5.') | textile %]
+  [% END %]
+</div>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
 
 <h3>Steps</h3>
 [% SET step = process.first_step %]

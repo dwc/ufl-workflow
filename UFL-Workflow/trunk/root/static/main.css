@@ -37,10 +37,17 @@ padding:5px;
 text-align:left;
 }
 
-h4 {
-font-size:1.05em;
+h4,h5,h6 {
 text-align:left;
 padding:5px;
+}
+
+h4 {
+font-size:1.05em;
+}
+
+h5 {
+font-size:1em;
 }
 
 p,li,form {
@@ -214,6 +221,10 @@ border-bottom:1px solid #ccc;
 
 #content ul,#content ol {
 margin:0 25px 10px;
+}
+
+#content .description {
+text-align:left;
 }
 
 #header {

@@ -29,7 +29,12 @@
 </dl>
 <br style="clear:both" />
 <h4>Description</h4>
-[% request.description | textile %]
+<div class="description">
+
+[% FILTER indent('  ') %]
+  [% request.description.replace('^h[12346]\.', 'h5.') | textile %]
+[% END %]
+</div>
 
 <h3>Documents</h3>
 [% SET documents = request.documents_rs %]
