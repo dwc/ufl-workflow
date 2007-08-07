@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.13
+        - Look at all actions instead of the latest only for
+          /requests/reports
+
 0.12  Tue Aug  7 13:40:37 EDT 2007
         - Fix email spacing
         - Ensure dates are displayed in emails by reSELECTing the

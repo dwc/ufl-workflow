@@ -120,12 +120,6 @@ sub reports : Local Args(0) {
         $requests = $requests->search({ 'me.update_time' => { '<' => $end_date } });
     }
 
-    # Look at latest actions only
-    my @action_ids = $c->model('DBIC::Action')->current_actions->get_column('id')->all;
-    if (@action_ids) {
-        $requests = $requests->search({ 'actions.id' => { -in => \@action_ids } });
-    }
-
     my $groups   = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
     my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
