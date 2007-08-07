@@ -296,7 +296,7 @@ sub send_new_request_email {
         email => {
             from     => $c->config->{email}->{admin_address},
             to       => join(', ', map { $_->email } $possible_actors->all),
-            subject  => '[Request ' . $request->id . '] New: "' . $request->title . '"',
+            subject  => $request->subject('New: '),
             header   => [
                 'Reply-To'   => $submitter->email,
                 Cc           => $submitter->email,

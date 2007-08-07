@@ -301,7 +301,7 @@ sub send_changed_request_email {
         email => {
             from     => $c->config->{email}->{admin_address},
             to       => join(', ', map { $_->email } $past_actors->all),
-            subject  => '[Request ' . $request->id . '] Change to "' . $request->title . '"',
+            subject  => $request->subject('Change to '),
             header   => [
                 'Reply-To'    => $actor->email,
                 Cc            => $request->submitter->email,
@@ -334,7 +334,7 @@ sub send_new_action_email {
         email   => {
             from     => $c->config->{email}->{admin_address},
             to       => join(', ', map { $_->email } $possible_actors->all),
-            subject  => '[Request ' . $request->id . '] Decision needed on "' . $request->title . '"',
+            subject  => $request->subject('Decision needed on '),
             header   => [
                 'Reply-To'    => $actor->email,
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),

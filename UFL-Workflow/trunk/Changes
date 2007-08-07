@@ -5,6 +5,7 @@ This file documents the revision history for UFL::Workflow.
           /requests/reports
         - s/administrative_address/admin_address/g
         - Add Reply-To headers to email
+        - Refactor email subject generation
 
 0.12  Tue Aug  7 13:40:37 EDT 2007
         - Fix email spacing

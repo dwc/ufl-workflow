@@ -408,6 +408,19 @@ sub message_id {
     return 'request-' . $self->id . '@' . $base;
 }
 
+=head2 subject
+
+Return a string suitable for identifying this request in a C<Subject>
+email header.
+
+=cut
+
+sub subject {
+    my ($self, $message) = @_;
+
+    return '[Request ' . $self->id . "] $message\"" . $self->title . '"';
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this request.
