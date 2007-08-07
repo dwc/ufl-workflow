@@ -294,13 +294,14 @@ sub send_new_request_email {
     $c->stash(
         request => $request,
         email => {
-            from     => $c->config->{email}->{admin_address},
+            from     => $c->config->{email}->{from_address},
             to       => join(', ', map { $_->email } $possible_actors->all),
             subject  => $request->subject('New: '),
             header   => [
-                'Reply-To'   => $submitter->email,
-                Cc           => $submitter->email,
-                'Message-Id' => $request->message_id($c->req->uri->host_port),
+                'Return-Path' => $c->config->{email}->{admin_address},
+                'Reply-To'    => $submitter->email,
+                Cc            => $submitter->email,
+                'Message-Id'  => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/new_request.tt',
         },

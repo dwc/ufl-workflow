@@ -4,9 +4,10 @@ This file documents the revision history for UFL::Workflow.
         - Look at all actions instead of the latest only for
           /requests/reports
         - s/administrative_address/admin_address/g
-        - Add Reply-To headers to email
+        - Add Reply-To header to emails
         - Refactor email subject generation
         - Add note to emails (e.g. for testing notice)
+        - Add Return-Path header to emails for bounces
 
 0.12  Tue Aug  7 13:40:37 EDT 2007
         - Fix email spacing

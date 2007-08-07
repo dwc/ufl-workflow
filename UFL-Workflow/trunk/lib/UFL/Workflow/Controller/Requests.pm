@@ -299,10 +299,11 @@ sub send_changed_request_email {
         actor   => $actor,
         comment => $comment,
         email => {
-            from     => $c->config->{email}->{admin_address},
+            from     => $c->config->{email}->{from_address},
             to       => join(', ', map { $_->email } $past_actors->all),
             subject  => $request->subject('Change to '),
             header   => [
+                'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
                 Cc            => $request->submitter->email,
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),
@@ -332,10 +333,11 @@ sub send_new_action_email {
         actor   => $actor,
         comment => $comment,
         email   => {
-            from     => $c->config->{email}->{admin_address},
+            from     => $c->config->{email}->{from_address},
             to       => join(', ', map { $_->email } $possible_actors->all),
             subject  => $request->subject('Decision needed on '),
             header   => [
+                'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
                 'In-Reply-To' => $request->message_id($c->req->uri->host_port),
             ],
