@@ -19,6 +19,5 @@
 [% FILTER indent('  ') %]
   [% INCLUDE requests/includes/request.tt %]
 [% END -%]
-  <label>Document: <input type="file" name="document" /></label>
   <input type="submit" class="submit" value="Add Request" />
 </form>

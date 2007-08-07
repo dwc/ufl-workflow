@@ -266,14 +266,14 @@ sub add_request : PathPart Chained('process') Args(0) {
         }
     }
 
-    my @groups;
+    my $groups;
     if (my $first_step = $process->first_step) {
-        @groups = $first_step->role->groups;
+        $groups = $first_step->role->groups->search(undef, { order_by => 'name' });
     }
 
     $c->stash(
         process  => $process,
-        groups   => \@groups,
+        groups   => $groups,
         template => 'processes/add_request.tt',
     );
 }
