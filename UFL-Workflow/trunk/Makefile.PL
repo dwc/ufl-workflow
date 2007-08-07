@@ -33,6 +33,7 @@ requires 'Module::Find';
 requires 'NEXT';
 requires 'Scalar::Util';
 requires 'Template::Plugin::Textile';
+requires 'Template::Plugin::Wrap';
 requires 'YAML';
 
 build_requires 'Catalyst::Test';
