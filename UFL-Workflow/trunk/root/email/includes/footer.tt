@@ -1,3 +1,4 @@
+[% USE wrap -%]
 To see the most recent status, visit:
 
 [% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) %]
