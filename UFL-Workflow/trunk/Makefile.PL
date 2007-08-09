@@ -22,7 +22,7 @@ requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::TT';
 requires 'Class::Accessor::Fast';
 requires 'Class::C3' => '0.12';  # For next::can
-requires 'DateTime::Format::DB2';
+requires 'DateTime::Format::DB2' => '0.05';
 requires 'DBD::DB2';
 requires 'DBIx::Class' => '0.07000';
 requires 'Digest::MD5';
