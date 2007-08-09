@@ -89,6 +89,15 @@ padding-bottom:5px;
 margin-left:5px;
 }
 
+#content form.reports a.clear {
+border:0;
+float:right;
+}
+
+#content form.reports select {
+margin:0;
+}
+
 #content form.process-steps {
 margin:0 0 10px;
 padding:5px 0 10px;
