@@ -1,5 +1,7 @@
 reports:
-  # group_id and status_id should be INT, but FormValidator::Simple barfs on multivalues currently
+  # These should be INT, but FormValidator::Simple barfs on multivalues currently
+  - process_id
+  - []
   - group_id
   - []
   - status_id

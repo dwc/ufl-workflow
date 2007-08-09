@@ -92,15 +92,17 @@ sub reports : Local Args(0) {
 
     my $result = $self->validate_form($c);
 
-    # Constrain requests based on the selected group
-    if (my $group_ids = $result->valid('group_id')) {
-        $requests = $requests->search({ 'action_groups.group_id' => { -in => $group_ids } });
-
-        my $selected_groups = $c->model('DBIC::Group')->search({ id => { -in => $group_ids } });
-        $c->stash(selected_groups => $selected_groups);
+    # Constrain requests based on the selected processes
+    if (my $process_ids = $result->valid('process_id')) {
+        $requests = $requests->search({ 'me.process_id' => { -in => $process_ids } });
     }
 
-    # Constrain requests based on the selected status or statuses
+    # Constrain requests based on the selected groups
+    if (my $group_ids = $result->valid('group_id')) {
+        $requests = $requests->search({ 'action_groups.group_id' => { -in => $group_ids } });
+    }
+
+    # Constrain requests based on the selected statuses
     if (my $status_ids = $result->valid('status_id')) {
         $requests = $requests->search({ 'actions.status_id' => { -in => $status_ids } });
     }
@@ -120,8 +122,9 @@ sub reports : Local Args(0) {
         $requests = $requests->search({ 'me.update_time' => { '<' => $end_date } });
     }
 
-    my $groups   = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
-    my $statuses = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
+    my $processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });
+    my $groups    = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
+    my $statuses  = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
     $c->stash(
         end_date   => DateTime->now,
@@ -130,6 +133,7 @@ sub reports : Local Args(0) {
         past_month => DateTime->now->subtract(months => 1),
         past_year  => DateTime->now->subtract(years => 1),
         requests   => $requests,
+        processes  => $processes,
         groups     => $groups,
         statuses   => $statuses,
         template   => 'requests/reports.tt',

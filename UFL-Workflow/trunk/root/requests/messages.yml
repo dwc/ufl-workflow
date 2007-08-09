@@ -1,4 +1,6 @@
 reports:
+  process_id:
+    DEFAULT: A process
   group_id:
     DEFAULT: A group
   status_id:
