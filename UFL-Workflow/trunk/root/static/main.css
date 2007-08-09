@@ -89,13 +89,17 @@ padding-bottom:5px;
 margin-left:5px;
 }
 
-#content form.reports a.clear {
-border:0;
-float:right;
+#content form.reports p.clear {
+text-align:right;
+margin:0;
 }
 
-#content form.reports select {
-margin:0;
+#content form.reports p.clear a {
+border:0;
+}
+
+#content form.reports select.multiple {
+margin-bottom:0;
 }
 
 #content form.process-steps {
