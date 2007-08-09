@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.15
+0.15  Wed Aug  8 21:22:08 EDT 2007
         - Add links to clear each fieldset on /requests/reports
         - Add ability to search by process to /requests/reports
 
