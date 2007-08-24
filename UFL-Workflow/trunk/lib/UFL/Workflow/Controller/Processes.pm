@@ -301,7 +301,7 @@ sub send_new_request_email {
                 'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $submitter->email,
                 Cc            => $submitter->email,
-                'Message-Id'  => $request->message_id($c->req->uri->host_port),
+                'Message-Id'  => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_request.tt',
         },

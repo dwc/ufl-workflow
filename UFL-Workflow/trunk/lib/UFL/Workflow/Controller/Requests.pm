@@ -310,7 +310,7 @@ sub send_changed_request_email {
                 'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
                 Cc            => $request->submitter->email,
-                'In-Reply-To' => $request->message_id($c->req->uri->host_port),
+                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/changed_request.tt',
         },
@@ -343,7 +343,7 @@ sub send_new_action_email {
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
-                'In-Reply-To' => $request->message_id($c->req->uri->host_port),
+                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_action.tt',
         },
