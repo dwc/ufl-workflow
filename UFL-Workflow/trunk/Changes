@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.17
+        - Fix pending decisions to display only requests that the user
+          can decide on
+
 0.16  Thu Aug 30 17:44:05 EDT 2007
         - Add angle brackets to Message-Id and and In-Reply-To headers
           for RFC compliance
