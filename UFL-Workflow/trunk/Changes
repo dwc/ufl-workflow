@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.16
+0.16  Thu Aug 30 17:44:05 EDT 2007
         - Add angle brackets to Message-Id and and In-Reply-To headers
           for RFC compliance
 
