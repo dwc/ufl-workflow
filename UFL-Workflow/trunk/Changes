@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.19
+0.19  Fri Aug 31 14:58:22 EDT 2007
         - Workaround form validation issue for checkboxes in
           production (different Catalyst::Engine?)
 
