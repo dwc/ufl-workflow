@@ -3,6 +3,7 @@ package UFL::Workflow::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
+use Class::C3;
 use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
@@ -66,6 +67,19 @@ See L<UFL::Workflow>.
 User table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
+
+=head2 insert
+
+=cut
+
+sub insert {
+    my $self = shift;
+
+    my $domain = $self->result_source->schema->email_domain;
+    $self->email($self->username . '@' . $domain);
+
+    $self->next::method(@_);
+}
 
 =head2 has_role
 

@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.18
+        - Override insert on Schema::User to set email domain
+          correctly for Catalyst auto_create'd users
+
 0.17  Thu Aug 30 18:38:38 EDT 2007
         - Fix pending decisions to display only requests that the user
           can decide on
