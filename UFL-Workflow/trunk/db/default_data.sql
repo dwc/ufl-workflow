@@ -1,8 +1,7 @@
-INSERT INTO users (username) VALUES ('mhoit');
-INSERT INTO users (username) VALUES ('cschoaf');
-INSERT INTO users (username) VALUES ('dwc');
-INSERT INTO users (username) VALUES ('mlj1790');
-INSERT INTO users (username) VALUES ('spooner');
+INSERT INTO users (username, email) VALUES ('mhoit', 'mhoit@ufl.edu');
+INSERT INTO users (username, email) VALUES ('cschoaf', 'cschoaf@ufl.edu');
+INSERT INTO users (username, email) VALUES ('dwc', 'dwc@ufl.edu');
+INSERT INTO users (username, email) VALUES ('spooner', 'spooner@ufl.edu');
 
 INSERT INTO groups (name) VALUES ('Information Technology');
 INSERT INTO groups (parent_group_id, name) VALUES (
