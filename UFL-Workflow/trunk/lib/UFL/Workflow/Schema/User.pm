@@ -195,26 +195,18 @@ user.
 sub pending_actions {
     my ($self) = @_;
 
-    my @groups = $self->groups;
-    my @roles  = $self->roles;
-
-    my $pending_actions;
-    if (@groups and @roles) {
-        $pending_actions = $self->result_source->schema->resultset('Action')->search(
-            {
-                'user_group_role.user_id'  => $self->id,
-                'user_group_role.group_id' => { -in => [ map { $_->id } @groups ] },
-                'user_group_role.role_id'  => { -in => [ map { $_->id } @roles ] },
-                'step.role_id'             => \q[= user_group_role.role_id],
-                'status.is_initial'        => 1,
-            },
-            {
-                join     => [ { action_groups => 'user_group_role' }, 'status', 'step' ],
-                distinct => 1,
-                order_by => \q[update_time DESC, insert_time DESC],
-            },
-        );
-    }
+    my $pending_actions = $self->result_source->schema->resultset('Action')->search(
+        {
+            'user_group_role.user_id' => $self->id,
+            'step.role_id'            => \q[= user_group_role.role_id],
+            'status.is_initial'       => 1,
+        },
+        {
+            join     => [ { action_groups => 'user_group_role' }, 'status', 'step' ],
+            distinct => 1,
+            order_by => \q[update_time DESC, insert_time DESC],
+        },
+    );
 
     return $pending_actions;
 }
