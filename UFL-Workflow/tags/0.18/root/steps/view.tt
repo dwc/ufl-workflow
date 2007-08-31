@@ -1,0 +1,28 @@
+[% SET title = step.name -%]
+
+<h3>Manage step</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), step.uri_args) | html %]">Edit this step</a></li>
+</ul>
+
+<h3>Step details</h3>
+<dl>
+  <dt>Name</dt>
+  <dd>[% step.name | html %]</dd>
+  <dt>Process</dt>
+[% SET process = step.process %]
+  <dd><a href="[% c.uri_for(c.controller('Processes').action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></dd>
+[% SET prev_step = step.prev_step %]
+[% IF prev_step %]
+  <dt>Previous Step</dt>
+  <dd><a href="[% c.uri_for(c.controller.action_for('view'), prev_step.uri_args) | html %]">[% prev_step.name | html %]</a></dd>
+[% END %]
+[% SET next_step = step.next_step %]
+[% IF next_step %]
+  <dt>Next Step</dt>
+  <dd><a href="[% c.uri_for(c.controller.action_for('view'), next_step.uri_args) | html %]">[% next_step.name | html %]</a></dd>
+[% END %]
+  <dt>Role</dt>
+[% SET role = step.role %]
+  <dd><a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a></dd>
+</dl>
