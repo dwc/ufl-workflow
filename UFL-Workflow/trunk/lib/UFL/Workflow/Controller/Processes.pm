@@ -103,7 +103,7 @@ sub edit : PathPart Chained('process') Args(0) {
             $process->update({
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
-                enabled     => $result->valid('enabled'),
+                enabled     => $result->valid('enabled') ? 1 : 0,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));

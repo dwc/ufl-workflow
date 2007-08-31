@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.19
+        - Workaround form validation issue for checkboxes in
+          production (different Catalyst::Engine?)
+
 0.18  Fri Aug 31 12:31:57 EDT 2007
         - Override insert on Schema::User to set email domain
           correctly for Catalyst auto_create'd users
