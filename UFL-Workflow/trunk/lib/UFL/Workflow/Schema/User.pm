@@ -70,15 +70,35 @@ User table class for L<UFL::Workflow::Schema>.
 
 =head2 insert
 
+Override L<DBIx::Class::Row/insert> to update the email address field.
+
 =cut
 
 sub insert {
     my $self = shift;
 
+    $self->_update_email;
+    $self->next::method(@_);
+}
+
+=head2 update
+
+Override L<DBIx::Class::Row/update> to update the email address field.
+
+=cut
+
+sub update {
+    my $self = shift;
+
+    $self->_update_email;
+    $self->next::method(@_);
+}
+
+sub _update_email {
+    my $self = shift;
+
     my $domain = $self->result_source->schema->email_domain;
     $self->email($self->username . '@' . $domain);
-
-    $self->next::method(@_);
 }
 
 =head2 has_role
