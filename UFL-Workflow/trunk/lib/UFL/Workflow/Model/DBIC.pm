@@ -19,7 +19,7 @@ L<DBIx::Class> L<Catalyst> model component.
 
 =head1 METHODS
 
-=head2 ACCEPT_CONTEXT
+=head2 new
 
 Set the domain for email addresses as configured on the application.
 
