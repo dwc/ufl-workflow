@@ -278,6 +278,18 @@ sub add_request : PathPart Chained('process') Args(0) {
     );
 }
 
+=head2 requests
+
+List requests for the stashed L<UFL::Workflow::Schema::Process>.
+
+=cut
+
+sub requests : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'processes/requests.tt');
+}
+
 =head2 send_new_request_email
 
 Send notification that a new L<UFL::Workflow::Schema::Request> has
