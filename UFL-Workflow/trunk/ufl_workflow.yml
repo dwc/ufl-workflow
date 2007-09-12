@@ -25,7 +25,7 @@ authorization:
     user_role_user_field: user_id
 
 Controller::Documents:
-  destination:         __path_to(documents)__
+  destination: __path_to(documents)__
 
 Controller::Processes: &requestdocuments
   accepted_extensions: [ doc, pdf, odt, txt ]
