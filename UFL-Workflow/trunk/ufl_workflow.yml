@@ -11,8 +11,6 @@ email:
   from_address:  webmaster@ufl.edu
   domain:        ufl.edu
 
-documents: &documents
-
 authentication:
   dbic:
     user_class:           DBIC::User
