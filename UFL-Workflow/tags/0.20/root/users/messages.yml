@@ -1,0 +1,10 @@
+add:
+  username:
+    DEFAULT: A username
+    LENGTH: A shorter username
+add_group_role: &role
+  group_id:
+    DEFAULT: A group
+  role_id:
+    DEFAULT: A role
+delete_group_role: *role
