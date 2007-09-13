@@ -27,7 +27,7 @@
 <div class="description">
 
   [% FILTER indent('  ') %]
-    [% process.description.replace('^h[12346]\.', 'h5.') | textile %]
+    [% process.description.replace('\bh[12346]\.', 'h5.') | textile %]
   [% END %]
 </div>
 [% ELSE %]
