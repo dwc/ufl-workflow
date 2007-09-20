@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.21
+0.21  Wed Sep 19 20:18:14 EDT 2007
         - Fix regular expression for handling headings in Textile
         - Further workarounds for checkboxes in production
 
