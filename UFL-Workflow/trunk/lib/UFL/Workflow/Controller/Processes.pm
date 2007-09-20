@@ -50,7 +50,7 @@ sub add : Local {
             my $process = $c->user->processes->create({
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
-                enabled     => $result->valid('enabled'),
+                enabled     => $result->valid('enabled') ? 1 : 0,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
