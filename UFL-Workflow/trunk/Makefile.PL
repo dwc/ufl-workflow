@@ -39,6 +39,7 @@ requires 'YAML';
 build_requires 'Catalyst::Test';
 build_requires 'DBD::SQLite';
 build_requires 'Test::More';
+build_requires 'Test::YAML::Valid';
 
 catalyst;
 
