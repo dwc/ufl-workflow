@@ -6,6 +6,8 @@ reports:
   - []
   - status_id
   - []
+  - inactive_processes
+  - []
   - { start_date: [ start_date_year, start_date_month, start_date_day ] }
   - [ DATE_ALLOWING_BLANK ]
   - { end_date: [ end_date_year, end_date_month, end_date_day ] }

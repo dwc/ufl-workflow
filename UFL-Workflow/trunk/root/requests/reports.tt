@@ -74,6 +74,13 @@
   [% clear_link([ 'status_id' ]) %]
 [% END %]
   </fieldset>
+  <fieldset>
+    <legend>Requests For Inactive Processes:</legend>
+    <label class="checkbox" ><input type="checkbox" name="inactive_processes"/></label>
+[% FILTER indent('    ') %]
+  [% clear_link([ 'inactive_processes' ]) %]
+[% END %]
+  </fieldset>
   <fieldset id="updated">
     <legend>Updated:</legend>
     <label>During:
