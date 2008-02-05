@@ -1,5 +1,8 @@
 This file documents the revision history for UFL::Workflow.
 
+0.23
+        - Incorporate changes to make the Help Desk feature readonly
+
 0.22
         - Fix YAML in root/steps/profiles.yml
         - Add final newlines to a few files that were missing them
