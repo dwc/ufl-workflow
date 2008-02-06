@@ -1,4 +1,5 @@
 [% SET title = 'Processes' -%]
+
 [% IF c.check_user_roles('Administrator') %]
 <h3>Manage processes</h3>
 <ul>

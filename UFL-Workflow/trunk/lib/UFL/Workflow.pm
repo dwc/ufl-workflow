@@ -25,9 +25,9 @@ __PACKAGE__->deny_access_unless(
     [ qw/Administrator/ ],
 ) for qw/groups processes roles statuses steps users/;
 
-__PACKAGE__->allow_access_if( 
+__PACKAGE__->allow_access_if(
     "/processes/$_",
-     [ 'Help Desk' ],
+    [ 'Help Desk' ],
 ) for qw/index process view requests add_request/;
 
 __PACKAGE__->allow_access_if(
@@ -41,18 +41,18 @@ __PACKAGE__->allow_access_if(
 ) for qw/index group view/;
 
 __PACKAGE__->allow_access_if(
-   "/roles/$_",
-   [ 'Help Desk' ],
+    "/roles/$_",
+    [ 'Help Desk' ],
 ) for qw/role view/;
 
 __PACKAGE__->allow_access_if(
-   "/statuses/$_",
-   [ 'Help Desk' ],
+    "/statuses/$_",
+    [ 'Help Desk' ],
 ) for qw/index status view/;
 
 __PACKAGE__->allow_access_if(
-  "/steps/$_",
-  [ 'Help Desk' ],
+    "/steps/$_",
+    [ 'Help Desk' ],
 ) for qw/step view/;
 
 =head1 NAME

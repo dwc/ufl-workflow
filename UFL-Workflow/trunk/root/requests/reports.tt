@@ -45,7 +45,7 @@
 
 <h3>[% title | html %]</h3>
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get" class="reports">
-<table border ="0"  >
+<table border ="0">
 <tr>
  <td>
   <fieldset id="process">
@@ -125,32 +125,32 @@
 [% SET page_params = requests.pager %]
 [% IF page_params %]
   [% IF page_params.first_page != page_params.last_page %]
-    <br/>
-   [% SET start_page = 1 %]
-   [% IF page_params.current_page > 11 %]
-     [% start_page = page_params.current_page - 9 %] 
-     [% SET low = start_page - 1 %]
-        <a class="paging" href="[% c.request.uri_with(page => low) %]" >[%  '1..' _  low  %]</a>
-   [% END %]
-   [% SET end_page = page_params.last_page %]
-   [% IF page_params.current_page + 10  < page_params.last_page %] 
-     [% end_page = page_params.current_page + 9 %]
-   [% END %]
+  <br/>
+    [% SET start_page = 1 %]
+    [% IF page_params.current_page > 11 %]
+      [% SET start_page = page_params.current_page - 9 %]
+      [% SET low = start_page - 1 %]
+  <a class="paging" href="[% c.request.uri_with(page => low) %]">[% '1..' _ low %]</a>
+    [% END %]
+    [% SET end_page = page_params.last_page %]
+    [% IF page_params.current_page + 10 < page_params.last_page %]
+      [% SET end_page = page_params.current_page + 9 %]
+    [% END %]
 
-   [% FOREACH  p = [start_page..end_page] %]
-     [% IF page_params.current_page  == p %]
-       <span class="paging">[%  p  %]</span>
-     [% ELSE %]
-       <a class="paging" href="[% c.request.uri_with(page => p) %]">[% p %]</a>
-     [% END %]
-   [% END %]
-   [% IF end_page != page_params.last_page  %]
-     [% SET end_page = end_page + 1 %]
-     [% SET low = end_page %]
-     [% SET high = page_params.last_page  %]
-     <a class="paging" href="[% c.request.uri_with( page => end_page) %]">[%  low _  '..' _  high  %]</a>
-   [% END %]
- [% END %]
+    [% FOREACH p IN [start_page .. end_page] %]
+      [% IF page_params.current_page == p %]
+  <span class="paging">[% p %]</span>
+      [% ELSE %]
+  <a class="paging" href="[% c.request.uri_with(page => p) %]">[% p %]</a>
+      [% END %]
+    [% END %]
+    [% IF end_page != page_params.last_page %]
+      [% SET end_page = end_page + 1 %]
+      [% SET low = end_page %]
+      [% SET high = page_params.last_page %]
+  <a class="paging" href="[% c.request.uri_with( page => end_page) %]">[%  low _  '..' _  high  %]</a>
+    [% END %]
+  [% END %]
 [% END %]
 </h3>
 

@@ -1,4 +1,3 @@
-
 package UFL::Workflow::Controller::Requests;
 
 use strict;
@@ -76,7 +75,7 @@ sub pending_decision : Local Args(0) {
 Show a list of requests matching the specified criteria.
 
 =cut
-use Data::Dumper;
+
 sub reports : Local Args(0) {
     my ($self, $c) = @_;
 
@@ -87,39 +86,41 @@ sub reports : Local Args(0) {
         undef,
         {
             join     => { actions => 'action_groups' },
-            prefetch => [ qw/submitter process documents / ],
+            prefetch => [ qw/submitter process documents/ ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
-            page     => $page_num?$page_num:1,
-            rows    => 10, 
+            page     => $page_num ? $page_num : 1,
+            rows     => 10,
         },
     );
 
     my $result = $self->validate_form($c);
 
-    if (my $search_name = $result->valid('search_id')){
-       # split the key words and attach % % on both sides of the word.s
-       $search_name =  '%'. join ( '% %', split(/\W+/, uc($search_name), -1)).'%';
-       my @word_list = split(/ /,$search_name,-1);
-       # search for text in the following fields: title, submitter, user, 
-      	# comment, document title, and description. 
-       my @fields = qw/ UCASE(title) UCASE(me.description) UCASE(submitter.username) UCASE(comment) UCASE(documents.name) UCASE(username) /;
-	
-       # construct Quer string with all like option upon the above fields
-       my @Query = ();
-       for my $i (0..$#fields){
-           for my $j (0..$#word_list){
-               $Query[ $i + $j ] = { $fields[$i] => { 'like', $word_list[$j] }}; 
-           }
-       }
-       $requests = $requests->search( { -or => [ @Query ] });
+    if (my $search_name = $result->valid('search_id')) {
+        # split the key words and attach % % on both sides of the word.s
+        $search_name =  '%'. join ( '% %', split(/\W+/, uc($search_name), -1)).'%';
+        my @word_list = split(/ /,$search_name,-1);
+
+        # search for text in the following fields: title, submitter, user,
+      	# comment, document title, and description.
+        my @fields = qw/ UCASE(title) UCASE(me.description) UCASE(submitter.username) UCASE(comment) UCASE(documents.name) UCASE(username) /;
+
+        # construct Quer string with all like option upon the above fields
+        my @Query = ();
+        for my $i (0..$#fields) {
+            for my $j (0..$#word_list) {
+                $Query[ $i + $j ] = { $fields[$i] => { 'like', $word_list[$j] } };
+            }
+        }
+
+        $requests = $requests->search({ -or => [ @Query ] });
     }
 
     # Select requests that belong to active processes
     my $display_inactive = $result->valid('inactive_processes');
+    $requests = $requests->search({ 'process.enabled' => 1 })
+        unless $display_inactive;
 
-    $requests = $requests->search({ 'process.enabled' => 1 }) unless ($display_inactive);
-    
     # Constrain requests based on the selected processes
     if (my $process_ids = $result->valid('process_id')) {
         $requests = $requests->search({ 'me.process_id' => { -in => $process_ids } });
@@ -154,8 +155,6 @@ sub reports : Local Args(0) {
     my $groups    = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
     my $statuses  = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 
-       
-
     $c->stash(
         end_date   => DateTime->now,
         past_day   => DateTime->now->subtract(days => 1),
@@ -166,7 +165,7 @@ sub reports : Local Args(0) {
         processes  => $processes,
         groups     => $groups,
         statuses   => $statuses,
-        template   => 'requests/reports.tt',	
+        template   => 'requests/reports.tt',
     );
 }
 

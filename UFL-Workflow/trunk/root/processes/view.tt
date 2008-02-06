@@ -5,9 +5,9 @@
 <h3>Manage process</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
-[% IF process.is_editable %]
+  [% IF process.is_editable %]
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]">Add new step</a></li>
-[% END %]
+  [% END %]
 </ul>
 [% END %]
 
@@ -46,7 +46,7 @@
     [% SET role = step.role %]
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), step.uri_args) | html %]">[% step.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>)
-    [% IF process.is_editable && c.check_user_roles('Administrator') %]
+    [% IF process.is_editable AND c.check_user_roles('Administrator') %]
     <br />
     <form class="process-steps" action="[% c.uri_for(c.controller.action_for('delete_step'), process.uri_args) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />

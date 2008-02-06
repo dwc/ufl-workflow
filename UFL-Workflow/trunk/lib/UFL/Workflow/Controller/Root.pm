@@ -106,7 +106,7 @@ sub access_denied : Private {
 
 Attempt to render a view, if needed.
 
-=cut 
+=cut
 
 sub render : ActionClass('RenderView') {
     my ($self, $c) = @_;
