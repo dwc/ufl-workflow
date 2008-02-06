@@ -15,7 +15,7 @@
 <dl>
   <dt>Name</dt>
   <dd>[% process.name | html %]</dd>
-  <dt>Enabled</dt>
+  <dt>Active</dt>
   <dd>[% process.enabled ? 'Yes' : 'No' %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]

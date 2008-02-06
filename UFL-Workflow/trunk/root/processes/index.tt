@@ -11,7 +11,7 @@
 <ul>
   [% WHILE (process = processes.next) %]
     [% SET num_requests = process.requests_rs.count %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% process.enabled ? 'Enabled' : 'Disabled' %], <a href="[% c.uri_for(c.controller.action_for('requests'), process.uri_args) | html %]">[% num_requests | html %] request[% num_requests == 1 ? '' : 's' %]</a>)</li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% process.enabled ? 'Active' : 'Inactive' %], <a href="[% c.uri_for(c.controller.action_for('requests'), process.uri_args) | html %]">[% num_requests | html %] request[% num_requests == 1 ? '' : 's' %]</a>)</li>
   [% END %]
 </ul>
 [% ELSE %]
