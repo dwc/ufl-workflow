@@ -1,4 +1,6 @@
 reports:
+  - query
+  - []
   # These should be INT, but FormValidator::Simple barfs on multivalues currently
   - process_id
   - []
@@ -12,8 +14,8 @@ reports:
   - [ DATE_ALLOWING_BLANK ]
   - { end_date: [ end_date_year, end_date_month, end_date_day ] }
   - [ DATE_ALLOWING_BLANK ]
-  - search_id
-  - []
+  - page
+  - [ INT ]
 add_document:
   - document
   - [ NOT_BLANK ]

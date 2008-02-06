@@ -79,7 +79,9 @@ Show a list of requests matching the specified criteria.
 sub reports : Local Args(0) {
     my ($self, $c) = @_;
 
-    my $page_num  = $c->req->param('page');
+    my $result = $self->validate_form($c);
+
+    my $page = $result->valid('page') || 1;
 
     # Default to all requests
     my $requests = $c->model('DBIC::Request')->search(
@@ -89,17 +91,15 @@ sub reports : Local Args(0) {
             prefetch => [ qw/submitter process documents/ ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
-            page     => $page_num ? $page_num : 1,
+            page     => $page,
             rows     => 10,
         },
     );
 
-    my $result = $self->validate_form($c);
-
-    if (my $search_name = $result->valid('search_id')) {
+    if (my $query = $result->valid('query')) {
         # split the key words and attach % % on both sides of the word.s
-        $search_name =  '%'. join ( '% %', split(/\W+/, uc($search_name), -1)).'%';
-        my @word_list = split(/ /,$search_name,-1);
+        $query =  '%'. join ( '% %', split(/\W+/, uc($query), -1)).'%';
+        my @word_list = split(/ /,$query,-1);
 
         # search for text in the following fields: title, submitter, user,
       	# comment, document title, and description.
