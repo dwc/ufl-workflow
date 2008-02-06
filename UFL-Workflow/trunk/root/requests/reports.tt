@@ -128,7 +128,7 @@
     [% IF page_params.current_page > 11 %]
       [% SET start_page = page_params.current_page - 9 %]
       [% SET low = start_page - 1 %]
-  <a class="paging" href="[% c.request.uri_with(page => low) %]">[% '1..' _ low %]</a>
+  <a class="paging" href="[% c.request.uri_with(page => low) | html %]">[% '1..' _ low | html %]</a>
     [% END %]
     [% SET end_page = page_params.last_page %]
     [% IF page_params.current_page + 10 < page_params.last_page %]
@@ -137,16 +137,16 @@
 
     [% FOREACH p IN [start_page .. end_page] %]
       [% IF page_params.current_page == p %]
-  <span class="paging">[% p %]</span>
+  <span class="paging">[% p | html %]</span>
       [% ELSE %]
-  <a class="paging" href="[% c.request.uri_with(page => p) %]">[% p %]</a>
+  <a class="paging" href="[% c.request.uri_with(page => p) | html %]">[% p | html %]</a>
       [% END %]
     [% END %]
     [% IF end_page != page_params.last_page %]
       [% SET end_page = end_page + 1 %]
       [% SET low = end_page %]
       [% SET high = page_params.last_page %]
-  <a class="paging" href="[% c.request.uri_with( page => end_page) %]">[%  low _  '..' _  high  %]</a>
+  <a class="paging" href="[% c.request.uri_with(page => end_page) | html %]">[% low _ '..' _ high | html %]</a>
     [% END %]
   [% END %]
 [% END %]
