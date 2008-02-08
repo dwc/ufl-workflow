@@ -8,7 +8,6 @@
   [% IF comment %]
 <p>[% comment | html %]</p>
   [% END %]
-<p>Found [% num_requests | html %] request[% num_requests == 1 ? '' : 's' %].</p>
 <table>
   <tr>
 [% IF show_submitter %]

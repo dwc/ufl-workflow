@@ -119,37 +119,7 @@
   <input type="submit" class="submit" value="Generate report" />
 </form>
 
-<h3>Requests
-[% SET page_params = requests.pager %]
-[% IF page_params %]
-  [% IF page_params.first_page != page_params.last_page %]
-  <br/>
-    [% SET start_page = 1 %]
-    [% IF page_params.current_page > 11 %]
-      [% SET start_page = page_params.current_page - 9 %]
-      [% SET low = start_page - 1 %]
-  <a class="paging" href="[% c.request.uri_with(page => low) | html %]">[% '1..' _ low | html %]</a>
-    [% END %]
-    [% SET end_page = page_params.last_page %]
-    [% IF page_params.current_page + 10 < page_params.last_page %]
-      [% SET end_page = page_params.current_page + 9 %]
-    [% END %]
-
-    [% FOREACH p IN [start_page .. end_page] %]
-      [% IF page_params.current_page == p %]
-  <span class="paging">[% p | html %]</span>
-      [% ELSE %]
-  <a class="paging" href="[% c.request.uri_with(page => p) | html %]">[% p | html %]</a>
-      [% END %]
-    [% END %]
-    [% IF end_page != page_params.last_page %]
-      [% SET end_page = end_page + 1 %]
-      [% SET low = end_page %]
-      [% SET high = page_params.last_page %]
-  <a class="paging" href="[% c.request.uri_with(page => end_page) | html %]">[% low _ '..' _ high | html %]</a>
-    [% END %]
-  [% END %]
-[% END %]
-</h3>
-
+<h3>Requests</h3>
+[% INCLUDE includes/paging.tt pager = requests.pager, singular = 'request', plural = 'requests' %]
 [% INCLUDE requests/includes/list.tt show_submitter = 1, show_process = 1 %]
+[% INCLUDE includes/paging.tt pager = requests.pager %]

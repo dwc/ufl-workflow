@@ -231,6 +231,40 @@ border-bottom:1px solid #ccc;
 margin:0 25px 10px;
 }
 
+#content ul.paging {
+display:block;
+height:30px;
+}
+
+#content ul.paging li {
+display:inline;
+list-style:none;
+}
+
+/* Need an additional hook to make the boxes work in IE */
+#content ul.paging li span, #content ul.paging li a {
+border:1px solid #eee;
+margin:0 0 0 5px;
+padding:0 5px;
+text-align:left;
+}
+
+#content ul.paging li.prev {
+margin-right:5px;
+}
+
+#content ul.paging li.next {
+margin-left:10px;
+}
+
+#content ul.paging li.prev span, #content ul.paging li.next span {
+color:#ddd;
+}
+
+#content ul.paging li a:hover {
+background:#eee;
+}
+
 #content .description {
 text-align:left;
 }
