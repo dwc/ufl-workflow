@@ -27,8 +27,13 @@ __PACKAGE__->deny_access_unless(
 
 __PACKAGE__->allow_access_if(
     "/processes/$_",
+    sub { $_[0]->user_exists },
+) for qw/process add_request/;
+
+__PACKAGE__->allow_access_if(
+    "/processes/$_",
     [ 'Help Desk' ],
-) for qw/index process view requests add_request/;
+) for qw/index view requests/;
 
 __PACKAGE__->allow_access_if(
     "/users/$_",
