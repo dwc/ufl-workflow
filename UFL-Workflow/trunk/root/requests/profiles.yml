@@ -1,6 +1,8 @@
 reports:
   - query
   - []
+  - query_field
+  - [ INT ]
   # These should be INT, but FormValidator::Simple barfs on multivalues currently
   - process_id
   - []

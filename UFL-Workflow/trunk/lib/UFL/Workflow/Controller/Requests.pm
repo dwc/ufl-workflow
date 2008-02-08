@@ -101,10 +101,12 @@ sub reports : Local Args(0) {
         $query =  '%'. join ( '% %', split(/\W+/, uc($query), -1)).'%';
         my @word_list = split(/ /,$query,-1);
 
+        my $field_sel = $result->valid('query_field');
+
         # search for text in the following fields: title, submitter, user,
       	# comment, document title, and description.
-        my @fields = qw/ UCASE(title) UCASE(me.description) UCASE(submitter.username) UCASE(comment) UCASE(documents.name) UCASE(username) /;
-
+        my @fields_all = qw/ UCASE(title) UCASE(me.description) UCASE(submitter.username) UCASE(comment) UCASE(documents.name) UCASE(username) /;
+        my @fields = $field_sel == 0 ? @fields_all : $fields_all[ $field_sel - 1 ];
         # construct Quer string with all like option upon the above fields
         my @Query = ();
         for my $i (0..$#fields) {

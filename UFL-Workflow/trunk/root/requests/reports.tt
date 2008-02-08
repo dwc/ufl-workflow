@@ -1,5 +1,6 @@
 [% SET
    title = 'Reports'
+   query_field_id = 'query_field_id'
    query_id = 'query_id'
    query_default = ''
    group_id = 'group_id'
@@ -46,11 +47,30 @@
 <h3>[% title | html %]</h3>
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get" class="reports">
   <fieldset id="search">
-    <legend>Search for a request:</legend>
-    <input type="text" name="query" id="[% query_id | html %]" value="[% query_default | html %]" />
+   <table class="search_table"  width="100%" cellspacing="0" cellpadding="0" border="0" margin="0pt">
+   <tbody>
+   <tr>
+     <td class="search_text" width="10">Search</td>
+     <td class="search_bar"  width="3"/>
+     <td class="search_bar"  width="20">
+       <select class="search_select" title="Search in" name="query_field" id="[% query_field_id | html %]" style="width:200px;">
+           <option value="[% 0 | html %]">All</option>
+           <option value="[% 1 | html %]">Title</option>
+           <option value="[% 2 | html %]">Description</option>
+           <option value="[% 3 | html %]">Submitter</option>
+           <option value="[% 4 | html %]">Comments</option>
+           <option value="[% 5 | html %]">Document Title</option>
+           <option value="[% 6 | html %]">Users Involved</option>
+       </select></td>
+     <td class="search_bar"  width="3"/>
+     <td class ="search_bar" ><input type="text" name="query" id="[% query_id | html %]" value="[% query_default | html %]" /></td>
 [% FILTER indent('    ') %]
-  [% clear_link([ 'query' ]) %]
+    <td class="search_bar">[% clear_link([ 'query' ], [ 'query_field' ]) %]</td>
 [% END %]
+   </tr>
+  </tbody>
+  </table>
+
   </fieldset><!-- #search -->
   <fieldset id="process">
     <legend>Process:</legend>
