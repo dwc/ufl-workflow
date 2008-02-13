@@ -8,6 +8,8 @@ This file documents the revision history for UFL::Workflow.
         - Add help desk functionality for read-only view of
           administrative information
         - Extend /requests/reports to support paging and searching
+        - Schema change: Add wants_email flag to users table
+          (_migration_00_users_wants_email.sql)
 
 0.21  Wed Sep 19 20:18:14 EDT 2007
         - Fix regular expression for handling headings in Textile

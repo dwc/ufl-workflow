@@ -19,6 +19,10 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 64,
     },
+    wants_email => {
+        data_type => 'boolean',
+        default   => 1,
+    },
 );
 __PACKAGE__->add_standard_columns;
 
