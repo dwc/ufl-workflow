@@ -302,12 +302,11 @@ sub send_new_request_email {
 
     my $submitter       = $request->submitter;
     my $possible_actors = $request->possible_actors;
-
     $c->stash(
         request => $request,
         email => {
             from     => $c->config->{email}->{from_address},
-            to       => join(', ', map { $_->email } $possible_actors->all),
+            to       => join(', ', map { $_->wants_email == 1 ? $_->email : "" } $possible_actors->all),
             subject  => $request->subject('New: '),
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},

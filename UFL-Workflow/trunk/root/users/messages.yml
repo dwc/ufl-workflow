@@ -2,6 +2,9 @@ add:
   username:
     DEFAULT: A username
     LENGTH: A shorter username
+edit_profile: &role
+  email_option:
+    DEFAULT: A email delivery Option
 add_group_role: &role
   group_id:
     DEFAULT: A group

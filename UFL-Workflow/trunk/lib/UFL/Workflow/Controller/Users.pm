@@ -85,6 +85,26 @@ sub view : PathPart('') Chained('user') Args(0) {
     $c->stash(template => 'users/view.tt');
 }
 
+=head2 my_profile
+
+Edit Profile of individual user for email options.
+
+=cut
+sub edit_profile : Local Args(0) {
+    my($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+       my $result = $self->validate_form($c);
+       if ($result->success) {
+           my $user = $c->user;
+           $user->update({ wants_email => $result->valid('email_option') ? 1 : 0 });
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
+        }
+     }
+    $c->stash(template => 'users/edit_profile.tt');
+
+}
+
 =head2 add_group_role
 
 Add the stashed user to the specified group-role.

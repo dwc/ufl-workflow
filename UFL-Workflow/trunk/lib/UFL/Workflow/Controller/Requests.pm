@@ -335,7 +335,7 @@ sub send_changed_request_email {
         comment => $comment,
         email => {
             from     => $c->config->{email}->{from_address},
-            to       => join(', ', map { $_->email } $past_actors->all),
+            to       => join(', ', map { $_->wants_email == 1 ? $_->email : "" } $past_actors->all),
             subject  => $request->subject('Change to '),
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
@@ -369,7 +369,7 @@ sub send_new_action_email {
         comment => $comment,
         email   => {
             from     => $c->config->{email}->{from_address},
-            to       => join(', ', map { $_->email } $possible_actors->all),
+            to       => join(', ', map { $_->wants_email == 1 ? $_->email : "" } $possible_actors->all),
             subject  => $request->subject('Decision needed on '),
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},

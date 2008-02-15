@@ -13,6 +13,8 @@
   <dd>[% user.username | html %]</dd>
   <dt>Created</dt>
   <dd>[% user.insert_time.strftime(datetime_format) | html %]</dd>
+  <dt>Email on every Change</dt>
+  <dd>[% IF user.wants_email == 1 %] Yes [% ELSE %] No [% END %]</dd>
 </dl>
 <br style="clear:both" />
 

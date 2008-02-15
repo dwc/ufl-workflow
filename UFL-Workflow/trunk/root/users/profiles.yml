@@ -1,6 +1,9 @@
 add:
   - username
   - [ NOT_BLANK, [ LENGTH, 0, 16 ] ]
+edit_profile: &role
+  - email_option
+  - []
 add_group_role: &role
   - group_id
   - [ NOT_BLANK, INT ]
