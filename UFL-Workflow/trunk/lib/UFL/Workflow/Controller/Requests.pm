@@ -87,7 +87,7 @@ sub reports : Local Args(0) {
     my $requests = $c->model('DBIC::Request')->search(
         undef,
         {
-            join     => { actions => 'action_groups' },
+            join     => { actions => [ qw/actor action_groups/ ] },
             prefetch => [ qw/submitter process documents/ ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
@@ -97,25 +97,27 @@ sub reports : Local Args(0) {
     );
 
     if (my $query = $result->valid('query')) {
-        # split the key words and attach % % on both sides of the word.s
-        $query =  '%'. join ( '% %', split(/\W+/, uc($query), -1)).'%';
-        my @word_list = split(/ /,$query,-1);
+        my @fields = qw/
+            me.title
+            me.description
+            submitter.username
+            actor.username
+            actions.comment
+            documents.name
+        /;
 
-        my $field_sel = $result->valid('query_field');
+        my $query_field = $result->valid('query_field');
+        my @selected_fields = $query_field == 0 ? @fields : $fields[$query_field - 1];
 
-        # search for text in the following fields: title, submitter, user,
-      	# comment, document title, and description.
-        my @fields_all = qw/ UCASE(title) UCASE(me.description) UCASE(submitter.username) UCASE(comment) UCASE(documents.name) UCASE(username) /;
-        my @fields = $field_sel == 0 ? @fields_all : $fields_all[ $field_sel - 1 ];
-        # construct Quer string with all like option upon the above fields
-        my @Query = ();
-        for my $i (0..$#fields) {
-            for my $j (0..$#word_list) {
-                $Query[ $i + $j ] = { $fields[$i] => { 'like', $word_list[$j] } };
+        my @words = split / /, lc $query;
+        my @queries;
+        foreach my $field (@selected_fields) {
+            foreach my $word (@words) {
+                push @queries, { "LOWER($field)" => { 'like', '%' . $word . '%' } };
             }
         }
 
-        $requests = $requests->search({ -or => [ @Query ] });
+        $requests = $requests->search({ -or => [ @queries ] });
     }
 
     # Select requests that belong to active processes

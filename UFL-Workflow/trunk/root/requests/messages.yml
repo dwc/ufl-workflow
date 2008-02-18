@@ -1,6 +1,8 @@
 reports:
   query:
     DEFAULT: A search query
+  query_field:
+    DEFAULT: A search query field
   process_id:
     DEFAULT: A process
   group_id:
