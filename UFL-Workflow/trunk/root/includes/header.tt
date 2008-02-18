@@ -33,8 +33,11 @@
       <div id="header">
         <h1><a href="[% c.uri_for('/') | html %]">[% c.config.name | html %]<span></span></a></h1>
 [% IF c.user_exists %]
-        <p><strong><a href="[% c.uri_for(c.controller('Users').action_for('edit_profile')) | html  %]">My Profile</a></strong>
-        Logged in as <strong>[% c.user.username | html %]</strong> (<a href="[% c.uri_for('/logout') | html %]">Logout</a>)</p>
+        <p>
+        [% IF c.check_user_roles('Administrator') OR c.check_user_roles('Help Desk') %]
+	<strong><a href="[% c.uri_for(c.controller('Users').action_for('edit_profile')) | html  %]">My Profile</a></strong>
+        [% END %]
+	Logged in as <strong>[% c.user.username | html %]</strong> (<a href="[% c.uri_for('/logout') | html %]">Logout</a>)</p>
 [% END %]
       </div>
 
