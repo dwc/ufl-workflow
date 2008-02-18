@@ -300,13 +300,16 @@ been entered to those who can act on it.
 sub send_new_request_email {
     my ($self, $c, $request) = @_;
 
-    my $submitter       = $request->submitter;
+    my $submitter = $request->submitter;
+
     my $possible_actors = $request->possible_actors;
+    my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
+
     $c->stash(
         request => $request,
         email => {
             from     => $c->config->{email}->{from_address},
-            to       => join(', ', map { $_->wants_email == 1 ? $_->email : "" } $possible_actors->all),
+            to       => join(', ', @to_addresses),
             subject  => $request->subject('New: '),
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},

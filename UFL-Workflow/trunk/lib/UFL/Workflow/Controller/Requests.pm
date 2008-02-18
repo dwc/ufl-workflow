@@ -329,7 +329,8 @@ to the submitter and to users who have previously acted on it.
 sub send_changed_request_email {
     my ($self, $c, $request, $actor, $comment) = @_;
 
-    my $past_actors = $request->past_actors;
+    my $past_actors  = $request->past_actors;
+    my @to_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
 
     $c->stash(
         request => $request,
@@ -337,7 +338,7 @@ sub send_changed_request_email {
         comment => $comment,
         email => {
             from     => $c->config->{email}->{from_address},
-            to       => join(', ', map { $_->wants_email == 1 ? $_->email : "" } $past_actors->all),
+            to       => join(', ', @to_addresses),
             subject  => $request->subject('Change to '),
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
@@ -364,6 +365,7 @@ sub send_new_action_email {
     my ($self, $c, $request, $actor, $comment) = @_;
 
     my $possible_actors = $request->possible_actors;
+    my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
 
     $c->stash(
         request => $request,
@@ -371,7 +373,7 @@ sub send_new_action_email {
         comment => $comment,
         email   => {
             from     => $c->config->{email}->{from_address},
-            to       => join(', ', map { $_->wants_email == 1 ? $_->email : "" } $possible_actors->all),
+            to       => join(', ', @to_addresses),
             subject  => $request->subject('Decision needed on '),
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
