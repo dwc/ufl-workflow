@@ -70,6 +70,9 @@ sub user : PathPart('users') Chained('/') CaptureArgs(1) {
     my $user = $c->model('DBIC::User')->find({ username => $username });
     $c->detach('/default') unless $user;
 
+    $c->detach('/forbidden') unless $c->check_any_user_role('Administrator', 'Help Desk')
+        or $c->user->username eq $user->username;
+
     $c->stash(user => $user);
 }
 
@@ -85,24 +88,27 @@ sub view : PathPart('') Chained('user') Args(0) {
     $c->stash(template => 'users/view.tt');
 }
 
-=head2 my_profile
+=head2 edit
 
-Edit Profile of individual user for email options.
+Edit the user's information, including whether they want to receive
+email or not.
 
 =cut
-sub edit_profile : Local Args(0) {
-    my($self, $c) = @_;
+
+sub edit : PathPart Chained('user') Args(0) {
+    my ($self, $c) = @_;
+
+    my $user = $c->stash->{user};
 
     if ($c->req->method eq 'POST') {
-       my $result = $self->validate_form($c);
-       if ($result->success) {
-           my $user = $c->user;
-           $user->update({ wants_email => $result->valid('email_option') ? 1 : 0 });
-            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            $user->wants_email($result->valid('wants_email'));
+            $user->update;
         }
-     }
-    $c->stash(template => 'users/edit_profile.tt');
+    }
 
+    $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
 }
 
 =head2 add_group_role

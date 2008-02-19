@@ -31,6 +31,11 @@ __PACKAGE__->allow_access_if(
 ) for qw/process add_request/;
 
 __PACKAGE__->allow_access_if(
+    "/users/$_",
+    sub { $_[0]->user_exists },
+) for qw/user view edit/;
+
+__PACKAGE__->allow_access_if(
     "/processes/$_",
     [ 'Help Desk' ],
 ) for qw/index view requests/;
