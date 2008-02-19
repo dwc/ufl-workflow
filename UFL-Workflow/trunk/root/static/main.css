@@ -313,6 +313,11 @@ background:#fff;
 color:#000;
 }
 
+#header p a.user {
+font-weight:bold;
+text-decoration:none;
+}
+
 #header,.directories h3 {
 text-align:left;
 }
