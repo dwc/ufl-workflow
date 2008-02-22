@@ -1,0 +1,13 @@
+add:
+  username:
+    DEFAULT: A username
+    LENGTH: A shorter username
+edit:
+  wants_email:
+    DEFAULT: Whether you want to receive email
+add_group_role: &role
+  group_id:
+    DEFAULT: A group
+  role_id:
+    DEFAULT: A role
+delete_group_role: *role
