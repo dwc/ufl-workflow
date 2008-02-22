@@ -46,16 +46,38 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {
-            my $user = $c->model('DBIC::User')->find_or_create({
-                username => $result->valid('username'),
-            });
+        if ($result->success) {	   
+	    my @new_users_list = split /[ \r\n]+/, lc $result->valid('newusers');
+	    my @added_users;
+	    my @invalid_users;
+	    my @existing_users;
+            foreach my $new_user (@new_users_list) {
+		my $searchfor = $new_user =~ /\d{8}/ ? "uflEduUniversityId" : "uid" ;
+	        if (my $entry = $c->model('LDAP')->search("($searchfor=$new_user)")->shift_entry ) {
+		    if (my $existing_user = $c->model('DBIC::User')->find({ username => $entry->uid })) {
+		        push @existing_users, $existing_user;
+		    }
+		    else {
+	                my $user  = $c->model('DBIC::User')->create({ username => $entry->uid });
+		        push @added_users, $user ;
+	            }
+                }
+	        else { 
+	            push @invalid_users, $new_user ;
+	        }
+	    }
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
-        }
+	    $c->stash(
+	        added_users    => [ @added_users ],
+		existing_users => [ @existing_users ],
+		invalid_users  => [ @invalid_users ],
+	        template      => 'users/added.tt',
+	    );
+	    return ;
+	}
     }
 
-    $c->stash(template => 'users/add.tt');
+    $c->stash( template => 'users/add.tt' );
 }
 
 =head2 user
