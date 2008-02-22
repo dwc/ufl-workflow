@@ -7,8 +7,8 @@ default_view: HTML
 logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
 
 email:
-  admin_address: webmaster@ufl.edu
-  from_address:  webmaster@ufl.edu
+  admin_address: approval@ufl.edu
+  from_address:  approval@ufl.edu
   domain:        ufl.edu
 
 authentication:

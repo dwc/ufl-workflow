@@ -12,6 +12,7 @@ This file documents the revision history for UFL::Workflow.
           (_migration_00_users_wants_email.sql)
         - Add option for users (and administrators and help desk
           members) to disable mail for a user
+        - Change administrative email address to approval@ufl.edu
 
 0.21  Wed Sep 19 20:18:14 EDT 2007
         - Fix regular expression for handling headings in Textile
