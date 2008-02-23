@@ -1,3 +1,1 @@
-<label id="new_users">
-<textarea name="newusers">[% user.username | html | escape_newlines %]</textarea>
-</label>
+<label>Username: <input type="text" name="username" value="[% user.username | html %]" maxlength="16" /></label>

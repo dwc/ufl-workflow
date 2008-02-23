@@ -1,5 +1,5 @@
 add:
-  - newusers 
+  - users 
   - [ NOT_BLANK ]
 edit:
   - wants_email

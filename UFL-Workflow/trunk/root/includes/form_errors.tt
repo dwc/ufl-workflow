@@ -2,7 +2,7 @@
 <p>Please provide the following:</p>
 <ul>
   [% FOREACH form_error IN form_errors %]
-  <li id="error">[% form_error | trim | html %]</li>
+  <li class="error">[% form_error | trim | html %]</li>
   [% END %]
 </ul>
 

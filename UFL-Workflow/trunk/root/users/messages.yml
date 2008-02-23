@@ -1,6 +1,6 @@
 add:
-  newusers:
-    DEFAULT: New users Gatorlink name or UFID seperated by commas.
+  users:
+    DEFAULT: At least one GatorLink ID or UFID
 edit:
   wants_email:
     DEFAULT: Whether you want to receive email

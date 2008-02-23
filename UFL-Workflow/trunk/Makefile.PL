@@ -7,6 +7,7 @@ requires 'Carp';
 requires 'Catalyst' => '5.7006';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Model::DBIC::Schema';
+requires 'Catalyst::Model::LDAP';
 requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Plugin::Authentication::Store::DBIC';
 requires 'Catalyst::Plugin::Authorization::ACL';

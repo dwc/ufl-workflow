@@ -47,37 +47,39 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {	   
-	    my @new_users_list = split /[ \r\n]+/, lc $result->valid('newusers');
-	    my @added_users;
-	    my @invalid_users;
-	    my @existing_users;
-            foreach my $new_user (@new_users_list) {
-		my $searchfor = $new_user =~ /\d{8}/ ? "uflEduUniversityId" : "uid" ;
-	        if (my $entry = $c->model('LDAP')->search("($searchfor=$new_user)")->shift_entry ) {
-		    if (my $existing_user = $c->model('DBIC::User')->find({ username => $entry->uid })) {
-		        push @existing_users, $existing_user;
-		    }
-		    else {
-	                my $user  = $c->model('DBIC::User')->create({ username => $entry->uid });
-		        push @added_users, $user ;
-	            }
-                }
-	        else { 
-	            push @invalid_users, $new_user ;
-	        }
-	    }
+            my @new_users = split /[ \r\n]+/, lc $result->valid('users');
 
-	    $c->stash(
-	        added_users    => [ @added_users ],
-		existing_users => [ @existing_users ],
-		invalid_users  => [ @invalid_users ],
-	        template      => 'users/added.tt',
-	    );
-	    return ;
-	}
+            my (@added_users, @existing_users, @invalid_users);
+            foreach my $new_user (@new_users) {
+                # Remove the hyphen in the UFID to match LDAP
+                if ($new_user =~ /\d{4}-\d{4}/) {
+                    $new_user =~ s/-//;
+                }
+
+                my $attribute = $new_user =~ /\d{8}/ ? 'uflEduUniversityId' : 'uid';
+                if (my $entry = $c->model('LDAP')->search("($attribute=$new_user)")->shift_entry) {
+                    if (my $user = $c->model('DBIC::User')->find({ username => $entry->uid })) {
+                        push @existing_users, $user;
+                    }
+                    else {
+                        my $user = $c->model('DBIC::User')->create({ username => $entry->uid });
+                        push @added_users, $user;
+                    }
+                }
+                else { 
+                    push @invalid_users, $new_user;
+                }
+            }
+
+            $c->stash(
+                added_users    => [ @added_users ],
+                existing_users => [ @existing_users ],
+                invalid_users  => [ @invalid_users ],
+            );
+        }
     }
 
-    $c->stash( template => 'users/add.tt' );
+    $c->stash(template => 'users/add.tt');
 }
 
 =head2 user
