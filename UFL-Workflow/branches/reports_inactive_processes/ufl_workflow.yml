@@ -32,6 +32,10 @@ Controller::Processes: &requestdocuments
 
 Controller::Requests: *requestdocuments
 
+Model::LDAP:
+  host: ldap.ufl.edu
+  base: ou=People,dc=ufl,dc=edu
+
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
   # Placeholder connect_info for make test

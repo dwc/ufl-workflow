@@ -46,12 +46,36 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {
-            my $user = $c->model('DBIC::User')->find_or_create({
-                username => $result->valid('username'),
-            });
+        if ($result->success) {	   
+            my @new_users = split /[ \r\n]+/, lc $result->valid('users');
 
-            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
+            my (@added_users, @existing_users, @invalid_users);
+            foreach my $new_user (@new_users) {
+                # Remove the hyphen in the UFID to match LDAP
+                if ($new_user =~ /\d{4}-\d{4}/) {
+                    $new_user =~ s/-//;
+                }
+
+                my $attribute = $new_user =~ /\d{8}/ ? 'uflEduUniversityId' : 'uid';
+                if (my $entry = $c->model('LDAP')->search("($attribute=$new_user)")->shift_entry) {
+                    if (my $user = $c->model('DBIC::User')->find({ username => $entry->uid })) {
+                        push @existing_users, $user;
+                    }
+                    else {
+                        my $user = $c->model('DBIC::User')->create({ username => $entry->uid });
+                        push @added_users, $user;
+                    }
+                }
+                else { 
+                    push @invalid_users, $new_user;
+                }
+            }
+
+            $c->stash(
+                added_users    => [ @added_users ],
+                existing_users => [ @existing_users ],
+                invalid_users  => [ @invalid_users ],
+            );
         }
     }
 

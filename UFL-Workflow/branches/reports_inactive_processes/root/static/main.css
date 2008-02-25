@@ -365,3 +365,7 @@ width:40em;
 .even {
 background:#eee;
 }
+
+.error {
+color: #FF0000;
+}

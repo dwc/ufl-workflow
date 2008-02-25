@@ -3,7 +3,7 @@
 [% IF c.check_user_roles('Administrator') %]
 <h3>Manage users</h3>
 <ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new users</a></li>
 </ul>
 [% END %]
 

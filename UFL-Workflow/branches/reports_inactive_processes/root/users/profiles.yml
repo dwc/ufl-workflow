@@ -1,6 +1,6 @@
 add:
-  - username
-  - [ NOT_BLANK, [ LENGTH, 0, 16 ] ]
+  - users 
+  - [ NOT_BLANK ]
 edit:
   - wants_email
   - [ INT ]

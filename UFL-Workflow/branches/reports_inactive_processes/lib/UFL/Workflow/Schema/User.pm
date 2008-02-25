@@ -20,8 +20,8 @@ __PACKAGE__->add_columns(
         size      => 64,
     },
     wants_email => {
-        data_type => 'boolean',
-        default   => 1,
+        data_type     => 'boolean',
+        default_value => 1,
     },
 );
 __PACKAGE__->add_standard_columns;
