@@ -1,0 +1,135 @@
+[% SET
+   title = 'Reports'
+   query_field_id = 'query_field_id'
+   query_id = 'query_id'
+   query_default = ''
+   group_id = 'group_id'
+   group_name_id = 'group_name'
+   group_name_default = 'Search for a group'
+   date_range_id = 'date_range'
+   start_date_year_id = 'start_date_year'
+   start_date_month_id = 'start_date_month'
+   start_date_day_id = 'start_date_day'
+   end_date_year_id = 'end_date_year'
+   end_date_month_id = 'end_date_month'
+   end_date_day_id = 'end_date_day'
+   scripts = [
+     c.uri_for('/static/javascript/jquery.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
+   ]
+   snippets = [
+     "new UFL.Workflow.Form.Input('$query_id', '$query_default');"
+     "new UFL.Workflow.Form.Input('$group_name_id', '$group_name_default');",
+     "new UFL.Workflow.Form.SelectSearch('$group_id', '$group_name_id', '$group_name_default');",
+     "new UFL.Workflow.Form.DateRange('$date_range_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
+   ]
+-%]
+[% MACRO clear_link(field_names, additional_field_names) BLOCK %]
+  [% SET all_filled = 1 %]
+  [% FOREACH field_name IN field_names %]
+    [% UNLESS c.req.param(field_name) %]
+      [% SET all_filled = 0 %]
+      [% LAST %]
+    [% END %]
+  [% END %]
+  [% IF all_filled %]
+    [% SET uri = c.req.uri.clone %]
+    [% field_names = field_names.merge(additional_field_names) %]
+    [% FOREACH field_name IN field_names %]
+      [% SET junk = uri.query_param_delete(field_name) %]
+    [% END %]
+<p class="clear"><a href="[% uri | html %]">Clear</a></p>
+  [% END %]
+[% END -%]
+
+<h3>[% title | html %]</h3>
+<form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get" class="reports">
+  <fieldset id="search">
+    Search:
+    <select name="query_field" id="[% query_field_id | html %]">
+      <option value="0">All</option>
+      <option value="1">Title</option>
+      <option value="2">Description</option>
+      <option value="3">Submitter</option>
+      <option value="4">Reviewers</option>
+      <option value="5">Comments</option>
+      <option value="6">Document Title</option>
+    </select>
+    <input type="text" name="query" id="[% query_id | html %]" value="[% query_default | html %]" />
+[% FILTER indent('    ') %]
+  [% clear_link([ 'query' ], [ 'query_field' ]) %]
+[% END %]
+  </fieldset><!-- #search -->
+  <fieldset id="process">
+    <legend>Process:</legend>
+    <select name="process_id" size="5" multiple="multiple" class="multiple">
+[% WHILE (process = processes.next) %]
+      <option value="[% process.id | html %]">[% process.name | html %]</option>
+[% END %]
+    </select>
+[% FILTER indent('    ') %]
+  [% clear_link([ 'process_id' ]) %]
+[% END %]
+  </fieldset><!-- #process -->
+  <fieldset id="group">
+    <legend>Group:</legend>
+    <input type="text" name="group_name" id="[% group_name_id | html %]" value="[% group_name_default | html %]" />
+    <select name="group_id" id="[% group_id | html %]" size="5" multiple="multiple" class="multiple">
+[% WHILE (group = groups.next) %]
+      <option value="[% group.id | html %]">[% group.name | html %]</option>
+[% END %]
+    </select>
+[% FILTER indent('    ') %]
+  [% clear_link([ 'group_id' ], [ 'group_name' ]) %]
+[% END %]
+  </fieldset><!-- #group -->
+  <fieldset id="status">
+    <legend>Status:</legend>
+[% WHILE (status = statuses.next) %]
+    <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" />&nbsp;[% status.name | html %]</label>
+[% END %]
+[% FILTER indent('    ') %]
+  [% clear_link([ 'status_id' ]) %]
+[% END %]
+  </fieldset>
+  <fieldset>
+    <legend>Requests For Inactive Processes:</legend>
+    <label class="checkbox"><input type="checkbox" name="inactive_processes" /></label>
+[% FILTER indent('    ') %]
+  [% clear_link([ 'inactive_processes' ]) %]
+[% END %]
+  </fieldset>
+  <fieldset id="updated">
+    <legend>Updated:</legend>
+    <label>During:
+      <select name="date_range" id="[% date_range_id | html %]">
+        <option value=""></option>
+        <option value="[% past_day.ymd | html %],[% end_date.ymd %]">The past day</option>
+        <option value="[% past_week.ymd | html %],[% end_date.ymd %]">The past week</option>
+        <option value="[% past_month.ymd | html %],[% end_date.ymd %]">The past month</option>
+        <option value="[% past_year.ymd | html %],[% end_date.ymd %]">The past year</option>
+      </select>
+    </label>
+    <div class="date_range">
+      <label for="[% start_date_month_id | html %]">or between:</label>
+[% FILTER indent('      ') %]
+  [% INCLUDE includes/date.tt month_field_name = 'start_date_month', month_field_id = start_date_month_id, day_field_name = 'start_date_day', day_field_id = start_date_day_id, year_field_name = 'start_date_year', year_field_id = start_date_year_id %]
+[% END -%]
+      and
+[% FILTER indent('      ') %]
+  [% INCLUDE includes/date.tt month_field_name = 'end_date_month', month_field_id = end_date_month_id, day_field_name = 'end_date_day', day_field_id = end_date_day_id, year_field_name = 'end_date_year', year_field_id = end_date_year_id %]
+[% END -%]
+    </div><!-- .date_range -->
+[% FILTER indent('      ') %]
+  [% clear_link([ 'start_date_month', 'start_date_day', 'start_date_year', 'end_date_month', 'end_date_day', 'end_date_year' ], [ 'date_range' ]) %]
+[% END %]
+  </fieldset><!-- #updated -->
+  <input type="submit" class="submit" value="Generate report" />
+</form>
+
+<h3>Requests</h3>
+[% INCLUDE includes/paging.tt pager = requests.pager, singular = 'request', plural = 'requests' %]
+[% INCLUDE requests/includes/list.tt show_submitter = 1, show_process = 1 %]
+[% INCLUDE includes/paging.tt pager = requests.pager %]
