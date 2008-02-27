@@ -97,6 +97,9 @@ margin:0;
 #content form.reports p.clear a {
 border:0;
 }
+#content form.reports p.clear a img {
+border:0;
+}
 
 #content form.reports select.multiple {
 margin-bottom:0;
@@ -366,6 +369,45 @@ width:40em;
 background:#eee;
 }
 
-.error {
+#error {
 color: #FF0000;
+}
+
+#new_users textarea {
+height: 8em;
+font-size: 2.0em;
+}
+
+#content label.searchbox {
+margin-right: 12px;
+}
+
+#content label.searchbox select {
+display:inline;
+margin: 0pt 4px 2px 0pt;
+width: 200px;
+}
+
+
+#content label.searchbox input {
+display:inline;
+margin: 0pt 4px 2px 0pt;
+width: 400px;
+}
+
+#content label.searchbox input.image {
+display: inline;
+height: 17px;
+margin: 0pt 0px 0px 0pt;
+width: 40px;
+}
+
+#content legend.expand , #content a.expand{
+cursor: pointer;
+color: #0021A5;
+text-decoration: none;
+border-bottom: 0px solid #0045C4;
+}
+#content a.expand{
+font-size:1.3em;
 }
