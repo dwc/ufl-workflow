@@ -373,11 +373,6 @@ background:#eee;
 color: #FF0000;
 }
 
-#new_users textarea {
-height: 8em;
-font-size: 2.0em;
-}
-
 #content label.searchbox {
 margin-right: 12px;
 }
@@ -387,7 +382,6 @@ display:inline;
 margin: 0pt 4px 2px 0pt;
 width: 200px;
 }
-
 
 #content label.searchbox input {
 display:inline;
