@@ -5,7 +5,7 @@ if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 UFL.Workflow.Form.ToggleInactiveProcesses = function(url, processesId, showInactiveProcessesId) {
     var me = this;
     var processesSelect;
-    var checkBox;
+    var showInactiveProcessesCheckbox;
 
     $(document).ready(function() {
         processesSelect = $("#" + processesId);
