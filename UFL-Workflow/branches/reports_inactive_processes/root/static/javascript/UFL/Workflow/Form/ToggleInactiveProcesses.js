@@ -18,7 +18,7 @@ UFL.Workflow.Form.ToggleInactiveProcesses = function(url, processesId, showInact
     });
 
     this.loadProcesses = function() {
-        $.getJSON(url, function(json) {
+        $.getJSON(url, processesSelect.serialize(), function(json) {
             processesSelect.empty();
 
             var j = 0;
@@ -26,8 +26,12 @@ UFL.Workflow.Form.ToggleInactiveProcesses = function(url, processesId, showInact
                 for (var i = 0; i < json.processes.length; i++) {
                     var process = json.processes[i];
 
-                    var option = new Option(process.name, process.id);
                     if (process.enabled || (showInactiveProcessesCheckbox.get(0).checked)) {
+                        var option = new Option(process.name, process.id);
+                        if (json.selected_processes && json.selected_processes[process.id]) {
+                            option.selected = true;
+                        }
+
                         processesSelect.get(0).options[j++] = option;
                     }
                 }
