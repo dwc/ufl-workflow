@@ -114,6 +114,24 @@ sub statuses {
     return $statuses;
 }
 
+=head2 group
+
+Return the L<UFL::Workflow::Schema::Group> to which this action is
+currently assigned.
+
+=cut
+
+sub group {
+    my ($self) = @_;
+
+    my $group;
+    if (my $groups = $self->groups) {
+        $group = $groups->first;
+    }
+
+    return $group;
+}
+
 =head2 assign_to_group
 
 Assign this action to the specified L<UFL::Workflow::Schema::Group>.

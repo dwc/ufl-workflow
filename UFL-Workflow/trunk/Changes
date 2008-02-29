@@ -15,6 +15,8 @@ This file documents the revision history for UFL::Workflow.
         - Change administrative email address to approval@ufl.edu
         - Add ability to bulk add users
         - Allow addition of users by UFID
+        - Add method Schema::Action to retrieve currently assigned
+          group
 
 0.21  Wed Sep 19 20:18:14 EDT 2007
         - Fix regular expression for handling headings in Textile
