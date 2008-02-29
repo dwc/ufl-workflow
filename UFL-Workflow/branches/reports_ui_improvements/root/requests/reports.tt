@@ -29,12 +29,15 @@
    update_opt_id = 'update_opt'
    update_div_id = 'update_div'
    update_img_id = 'update_img'
+   process_id = 'process_name'
+   checkbox_id = 'inactive_process'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Expand.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/SelectiveHide.js'),
    ]
    snippets = [
      "new UFL.Workflow.Form.Input('$query_id', '$query_default');"
@@ -46,6 +49,7 @@
      "new UFL.Workflow.Form.Expand('$group_opt_id', '$group_div_id', '$group_img_id', '$show_group_option');",
      "new UFL.Workflow.Form.Expand('$status_opt_id', '$status_div_id', '$status_img_id', '$show_status_option');",
      "new UFL.Workflow.Form.Expand('$update_opt_id', '$update_div_id', '$update_img_id', '$show_update_option');",
+     "new UFL.Workflow.Form.SelectiveHide('${c.uri_for(c.controller('Processes').action_for('list_processes'),process.uri_args)}','$checkbox_id','$process_id');",
    ]
 -%]
 [% MACRO clear_link(field_names, additional_field_names) BLOCK %]
@@ -92,18 +96,21 @@
 <fieldset id="process">
     <legend class="expand" id="[% process_opt_id | html %]" ><img alt="" src="" id="[% process_img_id | html %]"/> Process</legend>
     <div id="[% process_div_id | html %]">
-    <select name="process_id" size="5" multiple="multiple" class="multiple">
+    <select name="process_id" id = "[% process_id | html %]"size="5" multiple="multiple" class="multiple">
 [% WHILE (process = processes.next) %]
       <option value="[% process.id | html %]">[% process.name | html %]</option>
 [% END %]
     </select>
+    <label class="checkbox"><input type='checkbox' name='inactive_processes' id ='[% checkbox_id | html %]' />&nbsp;Show Inactive Processes</label>
 [% FILTER indent('    ') %]
-  [% clear_link([ 'process_id' ]) %]
-[% END %]
-    <label>Requests For Inactive Processes</label>
-    <label class="checkbox"><input type="checkbox" name="inactive_processes"></input></label>
-[% FILTER indent('    ') %]
-  [% clear_link([ 'inactive_processes' ]) %]
+  [% IF c.req.param('inactive_processes') %]
+      [% clear_link([ 'inactive_processes' ], [ 'process_id' ]) %]
+  [% ELSE %]
+      [% IF c.req.param('process_id') %]
+          [% clear_link([ 'process_id' ], [ 'inactive_processes' ]) %]
+      [% END %]
+  [% END %]
+
 [% END %]
   </div><!-- #[% process_div_id | html %] -->
   </fieldset><!-- #process -->
