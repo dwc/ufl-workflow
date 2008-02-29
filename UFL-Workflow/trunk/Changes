@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.22
+0.22  Fri Feb 29 17:43:27 EST 2008
         - Fix YAML in root/steps/profiles.yml
         - Add final newlines to a few files that were missing them
         - Allow JPEG, TIFF, and RTF documents
