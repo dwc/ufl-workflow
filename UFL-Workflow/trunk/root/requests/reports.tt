@@ -13,17 +13,21 @@
    end_date_year_id = 'end_date_year'
    end_date_month_id = 'end_date_month'
    end_date_day_id = 'end_date_day'
+   process_id = 'process_name'
+   checkbox_id = 'inactive_processes'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/SelectiveHide.js'),
    ]
    snippets = [
      "new UFL.Workflow.Form.Input('$query_id', '$query_default');"
      "new UFL.Workflow.Form.Input('$group_name_id', '$group_name_default');",
      "new UFL.Workflow.Form.SelectSearch('$group_id', '$group_name_id', '$group_name_default');",
      "new UFL.Workflow.Form.DateRange('$date_range_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
+     "new UFL.Workflow.Form.SelectiveHide('${c.uri_for(c.controller('Processes').action_for('list_processes'),process.uri_args)}','$checkbox_id','$process_id');",
    ]
 -%]
 [% MACRO clear_link(field_names, additional_field_names) BLOCK %]
@@ -63,8 +67,9 @@
 [% END %]
   </fieldset><!-- #search -->
   <fieldset id="process">
+   <label class="checkbox"><input type="checkbox" name="inactive_processes" id ="[% checkbox_id | html %]" />&nbsp;Show Inactive Processes</label>
     <legend>Process:</legend>
-    <select name="process_id" size="5" multiple="multiple" class="multiple">
+    <select name="process_id" id = "[% process_id | html %]" size="5" multiple="multiple" class="multiple">
 [% WHILE (process = processes.next) %]
       <option value="[% process.id | html %]">[% process.name | html %]</option>
 [% END %]
@@ -92,13 +97,6 @@
 [% END %]
 [% FILTER indent('    ') %]
   [% clear_link([ 'status_id' ]) %]
-[% END %]
-  </fieldset>
-  <fieldset>
-    <legend>Requests For Inactive Processes:</legend>
-    <label class="checkbox"><input type="checkbox" name="inactive_processes" /></label>
-[% FILTER indent('    ') %]
-  [% clear_link([ 'inactive_processes' ]) %]
 [% END %]
   </fieldset>
   <fieldset id="updated">
