@@ -319,6 +319,24 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
     $c->forward($view);
 }
 
+=head2 list_processes
+
+List processes via L<JSON>, including whether they are currently
+enabled, for the reporting screen.
+
+=cut
+
+sub list_processes : Local Args(0) {
+    my ($self, $c) = @_;
+
+    my @processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });
+    $c->stash(processes => [ map { $_->to_json } @processes ]);
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/processes/ ]);
+    $c->forward($view);
+}
+
 =head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed
