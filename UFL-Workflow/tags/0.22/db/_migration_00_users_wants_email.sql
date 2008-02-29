@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN wants_email SMALLINT DEFAULT 1;
