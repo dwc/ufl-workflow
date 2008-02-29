@@ -12,7 +12,7 @@ UFL.Workflow.Form.ToggleInactiveProcesses = function(url, processesId, showInact
         showInactiveProcessesCheckbox = $("#" + showInactiveProcessesId);
 
         if (processesSelect && showInactiveProcessesCheckbox) {
-            showInactiveProcessesCheckbox.change(function() { me.loadProcesses() });
+            showInactiveProcessesCheckbox.click(function() { me.loadProcesses() });
             me.loadProcesses();
         }
     });
