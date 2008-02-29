@@ -4,6 +4,8 @@ This file documents the revision history for UFL::Workflow.
         - Convert root/{groups,roles}/view.tt to use ResultSets to
           avoid weird counting errors in newer Template Toolkit
           versions
+        - Apply checkbox validation workaround from 0.19 to
+          /users/edit
 
 0.22  Fri Feb 29 17:43:27 EST 2008
         - Fix YAML in root/steps/profiles.yml
