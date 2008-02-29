@@ -81,7 +81,7 @@
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     <td>[% action.step.name | html %]</td>
     <td>[% action.status.name | html %]</td>
-    <td>[% action.groups.first.name | html %]</td>
+    <td>[% action.group.name | html %]</td>
     <td>[% action.actor.username || '-' | html %]</td>
     <td>[% action.comment || '-' | html %]</td>
     <td>[% action.update_time.strftime(datetime_format) | html %]</td>
