@@ -101,7 +101,7 @@
       <option value="[% process.id | html %]">[% process.name | html %]</option>
 [% END %]
     </select>
-    <label class="checkbox"><input type='checkbox' name='inactive_processes' id ='[% inactive_processes_id | html %]' value="1" />&nbsp;Show inactive processes</label>
+    <label class="checkbox"><input type="checkbox" name="inactive_processes" id ="[% inactive_processes_id | html %]" value="1" />&nbsp;Show inactive processes</label>
 [% FILTER indent('    ') %]
   [% IF c.req.param('inactive_processes') %]
       [% clear_link([ 'inactive_processes' ], [ 'process_id' ]) %]
