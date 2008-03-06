@@ -34,19 +34,20 @@
 </ul>
 [% END -%]
 
-[% SET group_roles = group.group_roles %]
+[% SET group_roles = group.group_roles_rs %]
 [% IF group_roles %]
 <h3>Users by role</h3>
 <ul>
-  [% FOREACH group_role IN group_roles %]
+  [% WHILE (group_role = group_roles.next) %]
     [% SET role = group_role.role %]
-    [% SET users = group_role.users %]
+    [% SET users = group_role.users_rs %]
+    [% SET num_users = users.count %]
   <li>
     <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
-    [% IF users %]
-    ([% users.size | html %] user[% users.size == 1 ? '' : 's' %])
+    [% IF num_users > 0 %]
+    ([% num_users | html %] user[% num_users == 1 ? '' : 's' %])
     <ul>
-      [% FOREACH user IN users %]
+      [% WHILE (user = users.next) %]
       <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
       [% END %]
     </ul>

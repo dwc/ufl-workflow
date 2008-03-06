@@ -127,8 +127,9 @@ sub edit : PathPart Chained('user') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            $user->wants_email($result->valid('wants_email'));
-            $user->update;
+            $user->update({
+                wants_email => $result->valid('wants_email') ? 1 : 0,
+            });
         }
     }
 

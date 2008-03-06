@@ -1,6 +1,13 @@
 This file documents the revision history for UFL::Workflow.
 
-0.22
+0.23  Fri Feb 29 18:35:42 EST 2008
+        - Convert root/{groups,roles}/view.tt to use ResultSets to
+          avoid weird counting errors in newer Template Toolkit
+          versions
+        - Apply checkbox validation workaround from 0.19 to
+          /users/edit
+
+0.22  Fri Feb 29 17:43:27 EST 2008
         - Fix YAML in root/steps/profiles.yml
         - Add final newlines to a few files that were missing them
         - Allow JPEG, TIFF, and RTF documents
@@ -15,6 +22,8 @@ This file documents the revision history for UFL::Workflow.
         - Change administrative email address to approval@ufl.edu
         - Add ability to bulk add users
         - Allow addition of users by UFID
+        - Add method Schema::Action to retrieve currently assigned
+          group
 
 0.21  Wed Sep 19 20:18:14 EDT 2007
         - Fix regular expression for handling headings in Textile

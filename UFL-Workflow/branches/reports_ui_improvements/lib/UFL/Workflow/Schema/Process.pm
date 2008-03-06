@@ -187,6 +187,25 @@ sub uri_args {
     return [ $self->id ];
 }
 
+=head2 to_json
+
+Return a hash suitable for conversion to JSON which represents this
+process.
+
+=cut
+
+sub to_json {
+    my ($self) = @_;
+
+    my $process = {
+        id      => $self->id,
+        name    => $self->name,
+        enabled => int($self->enabled),
+    };
+
+    return $process;
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
