@@ -323,24 +323,6 @@ sub send_new_request_email {
 
     $c->forward($c->view('Email'));
 }
-sub list_processes : Local Args(0) {
-    my ($self, $c) = @_;
-    my $processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });
-    my @send;
-    while(my $proc = $processes->next){
-    push @send,
-       {
-         name => $proc->name,
-         id => $proc->id,
-         enabled => $proc->enabled,
-       };
-    }
-   $c->stash(processes =>[ @send ]);
-
-    my $view = $c->view('JSON');
-    $view->expose_stash([ qw/processes/ ]);
-    $c->forward($view);
-}
 
 =head1 AUTHOR
 

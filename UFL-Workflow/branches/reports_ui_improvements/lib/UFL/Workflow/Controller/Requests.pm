@@ -126,6 +126,9 @@ sub reports : Local Args(0) {
 	show_update_option  => 0,
     );
 
+    # to display more options.
+    $c->stash( 'show_process_option' => 1 ) if $result->valid('inactive_processes');
+
     # Constrain requests based on the selected processes
     if (my $process_ids = $result->valid('process_id')) {
         $requests = $requests->search({ 'me.process_id' => { -in => $process_ids } });
