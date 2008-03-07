@@ -389,10 +389,9 @@ margin: 0pt 4px 2px 0pt;
 width: 400px;
 }
 
-#content label.searchbox input.image {
+#content label.searchbox input.submit {
 display: inline;
-height: 17px;
-margin: 0pt 0px 0px 0pt;
+margin: 0pt 4px 2px 0pt;
 width: 40px;
 }
 
