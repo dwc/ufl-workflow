@@ -1,0 +1,5 @@
+A new request is awaiting your attention:
+
+[% INCLUDE email/includes/header.tt -%]
+
+[% INCLUDE email/includes/footer.tt -%]
