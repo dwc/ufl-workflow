@@ -44,7 +44,7 @@ sub prepare_request {
         my $key = $c->config->{authentication}->{passthrough}->{key}
             || 'REMOTE_USER';
 
-        my $username = $ENV{$key};
+        my $username = $ENV{$key} || $c->req->user;
         if (not $username and ($ENV{HARNESS_ACTIVE} or ref($c->engine) =~ /::HTTP\b/)) {
             $username = $ENV{USER};
         }

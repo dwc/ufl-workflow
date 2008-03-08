@@ -1,5 +1,8 @@
 This file documents the revision history for UFL::Workflow.
 
+0.24
+        - Apply FastCGI environment fix to ::Passthrough
+
 0.23  Fri Feb 29 18:35:42 EST 2008
         - Convert root/{groups,roles}/view.tt to use ResultSets to
           avoid weird counting errors in newer Template Toolkit
