@@ -1,0 +1,1 @@
+<label>Name: <input type="text" name="name" value="[% step.name | html %]" maxlength="64" /></label>
