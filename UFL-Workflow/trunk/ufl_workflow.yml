@@ -19,6 +19,8 @@ authentication:
       store:
         class:            DBIx::Class
         user_class:       DBIC::User
+        role_relation:    roles
+        role_field:       name
         auto_create_user: 1
 
 authorization:
@@ -31,6 +33,7 @@ authorization:
 Controller::Authentication:
   use_login_form:  0
   use_environment: 1
+  username_field:  username
   logout_uri:      http://login.gatorlink.ufl.edu/quit.cgi
 
 Controller::Documents:
