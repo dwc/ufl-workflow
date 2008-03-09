@@ -1,5 +1,12 @@
 This file documents the revision history for UFL::Workflow.
 
+0.25
+        - Convert to common UFL::Controller::Authentication code for
+          FastCGI environments
+        - Convert to new Catalyst::Plugin::Authentication
+        - Switch from Catalyst::Plugin::Authentication::Store::DBIC to
+          Catalyst::Authentication::Store::DBIx::Class
+
 0.24  Fri Mar  7 19:46:39 EST 2008
         - Apply FastCGI environment fix to ::Passthrough
 
