@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.25
+0.25  Sun Mar  9 16:14:46 EDT 2008
         - Convert to common UFL::Controller::Authentication code for
           FastCGI environments
         - Convert to new Catalyst::Plugin::Authentication
