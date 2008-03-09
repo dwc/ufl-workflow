@@ -2,7 +2,7 @@ package UFL::Workflow::Controller::Authentication;
 
 use strict;
 use warnings;
-use base qw/Catalyst::Controller/;
+use base qw/UFL::Controller::Authentication/;
 
 =head1 NAME
 
@@ -10,28 +10,7 @@ UFL::Workflow::Controller::Authentication - Authentication controller component
 
 =head1 SYNOPSIS
 
-See L<UFL::Workflow>.
-
-=head1 DESCRIPTION
-
-L<Catalyst> controller component for authentication.
-
-=head1 METHODS
-
-=head2 logout
-
-Logout the current user.
-
-=cut
-
-sub logout : Global {
-    my ($self, $c) = @_;
-
-    $c->logout;
-
-    my $logout_uri = $c->config->{logout_uri} || $c->uri_for('/');
-    $c->res->redirect($logout_uri);
-}
+See L<UFL::Controller::Authentication>.
 
 =head1 AUTHOR
 

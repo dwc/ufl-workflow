@@ -8,8 +8,8 @@ requires 'Catalyst' => '5.7006';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Model::DBIC::Schema';
 requires 'Catalyst::Model::LDAP';
-requires 'Catalyst::Plugin::Authentication';
-requires 'Catalyst::Plugin::Authentication::Store::DBIC';
+requires 'Catalyst::Plugin::Authentication' => '0.10000';
+requires 'Catalyst::Plugin::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::ConfigLoader';
@@ -35,6 +35,7 @@ requires 'NEXT';
 requires 'Scalar::Util';
 requires 'Template::Plugin::Textile';
 requires 'Template::Plugin::Wrap';
+requires 'UFL::Controller::Authentication';
 requires 'YAML';
 
 build_requires 'Catalyst::Test';

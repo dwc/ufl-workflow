@@ -4,18 +4,22 @@ name:         Workflow
 encoding:     UTF-8
 default_view: HTML
 
-logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
-
 email:
   admin_address: approval@ufl.edu
   from_address:  approval@ufl.edu
   domain:        ufl.edu
 
 authentication:
-  dbic:
-    user_class:           DBIC::User
-    user_field:           username
-    auto_create_user:     1
+  default_realm: users
+  realms:
+    users:
+      credential:
+        class:         Password
+        password_type: none
+      store:
+        class:            DBIx::Class
+        user_class:       DBIC::User
+        auto_create_user: 1
 
 authorization:
   dbic:
@@ -24,11 +28,16 @@ authorization:
     role_rel:             user_group_roles
     user_role_user_field: user_id
 
+Controller::Authentication:
+  use_login_form:  0
+  use_environment: 1
+  logout_uri:      http://login.gatorlink.ufl.edu/quit.cgi
+
 Controller::Documents:
   destination: __path_to(documents)__
 
 Controller::Processes: &requestdocuments
-  accepted_extensions: [ doc, pdf, odt, txt, jpg, jpeg, tif, tiff, rtf ]
+  accepted_extensions: [ doc, odt, pdf, rtf, txt, jpg, jpeg, tif, tiff ]
 
 Controller::Requests: *requestdocuments
 
