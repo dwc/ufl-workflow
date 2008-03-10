@@ -14,7 +14,7 @@ use Catalyst qw/
     Unicode::Encoding
 /;
 
-our $VERSION = '0.26_01';
+our $VERSION = '0.26';
 
 __PACKAGE__->setup;
 
