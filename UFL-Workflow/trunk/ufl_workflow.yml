@@ -13,6 +13,7 @@ authentication:
   default_realm: users
   realms:
     users:
+      auto_create_user: 1
       credential:
         class:         Password
         password_type: none
@@ -21,7 +22,6 @@ authentication:
         user_class:       DBIC::User
         role_relation:    roles
         role_field:       name
-        auto_create_user: 1
 
 authorization:
   dbic:
