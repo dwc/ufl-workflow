@@ -395,12 +395,26 @@ margin: 0pt 4px 2px 0pt;
 width: 40px;
 }
 
-#content legend.expand , #content a.expand{
+#content legend.advOption{
+font-size:1.3em;
+}
+
+#content fieldset.expanded legend{
 cursor: pointer;
 color: #0021A5;
 text-decoration: none;
 border-bottom: 0px solid #0045C4;
+background:transparent url(images/minus.png) no-repeat scroll 0px 3px;
+padding-left:18px;
 }
-#content a.expand{
-font-size:1.3em;
+
+#content fieldset.collapsed legend{
+cursor: pointer;
+color: #0021A5;
+text-decoration: none;
+border-bottom: 0px solid #0045C4;
+background:transparent url(images/plus.png) no-repeat scroll 0px 3px;
+padding-left:18px;
 }
+
+

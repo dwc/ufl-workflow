@@ -14,21 +14,6 @@
    end_date_year_id = 'end_date_year'
    end_date_month_id = 'end_date_month'
    end_date_day_id = 'end_date_day'
-   adv_opt_id = 'adv_opt'
-   adv_opt_div_id = 'adv_opt_div'
-   adv_opt_img_id = 'adv_img'
-   process_opt_id = 'process_opt'
-   process_div_id = 'process_div'
-   process_img_id = 'process_img'
-   group_opt_id = 'group_opt'
-   group_div_id = 'group_div'
-   group_img_id = 'group_img'
-   status_opt_id = 'status_opt'
-   status_div_id = 'status_div'
-   status_img_id = 'status_img'
-   update_opt_id = 'update_opt'
-   update_div_id = 'update_div'
-   update_img_id = 'update_img'
    process_id = 'process_id'
    inactive_processes_id = 'inactive_processes'
    scripts = [
@@ -36,7 +21,7 @@
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/Expand.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/ExpandCollapse.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/ToggleInactiveProcesses.js'),
    ]
    snippets = [
@@ -45,11 +30,7 @@
      "new UFL.Workflow.Form.SelectSearch('$group_id', '$group_name_id', '$group_name_default');",
      "new UFL.Workflow.Form.DateRange('$date_range_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
      "new UFL.Workflow.Form.ToggleInactiveProcesses('${c.uri_for(c.controller('Requests').action_for('list_processes'),process.uri_args)}','$process_id','$inactive_processes_id');",
-     "new UFL.Workflow.Form.Expand('$adv_opt_id','$adv_opt_div_id','$adv_opt_img_id', '$show_adv_option');",
-     "new UFL.Workflow.Form.Expand('$process_opt_id', '$process_div_id', '$process_img_id', '$show_process_option');",
-     "new UFL.Workflow.Form.Expand('$group_opt_id', '$group_div_id', '$group_img_id', '$show_group_option');",
-     "new UFL.Workflow.Form.Expand('$status_opt_id', '$status_div_id', '$status_img_id', '$show_status_option');",
-     "new UFL.Workflow.Form.Expand('$update_opt_id', '$update_div_id', '$update_img_id', '$show_update_option');",
+     "new UFL.Workflow.Form.ExpandCollapse();",
    ]
 -%]
 [% MACRO clear_link(field_names, additional_field_names) BLOCK %]
@@ -69,7 +50,9 @@
 <p class="clear"><a href="[% uri | html %]"><img src="/static/images/clear.png" alt="Clear" height="20" width="20"></img></a></p>
   [% END %]
 [% END -%]
-
+[% MACRO set_expanded_or_collapsed_class(flag) BLOCK %]
+[% IF flag == 0 %]class = "collapsed"[% ELSE %]class = "expanded"[% END %]
+[% END -%]
 <h3>[% title | html %]</h3>
 <form action="[% c.uri_for(c.controller.action_for('reports')) | html %]" method="get" class="reports">
 <fieldset id="search">
@@ -90,12 +73,12 @@
   [% clear_link([ 'query' ], [ 'query_field' ]) %]
 [% END %]
 </fieldset><!-- #search -->
-<a class="expand" id="[% adv_opt_id | html  %]"><img alt="" src="" id="[% adv_opt_img_id | html %]"/> <strong>Advanced Options</strong>
-</a>
+<fieldset [% set_expanded_or_collapsed_class(show_adv_option) %]>
+<legend class="advOption"> <strong>Advanced Options</strong>
+</legend>
 <div id="[% adv_opt_div_id | html %]">
-<fieldset id="process">
-    <legend class="expand" id="[% process_opt_id | html %]" ><img alt="" src="" id="[% process_img_id | html %]"/> Process</legend>
-    <div id="[% process_div_id | html %]">
+<fieldset [% set_expanded_or_collapsed_class(show_process_option) %] id="process">
+    <legend> Process</legend>
     <select name="process_id" id = "[% process_id | html %]"size="5" multiple="multiple" class="multiple">
 [% WHILE (process = processes.next) %]
       <option value="[% process.id | html %]">[% process.name | html %]</option>
@@ -112,12 +95,10 @@
   [% END %]
 
 [% END %]
-  </div><!-- #[% process_div_id | html %] -->
-  </fieldset><!-- #process -->
+  </fieldset>
 
-  <fieldset id="group">
-    <legend class="expand" id="[% group_opt_id | html %]"><img alt="" src="" id="[% group_img_id | html %]"/> Group</legend>
-    <div id="[% group_div_id | html %]">
+  <fieldset [% set_expanded_or_collapsed_class(show_group_option) %]>
+    <legend> Group</legend>
     <input type="text" name="group_name" id="[% group_name_id | html %]" value="[% group_name_default | html %]" />
     <select name="group_id" id="[% group_id | html %]" size="5" multiple="multiple" class="multiple">
 [% WHILE (group = groups.next) %]
@@ -127,22 +108,18 @@
 [% FILTER indent('    ') %]
   [% clear_link([ 'group_id' ], [ 'group_name' ]) %]
 [% END %]
-  </div> <!-- #[% group_div_id | html %]  -->
-  </fieldset><!-- #group -->
-  <fieldset id="status">
-    <legend class="expand" id="[% status_opt_id | html %]"><img alt="" src="" id="[% status_img_id | html %]"/> Status</legend>
-    <div id="[% status_div_id | html %]" >
+  </fieldset>
+  <fieldset [% set_expanded_or_collapsed_class(show_status_option) %]>
+    <legend> Status</legend>
 [% WHILE (status = statuses.next) %]
     <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" />&nbsp;[% status.name | html %]</label>
 [% END %]
 [% FILTER indent('    ') %]
   [% clear_link([ 'status_id' ]) %]
 [% END %]
-  </div><!-- #[% status_div_id | html %] -->
-  </fieldset><!-- #status -->
-  <fieldset id="updated">
-    <legend class="expand" id="[% update_opt_id | html %]"><img alt="" src="" id="[% update_img_id | html %]"/> Updated</legend>
-    <div id="[% update_div_id | html %]">
+  </fieldset>
+  <fieldset [% set_expanded_or_collapsed_class(show_update_option) %]>
+    <legend> Updated</legend>
     <label>During:
       <select name="date_range" id="[% date_range_id | html %]">
         <option value=""></option>
@@ -165,10 +142,9 @@
 [% FILTER indent('      ') %]
   [% clear_link([ 'start_date_month', 'start_date_day', 'start_date_year', 'end_date_month', 'end_date_day', 'end_date_year' ], [ 'date_range' ]) %]
 [% END %]
-  </div> <!-- #[% update_div_id | html %]  -->
-  </fieldset><!-- #updated -->
+  </fieldset>
   <input type="submit" class="submit" value="Generate report" />
-</div> <!-- #[% adv_opt_div_id | html %] -->
+</fieldset> 
 </form>
 
 <h3>Requests</h3>
