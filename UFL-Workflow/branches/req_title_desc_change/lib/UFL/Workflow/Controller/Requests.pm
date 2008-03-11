@@ -349,6 +349,97 @@ sub list_processes : Local Args(0) {
     $c->forward($view);
 }
 
+=head2 edit
+
+edit title and description in case JS is switched off.
+
+=cut
+sub edit : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $request = $c->stash->{request};
+    die 'User cannot manage request' unless $c->user->can_manage($request);
+    
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ( $result->success ) {
+
+            # save to DB how wait for some more time.
+	   $request->update({
+	       title       => $result->valid('title'),
+               description => $result->valid('description'),
+            });
+	    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
+	}
+    }
+
+    $c->stash(
+        request   => $request,
+        template  => 'requests/edit.tt',
+    );
+
+}
+=head2 edit_title
+
+edit title via L<JSON>,
+
+=cut
+sub edit_title : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $result = $self->validate_form($c);
+    my $return = 0;
+    my $answer = "Empty!";
+
+    ## perform save operation to DB.
+    if ( my $title = $result->valid('title_id')) {
+        $return = 1;
+	my $request = $c->stash->{request};
+	$request->update({
+	    title => $title
+        });
+	$answer = "Saved!";
+    }
+
+    $c->stash({
+        return => $return, 
+	answer => $answer,
+    });
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/answer return/]);
+    $c->forward($view);
+}
+
+=head2 edit_title
+
+edit title via L<JSON>,
+
+=cut
+sub edit_description : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $result = $self->validate_form($c);
+    my $return = 0;
+    my $answer = "Empty!";
+
+    ## perform save operation to DB.
+    if ( my $desc = $result->valid('description_id')) {
+        $return = 1;
+	my $request = $c->stash->{request};
+	$request->update({
+	    description => $desc
+        });
+	$answer = "Saved!";
+    }
+
+    $c->stash({
+        return => $return, 
+	answer => $answer,
+    });
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/answer return/]);
+    $c->forward($view);
+}
 =head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed

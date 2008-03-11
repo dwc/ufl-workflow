@@ -1,0 +1,11 @@
+[% SET title = "Edit ${request.title} Request" -%]
+
+<h3>Request details</h3>
+<form action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+<label>Name: <input type="text" name="title" value="[% request.title | html %]" maxlength="64" /></label>
+<label>Description: <textarea name="description">[% request.description | html | escape_newlines %]</textarea></label>
+[% END -%]
+  <input type="submit" class="submit" value="Edit Request" />
+</form>
