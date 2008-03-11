@@ -25,10 +25,10 @@ Automatically create a user account with the specified username.
 =cut
 
 sub auto_create {
-    my ($self, $username) = @_;
+    my ($self, $authinfo) = @_;
 
     my $user = $self->find_or_create({
-        username => $username,
+        username => $authinfo->{username},
     });
 
     return $user;

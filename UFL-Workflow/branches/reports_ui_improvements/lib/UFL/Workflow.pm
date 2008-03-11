@@ -6,8 +6,6 @@ use Catalyst qw/
     ConfigLoader
     Setenv
     Authentication
-    +UFL::Workflow::Plugin::Authentication::Credential::Passthrough
-    Authentication::Store::DBIC
     Authorization::Roles
     Authorization::ACL
     FillInForm
@@ -16,7 +14,7 @@ use Catalyst qw/
     Unicode::Encoding
 /;
 
-our $VERSION = '0.23';
+our $VERSION = '0.26';
 
 __PACKAGE__->setup;
 
