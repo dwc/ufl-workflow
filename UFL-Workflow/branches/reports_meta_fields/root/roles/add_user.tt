@@ -1,0 +1,11 @@
+[% SET title = "Add a User to ${role.name}" -%]
+
+<h3>Manage role</h3>
+<form action="[% c.uri_for(c.controller.action_for('add_user'), role.uri_args) | html %]" method="post">
+[% FILTER indent('  ') %]
+  [% INCLUDE users/includes/users.tt %]
+  [% INCLUDE groups/includes/groups_simple.tt %]
+[% END -%]
+
+  <input type="submit" class="submit" value="Add User to Role" />
+</form>
