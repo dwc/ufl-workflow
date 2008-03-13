@@ -31,6 +31,8 @@
    update_opt_id = 'update_opt'
    update_div_id = 'update_div'
    update_img_id = 'update_img'
+   process_id = 'process_name'
+   checkbox_id = 'inactive_process'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
@@ -38,6 +40,7 @@
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/ToggleInactiveProcesses.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Expand.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/SelectiveHide.js'),
    ]
    snippets = [
      "new UFL.Workflow.Form.Input('$query_id', '$query_default');"
@@ -50,6 +53,7 @@
      "new UFL.Workflow.Form.Expand('$group_opt_id', '$group_div_id', '$group_img_id', '$show_group_option');",
      "new UFL.Workflow.Form.Expand('$status_opt_id', '$status_div_id', '$status_img_id', '$show_status_option');",
      "new UFL.Workflow.Form.Expand('$update_opt_id', '$update_div_id', '$update_img_id', '$show_update_option');",
+     "new UFL.Workflow.Form.SelectiveHide('${c.uri_for(c.controller('Processes').action_for('list_processes'),process.uri_args)}','$checkbox_id','$process_id');",
    ]
 -%]
 [% MACRO clear_link(field_names, additional_field_names) BLOCK %]
@@ -103,12 +107,14 @@
     </select>
     <label class="checkbox"><input type="checkbox" name="inactive_processes" id="[% inactive_processes_id | html %]" value="1" />&nbsp;Show inactive processes</label>
 [% FILTER indent('    ') %]
-  [% clear_link([ 'process_id' ]) %]
-[% END %]
-    <label>Requests For Inactive Processes</label>
-    <label class="checkbox"><input type="checkbox" name="inactive_processes"></input></label>
-[% FILTER indent('    ') %]
-  [% clear_link([ 'inactive_processes' ]) %]
+  [% IF c.req.param('inactive_processes') %]
+      [% clear_link([ 'inactive_processes' ], [ 'process_id' ]) %]
+  [% ELSE %]
+      [% IF c.req.param('process_id') %]
+          [% clear_link([ 'process_id' ], [ 'inactive_processes' ]) %]
+      [% END %]
+  [% END %]
+
 [% END %]
   </div><!-- #[% process_div_id | html %] -->
   </fieldset><!-- #process -->
