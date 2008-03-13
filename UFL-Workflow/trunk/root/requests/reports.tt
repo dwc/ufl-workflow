@@ -77,8 +77,8 @@
   [% END %]
 [% END -%]
 
-[% MACRO expandable_class(flag) BLOCK %]
-  [% IF flag %]expanded[% ELSE %]collapsed[% END %]
+[% MACRO expandable_class(expanded) BLOCK -%]
+expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
 [% END -%]
 
 <h3>[% title | html %]</h3>
@@ -121,7 +121,7 @@
 [% END %]
     </fieldset><!-- #process -->
 
-    <fieldset id="group" class="expandable [% expandable_class(c.req.param('group_id')) | html %]">
+    <fieldset id="group" class="[% expandable_class(c.req.param('group_id')) | html %]">
       <legend>Group</legend>
       <input type="text" name="group_name" id="[% group_name_id | html %]" value="[% group_name_default | html %]" />
       <select name="group_id" id="[% group_id | html %]" size="5" multiple="multiple" class="multiple">
@@ -134,7 +134,7 @@
 [% END %]
     </fieldset><!-- #group -->
 
-    <fieldset id="status" class="expandable [% expandable_class(c.req.param('status_id')) | html %]">
+    <fieldset id="status" class="[% expandable_class(c.req.param('status_id')) | html %]">
       <legend>Status</legend>
 [% WHILE (status = statuses.next) %]
       <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" />&nbsp;[% status.name | html %]</label>
@@ -144,7 +144,7 @@
 [% END %]
     </fieldset><!-- #status -->
 
-    <fieldset id="updated" class="expandable [% expandable_class(show_updated_fieldset) | html %]">
+    <fieldset id="updated" class="[% expandable_class(show_updated_fieldset) | html %]">
       <legend>Updated</legend>
       <label>During:
         <select name="date_range" id="[% date_range_id | html %]">
