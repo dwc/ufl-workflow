@@ -120,11 +120,6 @@ sub reports : Local Args(0) {
         $requests = $requests->search({ -or => [ @queries ] });
     }
 
-    # Select requests that belong to active processes
-    my $display_inactive = $result->valid('inactive_processes');
-    $requests = $requests->search({ 'process.enabled' => 1 })
-        unless $display_inactive;
-
     # Constrain requests based on the selected processes
     if (my $process_ids = $result->valid('process_id')) {
         $requests = $requests->search({ 'me.process_id' => { -in => $process_ids } });
