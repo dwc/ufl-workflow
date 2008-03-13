@@ -151,4 +151,4 @@ expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
 <h3>Requests</h3>
 [% INCLUDE includes/paging.tt pager = requests.pager, singular = 'request', plural = 'requests' %]
 [% INCLUDE requests/includes/list.tt show_submitter = 1, show_process = 1 %]
-[% INCLUDE includes/paging.tt pager = requests.pager %]
+[% INCLUDE includes/paging.tt pager = requests.pager -%]
