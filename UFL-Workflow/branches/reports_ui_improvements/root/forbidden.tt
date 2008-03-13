@@ -1,3 +1,0 @@
-[% SET title = 'Forbidden' -%]
-
-<p>Unfortunately, you don't have access to the requested page.</p>
