@@ -159,13 +159,13 @@
 [% FILTER indent('      ') %]
   [% INCLUDE includes/date.tt month_field_name = 'end_date_month', month_field_id = end_date_month_id, day_field_name = 'end_date_day', day_field_id = end_date_day_id, year_field_name = 'end_date_year', year_field_id = end_date_year_id %]
 [% END -%]
-    </div><!-- #date_range -->
+    </div><!-- .date_range -->
 [% FILTER indent('      ') %]
   [% clear_link([ 'start_date_month', 'start_date_day', 'start_date_year', 'end_date_month', 'end_date_day', 'end_date_year' ], [ 'date_range' ]) %]
 [% END %]
   </div> <!-- #[% update_div_id | html %]  -->
   </fieldset><!-- #updated -->
-<input type="submit" class="submit" value="Generate report" />
+  <input type="submit" class="submit" value="Generate report" />
 </div> <!-- #[% adv_opt_div_id | html %] -->
 </form>
 
