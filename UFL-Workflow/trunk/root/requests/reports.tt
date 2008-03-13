@@ -15,31 +15,13 @@
    end_date_day_id = 'end_date_day'
    process_id = 'process_id'
    inactive_processes_id = 'inactive_processes'
-   adv_opt_id = 'adv_opt'
-   adv_opt_div_id = 'adv_opt_div'
-   adv_opt_img_id = 'adv_img'
-   process_opt_id = 'process_opt'
-   process_div_id = 'process_div'
-   process_img_id = 'process_img'
-   group_opt_id = 'group_opt'
-   group_div_id = 'group_div'
-   group_img_id = 'group_img'
-   status_opt_id = 'status_opt'
-   status_div_id = 'status_div'
-   status_img_id = 'status_img'
-   update_opt_id = 'update_opt'
-   update_div_id = 'update_div'
-   update_img_id = 'update_img'
-   process_id = 'process_name'
-   checkbox_id = 'inactive_process'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/ToggleInactiveProcesses.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/Expand.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/SelectiveHide.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Expandable.js'),
    ]
    snippets = [
      "new UFL.Workflow.Form.Input('$query_id', '$query_default');"
@@ -48,12 +30,6 @@
      "new UFL.Workflow.Form.DateRange('$date_range_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
      "new UFL.Workflow.Form.ToggleInactiveProcesses('${c.uri_for(c.controller('Requests').action_for('list_processes'), process.uri_args)}', '$process_id', '$inactive_processes_id');",
      "new UFL.Workflow.Form.Expandable();",
-     "new UFL.Workflow.Form.Expand('$adv_opt_id','$adv_opt_div_id','$adv_opt_img_id', '$show_adv_option');",
-     "new UFL.Workflow.Form.Expand('$process_opt_id', '$process_div_id', '$process_img_id', '$show_process_option');",
-     "new UFL.Workflow.Form.Expand('$group_opt_id', '$group_div_id', '$group_img_id', '$show_group_option');",
-     "new UFL.Workflow.Form.Expand('$status_opt_id', '$status_div_id', '$status_img_id', '$show_status_option');",
-     "new UFL.Workflow.Form.Expand('$update_opt_id', '$update_div_id', '$update_img_id', '$show_update_option');",
-     "new UFL.Workflow.Form.SelectiveHide('${c.uri_for(c.controller('Processes').action_for('list_processes'),process.uri_args)}','$checkbox_id','$process_id');",
    ]
 -%]
 [% SET show_updated_fieldset = c.req.param('start_date_month') || c.req.param('start_date_day') || c.req.param('start_date_year') || c.req.param('end_date_month') || c.req.param('end_date_day') || c.req.param('end_date_year') -%]
@@ -99,14 +75,13 @@ expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
 [% FILTER indent('    ') %]
   [% clear_link([ 'query' ], [ 'query_field' ]) %]
 [% END %]
-</fieldset><!-- #search -->
-<fieldset [% set_expanded_or_collapsed_class(show_adv_option) %]>
-<legend class="advOption"> <strong>Advanced Options</strong>
-</legend>
-<div id="[% adv_opt_div_id | html %]">
-<fieldset [% set_expanded_or_collapsed_class(show_process_option) %] id="process">
-    <legend> Process</legend>
-    <select name="process_id" id="[% process_id | html %]" size="5" multiple="multiple" class="multiple">
+  </fieldset><!-- #search -->
+  <div id="advanced_options" class="[% expandable_class(show_advanced_options) | html %]">
+    <h4>Advanced Options</h4>
+
+    <fieldset id="process" class="[% expandable_class(c.req.param('process_id') || c.req.param('inactive_processes')) | html %]">
+      <legend>Process</legend>
+      <select name="process_id" id="[% process_id | html %]" size="5" multiple="multiple" class="multiple">
 [% WHILE (process = processes.next) %]
         <option value="[% process.id | html %]">[% process.name | html %]</option>
 [% END %]
