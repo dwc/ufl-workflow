@@ -53,8 +53,8 @@
   [% END %]
 [% END -%]
 
-[% MACRO expandable_class(flag) BLOCK %]
-  [% IF flag %]expanded[% ELSE %]collapsed[% END %]
+[% MACRO expandable_class(expanded) BLOCK -%]
+expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
 [% END -%]
 
 <h3>[% title | html %]</h3>
@@ -76,10 +76,10 @@
   [% clear_link([ 'query' ], [ 'query_field' ]) %]
 [% END %]
   </fieldset><!-- #search -->
-  <div id="advanced_options" class="expandable [% expandable_class(show_advanced_options) | html %]">
+  <div id="advanced_options" class="[% expandable_class(show_advanced_options) | html %]">
     <h4>Advanced Options</h4>
 
-    <fieldset id="process" class="expandable [% expandable_class(c.req.param('process_id') || c.req.param('inactive_processes')) | html %]">
+    <fieldset id="process" class="[% expandable_class(c.req.param('process_id') || c.req.param('inactive_processes')) | html %]">
       <legend>Process</legend>
       <select name="process_id" id="[% process_id | html %]" size="5" multiple="multiple" class="multiple">
 [% WHILE (process = processes.next) %]
@@ -96,7 +96,7 @@
 [% END %]
     </fieldset><!-- #process -->
 
-    <fieldset id="group" class="expandable [% expandable_class(c.req.param('group_id')) | html %]">
+    <fieldset id="group" class="[% expandable_class(c.req.param('group_id')) | html %]">
       <legend>Group</legend>
       <input type="text" name="group_name" id="[% group_name_id | html %]" value="[% group_name_default | html %]" />
       <select name="group_id" id="[% group_id | html %]" size="5" multiple="multiple" class="multiple">
@@ -109,7 +109,7 @@
 [% END %]
     </fieldset><!-- #group -->
 
-    <fieldset id="status" class="expandable [% expandable_class(c.req.param('status_id')) | html %]">
+    <fieldset id="status" class="[% expandable_class(c.req.param('status_id')) | html %]">
       <legend>Status</legend>
 [% WHILE (status = statuses.next) %]
       <label class="checkbox"><input type="checkbox" name="status_id" value="[% status.id | html %]" />&nbsp;[% status.name | html %]</label>
@@ -119,7 +119,7 @@
 [% END %]
     </fieldset><!-- #status -->
 
-    <fieldset id="updated" class="expandable [% expandable_class(show_updated_fieldset) | html %]">
+    <fieldset id="updated" class="[% expandable_class(show_updated_fieldset) | html %]">
       <legend>Updated</legend>
       <label>During:
         <select name="date_range" id="[% date_range_id | html %]">
