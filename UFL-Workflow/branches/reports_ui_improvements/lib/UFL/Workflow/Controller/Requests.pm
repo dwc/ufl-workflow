@@ -119,32 +119,20 @@ sub reports : Local Args(0) {
 
         $requests = $requests->search({ -or => [ @queries ] });
     }
-    $c->stash(
-        show_process_option => 0,
-	show_group_option   => 0,
-	show_status_option  => 0,
-	show_update_option  => 0,
-    );
-
-    # to display more options.
-    $c->stash( 'show_process_option' => 1 ) if $result->valid('inactive_processes');
 
     # Constrain requests based on the selected processes
     if (my $process_ids = $result->valid('process_id')) {
         $requests = $requests->search({ 'me.process_id' => { -in => $process_ids } });
-	$c->stash( show_process_option => 1 );
     }
 
     # Constrain requests based on the selected groups
     if (my $group_ids = $result->valid('group_id')) {
         $requests = $requests->search({ 'action_groups.group_id' => { -in => $group_ids } });
-	$c->stash( show_group_option => 1 );
     }
 
     # Constrain requests based on the selected statuses
     if (my $status_ids = $result->valid('status_id')) {
         $requests = $requests->search({ 'actions.status_id' => { -in => $status_ids } });
-	$c->stash( show_status_option => 1 );
     }
 
     # Constrain requests based on a date range
@@ -154,14 +142,12 @@ sub reports : Local Args(0) {
     if (my $start_date = $result->valid('start_date')) {
         $start_date->set_formatter($formatter);
         $requests = $requests->search({ 'me.update_time' => { '>=' => $start_date } });
-	$c->stash( 'show_update_option' => 1 );
     }
 
     if (my $end_date = $result->valid('end_date')) {
         $end_date->set_formatter($formatter);
         $end_date->add(days => 1);
         $requests = $requests->search({ 'me.update_time' => { '<' => $end_date } });
-	$c->stash( show_update_option => 1 );
     }
 
     my $processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });
