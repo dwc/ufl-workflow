@@ -1,5 +1,8 @@
 This file documents the revision history for UFL::Workflow.
 
+0.27
+        - Update reporting UI with an "advanced options" section
+
 0.26  Mon Mar 10 17:35:47 EDT 2008
         - Fix auto_create_user configuration for new
           Catalyst::Plugin::Authentication
