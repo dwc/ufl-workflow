@@ -3,6 +3,8 @@
    query_field_id = 'query_field_id'
    query_id = 'query_id'
    query_default = ''
+   process_id = 'process_id'
+   inactive_processes_id = 'inactive_processes'
    group_id = 'group_id'
    group_name_id = 'group_name'
    group_name_default = 'Search for a group'
@@ -13,8 +15,6 @@
    end_date_year_id = 'end_date_year'
    end_date_month_id = 'end_date_month'
    end_date_day_id = 'end_date_day'
-   process_id = 'process_id'
-   inactive_processes_id = 'inactive_processes'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
@@ -25,10 +25,10 @@
    ]
    snippets = [
      "new UFL.Workflow.Form.Input('$query_id', '$query_default');"
+     "new UFL.Workflow.Form.ToggleInactiveProcesses('${c.uri_for(c.controller('Requests').action_for('list_processes'), process.uri_args)}', '$process_id', '$inactive_processes_id');",
      "new UFL.Workflow.Form.Input('$group_name_id', '$group_name_default');",
      "new UFL.Workflow.Form.SelectSearch('$group_id', '$group_name_id', '$group_name_default');",
      "new UFL.Workflow.Form.DateRange('$date_range_id', '$start_date_year_id', '$start_date_month_id', '$start_date_day_id', '$end_date_year_id', '$end_date_month_id', '$end_date_day_id');",
-     "new UFL.Workflow.Form.ToggleInactiveProcesses('${c.uri_for(c.controller('Requests').action_for('list_processes'), process.uri_args)}', '$process_id', '$inactive_processes_id');",
      "new UFL.Workflow.Form.Expandable();",
    ]
 -%]
