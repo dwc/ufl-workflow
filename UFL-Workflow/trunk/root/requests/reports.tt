@@ -110,7 +110,7 @@
     </select></label>
 <label class="searchbox"><input type="text" name="query" id="[% query_id | html %]" value="[% query_default | html %]" />
 </label>
-<label class="searchbox"><input type="image" class="image" alt="Go!" src="/static/images/go.png"  /></label>
+<label class="searchbox"><input type="submit" class="submit" value="Go" /></label>
 [% FILTER indent('    ') %]
   [% clear_link([ 'query' ], [ 'query_field' ]) %]
 [% END %]
