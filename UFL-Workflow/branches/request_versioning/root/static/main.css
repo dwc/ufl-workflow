@@ -96,6 +96,8 @@ margin:0;
 
 #content form.reports p.clear a {
 border:0;
+background:transparent url(images/clear.png) no-repeat left;
+padding-left:18px;
 }
 
 #content form.reports select.multiple {
@@ -166,6 +168,20 @@ display:inline;
 margin:0;
 }
 
+#content .expandable h4, #content .expandable legend {
+background:transparent none no-repeat scroll left;
+cursor:default;
+padding-left:18px;
+}
+
+#content .expanded h4, #content .expanded legend {
+background-image:url(images/expanded.gif);
+}
+
+#content .collapsed h4, #content .collapsed legend {
+background-image:url(images/collapsed.gif);
+}
+
 #content label.checkbox {
 margin-right:12px;
 }
@@ -177,14 +193,36 @@ width:14px;
 margin:0 4px 2px 0;
 }
 
-#content label.radio input {
-margin-bottom:-2px;
-}
-
 #content label.radio {
 clear:both;
 display:block;
 height:1.4em;
+}
+
+#content label.radio input {
+margin-bottom:-2px;
+}
+
+#content fieldset#search label {
+margin-right: 12px;
+}
+
+#content fieldset#search select {
+display:inline;
+margin: 0pt 4px 2px 0pt;
+width: 200px;
+}
+
+#content fieldset#search input {
+display:inline;
+margin: 0pt 4px 2px 0pt;
+width: 400px;
+}
+
+#content fieldset#search input.submit {
+display: inline;
+margin: 0pt 4px 2px 0pt;
+width: 40px;
 }
 
 #content legend {
