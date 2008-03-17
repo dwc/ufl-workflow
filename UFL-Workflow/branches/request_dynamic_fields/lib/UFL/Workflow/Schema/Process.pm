@@ -41,6 +41,12 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->has_many(
+    fields => 'UFL::Workflow::Schema::Field',
+    { 'foreign.process_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
+__PACKAGE__->has_many(
     requests => 'UFL::Workflow::Schema::Request',
     { 'foreign.process_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
@@ -94,6 +100,20 @@ sub last_step {
     return $last_step;
 }
 
+=head2 last_field
+
+Return the last L<UFL::Workflow::Schema::Step> associated with this
+process.
+
+=cut
+
+sub last_field {
+    my $self = shift;
+
+    my $last_field = $self->fields->search({ next_field_id => undef })->first;
+
+    return $last_field;
+}
 =head2 is_editable
 
 Return true if this process is editable: if there are no associated
@@ -142,6 +162,45 @@ sub add_step {
     });
 
     return $step;
+}
+
+=head2 add_field
+
+Add a new field to the end of the chain for this process.
+
+=cut
+
+sub add_field {
+    my ($self, $name, $description, $type, $min_length, $max_length, $optional) = @_;
+
+    $self->throw_exception('You must provide a name for the field')
+        unless $name;
+    $self->throw_exception('Process cannot be edited')
+        unless $self->is_editable;
+
+    my $field;
+    $self->result_source->schema->txn_do(sub {
+        my $last_field = $self->last_field;
+
+        $field = $self->fields->create({
+            name        => $name,
+	    description => $description,
+	    type        => $type,
+	    min_length  => $min_length,
+	    max_length  => $max_length,
+	    optional    => $optional,
+        });
+
+        if ($last_field) {
+            $field->prev_field($last_field);
+            $field->update;
+
+            $last_field->next_field($field);
+            $last_field->update;
+        }
+    });
+
+    return $field;
 }
 
 =head2 add_request

@@ -1,0 +1,7 @@
+[% WHILE field %]
+<dt>[%field.field.name | html %]</dt>
+<dd>[% field.value| html %]</dd>
+[% field = field.next %]
+[% END %]
+
+

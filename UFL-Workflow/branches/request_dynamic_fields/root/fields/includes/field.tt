@@ -1,0 +1,12 @@
+<label>Name:<input type="text" name="name" maxlength="64" /></label>
+<label>Description:<textarea name="description" rows="10" cols="80"></textarea></label>
+<label>Field Type:<select name="type">
+  <option value = "" >Select a field type</option>
+  <option value = "0">String</option>
+  <option value = "1">Integer</option>
+  <option value = "2">Full Text</option>
+  <option value = "3">Check Box Item</option>
+</select></label>
+<label> Min Length/Value:<input type="text" name="min_length" maxlength="8" /></label>
+<label> Max Length/Value:<input type="text" name="max_length" maxlength="8" /></label>
+<label class="checkbox">This field is optional: <input type="checkbox" name="optional" value="1" /></label>
