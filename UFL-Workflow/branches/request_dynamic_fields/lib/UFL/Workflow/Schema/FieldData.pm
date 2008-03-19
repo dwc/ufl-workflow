@@ -49,6 +49,25 @@ Action table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
+=head2 next_field
+
+Return the next L<UFL::Workflow::Schema::Field> associated with
+this request.
+
+=cut
+
+sub next_field_data {
+    my ($self) = @_;
+
+    my $next_field_id = $self->field_id->next_field;
+    if ( $next_field_id ) {
+        my $field_data = $self->field_data->search({ 
+            field_id   => $next_field_id,
+	    request_id => $self->request_id,
+        })->first;
+        return $field_data;
+    }
+}
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this action.

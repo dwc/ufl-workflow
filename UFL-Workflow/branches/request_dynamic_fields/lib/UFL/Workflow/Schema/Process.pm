@@ -175,6 +175,8 @@ sub add_field {
 
     $self->throw_exception('You must provide a name for the field')
         unless $name;
+    $self->throw_exception('You must provide a type for the field')
+        unless $type;
     $self->throw_exception('Process cannot be edited')
         unless $self->is_editable;
 
@@ -226,7 +228,8 @@ sub add_request {
             title       => $title,
             description => $description,
         });
-
+         #TBD call this to add fields.
+        #$request->add_fields($fields);
         my $action = $request->add_action($self->first_step);
         $action->assign_to_group($initial_group);
     });

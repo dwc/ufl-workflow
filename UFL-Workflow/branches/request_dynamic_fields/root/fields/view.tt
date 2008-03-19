@@ -1,0 +1,41 @@
+[% SET title = field.name -%]
+
+[% IF c.check_user_roles('Administrator') %]
+<h3>Manage field</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), field.uri_args) | html %]">Edit this field</a></li>
+</ul>
+[% END %]
+
+<h3>Field details</h3>
+<dl>
+  <dt>Name</dt>
+  <dd>[% field.name | html %]</dd>
+  <dt>Description</dt>
+  <dd>[% field.description | html %]</dd>
+  <dt>Field Type</dt>
+  <dd>[% SET type = field.type %]
+  [% IF type == 0 %]String[% ELSE IF type == 1 %]Integer[% ELSE IF field.type == 2 %]Full Text[% ELSE %]Check Box[% END %]
+  </dd>
+  [% IF type != 3 %]
+  </dt>Min Length/Value</dt>
+  <dd>[% field.min_length | html %]</dd>
+  </dt>Max Length/Value</dt>
+  <dd>[% field.max_length | html %]</dd>
+  [% END %]
+  <dt>Is Optional</dt>
+  <dd>[% IF field.optional == 0 %]No[% ELSE %]Yes[% END %]</dd>
+  <dt>Process</dt>
+[% SET process = field.process %]
+  <dd><a href="[% c.uri_for(c.controller('Processes').action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></dd>
+[% SET prev_field = field.prev_field %]
+[% IF prev_field %]
+  <dt>Previous Field</dt>
+  <dd><a href="[% c.uri_for(c.controller.action_for('view'), prev_field.uri_args) | html %]">[% prev_field.name | html %]</a></dd>
+[% END %]
+[% SET next_field = field.next_field %]
+[% IF next_field %]
+  <dt>Next Field</dt>
+  <dd><a href="[% c.uri_for(c.controller.action_for('view'), next_field.uri_args) | html %]">[% next_field.name | html %]</a></dd>
+[% END %]
+</dl>

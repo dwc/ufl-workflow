@@ -53,8 +53,8 @@
   [% END %]
 [% END -%]
 
-[% MACRO expandable_class(expanded) BLOCK -%]
-expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
+[% MACRO expandable_class(expanded, more_expanded) BLOCK -%]
+expandable [% IF expanded OR more_expanded %]expanded[% ELSE %]collapsed[% END %]
 [% END -%]
 
 <h3>[% title | html %]</h3>
@@ -79,7 +79,7 @@ expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
   <div id="advanced_options" class="[% expandable_class(show_advanced_options) | html %]">
     <h4>Advanced Options</h4>
 
-    <fieldset id="process" class="[% expandable_class(c.req.param('process_id') || c.req.param('inactive_processes')) | html %]">
+    <fieldset id="process" class="[% expandable_class(c.req.param('process_id'), c.req.param('inactive_processes')) | html %]">
       <legend>Process</legend>
       <select name="process_id" id="[% process_id | html %]" size="5" multiple="multiple" class="multiple">
 [% WHILE (process = processes.next) %]

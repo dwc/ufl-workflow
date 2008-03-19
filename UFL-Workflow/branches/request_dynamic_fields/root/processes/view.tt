@@ -82,7 +82,6 @@
   [% WHILE field %]
     [% SET prev_field = field.prev_field %]
     [% SET next_field = field.next_field %]
-    [% SET role = field.role %]
   <li><a href="[% c.uri_for(c.controller('Fields').action_for('view'), field.uri_args) | html %]">[% field.name | html %]</a>
     [% IF process.is_editable AND c.check_user_roles('Administrator') %]
     <br />

@@ -27,15 +27,18 @@ __PACKAGE__->add_columns(
     description => {
         data_type => 'varchar',
         size      => 8192,
+        is_nullable => 1,
     },
     type => {
         data_type => 'integer',
     },
     min_length => {
         data_type => 'integer',
+        is_nullable => 1,
     },
     max_length => {
         data_type => 'integer',
+        is_nullable => 1,
     },
     optional => {
         data_type     => 'boolean',

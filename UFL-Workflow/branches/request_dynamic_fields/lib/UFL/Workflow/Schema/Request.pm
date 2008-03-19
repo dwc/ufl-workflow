@@ -169,6 +169,26 @@ sub next_step {
     return $self->current_step->next_step;
 }
 
+=head2 first_field_data
+
+Return the first L<UFL::Workflow::Schema::Action> entered for this
+request, i.e., the earliest L<UFL::Workflow::Schema::Action> in the
+L<UFL::Workflow::Schema::Process>.
+
+=cut
+
+sub first_field_data {
+    my ($self) = @_;
+
+    my $first_field = $self->fields->search({ prev_field_id => undef })->first;
+    my $first_field_data = $self->field_data->search({ 
+        field_id   => $first_field->id,
+	request_id => $self->id,
+    })->first;
+
+    return $first_field_data;
+}
+
 =head2 is_open
 
 Return true if this request is open, i.e., the current step is pending
@@ -270,6 +290,30 @@ sub add_action {
     });
 
     return $action;
+}
+
+=head2 add_field_data
+
+Add a new field data to this request corresponding to the specified
+L<UFL::Workflow::Schema::Step>.
+
+=cut
+
+sub add_field_data {
+    my ($self, @fields) = @_;
+
+    foreach my $field (@fields) {
+    $self->throw_exception('You must provide a field for the feld_data')
+        unless blessed $field and $field->isa('UFL::Workflow::Schema::Field');
+        $self->result_source->schema->txn_do(sub {
+            $self->field_data->create({
+                request_id => $self->id,
+	        field_id   => $field->id,
+                value      => $field->value,
+            });
+        });
+    }
+
 }
 
 =head2 add_document
