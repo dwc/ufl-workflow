@@ -70,6 +70,21 @@ Process table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
+=head2 first_field
+
+Return the first L<UFL::Workflow::Schema::Step> associated with this
+process.
+
+=cut
+
+sub first_field {
+    my $self = shift;
+
+    my $first_field = $self->fields->search({ prev_field_id => undef })->first;
+
+    return $first_field;
+}
+
 =head2 first_step
 
 Return the first L<UFL::Workflow::Schema::Step> associated with this
@@ -175,8 +190,6 @@ sub add_field {
 
     $self->throw_exception('You must provide a name for the field')
         unless $name;
-    $self->throw_exception('You must provide a type for the field')
-        unless $type;
     $self->throw_exception('Process cannot be edited')
         unless $self->is_editable;
 

@@ -58,11 +58,11 @@ this request.
 
 sub next_field_data {
     my ($self) = @_;
-
-    my $next_field_id = $self->field_id->next_field;
-    if ( $next_field_id ) {
-        my $field_data = $self->field_data->search({ 
-            field_id   => $next_field_id,
+    my $field_data;
+    my $next_field = $self->field->next_field;
+    if ( $next_field ) {
+        $field_data = $self->result_source->schema->resultset('FieldData')->search({ 
+            field_id   => $next_field->id,
 	    request_id => $self->request_id,
         })->first;
         return $field_data;

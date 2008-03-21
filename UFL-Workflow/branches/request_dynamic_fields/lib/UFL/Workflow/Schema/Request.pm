@@ -52,6 +52,12 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->has_many(
+    field_data => 'UFL::Workflow::Schema::FieldData',
+    { 'foreign.request_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
 __PACKAGE__->resultset_attributes({
     order_by => \q[me.update_time DESC, me.insert_time DESC],
 });
@@ -171,16 +177,16 @@ sub next_step {
 
 =head2 first_field_data
 
-Return the first L<UFL::Workflow::Schema::Action> entered for this
-request, i.e., the earliest L<UFL::Workflow::Schema::Action> in the
-L<UFL::Workflow::Schema::Process>.
+Return the first L<UFL::Workflow::Schema::FieldData> entered for this
+request, i.e., the earliest L<UFL::Workflow::Schema::FieldData> in the
+L<UFL::Workflow::Schema::Request>.
 
 =cut
 
 sub first_field_data {
     my ($self) = @_;
 
-    my $first_field = $self->fields->search({ prev_field_id => undef })->first;
+    my $first_field = $self->process->first_field;
     my $first_field_data = $self->field_data->search({ 
         field_id   => $first_field->id,
 	request_id => $self->id,
@@ -300,16 +306,14 @@ L<UFL::Workflow::Schema::Step>.
 =cut
 
 sub add_field_data {
-    my ($self, @fields) = @_;
+    my ($self, %fields) = @_;
 
-    foreach my $field (@fields) {
-    $self->throw_exception('You must provide a field for the feld_data')
-        unless blessed $field and $field->isa('UFL::Workflow::Schema::Field');
+    foreach my $field_id ( keys (%fields)) {
         $self->result_source->schema->txn_do(sub {
             $self->field_data->create({
                 request_id => $self->id,
-	        field_id   => $field->id,
-                value      => $field->value,
+	        field_id   => $field_id,
+                value      => $fields{$field_id},
             });
         });
     }

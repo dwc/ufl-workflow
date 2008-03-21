@@ -15,12 +15,15 @@
   <dd>[% field.description | html %]</dd>
   <dt>Field Type</dt>
   <dd>[% SET type = field.type %]
-  [% IF type == 0 %]String[% ELSE IF type == 1 %]Integer[% ELSE IF field.type == 2 %]Full Text[% ELSE %]Check Box[% END %]
+  [% IF type == 0 %]String[% END %]
+  [% IF type == 1 %]Integer[% END %]
+  [% IF type == 2 %]Full Text[% END %]
+  [% IF type == 3 %]Check Box[% END %]
   </dd>
   [% IF type != 3 %]
-  </dt>Min Length/Value</dt>
+  <dt>Min Length/Value</dt>
   <dd>[% field.min_length | html %]</dd>
-  </dt>Max Length/Value</dt>
+  <dt>Max Length/Value</dt>
   <dd>[% field.max_length | html %]</dd>
   [% END %]
   <dt>Is Optional</dt>
