@@ -187,12 +187,14 @@ sub first_field_data {
     my ($self) = @_;
 
     my $first_field = $self->process->first_field;
-    my $first_field_data = $self->field_data->search({ 
-        field_id   => $first_field->id,
-	request_id => $self->id,
-    })->first;
+    if ($first_field) {
+        my $first_field_data = $self->field_data->search({ 
+            field_id   => $first_field->id,
+            request_id => $self->id,
+        })->first;
 
-    return $first_field_data;
+        return $first_field_data;
+    }
 }
 
 =head2 is_open
