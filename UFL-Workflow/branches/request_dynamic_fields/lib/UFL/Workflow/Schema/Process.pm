@@ -241,8 +241,6 @@ sub add_request {
             title       => $title,
             description => $description,
         });
-         #TBD call this to add fields.
-        #$request->add_fields($fields);
         my $action = $request->add_action($self->first_step);
         $action->assign_to_group($initial_group);
     });

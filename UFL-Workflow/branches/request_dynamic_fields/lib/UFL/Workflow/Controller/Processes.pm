@@ -236,7 +236,6 @@ sub add_request : PathPart Chained('process') Args(0) {
         if ($result->success and $result_field->success ) {
             my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
-            #TBD save the fields too after validating.
 
             # Use a transaction so e.g. if the document is bad the request isn't added
             my $request;
@@ -284,9 +283,9 @@ sub add_request : PathPart Chained('process') Args(0) {
     );
 }
 
-=head2 validate_fields 
+=head2 get_field_data 
 
-Validates the extra fields of this process
+retrieves the data from request objects
 
 =cut
 sub get_field_data {
@@ -303,6 +302,7 @@ sub get_field_data {
 
     return %data;
 }
+
 =head2 validate_fields 
 
 Validates the extra fields of this process
@@ -311,8 +311,8 @@ Validates the extra fields of this process
 sub validate_fields {
     my ($self, $c) = @_;
     
-    # 1. form a yml query based on database.
-    # 2. form a yml message for errors.
+    # 1. form yml query based on database.
+    # 2. form yml messages for errors.
     # 3. validate the forms.
 
     my $process = $c->stash->{process};
@@ -323,11 +323,11 @@ sub validate_fields {
     while ($field) {
 
         $messages{ $field->id } =  { 
-	        DEFAULT => $field->description ? $field->description : "input ".$field->name." is invalid",
-	        ($field->type == 0 or $field->type == 2) ?
-	        ('LENGTH' => "input ".$field->name." ( length should be between ".$field->min_length." and ".$field->max_length." )") :
-	        ('BETWEEN' => "input ".$field->name." ( value should be between ".$field->min_length." and ".$field->max_length." )"),
-            }; 
+	    DEFAULT => $field->description ? $field->description : "input ".$field->name." is invalid",
+	    ($field->type == 0 or $field->type == 2) ?
+	    ('LENGTH' => "input ".$field->name." ( length should be between ".$field->min_length." and ".$field->max_length." )") :
+	    ('BETWEEN' => "input ".$field->name." ( value should be between ".$field->min_length." and ".$field->max_length." )"),
+        }; 
         
         my %valid_field = (
             $field->id => [ 
@@ -343,31 +343,33 @@ sub validate_fields {
 		        $field->min_length ? $field->min_length : 0,
 			$field->max_length ? $field->max_length : $field->type == 1 ? 2147483647 : 1,
 		    ],
-		($field->type == 1 or $field->type == 3) ? 'INT' : 'ASCII',
+		'INT',
             ],
 	);
 
+        # in case of text remove INT field type.
         pop @{$valid_field{$field->id}} if ($field->type == 0 or $field->type == 2);
 	
+	# remove NOT_BLANK option if optional.
 	shift @{$valid_field{$field->id}} if $field->optional == 1;
 
+        # add to field validation array.
 	push @validations, %valid_field;
 	$field = $field->next_field;
     }
 
     my $validator = FormValidator::Simple->new;
     $validator->set_messages({ add_request => {%messages} });
+    
     #$c->log->_dump([@validations]);
-    my $result = $validator->check($c->req => [@validations] );
-    if ( $result->has_error ) {
-        $c->stash(
-            form_errors => $result->messages("add_request"),
-	    fillform    => 1,
-        );
-    }
-
+    my $result = $validator->check( $c->req => [@validations] );
+    $c->stash(
+         field_errors => $result->messages("add_request"),
+         fillform     => 1,
+    );
     return $result;
 }
+
 =head2 requests
 
 List requests for the stashed L<UFL::Workflow::Schema::Process>.

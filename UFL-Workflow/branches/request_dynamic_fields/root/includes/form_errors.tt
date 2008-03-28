@@ -4,6 +4,9 @@
   [% FOREACH form_error IN form_errors %]
   <li class="error">[% form_error | trim | html %]</li>
   [% END %]
+  [% FOREACH field_error IN field_errors %]
+  <li class="error">[% field_error | trim | html %]</li>
+  [% END %]
 </ul>
 
 [% END -%]
