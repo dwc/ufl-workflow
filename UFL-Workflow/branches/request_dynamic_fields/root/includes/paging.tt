@@ -3,9 +3,9 @@
    plural = ''
 -%]
 
-[% IF pager %]
+[% IF pager AND pager.total_entries > 0 %]
   [% IF singular AND plural %]
-<p>Found [% pager.total_entries | html %][% pager.total_entries == 1 ? " $singular" : " $plural" | html %]. Displaying [% pager.first | html %] through [% pager.last | html %].</p>
+<p>Found [% pager.total_entries | html %][% pager.total_entries == 1 ? " $singular" : " $plural" | html %].[% IF pager.first_page != pager.last_page %] Displaying [% pager.first | html %] through [% pager.last | html %].[% END %]</p>
   [% END %]
   [% IF pager.first_page != pager.last_page %]
 <ul class="paging">
