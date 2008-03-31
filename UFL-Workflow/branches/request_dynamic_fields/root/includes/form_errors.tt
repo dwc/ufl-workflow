@@ -8,5 +8,4 @@
   <li class="error">[% field_error | trim | html %]</li>
   [% END %]
 </ul>
-
 [% END -%]

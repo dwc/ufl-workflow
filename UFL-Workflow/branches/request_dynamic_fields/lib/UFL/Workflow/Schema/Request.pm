@@ -303,23 +303,44 @@ sub add_action {
 =head2 add_field_data
 
 Add a new field data to this request corresponding to the specified
-L<UFL::Workflow::Schema::Step>.
+L<UFL::Workflow::Schema::Field>.
 
 =cut
 
 sub add_field_data {
-    my ($self, %fields) = @_;
-
-    foreach my $field_id ( keys (%fields)) {
-        $self->result_source->schema->txn_do(sub {
-            $self->field_data->create({
-                request_id => $self->id,
-	        field_id   => $field_id,
-                value      => $fields{$field_id},
+    my ($self, $result_field) = @_;
+    
+    if ( my %fields = $self->get_field_data($result_field)) {
+        foreach my $field_id ( keys (%fields)) {
+            $self->result_source->schema->txn_do(sub {
+                $self->field_data->create({
+                    request_id => $self->id,
+	            field_id   => $field_id,
+                    value      => $fields{$field_id},
+                });
             });
-        });
+        }
+     }
+
+}
+
+=head2 get_field_data 
+
+retrieves the data from form content and stores in DB. 
+
+=cut
+sub get_field_data {
+    my ($self, $result) = @_;
+
+    my %data;
+    my $field = $self->process->first_field;
+    
+    while ($field) {
+        $data{$field->id} = $result->valid($field->id);
+	$field = $field->next_field;
     }
 
+    return %data;
 }
 
 =head2 add_document

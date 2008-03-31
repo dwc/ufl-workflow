@@ -72,7 +72,7 @@ Process table class for L<UFL::Workflow::Schema>.
 
 =head2 first_field
 
-Return the first L<UFL::Workflow::Schema::Step> associated with this
+Return the first L<UFL::Workflow::Schema::Field> associated with this
 process.
 
 =cut
@@ -117,7 +117,7 @@ sub last_step {
 
 =head2 last_field
 
-Return the last L<UFL::Workflow::Schema::Step> associated with this
+Return the last L<UFL::Workflow::Schema::Field> associated with this
 process.
 
 =cut
@@ -216,6 +216,41 @@ sub add_field {
     });
 
     return $field;
+}
+
+=head2 validate_fields 
+
+Validates the extra fields of this process
+
+=cut
+sub validate_fields {
+    my ($self, $c) = @_;
+    
+    # 1. form yml query based on database.
+    # 2. form yml messages for errors.
+    # 3. validate the forms.
+
+    my $process = $c->stash->{process};
+    my %messages;
+    my @validations;
+    my $field = $process->first_field;
+
+    while ($field) {
+        $messages{ $field->id } = $field->get_message();
+	push @validations, $field->get_validation_condition();
+	$field = $field->next_field;
+    }
+
+    my $validator = FormValidator::Simple->new;
+    $validator->set_messages({ add_request => {%messages} });
+    
+    #$c->log->_dump([@validations]);
+    my $result = $validator->check( $c->req => [@validations] );
+    $c->stash(
+         field_errors => $result->messages("add_request"),
+         fillform     => 1,
+    );
+    return $result;
 }
 
 =head2 add_request

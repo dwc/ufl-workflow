@@ -3,7 +3,6 @@ package UFL::Workflow::Schema::FieldData;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
-use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
 
@@ -33,11 +32,9 @@ __PACKAGE__->belongs_to(
     'field_id',
 );
 
-__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::FieldData');
-
 =head1 NAME
 
-UFL::Workflow::Schema::Action - Action table class
+UFL::Workflow::Schema::FieldData - FieldData table class
 
 =head1 SYNOPSIS
 
@@ -45,13 +42,13 @@ See L<UFL::Workflow>.
 
 =head1 DESCRIPTION
 
-Action table class for L<UFL::Workflow::Schema>.
+FieldData table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
-=head2 next_field
+=head2 next_field_data
 
-Return the next L<UFL::Workflow::Schema::Field> associated with
+Return the next L<UFL::Workflow::Schema::FieldData> associated with
 this request.
 
 =cut
@@ -68,6 +65,7 @@ sub next_field_data {
         return $field_data;
     }
 }
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this action.
@@ -82,7 +80,7 @@ sub uri_args {
 
 =head1 AUTHOR
 
-Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
+Chetan Murthy E<lt>chetanmurthy@ufl.eduE<gt>
 
 =head1 LICENSE
 

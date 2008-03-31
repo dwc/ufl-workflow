@@ -76,7 +76,7 @@ sub edit : PathPart Chained('field') Args(0) {
 
 =head1 AUTHOR
 
-Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
+Chetan Murthy E<lt>chetanmurthy@ufl.eduE<gt>
 
 =head1 LICENSE
 

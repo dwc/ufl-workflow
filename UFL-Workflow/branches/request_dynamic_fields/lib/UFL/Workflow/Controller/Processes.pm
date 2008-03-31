@@ -232,7 +232,7 @@ sub add_request : PathPart Chained('process') Args(0) {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-	my $result_field = $self->validate_fields($c);
+	my $result_field = $process->validate_fields($c);
         if ($result->success and $result_field->success ) {
             my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
@@ -251,10 +251,10 @@ sub add_request : PathPart Chained('process') Args(0) {
                 # Make sure we get insert_time and update_time
                 $request->discard_changes;
 
-                if ( my %field_datas = $self->get_field_data($c, $result_field)) {
-		    $request->add_field_data(%field_datas);
-		}
-                if (my $upload = $c->req->upload('document')) {
+                # add the field data to the request.
+		$request->add_field_data($result_field);
+                
+		if (my $upload = $c->req->upload('document')) {
                     my $document = $request->add_document(
                         $c->user->obj,
                         $upload->basename,
@@ -281,93 +281,6 @@ sub add_request : PathPart Chained('process') Args(0) {
 	field    => $process->first_field,
         template => 'processes/add_request.tt',
     );
-}
-
-=head2 get_field_data 
-
-retrieves the data from request objects
-
-=cut
-sub get_field_data {
-    my ($self, $c, $result) = @_;
-
-    my $process = $c->stash->{process};
-    my %data;
-    my $field = $process->first_field;
-    
-    while ($field) {
-        $data{$field->id} = $result->valid($field->id);
-	$field = $field->next_field;
-    }
-
-    return %data;
-}
-
-=head2 validate_fields 
-
-Validates the extra fields of this process
-
-=cut
-sub validate_fields {
-    my ($self, $c) = @_;
-    
-    # 1. form yml query based on database.
-    # 2. form yml messages for errors.
-    # 3. validate the forms.
-
-    my $process = $c->stash->{process};
-    my %messages;
-    my @validations;
-    my $field = $process->first_field;
-
-    while ($field) {
-
-        $messages{ $field->id } =  { 
-	    DEFAULT => $field->description ? $field->description : "input ".$field->name." is invalid",
-	    ($field->type == 0 or $field->type == 2) ?
-	    ('LENGTH' => "input ".$field->name." ( length should be between ".$field->min_length." and ".$field->max_length." )") :
-	    ('BETWEEN' => "input ".$field->name." ( value should be between ".$field->min_length." and ".$field->max_length." )"),
-        }; 
-        
-        my %valid_field = (
-            $field->id => [ 
-	        'NOT_BLANK', 
-		($field->type == 0 or $field->type == 2) ?
-		    [ 
-		        'LENGTH', 
-		        $field->min_length ? $field->min_length : 0, 
-		        $field->max_length ? $field->max_length : $field->type == 2 ? 8192 : 64,
-		    ] :
-                    [
-		        'BETWEEN',
-		        $field->min_length ? $field->min_length : 0,
-			$field->max_length ? $field->max_length : $field->type == 1 ? 2147483647 : 1,
-		    ],
-		'INT',
-            ],
-	);
-
-        # in case of text remove INT field type.
-        pop @{$valid_field{$field->id}} if ($field->type == 0 or $field->type == 2);
-	
-	# remove NOT_BLANK option if optional.
-	shift @{$valid_field{$field->id}} if $field->optional == 1;
-
-        # add to field validation array.
-	push @validations, %valid_field;
-	$field = $field->next_field;
-    }
-
-    my $validator = FormValidator::Simple->new;
-    $validator->set_messages({ add_request => {%messages} });
-    
-    #$c->log->_dump([@validations]);
-    my $result = $validator->check( $c->req => [@validations] );
-    $c->stash(
-         field_errors => $result->messages("add_request"),
-         fillform     => 1,
-    );
-    return $result;
 }
 
 =head2 requests

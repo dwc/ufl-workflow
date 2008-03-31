@@ -207,6 +207,55 @@ sub move_down {
     });
 }
 
+=head2 get_message
+
+Return the message on validation failure.
+
+=cut
+sub get_message {
+    my ($self) = @_;
+    return {
+        DEFAULT => $self->description ? $self->description : "input ".$self->name." is invalid",
+	($self->type == 0 or $self->type == 2) ?
+	('LENGTH' => "input ".$self->name." ( length should be between ".$self->min_length." and ".$self->max_length." )") :
+	('BETWEEN' => "input ".$self->name." ( value should be between ".$self->min_length." and ".$self->max_length." )"),
+        }; 
+}
+
+=head2 get_validation_condition
+
+Return the validation condition for this field.
+
+=cut
+sub get_validation_condition {
+    my ($self) = @_;
+    my %valid_field = (
+        $self->id => [  
+            'NOT_BLANK', 
+            ($self->type == 0 or $self->type == 2) ?
+            [ 
+                'LENGTH', 
+                $self->min_length ? $self->min_length : 0, 
+                $self->max_length ? $self->max_length : $self->type == 2 ? 8192 : 64,
+            ] :
+            [
+                'BETWEEN',
+                $self->min_length ? $self->min_length : 0,
+		$self->max_length ? $self->max_length : $self->type == 1 ? 2147483647 : 1,
+	    ],
+            'INT',
+        ],
+    );
+
+    # in case of text remove INT field type.
+    pop @{$valid_field{$self->id}} if ($self->type == 0 or $self->type == 2);
+	
+    # remove NOT_BLANK option if optional.
+    shift @{$valid_field{$self->id}} if $self->optional == 1;
+    
+    return %valid_field;
+}
+
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this field.
@@ -221,7 +270,7 @@ sub uri_args {
 
 =head1 AUTHOR
 
-Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
+Chetan Murthy E<lt>chetanmurthy@ufl.eduE<gt>
 
 =head1 LICENSE
 
