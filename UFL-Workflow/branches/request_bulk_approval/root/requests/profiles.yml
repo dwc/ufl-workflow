@@ -30,3 +30,10 @@ update_status:
   - [ INT ]
   - comment
   - [ [ LENGTH, 0, 8192 ] ]
+pending_decision:
+  - status_id
+  - [ NOT_BLANK, INT]
+  - group_id
+  - [ INT ]
+  - comment
+  - [ NOT_BLANK, [LENGTH, 0, 8192] ]

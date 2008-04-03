@@ -1,9 +1,23 @@
-[% SET title = 'Requests Pending Decision' -%]
+[% SET title = 'Requests Pending Decision' %]
+[% USE Textile  %]
+[% SET
+   status_id = 'status_id'
+   group_id = 'group_id'
+   scripts = [
+     c.uri_for('/static/javascript/jquery.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/PendingDecisionStatusGroup.js'),
+   ]
+   snippets = [
+     "new UFL.Workflow.Form.PendingDecisionStatusGroup('${c.uri_for(c.controller('Requests').action_for('list_all_groups'))}', '$status_id', '$group_id');",
+   ]
 
+-%]
+[% Catalyst.log.debug("This is a test log message") %]
 [% SET num_actions = actions.count %]
 <h3>Pending decisions</h3>
 [% IF num_actions > 0 %]
 <p>There [% num_actions == 1 ? 'is' : 'are' %] currently [% num_actions %] request[% num_actions == 1 ? '' : 's' %] pending your decision.</p>
+<form action="[% c.uri_for(c.controller.action_for('pending_decision')) | html %]" method="post">
 <table>
   <tr>
     <th>Submitter</th>
@@ -11,6 +25,7 @@
     <th>Process</th>
     <th>Step</th>
     <th>Created</th>
+    <th>Change Status</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE (action = actions.next) %]
@@ -21,10 +36,23 @@
     <td>[% request.process.name | html %]</td>
     <td>[% action.step.name | html %]</td>
     <td>[% action.insert_time.strftime(datetime_format) | html %]</td>
+    <td><label class="checkbox"><input type="checkbox" name = "[% request.id | html %]" value ="1" /></label></td> 
+
   </tr>
     [% SET i = i + 1 %]
   [% END %]
 </table>
+<h3>Decision</h3>
+  [% FILTER indent('  ') %]
+  [% INCLUDE statuses/includes/statuses.tt field_id = 'status_id', field_label = 'Set status to'%]
+  [% END %]
+<label>Send to group:
+<select name="group_id" id="[% group_id | html %]">
+</select>
+</label>
+  <label>Comment: <textarea name="comment"></textarea></label>
+  <input type="submit" class="submit" value="Submit Decision" />
+ </form>
 [% ELSE %]
 <p>No requests require your attention.</p>
 [% END %]

@@ -31,3 +31,10 @@ update_status:
   comment:
     DEFAULT: A comment
     LENGTH:  A shorter comment
+pending_decision:
+  status_id:
+    DEFAULT: A Status
+  group_id:
+    DEFAULT: A group
+  comment:
+    DEFAULT: A Comment

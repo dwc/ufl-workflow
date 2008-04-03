@@ -61,14 +61,77 @@ Display a list of requests pending action by the current user.
 
 sub pending_decision : Local Args(0) {
     my ($self, $c) = @_;
-
-    my $actions = $c->user->pending_actions;
-
-    $c->stash(
-        actions  => $actions,
-        template => 'requests/pending_decision.tt',
+    my $actions  = $c->user->pending_actions;
+    my $statuses = $c->model( 'DBIC::Status' )->search(
+        undef,
+	{
+	    order_by => 'name'
+	}
     );
+    my $groups   = $c->model('DBIC::Group')->root_groups;
+    $statuses = $statuses->search(
+        {
+            'me.name' => { '!=' => 'Pending'}
+        }
+    );
+
+    if ( $c->req->method eq 'POST' ) {
+        
+	my $result   = $self->validate_form( $c );
+        my $status = $c->model('DBIC::Status')->find($result->valid('status_id'));
+                $c->detach('/default') unless $status;
+
+        if( $result->success ) {
+            while ( my $action = $actions->next ) {
+	        my $request   = $action->request;
+	        my $status_id = $c->req->param( $request->id );
+                if ($status_id) {
+		    my $valid = 0;
+		    my $group;
+                    if ( my $group_id = $result->valid('group_id') ) {
+
+		        my @groups = $request->groups_for_status($status);
+			$group  = $c->model('DBIC::Group')->find($group_id);
+                        foreach my $allowed_group ( @groups ){
+			   
+			   if( $allowed_group->id == $group->id ){
+			       $valid = 0;
+			       last;
+			   }
+                           else{
+			       $valid = 1;
+		           }
+                        }
+
+			$c->detach('/default') unless $group;
+			
+		    }
+
+		    $c->model('DBIC')->schema->txn_do( sub{
+		        my $comment = $result->valid('comment');
+		        if( $valid == 0 ){
+
+                           $request->update_status($status, $c->user->obj, $group, $comment);
+                           $request->discard_changes;
+			   $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
+			   if ( $request->is_open ) {
+			       $self->send_new_action_email( $c, $request, $c->user->obj, $comment );
+			   }
+		        }
+	            });	    
+                }
+            }
+	    return $c->res->redirect($c->uri_for($self->action_for('pending_decision')));
+	} 
+   }
+   $c->stash(
+       actions  => $actions,
+       statuses => $statuses,
+       groups   => $groups,
+       template => 'requests/pending_decision.tt',
+   );
 }
+
 
 =head2 reports
 
@@ -314,6 +377,27 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
 
     my $view = $c->view('JSON');
     $view->expose_stash([ qw/groups selected_group/ ]);
+    $c->forward($view);
+}
+
+=head2 list_all_groups
+
+List all the root groups.
+
+=cut
+
+sub list_all_groups: Local Args(0) {
+    my ($self, $c) = @_;
+    my @groups    = $c->model('DBIC::Group')->search(
+        undef, 
+	{ 
+	    order_by => 'name' 
+	}
+    );
+
+    $c->stash( groups   => [map { $_->to_json } @groups ] );
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/groups/ ]);
     $c->forward($view);
 }
 
