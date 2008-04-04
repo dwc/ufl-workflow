@@ -144,11 +144,11 @@ expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
   [% clear_link([ 'start_date_month', 'start_date_day', 'start_date_year', 'end_date_month', 'end_date_day', 'end_date_year' ], [ 'date_range' ]) %]
 [% END %]
     </fieldset><!-- #updated -->
-    <input type="submit" class="submit" value="Generate report" />
+    <input type="submit" class="submit" value="Generate Report" />
   </div><!-- #advanced_options -->
 </form>
 
 <h3>Requests</h3>
 [% INCLUDE includes/paging.tt pager = requests.pager, singular = 'request', plural = 'requests' %]
 [% INCLUDE requests/includes/list.tt show_submitter = 1, show_process = 1 %]
-[% INCLUDE includes/paging.tt pager = requests.pager %]
+[% INCLUDE includes/paging.tt pager = requests.pager -%]

@@ -151,6 +151,9 @@ sub reports : Local Args(0) {
     }
 
     my $processes = $c->model('DBIC::Process')->search(undef, { order_by => 'name' });
+    $processes = $processes->search({ 'me.enabled' => 1 })
+        unless $result->valid('inactive_processes');
+
     my $groups    = $c->model('DBIC::Group')->search(undef, { order_by => 'name' });
     my $statuses  = $c->model('DBIC::Status')->search(undef, { order_by => 'name' });
 

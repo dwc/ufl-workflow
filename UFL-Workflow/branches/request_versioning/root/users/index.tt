@@ -1,6 +1,6 @@
 [% SET title = 'Users' -%]
 
-[% IF c.check_user_roles('Administrator') %]
+[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
 <h3>Manage users</h3>
 <ul>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new users</a></li>

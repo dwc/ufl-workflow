@@ -14,14 +14,19 @@ use Catalyst qw/
     Unicode::Encoding
 /;
 
-our $VERSION = '0.26';
+our $VERSION = '0.27_01';
 
 __PACKAGE__->setup;
 
 __PACKAGE__->deny_access_unless(
     "/$_",
     [ qw/Administrator/ ],
-) for qw/groups processes roles statuses steps users/;
+) for qw/groups processes roles statuses steps/;
+
+__PACKAGE__->deny_access_unless(
+    "/users",
+    sub { shift->check_any_user_role('Administrator', 'Help Desk');  }
+);
 
 __PACKAGE__->allow_access_if(
     "/processes/$_",
@@ -39,11 +44,6 @@ __PACKAGE__->allow_access_if(
 ) for qw/index view requests/;
 
 __PACKAGE__->allow_access_if(
-    "/users/$_",
-    [ 'Help Desk' ],
-) for qw/index user view/;
-
-__PACKAGE__->allow_access_if(
     "/groups/$_",
     [ 'Help Desk' ],
 ) for qw/index group view/;
@@ -51,7 +51,7 @@ __PACKAGE__->allow_access_if(
 __PACKAGE__->allow_access_if(
     "/roles/$_",
     [ 'Help Desk' ],
-) for qw/role view/;
+) for qw/role view add_user/;
 
 __PACKAGE__->allow_access_if(
     "/statuses/$_",

@@ -6,11 +6,11 @@ reports:
   # These should be INT, but FormValidator::Simple barfs on multivalues currently
   - process_id
   - []
+  - inactive_processes
+  - [ INT ]
   - group_id
   - []
   - status_id
-  - []
-  - inactive_processes
   - []
   - { start_date: [ start_date_year, start_date_month, start_date_day ] }
   - [ DATE_ALLOWING_BLANK ]

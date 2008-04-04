@@ -4,7 +4,7 @@
 
 <ul id="nav">
 [% FILTER indent('  ') %]
-  [% IF c.check_user_roles('Administrator') OR c.check_user_roles('Help Desk') %]
+  [% IF c.check_any_user_role('Administrator', 'Help Desk') %]
     [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses' ] %]
       [% INCLUDE nav_link uri = c.uri_for(c.controller(name).action_for('index')), label = name %]
     [% END %]

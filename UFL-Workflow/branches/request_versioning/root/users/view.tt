@@ -1,6 +1,6 @@
 [% SET title = user.username -%]
 
-[% IF c.check_user_roles('Administrator') %]
+[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
 <h3>Manage user</h3>
 <ul>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
@@ -29,9 +29,9 @@
 [% END %]
 <form action="[% c.uri_for(c.controller.action_for('edit'), user.uri_args) | html %]" method="post">
   <label class="checkbox"><input type="checkbox" name="wants_email" value="1"[% IF user.wants_email %] checked="checked"[% END %] /> Email when a request is added or updated</label>
-  <input type="submit" class="submit" value="Save options" />
+  <input type="submit" class="submit" value="Save Options" />
 </form>
-[% IF c.check_user_roles('Administrator') OR c.check_user_roles('Help Desk') %]
+[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
 
 <h3>Roles</h3>
   [% SET user_group_roles = user.user_group_roles %]
@@ -43,13 +43,11 @@
   <li>
     <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>)
-      [% IF c.check_user_roles('Administrator') %]
     <form class="roles" action="[% c.uri_for(c.controller.action_for('delete_group_role'), user.uri_args) | html %]" method="post">
       <input type="hidden" name="group_id" value="[% group.id | html %]" />
       <input type="hidden" name="role_id" value="[% role.id | html %]" />
       <input type="submit" class="submit" value="Remove" />
     </form>
-      [% END %]
   </li>
     [% END %]
 </ul>
