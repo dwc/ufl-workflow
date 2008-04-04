@@ -5,7 +5,11 @@
 
 [% FILTER indent('  ') %]
 <label>Name: <input type="text" name="title" value="[% request.title | html %]" maxlength="64" /></label>
+[% field_data = request.first_field_data  %]
+[% IF field_data %]
+[% INCLUDE requests/includes/edit_fields.tt %]
+[% END %]
 <label>Description: <textarea name="description">[% request.description | html | escape_newlines %]</textarea></label>
 [% END -%]
-  <input type="submit" class="submit" value="Edit Request" />
+<input type="submit" class="submit" value="Edit Request" />
 </form>

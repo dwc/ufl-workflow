@@ -197,6 +197,25 @@ sub first_field_data {
     }
 }
 
+=head2 get_field_data_by_id
+
+Return the L<UFL::Workflow::Schema::FieldData> entered for this
+request by field data id.
+
+=cut
+
+sub get_field_data_by_id {
+    my ($self, $field_id) = @_;
+
+    if ($field_id) {
+        my $field_data = $self->field_data->search({ 
+            field_id   => $field_id,
+            request_id => $self->id,
+        })->first;
+        return $field_data;
+    }
+}
+
 =head2 is_open
 
 Return true if this request is open, i.e., the current step is pending
@@ -306,7 +325,6 @@ Add a new field data to this request corresponding to the specified
 L<UFL::Workflow::Schema::Field>.
 
 =cut
-
 sub add_field_data {
     my ($self, $result_field) = @_;
     
@@ -321,7 +339,26 @@ sub add_field_data {
             });
         }
      }
+}
 
+=head2 update_field_data
+
+Add a new field data to this request corresponding to the specified
+L<UFL::Workflow::Schema::Field>.
+
+=cut
+sub update_field_data {
+    my ($self, $result_field) = @_;
+    
+    if ( my %new_field_data = $self->get_field_data($result_field)) {
+        foreach my $each_field_id ( keys (%new_field_data)) {
+            $self->result_source->schema->txn_do(sub {
+                $self->get_field_data_by_id($each_field_id)->update({
+                    value => $new_field_data{$each_field_id},
+                });
+            });
+        }
+     }
 }
 
 =head2 get_field_data 
@@ -343,6 +380,27 @@ sub get_field_data {
     return %data;
 }
 
+=head2 validate_fields 
+
+Validates the extra fields of this process
+
+=cut
+sub validate_field {
+    my ($self, $c, $field_id) = @_;
+    $c->stash( process => $self->process );
+    return $self->process->validate_field($c, $self->get_field_data_by_id($field_id)->field);
+}
+
+=head2 validate_fields 
+
+Validates the extra fields of this process
+
+=cut
+sub validate_fields {
+    my ($self, $c) = @_;
+    $c->stash( process => $self->process );
+    return $self->process->validate_fields($c);
+}
 =head2 add_document
 
 Add a new L<UFL::Workflow::Schema::Document> to this request.

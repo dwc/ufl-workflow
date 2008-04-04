@@ -3,38 +3,36 @@
    title = request.title
    status_id = 'status_id'
    group_id = 'group_id'
-   title_id = 'title_id'
-   description_id = 'description_id'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
+     c.uri_for('/static/javascript/jquery.jeditable.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/StatusGroupAssignment.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/EditDescription.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/EditTitle.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/EditField.js'),
    ]
    snippets = [
      "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
-     "new UFL.Workflow.Form.EditTitle('${c.uri_for(c.controller('Requests').action_for('edit_title'),request.uri_args)}', '$title_id', '${c.user.can_manage(request)}' )",
-     "new UFL.Workflow.Form.EditDescription('${c.uri_for(c.controller('Requests').action_for('edit_description'),request.uri_args)}','$description_id', '${c.user.can_manage(request)}' )",
-  ]
+     "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}');",
+   ]
 -%]
-
 [% IF c.user.can_manage(request) %]
+
+<a id="field_error"</a>
 <h3>Manage Request</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
 </ul>
 [% END %]
-
+	
 <h3>Request details</h3>
 <dl>
   <dt>Title</dt>
-  <dd id="[% title_id  %]">[% request.title | html %]</dd>
+  <dd>[% request.title | html %]</dd>
   <dt>Process</dt>
   <dd>[% request.process.name | html %]</dd>
   <dt>Status</dt>
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
   <dt>Submitter</dt>
-  <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), request.submitter.uri_args) | html %]">[% request.submitter.username | html %]</a></dd>
+  <dd>[% request.submitter.username | html %]</dd>
   <dt>Created</dt>
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
@@ -46,7 +44,7 @@
 </dl>
 <br style="clear:both" />
 <h4>Description</h4>
-<div id="[% description_id %]" class="description">
+<div class="description">
 
 [% FILTER indent('  ') %]
   [% request.description.replace('\bh[12346]\.', 'h5.') | textile %]
@@ -130,10 +128,9 @@
     [% END %]
   <label>Send to group:
     <select name="group_id" id="[% group_id | html %]">
-    <option> </option>
     </select>
   </label>
-  <label>Comment: <textarea name="comment" rows="1000" cols="20"></textarea></label>
+  <label>Comment: <textarea name="comment"></textarea></label>
   <input type="submit" class="submit" value="Submit Decision" />
 </form>
   [% END %]

@@ -346,98 +346,98 @@ sub list_processes : Local Args(0) {
     $view->expose_stash([ qw/processes selected_processes/ ]);
     $c->forward($view);
 }
+=head2 edit_field
 
-=head2 edit
-
-edit title and description in case JS is switched off.
+edits field and creats a version
 
 =cut
+
 sub edit : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
-
     my $request = $c->stash->{request};
     die 'User cannot manage request' unless $c->user->can_manage($request);
-    
+
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ( $result->success ) {
+	my $result_field = $request->validate_fields($c);
+	if ( $result->success and $result_field->success ) {
 
             # save to DB how wait for some more time.
-	   $request->update({
-	       title       => $result->valid('title'),
-               description => $result->valid('description'),
+            $request->update({
+                title       => $result->valid('title'),
+                description => $result->valid('description'),
             });
-	    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
-	}
+	    $request->update_field_data($result_field);
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
+         }
     }
 
     $c->stash(
         request   => $request,
         template  => 'requests/edit.tt',
     );
-
 }
-=head2 edit_title
 
-edit title via L<JSON>,
+=head2 get_valid_field_id
+
+returns the valid field else none.
 
 =cut
-sub edit_title : PathPart Chained('request') Args(0) {
-    my ($self, $c) = @_;
+sub get_valid_field_id{
+    my ($self, $c, @params) = @_;
 
-    my $result = $self->validate_form($c);
-    my $return = 0;
-    my $answer = "Empty!";
-
-    ## perform save operation to DB.
-    if ( my $title = $result->valid('title_id')) {
-        $return = 1;
-	my $request = $c->stash->{request};
-	$request->update({
-	    title => $title
-        });
-	$answer = "Saved!";
+    my $request = $c->stash->{request};
+    foreach my $para ( @params ) {
+        my $field = $request->first_field_data();
+	while ($field){
+            if ( lc($field->field_id) eq lc($para)){
+	        return $para;
+            }
+	    $field = $field->next_field_data;
+        }
     }
+}
 
+=head2 edit_field
+
+edits a single field and creats a version
+
+=cut
+
+sub edit_field : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+    
+    my $answer = "Failed!";
+    my $new_data;
+    # get the field id
+    if ( my $field_id = $self->get_valid_field_id($c, $c->request->param) ) {
+        my $request = $c->stash->{request};
+        my $result = $request->validate_field($c, $field_id);
+        #validate the field content.
+        $new_data = $request->get_field_data_by_id($field_id)->value;
+        if ($result->success) {
+            ## perform save operation to DB.
+            if ( $new_data = $result->valid($field_id)) {
+                $request->get_field_data_by_id($field_id)->update({
+                    value => $new_data,
+                });	
+                $answer = "Saved!";
+            }
+        }
+        else {
+            $answer = $c->stash->{field_errors}[0];
+        }
+    }
     $c->stash({
-        return => $return, 
-	answer => $answer,
+        answer =>  $answer,
+	value  =>  $new_data,
     });
+
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/answer return/]);
+    $view->expose_stash([ qw/answer value/]);
     $c->forward($view);
 }
 
-=head2 edit_title
-
-edit title via L<JSON>,
-
-=cut
-sub edit_description : PathPart Chained('request') Args(0) {
-    my ($self, $c) = @_;
-
-    my $result = $self->validate_form($c);
-    my $return = 0;
-    my $answer = "Empty!";
-
-    ## perform save operation to DB.
-    if ( my $desc = $result->valid('description_id')) {
-        $return = 1;
-	my $request = $c->stash->{request};
-	$request->update({
-	    description => $desc
-        });
-	$answer = "Saved!";
-    }
-
-    $c->stash({
-        return => $return, 
-	answer => $answer,
-    });
-    my $view = $c->view('JSON');
-    $view->expose_stash([ qw/answer return/]);
-    $c->forward($view);
-}
 =head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed

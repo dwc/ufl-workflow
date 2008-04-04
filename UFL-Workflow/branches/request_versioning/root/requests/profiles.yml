@@ -31,13 +31,10 @@ update_status:
   - comment
   - [ [ LENGTH, 0, 8192 ] ]
 edit:
-  - title 
+  - title
   - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
-  - description 
+  - description
   - [ NOT_BLANK, [ LENGTH, 0, 8192 ] ]
-edit_title:
-  - title_id
-  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
-edit_description:
-  - description_id
-  - [ NOT_BLANK, [ LENGTH, 0, 8192 ] ]
+edit_field:
+  - value
+  - [ [ LENGTH, 0, 8192 ] ]

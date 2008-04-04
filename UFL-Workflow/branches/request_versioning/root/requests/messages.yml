@@ -33,7 +33,7 @@ update_status:
     LENGTH:  A shorter comment
 edit:
   title:
-    DEFAULT: A title 
+    DEFAULT: A title
     LENGTH:  A shorter title
   description:
     DEFAULT: A description

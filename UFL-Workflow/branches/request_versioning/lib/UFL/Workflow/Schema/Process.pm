@@ -218,6 +218,35 @@ sub add_field {
     return $field;
 }
 
+=head2 validate_field 
+
+Validates the extra field of this process
+
+=cut
+sub validate_field {
+    my ($self, $c, $field) = @_;
+    
+    # 1. form yml query based on database.
+    # 2. form yml messages for errors.
+    # 3. validate the forms.
+
+    my %messages;
+    my @validations;
+
+    $messages{ $field->id } = $field->get_message();
+    push @validations, $field->get_validation_condition();
+
+    my $validator = FormValidator::Simple->new;
+    $validator->set_messages({ edit_field => {%messages} });
+    
+    my $result = $validator->check( $c->req => [@validations] );
+    $c->stash(
+         field_errors => $result->messages("edit_field"),
+         fillform     => 1,
+    );
+    return $result;
+}
+
 =head2 validate_fields 
 
 Validates the extra fields of this process
