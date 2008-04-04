@@ -232,7 +232,8 @@ sub add_request : PathPart Chained('process') Args(0) {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {
+	my $result_field = $process->validate_fields($c);
+        if ($result->success and $result_field->success ) {
             my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
 
@@ -250,7 +251,10 @@ sub add_request : PathPart Chained('process') Args(0) {
                 # Make sure we get insert_time and update_time
                 $request->discard_changes;
 
-                if (my $upload = $c->req->upload('document')) {
+                # add the field data to the request.
+		$request->add_field_data($result_field);
+                
+		if (my $upload = $c->req->upload('document')) {
                     my $document = $request->add_document(
                         $c->user->obj,
                         $upload->basename,
@@ -274,6 +278,7 @@ sub add_request : PathPart Chained('process') Args(0) {
     $c->stash(
         process  => $process,
         groups   => $groups,
+	field    => $process->first_field,
         template => 'processes/add_request.tt',
     );
 }
@@ -322,6 +327,111 @@ sub send_new_request_email {
     );
 
     $c->forward($c->view('Email'));
+}
+
+=head2 add_field
+
+Add a field to the stashed process.
+
+=cut
+
+sub add_field : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $process = $c->stash->{process};
+            
+	    ## [type] 0 - strin(inputbox), 1 - Integer, 2 - text(textbox) and 3 - Boolean(checkbox)
+            my $field = $process->add_field(
+	        $result->valid('name'),
+		$result->valid('description'),
+		$result->valid('type'),
+		$result->valid('min_length'),
+		$result->valid('max_length'),
+		$result->valid('optional')
+            );
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
+        }
+    }
+
+    $c->stash(
+        template => 'processes/add_field.tt',
+    );
+}
+
+=head2 delete_field
+
+Remove the specified field from the stashed process.
+
+=cut
+
+sub delete_field : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $process = $c->stash->{process};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $field = $process->fields->find($result->valid('field_id'));
+        $c->detach('/default') unless $field;
+
+        $field->delete;
+    }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
+}
+
+=head2 move_field_up
+
+Move the specified field up one position in the stashed process.
+
+=cut
+
+sub move_field_up : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $process = $c->stash->{process};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $field = $process->fields->find($result->valid('field_id'));
+        $c->detach('/default') unless $field;
+
+        $field->move_up;
+    }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
+}
+
+=head2 move_field_down
+
+Move the specified field down one position in the stashed process.
+
+=cut
+
+sub move_field_down : PathPart Chained('process') Args(0) {
+    my ($self, $c) = @_;
+
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $process = $c->stash->{process};
+
+    my $result = $self->validate_form($c);
+    if ($result->success) {
+        my $field = $process->fields->find($result->valid('field_id'));
+        $c->detach('/default') unless $field;
+
+        $field->move_down;
+    }
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
 }
 
 =head1 AUTHOR

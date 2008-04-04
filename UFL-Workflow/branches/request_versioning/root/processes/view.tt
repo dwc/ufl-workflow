@@ -7,6 +7,7 @@
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
   [% IF process.is_editable %]
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]">Add new step</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_field'), process.uri_args) | html %]">Add new field</a></li>
   [% END %]
 </ul>
 [% END %]
@@ -67,6 +68,42 @@
     [% END %]
   </li>
     [% SET step = next_step %]
+  [% END %]
+</ol>
+<br style="clear:both" />
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
+<h3>Fields</h3>
+[% SET field = process.first_field %]
+[% IF field %]
+<ol type="1">
+  [% WHILE field %]
+    [% SET prev_field = field.prev_field %]
+    [% SET next_field = field.next_field %]
+  <li><a href="[% c.uri_for(c.controller('Fields').action_for('view'), field.uri_args) | html %]">[% field.name | html %]</a>
+    [% IF process.is_editable AND c.check_user_roles('Administrator') %]
+    <br />
+    <form class="process-fields" action="[% c.uri_for(c.controller.action_for('delete_field'), process.uri_args) | html %]" method="post">
+      <input type="hidden" name="field_id" value="[% field.id | html %]" />
+      <input type="submit" class="submit" value="Remove" />
+    </form>
+      [% IF prev_field %]
+    <form class="process-fields" action="[% c.uri_for(c.controller.action_for('move_field_up'), process.uri_args) | html %]" method="post">
+      <input type="hidden" name="field_id" value="[% field.id | html %]" />
+      <input type="submit" class="submit" value="Move Up &uarr;" />
+    </form>
+      [% END %]
+      [% IF next_field %]
+    <form class="process-fields process-fields-down" action="[% c.uri_for(c.controller.action_for('move_field_down'), process.uri_args) | html %]" method="post">
+      <input type="hidden" name="field_id" value="[% field.id | html %]" />
+      <input type="submit" class="submit" value="Move Down &darr;" />
+    </form>
+      [% END %]
+    [% END %]
+  </li>
+    [% SET field = next_field %]
   [% END %]
 </ol>
 <br style="clear:both" />

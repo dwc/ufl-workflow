@@ -39,6 +39,10 @@
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
   <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
+  [% field_data = request.first_field_data  %]
+  [% IF field_data %]
+  [% INCLUDE requests/includes/field_data.tt %]
+  [% END %]
 </dl>
 <br style="clear:both" />
 <h4>Description</h4>

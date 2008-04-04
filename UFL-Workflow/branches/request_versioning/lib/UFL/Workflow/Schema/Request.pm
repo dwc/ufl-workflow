@@ -52,6 +52,12 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->has_many(
+    field_data => 'UFL::Workflow::Schema::FieldData',
+    { 'foreign.request_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
 __PACKAGE__->resultset_attributes({
     order_by => \q[me.update_time DESC, me.insert_time DESC],
 });
@@ -169,6 +175,28 @@ sub next_step {
     return $self->current_step->next_step;
 }
 
+=head2 first_field_data
+
+Return the first L<UFL::Workflow::Schema::FieldData> entered for this
+request, i.e., the earliest L<UFL::Workflow::Schema::FieldData> in the
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub first_field_data {
+    my ($self) = @_;
+
+    my $first_field = $self->process->first_field;
+    if ($first_field) {
+        my $first_field_data = $self->field_data->search({ 
+            field_id   => $first_field->id,
+            request_id => $self->id,
+        })->first;
+
+        return $first_field_data;
+    }
+}
+
 =head2 is_open
 
 Return true if this request is open, i.e., the current step is pending
@@ -270,6 +298,49 @@ sub add_action {
     });
 
     return $action;
+}
+
+=head2 add_field_data
+
+Add a new field data to this request corresponding to the specified
+L<UFL::Workflow::Schema::Field>.
+
+=cut
+
+sub add_field_data {
+    my ($self, $result_field) = @_;
+    
+    if ( my %fields = $self->get_field_data($result_field)) {
+        foreach my $field_id ( keys (%fields)) {
+            $self->result_source->schema->txn_do(sub {
+                $self->field_data->create({
+                    request_id => $self->id,
+	            field_id   => $field_id,
+                    value      => $fields{$field_id},
+                });
+            });
+        }
+     }
+
+}
+
+=head2 get_field_data 
+
+retrieves the data from form content and stores in DB. 
+
+=cut
+sub get_field_data {
+    my ($self, $result) = @_;
+
+    my %data;
+    my $field = $self->process->first_field;
+    
+    while ($field) {
+        $data{$field->id} = $result->valid($field->id);
+	$field = $field->next_field;
+    }
+
+    return %data;
 }
 
 =head2 add_document

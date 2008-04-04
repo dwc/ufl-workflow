@@ -1,0 +1,9 @@
+[% WHILE field %]
+[% SET type = field.type %]
+<label [% IF type == 3 %] class="checkbox" [% END %]>[% field.name | html %] [% IF field.optional == 0 %]<span class="error">*</span>[% END %] : 
+[% IF type == 0 OR type == 1 %]<input type="text" name="[% field.id %]"maxlength="64" />[% END %]
+[% IF type == 2 %]<textarea name="[% field.id %]"></textarea>[% END %]
+[% IF type == 3 %]<input type="checkbox" name="[% field.id %]" value="1" /><br/>[% END %]
+</label>
+[% field = field.next_field %]
+[% END -%]

@@ -1,0 +1,10 @@
+[% SET title = "Add Field to ${process.name} Process" -%]
+
+<h3>Field details</h3>
+<p>To add a new field to the <strong>[% process.name | html %]</strong> process, provide a name, description, field type, min length or min value, max length or max value and if the field is optional. </p>
+<form action="[% c.uri_for(c.controller.action_for('add_field'), process.uri_args) | html %]" method="post">
+[% FILTER indent('  ') %]
+  [% INCLUDE fields/includes/field.tt %]
+[% END -%]
+  <input type="submit" class="submit" value="Add Field" />
+</form>

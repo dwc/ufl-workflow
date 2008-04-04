@@ -1,0 +1,10 @@
+[% SET title = "Edit Field: ${field.name}" -%]
+
+<h3>Field details</h3>
+<form action="[% c.uri_for(c.controller.action_for('edit'), field.uri_args) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE fields/includes/field.tt %]
+[% END -%]
+  <input type="submit" class="submit" value="Edit Field" />
+</form>

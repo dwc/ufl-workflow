@@ -1,0 +1,16 @@
+[% MACRO selected(val) BLOCK -%]
+[% IF field.type == val %]selected="selected"[% END %]
+[% END -%]
+
+<label>Name:<input type="text" name="name" maxlength="64" value = "[% field.name %]" /></label>
+<label>Description:(On error this message will be displayed)<textarea name="description" rows="10" cols="80">[% field.description | html | escape_newlines %]</textarea></label>
+<label>Field Type:<select name="type">
+  <option value = "" >Select a field type</option	
+  <option value = "0" [% selected(0) %] >String</option>
+  <option value = "1" [% selected(1) %] >Integer</option>
+  <option value = "2" [% selected(2) %]>Full Text</option>
+  <option value = "3" [% selected(3) %]>Check Box</option>
+</select></label>
+<label> Min Length/Value:<input type="text" name="min_length" maxlength="8" value = "[% field.min_length | html %]" /></label>
+<label> Max Length/Value:<input type="text" name="max_length" maxlength="8" value = "[% field.max_length | html %]"/></label>
+<label class="checkbox">This field is optional: <input type="checkbox" name="optional" value="1" [% IF field.optional == 1 %]checked="checked" [% END %] /></label>

@@ -27,3 +27,23 @@ add_request:
   - [ NOT_BLANK, INT ]
   - document
   - []
+add_field:
+  - name
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
+  - description
+  - [ [ LENGTH, 0, 8192 ] ]
+  - type
+  - [ NOT_BLANK, INT ]
+  - min_length
+  - [ INT ]
+  - max_length
+  - [ INT ]
+  - optional
+  - [ INT ]
+delete_field:
+  - field_id
+  - [ NOT_BLANK, INT ]
+move_field_up: &move
+  - field_id
+  - [ NOT_BLANK, INT ]
+move_field_down: *move
