@@ -108,5 +108,5 @@
 </ol>
 <br style="clear:both" />
 [% ELSE %]
-<p>None yet.</p>
+<p>None yet. <a class="error">(Note:- Title and description fields are not created by default!)</a></p>
 [% END %]

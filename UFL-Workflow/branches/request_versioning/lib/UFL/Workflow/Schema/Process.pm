@@ -289,10 +289,8 @@ Add a request that follows this process.
 =cut
 
 sub add_request {
-    my ($self, $title, $description, $user, $initial_group) = @_;
+    my ($self, $user, $initial_group) = @_;
 
-    $self->throw_exception('You must provide a title and description for the request')
-        unless $title and $description;
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
     $self->throw_exception('You must provide a group')
@@ -302,8 +300,8 @@ sub add_request {
     $self->result_source->schema->txn_do(sub {
         $request = $self->requests->create({
             user_id     => $user->id,
-            title       => $title,
-            description => $description,
+	    title       => "Dummy",
+	    description => "heheh",
         });
         my $action = $request->add_action($self->first_step);
         $action->assign_to_group($initial_group);

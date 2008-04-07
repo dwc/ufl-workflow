@@ -407,3 +407,9 @@ background:#eee;
 .error {
 color: #FF0000;
 }
+.edit_status {
+background: #FFF1A8 none repeat scroll 0%;
+text-align: center;
+font-weight: bold;
+font-size: 80%;
+}

@@ -230,6 +230,8 @@ sub add_request : PathPart Chained('process') Args(0) {
     my $process = $c->stash->{process};
     die 'Process is not enabled' unless $process->enabled;
 
+    die 'No Fields added yet' unless $process->first_field;
+
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
 	my $result_field = $process->validate_fields($c);
@@ -241,8 +243,6 @@ sub add_request : PathPart Chained('process') Args(0) {
             my $request;
             $c->model('DBIC')->schema->txn_do(sub {
                 $request = $process->add_request(
-                    $result->valid('title'),
-                    $result->valid('description'),
                     $result->valid('enabled'),
                     $c->user->obj,
                     $group,

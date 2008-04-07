@@ -30,11 +30,6 @@ update_status:
   - [ INT ]
   - comment
   - [ [ LENGTH, 0, 8192 ] ]
-edit:
-  - title
-  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
-  - description
-  - [ NOT_BLANK, [ LENGTH, 0, 8192 ] ]
 edit_field:
   - value
   - [ [ LENGTH, 0, 8192 ] ]

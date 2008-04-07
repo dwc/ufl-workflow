@@ -17,10 +17,13 @@ UFL.Workflow.Form.EditField = function(url) {
 	       var resp = eval('('+value+')'); 
 	       $(this).html( resp['value'] );
 	       $("#field_error").removeClass("error");
+	       $("#field_error").html(resp['answer']).show();
 	       if (resp['answer'] != "Saved!" ) {
 	           $("#field_error").addClass("error");
 	       }
-	       $("#field_error").html(resp['answer']).show().fadeOut(5000);
+	       else {
+	       	   $("#field_error").html(resp['answer']).fadeOut(5000);
+	       }
 	    }
        });
     });

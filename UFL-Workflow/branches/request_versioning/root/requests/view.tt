@@ -16,7 +16,7 @@
 -%]
 [% IF c.user.can_manage(request) %]
 
-<a id="field_error"</a>
+<a id="field_error" class="edit_status" </a>
 <h3>Manage Request</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
@@ -25,8 +25,10 @@
 	
 <h3>Request details</h3>
 <dl>
-  <dt>Title</dt>
-  <dd>[% request.title | html %]</dd>
+  [% field_data = request.first_field_data  %]
+  [% IF field_data %]
+  [% INCLUDE requests/includes/field_data.tt %]
+  [% END %]
   <dt>Process</dt>
   <dd>[% request.process.name | html %]</dd>
   <dt>Status</dt>
@@ -37,19 +39,8 @@
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
   <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
-  [% field_data = request.first_field_data  %]
-  [% IF field_data %]
-  [% INCLUDE requests/includes/field_data.tt %]
-  [% END %]
 </dl>
 <br style="clear:both" />
-<h4>Description</h4>
-<div class="description">
-
-[% FILTER indent('  ') %]
-  [% request.description.replace('\bh[12346]\.', 'h5.') | textile %]
-[% END %]
-</div>
 
 <h3>Documents</h3>
 [% SET documents = request.documents_rs %]

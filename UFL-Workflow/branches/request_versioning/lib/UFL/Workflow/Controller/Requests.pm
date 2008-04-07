@@ -358,15 +358,8 @@ sub edit : PathPart Chained('request') Args(0) {
     die 'User cannot manage request' unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
-        my $result = $self->validate_form($c);
 	my $result_field = $request->validate_fields($c);
-	if ( $result->success and $result_field->success ) {
-
-            # save to DB how wait for some more time.
-            $request->update({
-                title       => $result->valid('title'),
-                description => $result->valid('description'),
-            });
+	if ( $result_field->success ) {
 	    $request->update_field_data($result_field);
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
          }
@@ -391,7 +384,7 @@ sub get_valid_field_id{
         my $field = $request->first_field_data();
 	while ($field){
             if ( lc($field->field_id) eq lc($para)){
-	        return $para;
+		return $para;
             }
 	    $field = $field->next_field_data;
         }
@@ -412,16 +405,18 @@ sub edit_field : PathPart Chained('request') Args(0) {
     # get the field id
     if ( my $field_id = $self->get_valid_field_id($c, $c->request->param) ) {
         my $request = $c->stash->{request};
-        my $result = $request->validate_field($c, $field_id);
-        #validate the field content.
         $new_data = $request->get_field_data_by_id($field_id)->value;
+        my $result = $request->validate_field($c, $field_id);
         if ($result->success) {
             ## perform save operation to DB.
-            if ( $new_data = $result->valid($field_id)) {
-                $request->get_field_data_by_id($field_id)->update({
-                    value => $new_data,
-                });	
-                $answer = "Saved!";
+	    if ( $new_data eq $result->valid($field_id)) {
+		$answer = "No changes found";
+	    }
+	    else {
+	        if ( $new_data = $result->valid($field_id)) {
+                    $request->create_field_data( $field_id, $new_data );
+                    $answer = "Saved!";
+		}
             }
         }
         else {
@@ -438,6 +433,22 @@ sub edit_field : PathPart Chained('request') Args(0) {
     $c->forward($view);
 }
 
+=head2 field
+
+displays all the version of this field
+
+=cut
+
+sub field : PathPart Chained('request') Chained('/') Args(1) {
+    my ($self, $c, $field_id) = @_;
+    my $request = $c->stash->{request};
+    
+    my $field_versions = $request->get_all_field_data_by_id($field_id); 
+    $c->stash({
+        field_versions => $field_versions, 
+        template       => 'requests/includes/field_version.tt', 
+    });
+}
 =head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed

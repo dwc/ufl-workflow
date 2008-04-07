@@ -1,5 +1,5 @@
 [% WHILE field_data %]
-<dt>[% field_data.field.name | html %]</dt>
+<dt><a [% IF request.get_all_field_data_by_id(field_data.field.id).count > 1 %] href="[%c.uri_for(c.controller.action_for('field'), request.uri_args) | html %]/[% field_data.field.id | html %]"[% END %] >[% field_data.field.name | html %]</a></dt>
 <dd><span class="edit" id="[% field_data.field.id  %]">
   [% SET type = field_data.field.type %]
   [% IF type != 3 %][% field_data.value| html %][% ELSE %][% IF field_data.value == 1 %]Yes[% ELSE %]No[% END %][% END %]</span></dd>

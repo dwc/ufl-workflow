@@ -18,7 +18,7 @@ __PACKAGE__->add_columns(
     },
     user_id => {
         data_type => 'integer',
-    },
+    },    
     title => {
         data_type => 'varchar',
         size      => 64,
@@ -175,6 +175,16 @@ sub next_step {
     return $self->current_step->next_step;
 }
 
+sub title {
+    my ($self) = @_;
+    
+    # first field will be sort of title.
+    if ( my $first_field = $self->first_field_data) {
+        return $first_field->value;
+    }
+    return "Empty Request";
+}
+
 =head2 first_field_data
 
 Return the first L<UFL::Workflow::Schema::FieldData> entered for this
@@ -208,14 +218,28 @@ sub get_field_data_by_id {
     my ($self, $field_id) = @_;
 
     if ($field_id) {
-        my $field_data = $self->field_data->search({ 
-            field_id   => $field_id,
-            request_id => $self->id,
-        })->first;
-        return $field_data;
+        if( my $field_content = $self->get_all_field_data_by_id($field_id)) {
+            return $field_content->first;
+	}
     }
 }
 
+=head2 get_all_field_data_by_id
+
+Return all versions of field data.
+
+=cut
+sub get_all_field_data_by_id {
+    my ($self, $field_id) = @_;  
+    
+    if ($field_id) {
+        my $field_datas = $self->field_data->search({ 
+            field_id   => $field_id,
+            request_id => $self->id,
+        });
+	return $field_datas;
+    }
+} 
 =head2 is_open
 
 Return true if this request is open, i.e., the current step is pending
@@ -319,6 +343,23 @@ sub add_action {
     return $action;
 }
 
+=head2 create_field_data
+
+Adds the field data to database.
+
+=cut
+sub create_field_data{
+    my ($self, $field_id, $value) = @_;
+
+    $self->result_source->schema->txn_do(sub {
+         $self->field_data->create({
+              request_id => $self->id,
+              field_id   => $field_id,
+              value      => $value,
+         });
+    });
+}
+
 =head2 add_field_data
 
 Add a new field data to this request corresponding to the specified
@@ -327,16 +368,10 @@ L<UFL::Workflow::Schema::Field>.
 =cut
 sub add_field_data {
     my ($self, $result_field) = @_;
-    
+
     if ( my %fields = $self->get_field_data($result_field)) {
         foreach my $field_id ( keys (%fields)) {
-            $self->result_source->schema->txn_do(sub {
-                $self->field_data->create({
-                    request_id => $self->id,
-	            field_id   => $field_id,
-                    value      => $fields{$field_id},
-                });
-            });
+            $self->create_field_data( $field_id, $fields{$field_id} );
         }
      }
 }
@@ -352,11 +387,9 @@ sub update_field_data {
     
     if ( my %new_field_data = $self->get_field_data($result_field)) {
         foreach my $each_field_id ( keys (%new_field_data)) {
-            $self->result_source->schema->txn_do(sub {
-                $self->get_field_data_by_id($each_field_id)->update({
-                    value => $new_field_data{$each_field_id},
-                });
-            });
+            if ( $self->get_field_data_by_id($each_field_id)->value ne $new_field_data{$each_field_id} ) {
+	        $self->create_field_data( $each_field_id, $new_field_data{$each_field_id} );
+            }
         }
      }
 }

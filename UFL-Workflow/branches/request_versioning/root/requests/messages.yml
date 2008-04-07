@@ -31,10 +31,3 @@ update_status:
   comment:
     DEFAULT: A comment
     LENGTH:  A shorter comment
-edit:
-  title:
-    DEFAULT: A title
-    LENGTH:  A shorter title
-  description:
-    DEFAULT: A description
-    LENGTH:  A shorter description
