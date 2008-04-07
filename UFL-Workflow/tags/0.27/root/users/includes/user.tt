@@ -1,0 +1,1 @@
+<label>Username: <input type="text" name="username" value="[% user.username | html %]" maxlength="16" /></label>
