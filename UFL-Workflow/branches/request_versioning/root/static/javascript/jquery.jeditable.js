@@ -88,8 +88,8 @@
         /* add custom event if it does not exist */
         if  (!$.isFunction($(this)[settings.event])) {
             $.fn[settings.event] = function(fn){
-          		return fn ? this.bind(settings.event, fn) : this.trigger(settings.event);
-          	}
+                    return fn ? this.bind(settings.event, fn) : this.trigger(settings.event);
+            }
         }
           
         $(this).attr('title', settings.tooltip);
@@ -114,7 +114,7 @@
                     return;
                 }
 
-		settings.name = self.id;
+                settings.name = self.id;
 
                 /* figure out how wide and tall we are, visibility trick */
                 /* is workaround for http://dev.jquery.com/ticket/2190 */
@@ -187,8 +187,8 @@
                        data : loaddata,
                        async : false,
                        success: function(result) {
-                       	  window.clearTimeout(t);
-                       	  input_content = result;
+                          window.clearTimeout(t);
+                          input_content = result;
                           input.disabled = false;
                        }
                     });
@@ -398,7 +398,7 @@
                     return(select);
                 },
                 content : function(string, settings, original) {
-                    if (String == string.constructor) { 	 
+                    if (String == string.constructor) { 
                         eval ('var json = ' + string);
                         for (var key in json) {
                             if (!json.hasOwnProperty(key)) {
@@ -408,7 +408,7 @@
                                 continue;
                             } 
                             var option = $('<option>').val(key).append(json[key]);
-                            $('select', this).append(option); 	 
+                            $('select', this).append(option);  
                         }
                     }
                     /* Loop option again to set selected. IE needed this... */ 

@@ -98,8 +98,6 @@ sub reports : Local Args(0) {
 
     if (my $query = $result->valid('query')) {
         my @fields = qw/
-            me.title
-            me.description
             submitter.username
             actor.username
             actions.comment
@@ -192,10 +190,13 @@ Display basic information on the stashed request.
 
 =cut
 
-sub view : PathPart('') Chained('request') Args(0) {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'requests/view.tt');
+sub view : PathPart('') Chained('request') Args(1) {
+    my ($self, $c, $version) = @_;
+    
+    $c->stash({
+        template => 'requests/view.tt',
+        version  => $version ? $c->stash->{request}->version($version) : $c->stash->{request}->current_version,
+    });
 }
 
 =head2 add_document
@@ -213,7 +214,7 @@ sub add_document : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
-            my $document = $request->add_document(
+            my $document = $request->current_version->add_document(
                 $c->user->obj,
                 $upload->basename,
                 $upload->slurp,
@@ -225,7 +226,7 @@ sub add_document : PathPart Chained('request') Args(0) {
         }
     }
 
-    my $documents = $request->documents->search(
+    my $documents = $request->current_version->documents->search(
         { document_id => undef },
         { order_by    => 'insert_time' },
     );
@@ -358,17 +359,17 @@ sub edit : PathPart Chained('request') Args(0) {
     die 'User cannot manage request' unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
-	my $result_field = $request->validate_fields($c);
-	if ( $result_field->success ) {
-	    $request->update_field_data($result_field);
+        my $result_field = $request->validate_fields($c);
+        if ( $result_field->success ) {
+            if ($request->current_version->is_field_data_changed($result_field)) {
+                $request->create_version();
+                $request->current_version->add_field_data($result_field);
+            }
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
          }
     }
-
-    $c->stash(
-        request   => $request,
-        template  => 'requests/edit.tt',
-    );
+    
+    $c->stash(template  => 'requests/edit.tt');
 }
 
 =head2 get_valid_field_id
@@ -376,24 +377,25 @@ sub edit : PathPart Chained('request') Args(0) {
 returns the valid field else none.
 
 =cut
+
 sub get_valid_field_id{
     my ($self, $c, @params) = @_;
 
     my $request = $c->stash->{request};
     foreach my $para ( @params ) {
         my $field = $request->first_field_data();
-	while ($field){
+        while ($field){
             if ( lc($field->field_id) eq lc($para)){
-		return $para;
+                return $para;
             }
-	    $field = $field->next_field_data;
+            $field = $field->next_field_data;
         }
     }
 }
 
 =head2 edit_field
 
-edits a single field and creats a version
+edits a single field and currently not creats a version
 
 =cut
 
@@ -405,18 +407,18 @@ sub edit_field : PathPart Chained('request') Args(0) {
     # get the field id
     if ( my $field_id = $self->get_valid_field_id($c, $c->request->param) ) {
         my $request = $c->stash->{request};
-        $new_data = $request->get_field_data_by_id($field_id)->value;
-        my $result = $request->validate_field($c, $field_id);
+        $new_data = $request->current_version->get_field_data_by_id($field_id)->value;
+        my $result = $request->current_version->validate_field($c, $field_id);
         if ($result->success) {
             ## perform save operation to DB.
-	    if ( $new_data eq $result->valid($field_id)) {
-		$answer = "No changes found";
-	    }
-	    else {
-	        if ( $new_data = $result->valid($field_id)) {
-                    $request->create_field_data( $field_id, $new_data );
+            if ($new_data eq $result->valid($field_id)) {
+                $answer = "No changes found";
+            }
+            else {
+                if ($new_data = $result->valid($field_id)) {
+                    $request->current_version->create_field_data( $field_id, $new_data );
                     $answer = "Saved!";
-		}
+                }
             }
         }
         else {
@@ -425,7 +427,7 @@ sub edit_field : PathPart Chained('request') Args(0) {
     }
     $c->stash({
         answer =>  $answer,
-	value  =>  $new_data,
+        value  =>  $new_data,
     });
 
     my $view = $c->view('JSON');
@@ -433,22 +435,6 @@ sub edit_field : PathPart Chained('request') Args(0) {
     $c->forward($view);
 }
 
-=head2 field
-
-displays all the version of this field
-
-=cut
-
-sub field : PathPart Chained('request') Chained('/') Args(1) {
-    my ($self, $c, $field_id) = @_;
-    my $request = $c->stash->{request};
-    
-    my $field_versions = $request->get_all_field_data_by_id($field_id); 
-    $c->stash({
-        field_versions => $field_versions, 
-        template       => 'requests/includes/field_version.tt', 
-    });
-}
 =head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed

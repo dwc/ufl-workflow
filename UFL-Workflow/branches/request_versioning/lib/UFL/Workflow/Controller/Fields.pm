@@ -60,11 +60,11 @@ sub edit : PathPart Chained('field') Args(0) {
             my $field = $c->stash->{field};
             $field->update({
                 name        => $result->valid('name'),
-		description => $result->valid('description'),
-		type        => $result->valid('type'),
-		min_length  => $result->valid('min_length'),
-		max_length  => $result->valid('max_length'),
-		optional    => $result->valid('optional')
+                description => $result->valid('description'),
+                type        => $result->valid('type'),
+                min_length  => $result->valid('min_length'),
+                max_length  => $result->valid('max_length'),
+                optional    => $result->valid('optional')
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $field->uri_args));

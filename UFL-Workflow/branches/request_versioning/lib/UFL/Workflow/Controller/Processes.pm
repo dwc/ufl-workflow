@@ -234,7 +234,7 @@ sub add_request : PathPart Chained('process') Args(0) {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-	my $result_field = $process->validate_fields($c);
+        my $result_field = $process->validate_fields($c);
         if ($result->success and $result_field->success ) {
             my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
@@ -252,10 +252,10 @@ sub add_request : PathPart Chained('process') Args(0) {
                 $request->discard_changes;
 
                 # add the field data to the request.
-		$request->add_field_data($result_field);
+                $request->current_version->add_field_data($result_field);
                 
-		if (my $upload = $c->req->upload('document')) {
-                    my $document = $request->add_document(
+                if (my $upload = $c->req->upload('document')) {
+                    my $document = $request->current_version->add_document(
                         $c->user->obj,
                         $upload->basename,
                         $upload->slurp,
@@ -278,7 +278,7 @@ sub add_request : PathPart Chained('process') Args(0) {
     $c->stash(
         process  => $process,
         groups   => $groups,
-	field    => $process->first_field,
+        field    => $process->first_field,
         template => 'processes/add_request.tt',
     );
 }
@@ -343,14 +343,14 @@ sub add_field : PathPart Chained('process') Args(0) {
         if ($result->success) {
             my $process = $c->stash->{process};
             
-	    ## [type] 0 - strin(inputbox), 1 - Integer, 2 - text(textbox) and 3 - Boolean(checkbox)
+            ## [type] 0 - strin(inputbox), 1 - Integer, 2 - text(textbox) and 3 - Boolean(checkbox)
             my $field = $process->add_field(
-	        $result->valid('name'),
-		$result->valid('description'),
-		$result->valid('type'),
-		$result->valid('min_length'),
-		$result->valid('max_length'),
-		$result->valid('optional')
+                $result->valid('name'),
+                $result->valid('description'),
+                $result->valid('type'),
+                $result->valid('min_length'),
+                $result->valid('max_length'),
+                $result->valid('optional')
             );
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));

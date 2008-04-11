@@ -216,9 +216,9 @@ sub get_message {
     my ($self) = @_;
     return {
         DEFAULT => $self->description ? $self->description : "input ".$self->name." is invalid",
-	($self->type == 0 or $self->type == 2) ?
-	('LENGTH' => "input ".$self->name." ( length should be between ".$self->min_length." and ".$self->max_length." )") :
-	('BETWEEN' => "input ".$self->name." ( value should be between ".$self->min_length." and ".$self->max_length." )"),
+        ($self->type == 0 or $self->type == 2) ?
+        ('LENGTH' => "input ".$self->name." ( length should be between ".$self->min_length." and ".$self->max_length." )") :
+        ('BETWEEN' => "input ".$self->name." ( value should be between ".$self->min_length." and ".$self->max_length." )"),
         }; 
 }
 
@@ -241,15 +241,15 @@ sub get_validation_condition {
             [
                 'BETWEEN',
                 $self->min_length ? $self->min_length : 0,
-		$self->max_length ? $self->max_length : $self->type == 1 ? 2147483647 : 1,
-	    ],
+                $self->max_length ? $self->max_length : $self->type == 1 ? 2147483647 : 1,
+            ],
             'INT',
         ],
     );
 
     # in case of text remove INT field type.
     pop @{$valid_field{$self->id}} if ($self->type == 0 or $self->type == 2);
-	
+        
     # remove NOT_BLANK option if optional.
     shift @{$valid_field{$self->id}} if $self->optional == 1;
     

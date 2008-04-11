@@ -15,7 +15,6 @@
    ]
 -%]
 [% IF c.user.can_manage(request) %]
-
 <a id="field_error" class="edit_status" </a>
 <h3>Manage Request</h3>
 <ul>
@@ -23,27 +22,41 @@
 </ul>
 [% END %]
 	
-<h3>Request details</h3>
+<h3>Request details
+[% SET version_count = request.all_versions.count %]
+[% IF version_count > 1  %]
+  <ul class="paging">
+  [% FOREACH rev_version IN [1 .. version_count] %]
+    [% SET ver = version_count - rev_version - 1 %]
+    [% IF ver == version.version %]
+      <li class="current"><span>[% ver | html %]</span></li>
+    [% ELSE %]
+      <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/[% ver | html %]">[% ver | html %]</a></li>
+    [% END %]
+  [% END %]
+  </ul><!-- .paging -->
+[% END %]
+</h3>
 <dl>
-  [% field_data = request.first_field_data  %]
+  [% field_data = version.first_field_data  %]
   [% IF field_data %]
   [% INCLUDE requests/includes/field_data.tt %]
   [% END %]
   <dt>Process</dt>
-  <dd>[% request.process.name | html %]</dd>
+  <dd>[% version.process.name | html %]</dd>
   <dt>Status</dt>
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
   <dt>Submitter</dt>
   <dd>[% request.submitter.username | html %]</dd>
   <dt>Created</dt>
-  <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
+  <dd>[% version.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
-  <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
+  <dd>[% version.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
 
 <h3>Documents</h3>
-[% SET documents = request.documents_rs %]
+[% SET documents = version.documents_rs %]
 [% IF documents.count > 0 %]
 <table>
   <tr>

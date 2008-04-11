@@ -300,9 +300,8 @@ sub add_request {
     $self->result_source->schema->txn_do(sub {
         $request = $self->requests->create({
             user_id     => $user->id,
-	    title       => "Dummy",
-	    description => "heheh",
         });
+	$request->create_version();
         my $action = $request->add_action($self->first_step);
         $action->assign_to_group($initial_group);
     });

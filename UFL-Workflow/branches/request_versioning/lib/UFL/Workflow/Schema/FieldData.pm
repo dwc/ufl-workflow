@@ -9,7 +9,7 @@ __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/
 __PACKAGE__->table('field_data');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
-    request_id => {
+    request_version_id => {
         data_type => 'integer',
     },
     field_id => {
@@ -23,8 +23,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->belongs_to(
-    request => 'UFL::Workflow::Schema::Request',
-    'request_id',
+    request_version => 'UFL::Workflow::Schema::RequestVersion',
+    'request_version_id',
 );
 
 __PACKAGE__->belongs_to(
@@ -63,8 +63,8 @@ sub next_field_data {
     my $next_field = $self->field->next_field;
     if ( $next_field ) {
         $field_data = $self->result_source->schema->resultset('FieldData')->search({ 
-            field_id   => $next_field->id,
-	    request_id => $self->request_id,
+            field_id           => $next_field->id,
+            request_version_id => $self->request_version_id,
         })->first;
         return $field_data;
     }

@@ -46,7 +46,7 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {	   
+        if ($result->success) {           
             my @new_users = split /[ \r\n]+/, lc $result->valid('users');
 
             my (@added_users, @existing_users, @invalid_users);

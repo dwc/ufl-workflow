@@ -78,6 +78,7 @@
 <h3>Fields</h3>
 [% SET field = process.first_field %]
 [% IF field %]
+<p>Field #1 is the title of the Request</p>
 <ol type="1">
   [% WHILE field %]
     [% SET prev_field = field.prev_field %]
@@ -108,5 +109,5 @@
 </ol>
 <br style="clear:both" />
 [% ELSE %]
-<p>None yet. <a class="error">(Note:- Title and description fields are not created by default!)</a></p>
+<p>None yet. <a class="error">(Note:- Title and description fields are not created by default!, First field will be the title of the Request.)</a></p>
 [% END %]

@@ -4,7 +4,7 @@
 <form action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
 
 [% FILTER indent('  ') %]
-[% field_data = request.first_field_data  %]
+[% field_data = request.current_version.first_field_data  %]
 [% IF field_data %]
 [% INCLUDE requests/includes/edit_fields.tt %]
 [% END %]
