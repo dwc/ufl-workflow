@@ -10,7 +10,7 @@ use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
 
-__PACKAGE__->table('requests_versions');
+__PACKAGE__->table('request_versions');
 __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
     request_id => {
