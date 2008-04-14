@@ -65,7 +65,7 @@ border-bottom:1px solid #ccc;
 float:right;
 padding:3px 0;
 text-align:left;
-width:650px;
+width:78%;
 }
 
 #content dt {
@@ -75,7 +75,7 @@ float:left;
 font-weight:700;
 padding:3px 0 3px 3px;
 text-align:left;
-width:100px;
+width:20%;
 }
 
 #content fieldset {
@@ -412,4 +412,49 @@ background: #FFF1A8 none repeat scroll 0%;
 text-align: center;
 font-weight: bold;
 font-size: 80%;
+}
+.left {
+float:left;
+margin:0px 0pt 10pt 0pt;
+padding:0pt 10pt 0pt 10pt;
+text-align:left;
+width:85%;
+border: 2px solid #d1d1d1;
+}
+
+.right {
+float:left;
+margin:0px 0pt 0pt;
+padding:0pt;
+text-align:left;
+width:10%;
+}
+
+#content ul.versioning {
+display:block;
+margin: 12px 25px 10px;
+height:30px;
+}
+
+#content ul.versioning li {
+display:block;
+list-style:none;
+}
+
+/* Need an additional hook to make the boxes work in IE */
+#content ul.versioning li span, #content ul.versioning li a {
+border:1px solid #eee;
+margin:0 0 0 5px;
+padding:0 5px;
+text-align:left;
+}
+
+#content ul.versioning li a:hover {
+background:#eee;
+}
+#content ul.versioning li span {
+background: #d0d0d0;
+border:2px solid #d1d1d1;
+margin: 0px 0px 0px -27px;
+padding: 0 5px 0px 34px;
 }

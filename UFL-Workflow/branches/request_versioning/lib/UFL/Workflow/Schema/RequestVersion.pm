@@ -211,14 +211,14 @@ Add a new L<UFL::Workflow::Schema::Document> to this request.
 =cut
 
 sub add_document {
-    my ($self, $user, $filename, $contents, $destination, $replaced_document_id) = @_;
+    my ($self, $request, $user, $filename, $contents, $destination, $replaced_document_id) = @_;
 
     $self->throw_exception('You must provide a filename, the contents, and a destination directory')
         unless $filename and $contents and $destination;
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
     $self->throw_exception('User cannot manage request')
-        unless $user->can_manage($self);
+        unless $user->can_manage($request);
 
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;

@@ -90,16 +90,16 @@ sub version {
     }    
 }
 
-=head2 all_versions
+=head2 all_version_count
 
-Return all the versions.
+Return all the versions count.
 
 =cut
 
-sub all_versions {
+sub all_version_count {
     my ($self) = @_;
    
-    return $self->versions->search({ request_id => $self->id });    
+    return $self->versions->search({ request_id => $self->id })->count;    
 }
 
 =head2 create_version

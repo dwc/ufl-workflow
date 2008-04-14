@@ -21,22 +21,9 @@
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
 </ul>
 [% END %]
-	
-<h3>Request details
-[% SET version_count = request.all_versions.count %]
-[% IF version_count > 1  %]
-  <ul class="paging">
-  [% FOREACH rev_version IN [1 .. version_count] %]
-    [% SET ver = version_count - rev_version - 1 %]
-    [% IF ver == version.version %]
-      <li class="current"><span>[% ver | html %]</span></li>
-    [% ELSE %]
-      <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/[% ver | html %]">[% ver | html %]</a></li>
-    [% END %]
-  [% END %]
-  </ul><!-- .paging -->
-[% END %]
-</h3>
+
+<div class="left">
+<h3>Request details</h3>
 <dl>
   [% field_data = version.first_field_data  %]
   [% IF field_data %]
@@ -81,6 +68,24 @@
 [% IF c.user.can_manage(request) %]
 <p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>
 [% END -%]
+</div>
+
+[% SET version_count = request.all_version_count %]
+[% IF version_count > 1  %]
+<div class="right">
+<ul class="versioning">
+Versions
+[% FOREACH rev_version IN [1 .. version_count] %]
+    [% SET ver = version_count - rev_version + 1 %]
+    [% IF ver == version.version %]
+      <li class="current"><span>[% ver | html %]</span></li>
+    [% ELSE %]
+      <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]</a></li>
+    [% END %]
+  [% END %]
+  </ul><!-- .paging -->
+</div>
+[% END %]
 
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]

@@ -88,7 +88,7 @@ sub reports : Local Args(0) {
         undef,
         {
             join     => { actions => [ qw/actor action_groups/ ] },
-            prefetch => [ qw/submitter process documents/ ],
+            prefetch => [ qw/submitter process versions / ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
             page     => $page,
@@ -190,12 +190,27 @@ Display basic information on the stashed request.
 
 =cut
 
-sub view : PathPart('') Chained('request') Args(1) {
-    my ($self, $c, $version) = @_;
-    
+sub view : PathPart('') Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
     $c->stash({
         template => 'requests/view.tt',
-        version  => $version ? $c->stash->{request}->version($version) : $c->stash->{request}->current_version,
+        version  => $c->stash->{request}->current_version,
+    });
+}
+
+=head2 version_view
+
+Display version view.
+
+=cut
+
+sub version_view : PathPart('version') Chained('request') Args(1) {
+    my ($self, $c, $version) = @_;
+
+    $c->stash({
+        template => 'requests/view.tt',
+        version  => $c->stash->{request}->version($version),
     });
 }
 
@@ -215,7 +230,8 @@ sub add_document : PathPart Chained('request') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
             my $document = $request->current_version->add_document(
-                $c->user->obj,
+                $request,
+		$c->user->obj,
                 $upload->basename,
                 $upload->slurp,
                 $c->controller('Documents')->destination,
@@ -347,7 +363,8 @@ sub list_processes : Local Args(0) {
     $view->expose_stash([ qw/processes selected_processes/ ]);
     $c->forward($view);
 }
-=head2 edit_field
+
+=head2 edit
 
 edits field and creats a version
 
@@ -359,7 +376,10 @@ sub edit : PathPart Chained('request') Args(0) {
     die 'User cannot manage request' unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
-        my $result_field = $request->validate_fields($c);
+        
+	$c->stash({process => $request->process});
+
+        my $result_field = $request->process->validate_fields($c);
         if ( $result_field->success ) {
             if ($request->current_version->is_field_data_changed($result_field)) {
                 $request->create_version();
@@ -383,7 +403,7 @@ sub get_valid_field_id{
 
     my $request = $c->stash->{request};
     foreach my $para ( @params ) {
-        my $field = $request->first_field_data();
+        my $field = $request->current_version->first_field_data();
         while ($field){
             if ( lc($field->field_id) eq lc($para)){
                 return $para;
