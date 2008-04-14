@@ -382,7 +382,7 @@ sub edit : PathPart Chained('request') Args(0) {
         my $result_field = $request->process->validate_fields($c);
         if ( $result_field->success ) {
             if ($request->current_version->is_field_data_changed($result_field)) {
-                $request->create_version();
+                $request->create_version($c->user->id);
                 $request->current_version->add_field_data($result_field);
             }
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));

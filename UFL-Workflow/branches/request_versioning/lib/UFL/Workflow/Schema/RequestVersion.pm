@@ -19,12 +19,20 @@ __PACKAGE__->add_columns(
     version => {
         data_type => 'integer',
     },
+    user_id => {
+        data_type => 'integer',
+    },
 );
 __PACKAGE__->add_standard_columns;
 
 __PACKAGE__->belongs_to(
    request => 'UFL::Workflow::Schema::Request',
    'request_id',
+);
+
+__PACKAGE__->belongs_to(
+   submitter => 'UFL::Workflow::Schema::User',
+   'user_id',
 );
 
 __PACKAGE__->has_many(

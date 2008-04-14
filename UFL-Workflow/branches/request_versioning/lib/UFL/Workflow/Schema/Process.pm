@@ -301,7 +301,7 @@ sub add_request {
         $request = $self->requests->create({
             user_id     => $user->id,
         });
-	$request->create_version();
+	$request->create_version($user->id);
         my $action = $request->add_action($self->first_step);
         $action->assign_to_group($initial_group);
     });

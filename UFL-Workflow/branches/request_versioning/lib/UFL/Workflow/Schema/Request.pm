@@ -109,7 +109,7 @@ get the current version and increate the version number and create a new version
 =cut
 
 sub create_version{
-    my ($self) = @_;
+    my ($self, $user_id) = @_;
 
     my $version_number = 1;
     
@@ -121,6 +121,7 @@ sub create_version{
         $self->versions->create({
 	    request_id => $self->id,
             version    => $version_number,
+            user_id    => $user_id,
 	});
     });
 }

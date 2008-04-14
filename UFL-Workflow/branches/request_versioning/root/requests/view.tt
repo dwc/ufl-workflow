@@ -15,7 +15,7 @@
    ]
 -%]
 [% IF c.user.can_manage(request) %]
-<a id="field_error" class="edit_status" </a>
+<a id="field_error" class="edit_status"> </a>
 <h3>Manage Request</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
@@ -73,14 +73,14 @@
 [% SET version_count = request.all_version_count %]
 [% IF version_count > 1  %]
 <div class="right">
+<p>Versions</p>
 <ul class="versioning">
-Versions
 [% FOREACH rev_version IN [1 .. version_count] %]
     [% SET ver = version_count - rev_version + 1 %]
     [% IF ver == version.version %]
       <li class="current"><span>[% ver | html %]</span></li>
     [% ELSE %]
-      <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]</a></li>
+      <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]</a> [% request.version(ver).submitter.username  %]</li>
     [% END %]
   [% END %]
   </ul><!-- .paging -->

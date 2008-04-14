@@ -432,7 +432,7 @@ width:10%;
 
 #content ul.versioning {
 display:block;
-margin: 12px 25px 10px;
+margin: 12px 5px 10px;
 height:30px;
 }
 
@@ -455,6 +455,9 @@ background:#eee;
 #content ul.versioning li span {
 background: #d0d0d0;
 border:2px solid #d1d1d1;
-margin: 0px 0px 0px -27px;
-padding: 0 5px 0px 34px;
+margin: 0px 0px 0px -7px;
+padding: 0 5px 0px 16px;
+}
+#content .right p {
+margin: 0px 20px 10px; 
 }
