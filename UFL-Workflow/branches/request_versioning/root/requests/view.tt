@@ -43,7 +43,7 @@
   [% INCLUDE requests/includes/field_data.tt %]
   [% END %]
   <dt>Process</dt>
-  <dd>[% version.process.name | html %]</dd>
+  <dd>[% request.process.name | html %]</dd>
   <dt>Status</dt>
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
   <dt>Submitter</dt>

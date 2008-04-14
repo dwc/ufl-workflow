@@ -230,7 +230,7 @@ sub add_request : PathPart Chained('process') Args(0) {
     my $process = $c->stash->{process};
     die 'Process is not enabled' unless $process->enabled;
 
-    die 'No Fields added yet' unless $process->first_field;
+    die 'No Fields added yet. Please add atleast one field' unless $process->first_field;
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
