@@ -119,10 +119,10 @@ sub create_version{
     
     $self->result_source->schema->txn_do(sub {
         $self->versions->create({
-	    request_id => $self->id,
+            request_id => $self->id,
             version    => $version_number,
             user_id    => $user_id,
-	});
+        });
     });
 }
 

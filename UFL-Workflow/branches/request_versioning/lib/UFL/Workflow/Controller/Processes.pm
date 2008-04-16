@@ -257,7 +257,7 @@ sub add_request : PathPart Chained('process') Args(0) {
                 if (my $upload = $c->req->upload('document')) {
                     my $document = $request->current_version->add_document(
                         $request,
-			$c->user->obj,
+                        $c->user->obj,
                         $upload->basename,
                         $upload->slurp,
                         $c->controller('Documents')->destination,

@@ -3,6 +3,8 @@
    title = request.title
    status_id = 'status_id'
    group_id = 'group_id'
+   field_error = 'field_error'
+   edit_field_form = 'edit_field_form'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/jquery.jeditable.js'),
@@ -11,15 +13,16 @@
    ]
    snippets = [
      "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
-     "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}');",
+     "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}', '$field_error', '$edit_field_form');",
    ]
 -%]
 [% IF c.user.can_manage(request) %]
-<a id="field_error" class="edit_status"> </a>
 <h3>Manage Request</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
 </ul>
+<span class="edit_status"><a id="[% field_error %]"></a></span>
+<form id="[% edit_field_form %]" action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
 [% END %]
 [% SET version_count = request.all_version_count %]
 
@@ -88,7 +91,9 @@
   </ul><!-- .paging -->
 </div>
 [% END %]
-
+[% IF c.user.can_manage(request) %]
+</form>
+[% END %]
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
 [% SET current_action = request.current_action %]

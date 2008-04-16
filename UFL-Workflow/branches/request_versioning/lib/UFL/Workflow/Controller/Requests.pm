@@ -235,7 +235,7 @@ sub add_document : PathPart Chained('request') Args(0) {
         if ($result->success and my $upload = $c->req->upload('document')) {
             my $document = $request->current_version->add_document(
                 $request,
-		$c->user->obj,
+                $c->user->obj,
                 $upload->basename,
                 $upload->slurp,
                 $c->controller('Documents')->destination,
@@ -381,7 +381,7 @@ sub edit : PathPart Chained('request') Args(0) {
 
     if ($c->req->method eq 'POST') {
         
-	$c->stash({process => $request->process});
+        $c->stash({process => $request->process});
 
         my $result_field = $request->process->validate_fields($c);
         if ( $result_field->success ) {
@@ -419,7 +419,7 @@ sub get_valid_field_id{
 
 =head2 edit_field
 
-edits a single field and currently not creats a version
+pre edits a single field and returns ok for successful validations.
 
 =cut
 
@@ -428,19 +428,18 @@ sub edit_field : PathPart Chained('request') Args(0) {
     
     my $answer = "Failed!";
     my $new_data;
+
     # get the field id
     if ( my $field_id = $self->get_valid_field_id($c, $c->request->param) ) {
         my $request = $c->stash->{request};
         $new_data = $request->current_version->get_field_data_by_id($field_id)->value;
         my $result = $request->current_version->validate_field($c, $field_id);
         if ($result->success) {
-            ## perform save operation to DB.
             if ($new_data eq $result->valid($field_id)) {
                 $answer = "No changes found";
             }
             else {
                 if ($new_data = $result->valid($field_id)) {
-                    $request->current_version->create_field_data( $field_id, $new_data );
                     $answer = "Saved!";
                 }
             }

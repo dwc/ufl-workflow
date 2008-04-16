@@ -1,7 +1,11 @@
 [% WHILE field_data %]
 <dt>[% field_data.field.name | html %]</dt>
-<dd><span class="non_edit" id="[% field_data.field.id  %]">
+<dd>
   [% SET type = field_data.field.type %]
-  [% IF type != 3 %][% field_data.value| html %][% ELSE %][% IF field_data.value == 1 %]Yes[% ELSE %]No[% END %][% END %]</span></dd>
+  [% IF type != 3 %]
+    <span  [% IF c.user.can_manage(request) AND version.version == request.current_version.version %]class="edit"[% END %] id="[% field_data.field.id  %]">[% field_data.value| html %]</span>
+  [% ELSE %]
+    <label class="checkbox"><input type="checkbox" [% IF c.user.can_manage(request) AND version.version == request.current_version.version %][% ELSE %]disabled="disabled"[% END %] name="[% field_data.field.id %]" value="1" [% IF field_data.value == 1 %]checked="checked"[% END %] /></label>
+  [% END %]
 [% field_data = field_data.next_field_data %]
 [% END -%]

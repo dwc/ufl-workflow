@@ -199,11 +199,11 @@ sub add_field {
 
         $field = $self->fields->create({
             name        => $name,
-	    description => $description,
-	    type        => $type,
-	    min_length  => $min_length,
-	    max_length  => $max_length,
-	    optional    => $optional,
+            description => $description,
+            type        => $type,
+            min_length  => $min_length,
+            max_length  => $max_length,
+            optional    => $optional,
         });
 
         if ($last_field) {
@@ -266,8 +266,8 @@ sub validate_fields {
 
     while ($field) {
         $messages{ $field->id } = $field->get_message();
-	push @validations, $field->get_validation_condition();
-	$field = $field->next_field;
+        push @validations, $field->get_validation_condition();
+        $field = $field->next_field;
     }
 
     my $validator = FormValidator::Simple->new;
@@ -301,7 +301,7 @@ sub add_request {
         $request = $self->requests->create({
             user_id     => $user->id,
         });
-	$request->create_version($user->id);
+        $request->create_version($user->id);
         my $action = $request->add_action($self->first_step);
         $action->assign_to_group($initial_group);
     });

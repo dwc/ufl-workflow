@@ -452,12 +452,14 @@ text-align:left;
 #content ul.versioning li a:hover {
 background:#eee;
 }
+
 #content ul.versioning li span {
 background: #d0d0d0;
 border:2px solid #d1d1d1;
 margin: 0px 0px 0px -7px;
 padding: 0 5px 0px 16px;
 }
+
 #content .right p {
 margin: 0px 20px 10px; 
 }
