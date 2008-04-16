@@ -218,6 +218,22 @@ sub version_view : PathPart('version') Chained('request') Args(1) {
     });
 }
 
+=head2 versions
+
+displays all the versions.
+
+=cut
+sub versions : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $request = $c->stash->{request};
+    
+    $c->stash({
+        template => 'requests/versions.tt',
+    });
+
+
+}
 =head2 add_document
 
 Add a document to the stashed request.

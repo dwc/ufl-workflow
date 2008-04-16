@@ -1,0 +1,12 @@
+<h3>Versions</h3>
+[% SET version_count = request.all_version_count %]
+[% IF version_count > 1 %]
+<ul>
+[% FOREACH rev_version IN [1 .. version_count] %]
+[% SET ver = version_count - rev_version + 1 %]
+<li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]&nbsp;[% request.version(ver).submitter.username | html %]</a></li>
+[% END %]
+</ul>
+[% ELSE %]
+<p>There are no version to display</p>
+[% END %]

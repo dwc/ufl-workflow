@@ -52,14 +52,16 @@
 [% IF version_count > 1 %]
 </div><!-- .left  -->
 <div class="right">
-<p>Versions</p>
+<a [% IF version_count > 10 %]href='[% c.uri_for(c.controller.action_for('versions'), request.uri_args) | html %]' [% END %]>Versions</a>
 <ul class="versioning">
 [% FOREACH rev_version IN [1 .. version_count] %]
+    [% IF rev_version <= 10 %]
     [% SET ver = version_count - rev_version + 1 %]
     [% IF ver == version.version %]
       <li class="current"><span>[% ver | html %]&nbsp;[% request.version(ver).submitter.username | html %]</span></li>
     [% ELSE %]
       <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]&nbsp;[% request.version(ver).submitter.username | html %]</a></li>
+    [% END %]
     [% END %]
   [% END %]
   </ul><!-- .paging -->
