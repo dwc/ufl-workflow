@@ -16,8 +16,8 @@
      "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}', '$field_error', '$edit_field_form');",
    ]
 -%]
-[% IF c.user.can_manage(request) %]
-<h3>Manage Request</h3>
+[% IF request.can_edit(version, c.user) %]
+<h3>Edit Request</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
 </ul>
@@ -48,32 +48,6 @@
 </dl>
 <br style="clear:both" />
 
-<h3>Documents</h3>
-[% SET documents = version.documents_rs %]
-[% IF documents.count > 0 %]
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Replacement</th>
-    <th>Created</th>
-  </tr>
-  [% SET i = 0 %]
-  [% WHILE (document = documents.next) %]
-    [% SET replacement = document.replacement %]
-  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
-    <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
-    <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for(c.controller('Documents').action_for('download'), replacement.uri_args) | html %]">[% replacement.name | html %]</a>[% END %]</td>
-    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time.strftime(datetime_format) | html %]</td>
-  </tr>
-    [% SET i = i + 1 %]
-  [% END %]
-</table>
-[% ELSE %]
-<p>None yet.</p>
-[% END %]
-[% IF c.user.can_manage(request) %]
-<p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>
-[% END -%]
 
 [% IF version_count > 1 %]
 </div><!-- .left  -->
@@ -91,9 +65,48 @@
   </ul><!-- .paging -->
 </div>
 [% END %]
-[% IF c.user.can_manage(request) %]
+[% IF request.can_edit(version, c.user) %]
 </form>
 [% END %]
+
+<h3>Documents</h3>
+[% SET docs_so_far = 0%]
+[% SET i = 0 %]
+[% FOREACH rev_version IN [1 .. version_count] %]
+[% SET ver = version_count - rev_version + 1 %]
+[% SET documents = request.version(ver).documents_rs %]
+[% IF documents.count > 0 %]
+[% IF docs_so_far == 0 %]
+<table>
+  <tr>
+    <th>Added in version</th>
+    <th>Title</th>
+    <th>Replacement</th>
+    <th>Created</th>
+  </tr>
+[% docs_so_far = 1; %]
+[% END %]
+  [% WHILE (document = documents.next) %]
+    <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    [% SET replacement = document.replacement %]
+    <td ><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]</a></td>
+    <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for(c.controller('Documents').action_for('download'), replacement.uri_args) | html %]">[% replacement.name | html %]</a>[% END %]</td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time.strftime(datetime_format) | html %]</td>
+    </tr>
+    [% SET i = i + 1 %]
+  [% END %]
+[% END %]
+[% END %]
+[% IF docs_so_far == 1 %]
+</table>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+[% IF request.can_edit(version, c.user) %]
+<p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>
+[% END -%]
+
 <h3 id="actions">Actions</h3>
 [% SET action = request.first_action %]
 [% SET current_action = request.current_action %]

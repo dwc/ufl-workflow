@@ -63,7 +63,7 @@ expandable [% IF expanded OR more_expanded %]expanded[% ELSE %]collapsed[% END %
     Search:
     <select name="query_field" id="[% query_field_id | html %]">
       <option value="0">All</option>
-      <option value="1">Title</option>
+      <option value="1">Request details</option>
       <option value="2">Submitter</option>
       <option value="3">Reviewers</option>
       <option value="4">Comments</option>

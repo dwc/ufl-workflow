@@ -408,6 +408,22 @@ sub update_status {
     });
 }
 
+=head2 can_edit
+
+Return if the user can edit the request.
+
+=cut
+sub can_edit {
+    my ($self, $version, $user) = @_;
+    my $is_user_acted;
+
+    if ($self->past_actors) {
+        $is_user_acted = $self->past_actors()->search({ id => $user->id });
+    }
+
+    return ($self->is_open and $version->version == $self->current_version->version and ($user->id == $self->user_id or $is_user_acted ));
+}
+
 =head2 message_id
 
 Return a string suitable for identifying this request in C<Message-Id>

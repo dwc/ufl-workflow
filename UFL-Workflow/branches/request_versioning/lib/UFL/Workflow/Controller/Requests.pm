@@ -228,7 +228,7 @@ sub add_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
-    die 'User cannot manage request' unless $c->user->can_manage($request);
+    die 'User cannot manage request' unless $request->can_edit($request->current_version, $c->user);
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
@@ -377,7 +377,7 @@ edits field and creats a version
 sub edit : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
     my $request = $c->stash->{request};
-    die 'User cannot manage request' unless $c->user->can_manage($request);
+    die 'User cannot manage request' unless $request->can_edit($request->current_version, $c->user);
 
     if ($c->req->method eq 'POST') {
         

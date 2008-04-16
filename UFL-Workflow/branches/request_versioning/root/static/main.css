@@ -416,7 +416,7 @@ font-size: 80%;
 .left {
 float:left;
 margin:0px 0pt 10pt 0pt;
-padding:0pt 10pt 0pt 10pt;
+padding:0pt 10pt 10pt 10pt;
 text-align:left;
 width:80%;
 border: 2px solid #d1d1d1;
