@@ -1,6 +1,6 @@
 [% WHILE field_data %]
 <dt>[% field_data.field.name | html %]</dt>
-<dd><span class="edit" id="[% field_data.field.id  %]">
+<dd><span class="non_edit" id="[% field_data.field.id  %]">
   [% SET type = field_data.field.type %]
   [% IF type != 3 %][% field_data.value| html %][% ELSE %][% IF field_data.value == 1 %]Yes[% ELSE %]No[% END %][% END %]</span></dd>
 [% field_data = field_data.next_field_data %]

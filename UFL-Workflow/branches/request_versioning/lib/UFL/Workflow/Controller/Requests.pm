@@ -87,8 +87,11 @@ sub reports : Local Args(0) {
     my $requests = $c->model('DBIC::Request')->search(
         undef,
         {
-            join     => { actions => [ qw/actor action_groups/ ] },
-            prefetch => [ qw/submitter process versions / ],
+            join     => {
+                actions   => [ qw/actor action_groups/ ],
+                versions  => [ qw/field_data documents/ ],
+            },
+            prefetch => [ qw/submitter process/ ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
             page     => $page,
@@ -98,6 +101,7 @@ sub reports : Local Args(0) {
 
     if (my $query = $result->valid('query')) {
         my @fields = qw/
+            field_data.value
             submitter.username
             actor.username
             actions.comment
