@@ -474,6 +474,32 @@ sub edit_field : PathPart Chained('request') Args(0) {
     $c->forward($view);
 }
 
+=head2 version_diff
+
+Displays the version differences
+
+=cut
+sub version_diff : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+    my $request = $c->stash->{request};
+    
+    if ($c->req->method eq 'POST') {
+	my @versions = $c->request->param;
+	my @diff_versions;
+        foreach my $version ( @versions ) {
+	    if ( $version =~ /^(\d+$)/ and $version <= $request->current_version->version ) {
+	       push @diff_versions, $version if $c->request->param($version) == 1;
+	    }
+        }
+	@diff_versions = sort {$b <=> $a} @diff_versions;
+	$c->stash({
+	    diff_versions => [ @diff_versions ],
+	    diff_count    => scalar @diff_versions - 1,
+        });
+    }
+
+    $c->stash(template  => 'requests/version_diff.tt');
+}
 =head2 send_changed_request_email
 
 Send notification that a L<UFL::Workflow::Schema::Request> has changed

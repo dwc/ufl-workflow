@@ -418,7 +418,7 @@ float:left;
 margin:0px 0pt 10pt 0pt;
 padding:0pt 10pt 10pt 10pt;
 text-align:left;
-width:80%;
+width:72%;
 border: 2px solid #d1d1d1;
 }
 
@@ -427,39 +427,37 @@ float:left;
 margin:0px 0pt 0pt;
 padding:0pt;
 text-align:left;
-width:15%;
+width:23%;
 }
 
 #content ul.versioning {
 display:block;
-margin: 12px 5px 10px;
+margin: 12px 0px 10px 5px;
 height:30px;
 }
 
+/* Need an additional hook to make the boxes work in IE */
 #content ul.versioning li {
 display:block;
 list-style:none;
-}
-
-/* Need an additional hook to make the boxes work in IE */
-#content ul.versioning li span, #content ul.versioning li a {
 border:1px solid #eee;
-margin:0 0 0 5px;
-padding:0 5px;
+margin: 7px 0px 0px 0px;
+padding:0px 0px 0px 5px;
 text-align:left;
+font-size:0.8em;
 }
 
 #content ul.versioning li a:hover {
 background:#eee;
 }
 
-#content ul.versioning li span {
+#content ul.versioning li.current {
 background: #d0d0d0;
-border:2px solid #d1d1d1;
-margin: 0px 0px 0px -7px;
-padding: 0 5px 0px 16px;
+border:1px solid #d1d1d1;
+margin: 5px 0px 0px -10px;
+padding: 0px 5px 0px 15px;
 }
 
-#content .right a {
-margin: 0px 20px 10px; 
+#content .center {
+margin: 0px 50px 10px;
 }

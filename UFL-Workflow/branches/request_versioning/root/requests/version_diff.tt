@@ -1,0 +1,30 @@
+<h3>Differences </h3>
+[% IF diff_count > 0 %]
+<br style="clear:both" />
+<p>Comparing [% diff_count + 1 | html %] Versions.</p>
+<br style="clear:both" />
+<table>
+  <tr>
+    <th>Fields</th>
+[% FOREACH ver IN [0..diff_count] %]
+[% SET version =  diff_versions.$ver %]
+    <th>Version [% version | html %]</th>
+[% END %]
+  </tr>
+  [% SET i=0 %]
+  [% field_data = request.current_version.first_field_data  %]
+  [% WHILE field_data %]
+  <tr [% IF i % 2 == 0 %]class="even"[% END %]>
+  <td>[% field_data.field.name %]</td>
+    [% FOREACH ver IN [0..diff_count] %]
+    [% SET version =  diff_versions.$ver %]
+    <td [% IF request.version(diff_versions.0).get_field_data_by_id(field_data.field.id).value != request.version(version).get_field_data_by_id(field_data.field.id).value %]class="error"[% END %]>[% request.version(version).get_field_data_by_id(field_data.field.id).value %]</td> 
+    [% END %]
+  </tr>
+  [% SET i = i + 1 %]
+  [% field_data = field_data.next_field_data %]
+  [% END %]
+</table>
+[% ELSE %]
+<p class="error"> Nothing to Compare.  </p>
+[% END %]

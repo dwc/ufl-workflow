@@ -22,13 +22,15 @@
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
 </ul>
 <span class="edit_status"><a id="[% field_error %]"></a></span>
-<form id="[% edit_field_form %]" action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
 [% END %]
 [% SET version_count = request.all_version_count %]
 
 [% IF version_count > 1 %]
 <div class="left">
 [% END %]
+[% IF request.can_edit(version, c.user) %]
+<form id="[% edit_field_form %]" action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
+[%END%]
 <h3>Request details</h3>
 <dl>
   [% field_data = version.first_field_data  %]
@@ -47,20 +49,25 @@
   <dd>[% version.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
+[% IF request.can_edit(version, c.user) %]
+</form>
+[%END%]
 
 
 [% IF version_count > 1 %]
 </div><!-- .left  -->
 <div class="right">
-<a [% IF version_count > 10 %]href='[% c.uri_for(c.controller.action_for('versions'), request.uri_args) | html %]' [% END %]>Versions</a>
+<form action="[% c.uri_for(c.controller.action_for('version_diff'), request.uri_args) | html %]" method="post">
+<a class="center" [% IF version_count > 8 %]href='[% c.uri_for(c.controller.action_for('versions'), request.uri_args) | html %]' [% END %]>Versions</a>
+  <input type="submit" value="Compare" />
 <ul class="versioning">
 [% FOREACH rev_version IN [1 .. version_count] %]
-    [% IF rev_version <= 10 %]
+    [% IF rev_version <= 8 %]
     [% SET ver = version_count - rev_version + 1 %]
     [% IF ver == version.version %]
-      <li class="current"><span>[% ver | html %]&nbsp;[% request.version(ver).submitter.username | html %]</span></li>
+      <li class="current"><label class="checkbox"><input type="checkbox" name="[% ver | html %]" value="1" class="diff"/></label>[% request.version(ver).insert_time.strftime("%e-%b-%y") | html %]&nbsp;[% request.version(ver).submitter.username | html %]</li>
     [% ELSE %]
-      <li><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]&nbsp;[% request.version(ver).submitter.username | html %]</a></li>
+      <li><label class="checkbox"><input type="checkbox" name="[% ver | html %]" value="1" class="diff"/></label><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% request.version(ver).insert_time.strftime("%e-%b-%y") | html %]</a>&nbsp;[% request.version(ver).submitter.username | html %]</li>
     [% END %]
     [% END %]
   [% END %]
