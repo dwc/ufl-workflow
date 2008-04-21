@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.28
+0.28  Mon Apr 21 11:25:54 EDT 2008
         - Fix paging on /requests/reports by removing buggy prefetch
           (distinct => 1 was causing inappropriate GROUP BY for
           paging)
