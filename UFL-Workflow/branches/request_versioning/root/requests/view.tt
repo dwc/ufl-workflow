@@ -16,7 +16,7 @@
      "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}', '$field_error', '$edit_field_form');",
    ]
 -%]
-[% IF request.can_edit(version, c.user) %]
+[% IF request.can_be_edited(version, c.user) %]
 <h3>Edit Request</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
@@ -28,10 +28,10 @@
 [% IF version_count > 1 %]
 <div class="left">
 [% END %]
-[% IF request.can_edit(version, c.user) %]
+[% IF request.can_be_edited(version, c.user) %]
 <form id="[% edit_field_form %]" action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
 [%END%]
-<h3>Request details</h3>
+<h3>Request details [% IF request.current_version.version != version.version %] of version [% version.version %] [% END %]</h3>
 <dl>
   [% field_data = version.first_field_data  %]
   [% IF field_data %]
@@ -49,7 +49,7 @@
   <dd>[% version.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
-[% IF request.can_edit(version, c.user) %]
+[% IF request.can_be_edited(version, c.user) %]
 </form>
 [%END%]
 
@@ -59,7 +59,7 @@
 <div class="right">
 <form action="[% c.uri_for(c.controller.action_for('version_diff'), request.uri_args) | html %]" method="post">
 <a class="center" [% IF version_count > 8 %]href='[% c.uri_for(c.controller.action_for('versions'), request.uri_args) | html %]' [% END %]>Versions</a>
-  <input type="submit" value="Compare" />
+  <input class="submit" type="submit" value="Compare" />
 <ul class="versioning">
 [% FOREACH rev_version IN [1 .. version_count] %]
     [% IF rev_version <= 8 %]
@@ -74,7 +74,7 @@
   </ul><!-- .paging -->
 </div>
 [% END %]
-[% IF request.can_edit(version, c.user) %]
+[% IF request.can_be_edited(version, c.user) %]
 </form>
 [% END %]
 
@@ -98,7 +98,7 @@
   [% WHILE (document = documents.next) %]
     <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     [% SET replacement = document.replacement %]
-    <td ><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% ver | html %]</a></td>
+    <td ><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% request.version(ver).insert_time.strftime("%e-%b-%y") | html %]</a></td>
     <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
     <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for(c.controller('Documents').action_for('download'), replacement.uri_args) | html %]">[% replacement.name | html %]</a>[% END %]</td>
     <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time.strftime(datetime_format) | html %]</td>
@@ -112,7 +112,7 @@
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
-[% IF request.can_edit(version, c.user) %]
+[% IF request.can_be_edited(version, c.user) %]
 <p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>
 [% END -%]
 

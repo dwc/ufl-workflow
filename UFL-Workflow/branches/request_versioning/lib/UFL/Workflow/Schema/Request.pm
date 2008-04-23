@@ -408,12 +408,12 @@ sub update_status {
     });
 }
 
-=head2 can_edit
+=head2 can_be_edited
 
 Return if the user can edit the request.
 
 =cut
-sub can_edit {
+sub can_be_edited {
     my ($self, $version, $user) = @_;
     my $is_user_acted;
 

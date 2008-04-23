@@ -458,6 +458,9 @@ margin: 5px 0px 0px -10px;
 padding: 0px 5px 0px 15px;
 }
 
+#content ul.versioning li label.checkbox{
+margin-right: 3px;
+}
 #content .center {
 margin: 0px 50px 10px;
 }

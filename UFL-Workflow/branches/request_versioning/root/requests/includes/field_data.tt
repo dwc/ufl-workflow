@@ -3,9 +3,9 @@
 <dd>
   [% SET type = field_data.field.type %]
   [% IF type != 3 %]
-    <span  [% IF request.can_edit(version, c.user) %]class="edit"[% END %] id="[% field_data.field.id  %]">[% field_data.value| html %]</span>
+    <span  [% IF request.can_be_edited(version, c.user) %]class="edit"[% END %] id="f_[% field_data.field.id  %]">[% field_data.value| html %]</span>
   [% ELSE %]
-    <label class="checkbox"><input type="checkbox" [% IF request.can_edit(version, c.user) %][% ELSE %]disabled="disabled"[% END %] name="[% field_data.field.id %]" value="1" [% IF field_data.value == 1 %]checked="checked"[% END %] /></label>
+    <label class="checkbox"><input type="checkbox" [% IF request.can_be_edited(version, c.user) %][% ELSE %]disabled="disabled"[% END %] name="[% field_data.field.id %]" value="1" [% IF field_data.value == 1 %]checked="checked"[% END %] /></label>
   [% END %]
 </dd>
 [% field_data = field_data.next_field_data %]

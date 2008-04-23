@@ -114,7 +114,7 @@
                     return;
                 }
 
-                settings.name = self.id;
+                settings.name = self.id.substring(2);
 
                 /* figure out how wide and tall we are, visibility trick */
                 /* is workaround for http://dev.jquery.com/ticket/2190 */

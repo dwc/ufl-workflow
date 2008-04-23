@@ -19,20 +19,20 @@ UFL.Workflow.Form.EditField = function(url, field_error, edit_field_form) {
                $(this).html( resp['value'] );
                $(field_error_id).removeClass("error");
                $(field_error_id).html(resp['answer']).show();
-               if (resp['answer'] != "Saved!" ) {
+               if (resp['answer'] != "Success!" ) {
                    $(field_error_id).addClass("error");
                }
                else {
 		   // enabled the save button now for saving finally.
                    $(field_error_id).html(resp['answer']).fadeOut(5000);
                    $('#submit_data').show();
-		   $("#h_"+$(this).attr('id')).val(resp['value']);
+		   $("#h_"+$(this).attr('id').substring(2)).val(resp['value']);
                }
             }
        });
        for (i=0;i<$(".edit").length;i++) {
           each = $(".edit").eq(i);
-          each.parent().append("<span class='hidden'><input type='hidden'id='h_"+each.attr('id')+"' name='"+each.attr('id')+"' value='"+each.text()+"' /></span>");
+          each.parent().append("<span class='hidden'><input type='hidden'id='h_"+each.attr('id').substring(2)+"' name='"+each.attr('id').substring(2)+"' value='"+each.text()+"' /></span>");
        }
        $(field_error_id).parent().append("<button class='hidden' id='submit_data'>Save!</button>");
        $(".hidden").hide();

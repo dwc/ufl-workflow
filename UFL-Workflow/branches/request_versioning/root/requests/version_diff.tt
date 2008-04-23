@@ -26,5 +26,5 @@
   [% END %]
 </table>
 [% ELSE %]
-<p class="error"> Nothing to Compare.  </p>
+<p class="error"> Nothing to Compare with.  </p>
 [% END %]

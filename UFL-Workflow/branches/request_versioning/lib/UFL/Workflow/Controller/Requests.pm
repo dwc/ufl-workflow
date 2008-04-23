@@ -393,7 +393,7 @@ edits field and creats a version
 sub edit : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
     my $request = $c->stash->{request};
-    die 'User cannot manage request' unless $request->can_edit($request->current_version, $c->user);
+    die 'User cannot manage request' unless $request->can_be_edited($request->current_version, $c->user);
 
     if ($c->req->method eq 'POST') {
         
@@ -456,7 +456,7 @@ sub edit_field : PathPart Chained('request') Args(0) {
             }
             else {
                 if ($new_data = $result->valid($field_id)) {
-                    $answer = "Saved!";
+                    $answer = "Success!";
                 }
             }
         }
