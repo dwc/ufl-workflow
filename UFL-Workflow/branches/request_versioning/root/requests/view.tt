@@ -3,7 +3,6 @@
    title = request.title
    status_id = 'status_id'
    group_id = 'group_id'
-   field_error = 'field_error'
    edit_field_form = 'edit_field_form'
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
@@ -13,7 +12,7 @@
    ]
    snippets = [
      "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
-     "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}', '$field_error', '$edit_field_form');",
+     "new UFL.Workflow.Form.EditField('${c.uri_for(c.controller('Requests').action_for('edit_field'),request.uri_args)}', '$edit_field_form');",
    ]
 -%]
 [% IF request.can_be_edited(version, c.user) %]
@@ -21,7 +20,6 @@
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></li>
 </ul>
-<span class="edit_status"><a id="[% field_error %]"></a></span>
 [% END %]
 [% SET version_count = request.all_version_count %]
 
@@ -30,52 +28,50 @@
 [% END %]
 [% IF request.can_be_edited(version, c.user) %]
 <form id="[% edit_field_form %]" action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" method="post">
-[%END%]
+[% END %]
 <h3>Request details [% IF request.current_version.version != version.version %] of version [% version.version %] [% END %]</h3>
-<dl>
+[% IF request.can_be_edited(version, c.user) %]
+<span class="edit_status"></span>
+[% END %]
+<table>
   [% field_data = version.first_field_data  %]
   [% IF field_data %]
   [% INCLUDE requests/includes/field_data.tt %]
   [% END %]
-  <dt>Process</dt>
-  <dd>[% request.process.name | html %]</dd>
-  <dt>Status</dt>
-  <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
-  <dt>Submitter</dt>
-  <dd>[% request.submitter.username | html %]</dd>
-  <dt>Created</dt>
-  <dd>[% version.insert_time.strftime(datetime_format) | html %]</dd>
-  <dt>Updated</dt>
-  <dd>[% version.update_time.strftime(datetime_format) | html %]</dd>
-</dl>
-<br style="clear:both" />
+  <tr><th scope="row">Process</th>
+  <td>[% request.process.name | html %]</td></tr>
+  <tr><th scope="row">Status</th>
+  <td>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</td></tr>
+  <tr><th scope="row">Submitter</th>
+  <td>[% request.submitter.username | html %]</td></tr>
+  <tr><th scope="row">Created</th>
+  <td>[% version.insert_time.strftime(datetime_format) | html %]</td></tr>
+  <tr><th scope="row">Updated</th>
+  <td>[% version.update_time.strftime(datetime_format) | html %]</td></tr>
+</table>
 [% IF request.can_be_edited(version, c.user) %]
 </form>
-[%END%]
-
-
+[% END %]
 [% IF version_count > 1 %]
 </div><!-- .left  -->
 <div class="right">
 <form action="[% c.uri_for(c.controller.action_for('version_diff'), request.uri_args) | html %]" method="post">
-<a class="center" [% IF version_count > 8 %]href='[% c.uri_for(c.controller.action_for('versions'), request.uri_args) | html %]' [% END %]>Versions</a>
-  <input class="submit" type="submit" value="Compare" />
+<h3> Versions [% IF version_count > 8 %]<a href='[% c.uri_for(c.controller.action_for('versions'), request.uri_args) | html %]' >(view all)</a>[% END %]</h3>
 <ul class="versioning">
 [% FOREACH rev_version IN [1 .. version_count] %]
-    [% IF rev_version <= 8 %]
+  [% IF rev_version <= 8 %]
     [% SET ver = version_count - rev_version + 1 %]
     [% IF ver == version.version %]
-      <li class="current"><label class="checkbox"><input type="checkbox" name="[% ver | html %]" value="1" class="diff"/></label>[% request.version(ver).insert_time.strftime("%e-%b-%y") | html %]&nbsp;[% request.version(ver).submitter.username | html %]</li>
+     <li class="current"><label class="checkbox"><input type="checkbox" name="[% ver | html %]" value="1" class="diff"/></label>[% request.version(ver).insert_time.strftime("%e-%b-%y") | html %]&nbsp;[% request.version(ver).submitter.username | html %]</li>
     [% ELSE %]
       <li><label class="checkbox"><input type="checkbox" name="[% ver | html %]" value="1" class="diff"/></label><a href="[% c.uri_for(c.controller.action_for('view'), request.uri_args) | html %]/version/[% ver | html %]">[% request.version(ver).insert_time.strftime("%e-%b-%y") | html %]</a>&nbsp;[% request.version(ver).submitter.username | html %]</li>
     [% END %]
-    [% END %]
   [% END %]
-  </ul><!-- .paging -->
-</div>
 [% END %]
-[% IF request.can_be_edited(version, c.user) %]
+<li><input class="submit" type="submit" value="Compare" /></li>
+</ul>
 </form>
+</div>
 [% END %]
 
 <h3>Documents</h3>
@@ -166,9 +162,10 @@
     [% END %]
   <label>Send to group:
     <select name="group_id" id="[% group_id | html %]">
+    <option value='0' />
     </select>
   </label>
-  <label>Comment: <textarea name="comment"></textarea></label>
+  <label>Comment: <textarea name="comment" rows="10" cols="80"></textarea></label>
   <input type="submit" class="submit" value="Submit Decision" />
 </form>
   [% END %]

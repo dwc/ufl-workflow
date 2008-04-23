@@ -407,19 +407,24 @@ background:#eee;
 .error {
 color: #FF0000;
 }
-.edit_status {
+
+.base {
+color: green;
+}
+
+.edit_status ul li#field_error{
 background: #FFF1A8 none repeat scroll 0%;
-text-align: center;
 font-weight: bold;
 font-size: 80%;
 }
+
 .left {
 float:left;
 margin:0px 0pt 10pt 0pt;
 padding:0pt 10pt 10pt 10pt;
 text-align:left;
-width:72%;
-border: 2px solid #d1d1d1;
+width:74%;
+border: 2px solid #aaaaaa;
 }
 
 .right {
@@ -427,7 +432,7 @@ float:left;
 margin:0px 0pt 0pt;
 padding:0pt;
 text-align:left;
-width:23%;
+width:22%;
 }
 
 #content ul.versioning {
@@ -453,14 +458,21 @@ background:#eee;
 
 #content ul.versioning li.current {
 background: #d0d0d0;
-border:1px solid #d1d1d1;
-margin: 5px 0px 0px -10px;
-padding: 0px 5px 0px 15px;
+border:2px solid #aaaaaa;
+margin: 5px 0px 0px -12px;
+padding: 0px 5px 0px 16px;
 }
 
 #content ul.versioning li label.checkbox{
-margin-right: 3px;
+margin-right: 5px;
 }
-#content .center {
-margin: 0px 50px 10px;
+
+#content ul.versioning li label.checkbox input{
+margin: 3px 0px 0px 0px;
+height: 14px;
+width: 14px;
+}
+
+#content h3 a{
+font-size:0.8em;
 }
