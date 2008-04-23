@@ -1,5 +1,14 @@
 This file documents the revision history for UFL::Workflow.
 
+0.29  Mon Apr 21 16:23:41 EDT 2008
+        - Schema::Action: Force actor relationship to a LEFT JOIN so
+          pending actions show up in /requests/reports
+
+0.28  Mon Apr 21 11:25:54 EDT 2008
+        - Fix paging on /requests/reports by removing buggy prefetch
+          (distinct => 1 was causing inappropriate GROUP BY for
+          paging)
+
 0.27  Mon Apr  7 19:14:03 EDT 2008
         - Update reporting UI with an "advanced options" section
         - Extend ACLs to allow Help Desk users to add users
