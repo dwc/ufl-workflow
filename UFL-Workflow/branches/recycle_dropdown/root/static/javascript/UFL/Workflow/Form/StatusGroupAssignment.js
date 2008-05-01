@@ -36,11 +36,13 @@ UFL.Workflow.Form.StatusGroupAssignment = function(url, statusId, groupId) {
                     }
 
                     var option = new Option(group.name, group.id);
-                    if ( ! json.previous_group && json.selected_group && group.id == json.selected_group.id) {
+                    if (! json.previous_group && json.selected_group && group.id == json.selected_group.id) {
                         option.selected = true;
                     }
+
                     groupSelect.get(0).options[j++] = option;
                 }
+
                 groupSelect.parent().show();
             }
             else {
