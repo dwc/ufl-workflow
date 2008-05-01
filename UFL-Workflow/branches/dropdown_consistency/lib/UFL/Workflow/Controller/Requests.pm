@@ -87,8 +87,7 @@ sub reports : Local Args(0) {
     my $requests = $c->model('DBIC::Request')->search(
         undef,
         {
-            join     => { actions => [ qw/actor action_groups/ ] },
-            prefetch => [ qw/submitter process documents/ ],
+            join     => [ qw/submitter process documents/, { actions => [ qw/actor action_groups/ ] } ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
             page     => $page,
