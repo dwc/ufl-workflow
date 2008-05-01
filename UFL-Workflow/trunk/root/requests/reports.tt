@@ -63,12 +63,12 @@ expandable [% IF expanded %]expanded[% ELSE %]collapsed[% END %]
     Search:
     <select name="query_field" id="[% query_field_id | html %]">
       <option value="0">All</option>
-      <option value="1">Title</option>
+      <option value="1">Comments</option>
       <option value="2">Description</option>
-      <option value="3">Submitter</option>
+      <option value="3">Document title</option>
       <option value="4">Reviewers</option>
-      <option value="5">Comments</option>
-      <option value="6">Document title</option>
+      <option value="5">Submitter</option>
+      <option value="6">Title</option>
     </select>
     <input type="text" name="query" id="[% query_id | html %]" value="[% query_default | html %]" />
     <input type="submit" class="submit" value="Go" />
