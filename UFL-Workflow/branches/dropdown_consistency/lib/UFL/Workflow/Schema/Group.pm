@@ -34,7 +34,7 @@ __PACKAGE__->has_many(
 __PACKAGE__->has_many(
     group_roles => 'UFL::Workflow::Schema::GroupRole',
     { 'foreign.group_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
+    { cascade_delete => 0, cascade_copy => 0, join => 'role', order_by => 'name' },
 );
 
 __PACKAGE__->has_many(
@@ -49,10 +49,14 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
-__PACKAGE__->many_to_many('roles', 'group_roles', 'role');
+__PACKAGE__->many_to_many('roles', 'group_roles', 'role', { order_by => 'name' });
 __PACKAGE__->many_to_many('actions', 'action_groups', 'action');
 
 __PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Group');
+
+__PACKAGE__->resultset_attributes({
+    order_by => 'name',
+});
 
 =head1 NAME
 
