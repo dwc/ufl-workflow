@@ -1,5 +1,7 @@
 This file documents the revision history for UFL::Workflow.
 
+        - Add default sorting for various group and role views
+
 0.29  Mon Apr 21 16:23:41 EDT 2008
         - Schema::Action: Force actor relationship to a LEFT JOIN so
           pending actions show up in /requests/reports
