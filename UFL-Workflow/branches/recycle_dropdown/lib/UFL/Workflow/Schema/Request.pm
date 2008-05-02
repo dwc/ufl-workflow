@@ -208,12 +208,12 @@ sub groups_for_status {
         $step = $self->prev_step;
     }
 
-    my @groups;
+    my $groups;
     if ($step) {
-        @groups = $step->role->groups->search(undef, { order_by => 'name' });
+        $groups = $step->role->groups->search(undef, { order_by => 'name' });
     }
 
-    return @groups;
+    return $groups;
 }
 
 =head2 past_actors
