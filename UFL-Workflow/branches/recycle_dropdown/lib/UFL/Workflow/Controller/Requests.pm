@@ -296,15 +296,12 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
             my $request = $c->stash->{request};
 
             my $groups = $request->groups_for_status($status);
-            my @all_groups = $groups->all if $groups;
-            $c->stash(groups => [ map { $_->to_json } @all_groups ]);
+            $c->stash(groups => [ map { $_->to_json } $groups->all ]);
 
             my $current_group = $request->current_action->groups->first;
-            if (my $parent_group = $current_group->parent_group and $groups) {
+            if (my $parent_group = $current_group->parent_group) {
                 # Default to the parent group
-                if (my $selected_group = $groups->search({'group.id' => $parent_group->id})) {
-                    $c->stash(selected_group => $selected_group->first->to_json) if $selected_group->count;
-                }
+                $c->stash(selected_group => $groups->find($parent_group->id)->to_json);
             }
 
             if ($status->recycles_request and $request->current_action->prev_action) {
