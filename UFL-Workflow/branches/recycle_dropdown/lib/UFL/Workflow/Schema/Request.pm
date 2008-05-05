@@ -213,8 +213,8 @@ sub groups_for_status {
             'role.id' => $step ? $step->role->id : 0,
         },
         {
-            join     => [ { group_roles =>  'role' }],
-            order_by => 'me.name', 
+            join     => [ { group_roles => 'role' } ],
+            order_by => 'me.name',
         },
     );
 }
