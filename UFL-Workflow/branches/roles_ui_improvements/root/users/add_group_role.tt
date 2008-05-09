@@ -7,7 +7,7 @@
      c.uri_for('/static/javascript/UFL/Workflow/Form/GroupRoleAssignment.js'),
    ]
    snippets = [
-     "new UFL.Workflow.Form.GroupRoleAssignment('${c.uri_for(c.controller('users').action_for('list_group_roles'), request.uri_args)}', '$group_id', '$role_id');",
+     "new UFL.Workflow.Form.GroupRoleAssignment('${c.uri_for(c.controller.action_for('list_group_roles'), user.uri_args)}', '$group_id', '$role_id');",
    ]
 -%]
 

@@ -26,15 +26,8 @@ UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId) {
             if (json && json.roles && json.roles.length > 0) {
                 for (var i = 0; i < json.roles.length; i++) {
                     var role = json.roles[i];
-
-                    var option = new Option(role.name, role.id);
-                    if (json.selected_role && role.id == json.selected_role.id) {
-                        option.selected = true;
-                    }
-
-                    roleSelect.get(0).options[i] = option;
+                    roleSelect.get(0).options[i] = new Option(role.name, role.id);
                 }
-
                 roleSelect.parent().show();
             }
             else {
