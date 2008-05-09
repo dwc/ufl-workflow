@@ -295,13 +295,14 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
         if ($status) {
             my $request = $c->stash->{request};
 
-            my @groups = $request->groups_for_status($status);
-            $c->stash(groups => [ map { $_->to_json } @groups ]);
+            my $groups = $request->groups_for_status($status);
+            my @all_groups = $groups->all if $groups;
+            $c->stash(groups => [ map { $_->to_json } @all_groups ]);
 
             my $current_group = $request->current_action->groups->first;
             if (my $parent_group = $current_group->parent_group) {
                 # Default to the parent group
-                foreach my $group (@groups) {
+                foreach my $group (@all_groups) {
                     if ($group->id == $parent_group->id) {
                         $c->stash(selected_group => $group->to_json);
                         last;
