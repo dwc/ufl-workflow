@@ -304,8 +304,8 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
                 $c->stash(selected_group => $groups->find($parent_group->id)->to_json);
             }
 
-            if ($status->recycles_request and $request->current_action->prev_action) {
-                $c->stash(prev_group => $request->current_action->prev_action->group->to_json);
+            if ($status->recycles_request and my $prev_action = $request->current_action->prev_action) {
+                $c->stash(prev_group => $prev_action->group->to_json);
             }
         }
     }
