@@ -309,7 +309,7 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
                 }
             }
 
-            if ( $status->recycles_request and $request->current_action->prev_action ) {
+            if ($status->recycles_request and $request->current_action->prev_action) {
                 $c->stash(previous_group => $request->current_action->prev_action->group->to_json);
             }
         }
