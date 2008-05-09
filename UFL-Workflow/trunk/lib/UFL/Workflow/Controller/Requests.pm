@@ -310,13 +310,13 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
             }
 
             if ($status->recycles_request and $request->current_action->prev_action) {
-                $c->stash(previous_group => $request->current_action->prev_action->group->to_json);
+                $c->stash(prev_group => $request->current_action->prev_action->group->to_json);
             }
         }
     }
 
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/groups selected_group previous_group/ ]);
+    $view->expose_stash([ qw/groups selected_group prev_group/ ]);
     $c->forward($view);
 }
 
