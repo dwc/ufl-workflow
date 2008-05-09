@@ -72,7 +72,7 @@ sub uri_args {
 =head2 to_json
 
 Return a hash suitable for conversion to JSON which represents this
-group.
+Role.
 
 =cut
 
