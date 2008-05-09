@@ -300,13 +300,10 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
             $c->stash(groups => [ map { $_->to_json } @all_groups ]);
 
             my $current_group = $request->current_action->groups->first;
-            if (my $parent_group = $current_group->parent_group) {
+            if (my $parent_group = $current_group->parent_group and $groups) {
                 # Default to the parent group
-                foreach my $group (@all_groups) {
-                    if ($group->id == $parent_group->id) {
-                        $c->stash(selected_group => $group->to_json);
-                        last;
-                    }
+                if (my $selected_group = $groups->search({'group.id' => $parent_group->id})) {
+                    $c->stash(selected_group => $selected_group->first->to_json) if $selected_group->count;
                 }
             }
 
