@@ -210,7 +210,7 @@ sub groups_for_status {
 
     my @groups;
     if ($step) {
-        @groups = $step->role->groups;
+        @groups = $step->role->groups->search(undef, { order_by => 'name' });;
     }
 
     return @groups;
