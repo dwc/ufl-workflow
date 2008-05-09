@@ -208,12 +208,15 @@ sub groups_for_status {
         $step = $self->prev_step;
     }
 
-    my @groups;
-    if ($step) {
-        @groups = $step->role->groups;
-    }
-
-    return @groups;
+    return $self->result_source->schema->resultset('Group')->search(
+        {
+            'role.id' => $step ? $step->role->id : 0,
+        },
+        {
+            join     => [ { group_roles => 'role' } ],
+            order_by => 'me.name',
+        },
+    );
 }
 
 =head2 past_actors
