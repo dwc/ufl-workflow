@@ -101,6 +101,7 @@ sub add_user : PathPart Chained('role') Args(0) {
                     group_id => $group->id,
                     role_id  => $role->id,
                 });
+
             }
             return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
         }

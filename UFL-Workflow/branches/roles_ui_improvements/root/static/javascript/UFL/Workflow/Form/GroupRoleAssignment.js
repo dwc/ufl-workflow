@@ -2,31 +2,23 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId) {
+UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId, btnGroupId, btnRoleId) {
     var me = this;
     var groupSelect;
     var roleSelect;
-    var submitSelect;
+    var btnGroupSelect;
+    var btnRoleSelect;
 
     $(document).ready(function() {
         groupSelect = $("#" + groupId);
         roleSelect = $("#" + roleId);
+        btnGroupSelect = $("#" + btnGroupId);
+        btnRoleSelect = $("#" + btnRoleId);
 
-        if (roleSelect && roleSelect.length == 0 && groupSelect && groupSelect.length != 0) {
-            var formHolder = groupSelect.parent().parent().get(0);
-            submitSelect = formHolder.getElementsByTagName("input")[0];
-            submitSelect.id = "submit_role";
-            var roleLabel = document.createElement('label');
-            roleLabel.textContent = "Role: ";
-            formHolder.insertBefore(roleLabel , submitSelect);
-            roleSelect = document.createElement('select');
-            roleLabel.appendChild(roleSelect);
-            roleSelect.id = roleSelect.name = roleId;
-            roleSelect = $("#" + roleId);
-            submitSelect = $("#submit_role");
-            roleSelect.parent().hide();
-            groupSelect.change(me.getPossibleRoles);
-        }
+        btnGroupSelect.hide();
+        btnGroupSelect.parent().attr({method:"post"});
+        groupSelect.change(me.getPossibleRoles);
+
     });
 
     this.getPossibleRoles = function() {
@@ -38,14 +30,10 @@ UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId) {
                     var role = json.roles[i];
                     roleSelect.get(0).options[i] = new Option(role.name, role.id);
                 }
-                roleSelect.parent().show();
-                submitSelect.val("Select Role");
-                submitSelect.parent().attr({method:"post"});
+                btnRoleSelect.removeAttr("disabled");
             }
             else {
-                roleSelect.parent().hide();
-                submitSelect.val("Select Group");
-                submitSelect.parent().attr({method:"get"});
+                btnRoleSelect.attr("disabled","disabled");
             }
         });
     }
