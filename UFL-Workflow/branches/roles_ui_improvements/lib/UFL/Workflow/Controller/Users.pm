@@ -188,7 +188,7 @@ group via L<JSON>.
 =cut
 
 sub list_group_roles : PathPart Chained('user') Args(0) {
-    my($self, $c) = @_;
+    my ($self, $c) = @_;
    
     # Show the roles once a group is selected
     if (my $group_id = $c->req->param('group_id')) {
@@ -197,7 +197,8 @@ sub list_group_roles : PathPart Chained('user') Args(0) {
 
         my $group = $c->model('DBIC::Group')->find($group_id);
         $c->detach('/default') unless $group;
-        my @roles = $group->roles;
+
+	my @roles = $group->roles;
         $c->stash(roles => [ map { $_->to_json } @roles ]);
     }
 

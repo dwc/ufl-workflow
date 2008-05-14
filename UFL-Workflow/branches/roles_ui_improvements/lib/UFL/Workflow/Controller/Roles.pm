@@ -89,14 +89,13 @@ sub add_user : PathPart Chained('role') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $users_list = $result->valid('user_id');
             my $group = $groups->find($result->valid('group_id'));
-                $c->log->_dump($users_list); 
+            $c->detach('/default') unless $group;
+
+            my $users_list = $result->valid('user_id');
             foreach my $user_id (@$users_list) {
                 my $user  = $users->find($user_id);
-                $c->detach('/default') unless $user and $group;
-       
-                $c->log->_dump($user_id); 
+                $c->detach('/default') unless $user;
 
                 $user->user_group_roles->find_or_create({
                     group_id => $group->id,

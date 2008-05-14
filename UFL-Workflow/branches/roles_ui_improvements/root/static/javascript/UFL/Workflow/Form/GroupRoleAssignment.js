@@ -12,9 +12,16 @@ UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId) {
         groupSelect = $("#" + groupId);
         roleSelect = $("#" + roleId);
 
-        if (roleSelect && roleSelect.length == 0 && groupSelect&& groupSelect.length != 0) {
-            groupSelect.parent().parent().html("<label>"+groupSelect.parent().html() + "</label><label>Role:<select id='"+roleId+"' name='"+roleId+"'><option/></select></label><input id='submit_role' class='submit' type='submit' value='Select Group'>");
-            groupSelect = $("#" + groupId);
+        if (roleSelect && roleSelect.length == 0 && groupSelect && groupSelect.length != 0) {
+            var formHolder = groupSelect.parent().parent().get(0);
+            submitSelect = formHolder.getElementsByTagName("input")[0];
+            submitSelect.id = "submit_role";
+            var roleLabel = document.createElement('label');
+            roleLabel.textContent = "Role: ";
+            formHolder.insertBefore(roleLabel , submitSelect);
+            roleSelect = document.createElement('select');
+            roleLabel.appendChild(roleSelect);
+            roleSelect.id = roleSelect.name = roleId;
             roleSelect = $("#" + roleId);
             submitSelect = $("#submit_role");
             roleSelect.parent().hide();
@@ -42,4 +49,4 @@ UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId) {
             }
         });
     }
-}
+};
