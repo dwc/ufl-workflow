@@ -1,4 +1,0 @@
-The change was entered by [% actor.username %].[% IF comment %] Their comment:
-
-[% comment | wrap(68) | indent('    ') %]
-[% END -%]
