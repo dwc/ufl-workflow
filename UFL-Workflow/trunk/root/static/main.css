@@ -1,5 +1,9 @@
 * {margin:0;padding:0;}
 
+*:target {
+background:#ffc !important;
+}
+
 body {
 background:#FFF url(images/bg.gif) repeat-x;
 color:#444;

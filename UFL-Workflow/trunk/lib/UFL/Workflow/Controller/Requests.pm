@@ -194,7 +194,21 @@ Display basic information on the stashed request.
 sub view : PathPart('') Chained('request') Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'requests/view.tt');
+    my $request = $c->stash->{request};
+
+    my $documents = $request->documents->search({
+        document_id => undef,
+    });
+
+    my $replaced_documents = $request->documents->search({
+        document_id => { '!=' => undef },
+    });
+
+    $c->stash(
+        documents          => $documents,
+        replaced_documents => $replaced_documents,
+        template           => 'requests/view.tt',
+    );
 }
 
 =head2 add_document

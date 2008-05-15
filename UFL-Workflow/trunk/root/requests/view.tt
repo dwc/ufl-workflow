@@ -6,9 +6,11 @@
    scripts = [
      c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/StatusGroupAssignment.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Expandable.js'),
    ]
    snippets = [
      "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
+     "new UFL.Workflow.Form.Expandable();",
    ]
 -%]
 
@@ -37,27 +39,45 @@
 </div>
 
 <h3>Documents</h3>
-[% SET documents = request.documents_rs %]
 [% IF documents.count > 0 %]
 <table>
   <tr>
     <th>Title</th>
-    <th>Replacement</th>
     <th>Created</th>
   </tr>
   [% SET i = 0 %]
   [% WHILE (document = documents.next) %]
-    [% SET replacement = document.replacement %]
-  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
-    <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
-    <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for(c.controller('Documents').action_for('download'), replacement.uri_args) | html %]">[% replacement.name | html %]</a>[% END %]</td>
-    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time.strftime(datetime_format) | html %]</td>
+  <tr id="document_[% document.id | html %]"[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
+    <td>[% document.insert_time.strftime(datetime_format) | html %]</td>
   </tr>
     [% SET i = i + 1 %]
   [% END %]
 </table>
 [% ELSE %]
 <p>None yet.</p>
+[% END %]
+[% IF replaced_documents.count > 0 %]
+<div class="expandable collapsed">
+  <h4>Replaced Documents ([% replaced_documents.count | html %])</h4>
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Replacement</th>
+      <th>Created</th>
+    </tr>
+  [% SET i = 0 %]
+  [% WHILE (document = replaced_documents.next) %]
+    [% SET replacement = document.replacement %]
+    <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+      <td><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
+      <td><a href="#document_[% replacement.id | html %]">[% replacement.name | html %]</a></td>
+      <td>[% document.insert_time.strftime(datetime_format) | html %]</td>
+    </tr>
+    [% SET i = i + 1 %]
+  [% END %]
+  </table>
+</div><!-- .expandable -->
 [% END %]
 [% IF c.user.can_manage(request) %]
 <p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>
