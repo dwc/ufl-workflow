@@ -1,13 +1,8 @@
-[% BLOCK user_list %]
-  [% SET prefix = '' %]
-  [% SET i = 0; WHILE i < level; i; SET prefix = "$prefix&mdash; "; SET i = i + 1; END %]
-[% END -%]
-
 <label> User :
   <input type="text" name="user_name" id="[% user_name | html %]" value="[% user_name_default | html %]" />
 </label>
   <select name="user_id" id="[% user_id | html %]" size="10" multiple="multiple" class="multiple">
 [% WHILE (user = users.next) %]
-    <option value="[% user.id | html %]"[% IF user.id == field_value %] selected="selected"[% END %]>[% prefix %][% user.username | html %]</option>
+    <option value="[% user.id | html %]"[% IF user.id == field_value %] selected="selected"[% END %]>[% user.username | html %]</option>
 [% END %]
   </select>
