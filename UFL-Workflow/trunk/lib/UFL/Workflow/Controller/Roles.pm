@@ -88,7 +88,8 @@ sub add_user : PathPart Chained('role') Args(0) {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {
+        $c->log->_dump($result->valid('user_id'));
+	if ($result->success) {
             my $user  = $users->find($result->valid('user_id'));
             my $group = $groups->find($result->valid('group_id'));
             $c->detach('/default') unless $user and $group;
