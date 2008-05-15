@@ -1,8 +1,13 @@
-<label> User :
-  <input type="text" name="user_name" id="[% user_name | html %]" value="[% user_name_default | html %]" />
+[% DEFAULT
+   field_label      = 'User'
+   username_default = 'Search for a user'
+-%]
+
+<label>[% field_label | html %]:
+  <input type="text" name="username" id="[% username_id | html %]" value="[% username_default | html %]" />
 </label>
-  <select name="user_id" id="[% user_id | html %]" size="10" multiple="multiple" class="multiple">
+<select name="user_id" id="[% user_id | html %]" size="10" multiple="multiple" class="multiple">
 [% WHILE (user = users.next) %]
-    <option value="[% user.id | html %]" [% IF user.id == field_value %]selected="selected"[% END %]>[% user.username | html %]</option>
+  <option value="[% user.id | html %]"[% IF user.id == field_value %] selected="selected"[% END %]>[% user.username | html %]</option>
 [% END %]
-  </select>
+</select>

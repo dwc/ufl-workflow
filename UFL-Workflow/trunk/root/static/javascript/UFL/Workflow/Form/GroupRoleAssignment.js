@@ -2,23 +2,22 @@ if (typeof UFL == 'undefined') UFL = {};
 if (typeof UFL.Workflow == 'undefined') UFL.Workflow = {};
 if (typeof UFL.Workflow.Form == 'undefined') UFL.Workflow.Form = {};
 
-UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId, btnGroupId, btnRoleId) {
+UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId, groupButtonId, roleButtonId) {
     var me = this;
     var groupSelect;
     var roleSelect;
-    var btnGroupSelect;
-    var btnRoleSelect;
+    var groupButton;
+    var roleButton;
 
     $(document).ready(function() {
         groupSelect = $("#" + groupId);
         roleSelect = $("#" + roleId);
-        btnGroupSelect = $("#" + btnGroupId);
-        btnRoleSelect = $("#" + btnRoleId);
+        groupButton = $("#" + groupButtonId);
+        roleButton = $("#" + roleButtonId);
 
-        btnGroupSelect.hide();
-        btnGroupSelect.parent().attr({method:"post"});
+        groupButton.hide();
+        groupButton.parent().attr("method", "post");
         groupSelect.change(me.getPossibleRoles);
-
     });
 
     this.getPossibleRoles = function() {
@@ -30,10 +29,13 @@ UFL.Workflow.Form.GroupRoleAssignment = function(url, groupId, roleId, btnGroupI
                     var role = json.roles[i];
                     roleSelect.get(0).options[i] = new Option(role.name, role.id);
                 }
-                btnRoleSelect.removeAttr("disabled");
+
+                roleSelect.removeAttr("disabled");
+                roleButton.removeAttr("disabled");
             }
             else {
-                btnRoleSelect.attr("disabled","disabled");
+                roleSelect.attr("disabled", "disabled");
+                roleButton.attr("disabled", "disabled");
             }
         });
     }

@@ -92,17 +92,17 @@ sub add_user : PathPart Chained('role') Args(0) {
             my $group = $groups->find($result->valid('group_id'));
             $c->detach('/default') unless $group;
 
-            my $users_list = $result->valid('user_id');
-            foreach my $user_id (@$users_list) {
-                my $user  = $users->find($user_id);
+            my $user_ids = $result->valid('user_id');
+            foreach my $user_id (@$user_ids) {
+                my $user = $users->find($user_id);
                 $c->detach('/default') unless $user;
 
                 $user->user_group_roles->find_or_create({
                     group_id => $group->id,
                     role_id  => $role->id,
                 });
-
             }
+
             return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
         }
     }
