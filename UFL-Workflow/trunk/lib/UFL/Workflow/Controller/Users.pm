@@ -198,7 +198,7 @@ sub list_group_roles : PathPart Chained('user') Args(0) {
         my $group = $c->model('DBIC::Group')->find($group_id);
         $c->detach('/default') unless $group;
 
-	my @roles = $group->roles;
+        my @roles = $group->roles;
         $c->stash(roles => [ map { $_->to_json } @roles ]);
     }
 

@@ -3,6 +3,6 @@
 </label>
   <select name="user_id" id="[% user_id | html %]" size="10" multiple="multiple" class="multiple">
 [% WHILE (user = users.next) %]
-    <option value="[% user.id | html %]"[% IF user.id == field_value %] selected="selected"[% END %]>[% user.username | html %]</option>
+    <option value="[% user.id | html %]" [% IF user.id == field_value %]selected="selected"[% END %]>[% user.username | html %]</option>
 [% END %]
   </select>
