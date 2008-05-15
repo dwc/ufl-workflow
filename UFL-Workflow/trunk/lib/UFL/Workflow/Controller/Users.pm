@@ -180,6 +180,17 @@ sub add_group_role : PathPart Chained('user') Args(0) {
     );
 }
 
+=head2 list_group_roles
+
+List roles that are valid for the user, and the specified
+group via L<JSON>.
+
+=cut
+
+sub list_group_roles : PathPart Chainged('users') Args(0) {
+    my($self, $c) = @_;
+    
+}
 =head2 delete_group_role
 
 Remove the stashed user from the specified group-role.
