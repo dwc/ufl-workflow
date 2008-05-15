@@ -3,6 +3,6 @@ edit:
   - [ NOT_BLANK, [ NOT_REGEX, '^Administrator$' ] ]
 add_user:
   - user_id
-  - [ NOT_BLANK, INT ]
+  - [  ]
   - group_id
   - [ NOT_BLANK, INT ]

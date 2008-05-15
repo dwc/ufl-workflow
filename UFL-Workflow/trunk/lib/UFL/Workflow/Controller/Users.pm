@@ -46,7 +46,7 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {	   
+        if ($result->success) {   
             my @new_users = split /[ \r\n]+/, lc $result->valid('users');
 
             my (@added_users, @existing_users, @invalid_users);
@@ -187,10 +187,25 @@ group via L<JSON>.
 
 =cut
 
-sub list_group_roles : PathPart Chainged('users') Args(0) {
+sub list_group_roles : PathPart Chained('user') Args(0) {
     my($self, $c) = @_;
-    
+   
+    # Show the roles once a group is selected
+    if (my $group_id = $c->req->param('group_id')) {
+        $group_id =~ s/\D//g;
+        $c->detach('/default') unless $group_id;
+
+        my $group = $c->model('DBIC::Group')->find($group_id);
+        $c->detach('/default') unless $group;
+        my @roles = $group->roles;
+        $c->stash(roles => [ map { $_->to_json } @roles ]);
+    }
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/roles/ ]);
+    $c->forward($view);
 }
+
 =head2 delete_group_role
 
 Remove the stashed user from the specified group-role.
