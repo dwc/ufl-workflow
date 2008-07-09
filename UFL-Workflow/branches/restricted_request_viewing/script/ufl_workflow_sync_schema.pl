@@ -43,6 +43,7 @@ sub main {
     my $type      = 'DB2';
     my $separator = '%';
     my $user      = 'dbzwap02';
+    my $export    = 1;
     my $help      = 0;
     die usage() unless GetOptions(
         'from|f=s'      => \$from,
@@ -50,6 +51,7 @@ sub main {
         'type=s'        => \$type,
         'separator|s=s' => \$separator,
         'user|u=s'      => \$user,
+        'export|c!'     => \$export,
         'help|h'        => \$help,
     );
     print usage() and exit() if $help;
@@ -63,8 +65,10 @@ sub main {
     my (@first_pass_statements, @second_pass_statements, @third_pass_statements);
 
     if ($type eq 'DB2') {
-        push @first_pass_statements, "SET CURRENT SCHEMA $from$separator";
-        push @first_pass_statements, $schema->export_statements($separator);
+        if ($export) {
+            push @first_pass_statements, "SET CURRENT SCHEMA $from$separator";
+            push @first_pass_statements, $schema->export_statements($separator);
+        }
         push @first_pass_statements, "SET CURRENT SCHEMA $to$separator";
     }
 
