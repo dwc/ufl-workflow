@@ -25,7 +25,7 @@ __PACKAGE__->deny_access_unless(
 
 __PACKAGE__->deny_access_unless(
     "/users",
-    sub { shift->check_any_user_role('Administrator', 'Help Desk');  }
+    sub { shift->check_any_user_role('Administrator', 'Help Desk') },
 );
 
 __PACKAGE__->allow_access_if(
