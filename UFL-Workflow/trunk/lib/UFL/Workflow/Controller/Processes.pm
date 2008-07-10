@@ -242,7 +242,6 @@ sub add_request : PathPart Chained('process') Args(0) {
                 $request = $process->add_request(
                     $result->valid('title'),
                     $result->valid('description'),
-                    $result->valid('enabled'),
                     $c->user->obj,
                     $group,
                 );
