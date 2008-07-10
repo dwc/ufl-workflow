@@ -211,19 +211,55 @@ sub can_view {
     my $possible_actors = $request->possible_actors;
     return 1 if $possible_actors->count({ user_id => $self->id }) > 0;
 
-    # Allow users with any of the following step's roles
+    return 1 if $self->_has_past_group_role($request);
+    return 1 if $self->_has_future_role($request);
+
+    return 0;
+}
+
+sub _has_past_group_role {
+    my ($self, $request) = @_;
+
+    my $has_past_group_role = 0;
+
+    my $action = $request->current_action;
+    while ($action = $action->prev_action) {
+        my $user_group_roles = $action->user_group_roles->search({
+            user_id => $self->id,
+            role_id => $action->step->role->id,
+        });
+
+        if ($user_group_roles->count > 0) {
+            $has_past_group_role = 1;
+            last;
+        }
+    }
+
+    return $has_past_group_role;
+}
+
+sub _has_future_role {
+    my ($self, $request) = @_;
+
     my $step = $request->current_step;
     my @future_roles;
     while ($step = $step->next_step) {
         push @future_roles, $step->role;
     }
 
-    my $user_group_roles = $self->user_group_roles->search({
-        role_id => { -in => [ map { $_->id } @future_roles ] },
-    });
-    return 1 if $user_group_roles->count > 0;
+    my $has_future_role = 0;
 
-    return 0;
+    if (@future_roles) {
+        my $user_group_roles = $self->user_group_roles->search({
+            role_id => { -in => [ map { $_->id } @future_roles ] },
+        });
+
+        if ($user_group_roles->count > 0) {
+            $has_future_role = 1;
+        }
+    }
+
+    return $has_future_role;
 }
 
 =head2 pending_actions
