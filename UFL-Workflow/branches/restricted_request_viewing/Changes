@@ -4,6 +4,11 @@ This file documents the revision history for UFL::Workflow.
         - Make the previous group the default when recycling
         - Improve role assignment UI
         - Move replaced documents to a separate list
+        - Add option to schema synchronization script to disable
+          exporting, for e.g. when we are syncing from workflow_prod
+          to workflow_test
+        - Controller::Processes: Remove extraneous parameter to
+          Schema::Process::add_request
 
 0.29  Mon Apr 21 16:23:41 EDT 2008
         - Schema::Action: Force actor relationship to a LEFT JOIN so
