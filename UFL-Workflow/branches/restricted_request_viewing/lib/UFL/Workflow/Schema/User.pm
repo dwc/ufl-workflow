@@ -188,6 +188,44 @@ sub can_manage {
     return ($request->is_open and $self->id == $request->user_id);
 }
 
+=head2 can_view
+
+Return true if this user can view the specified
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub can_view {
+    my ($self, $request) = @_;
+
+    $self->throw_exception('You must provide a request')
+        unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
+
+    # Always allow access if the process is unrestricted
+    return 1 unless $request->process->restricted;
+
+    # Always allow the submitter
+    return 1 if $self->id == $request->user_id;
+
+    # Allow users with current (pending) step's group-role
+    my $possible_actors = $request->possible_actors;
+    return 1 if $possible_actors->count({ user_id => $self->id }) > 0;
+
+    # Allow users with any of the following step's roles
+    my $step = $request->current_step;
+    my @future_roles;
+    while ($step = $step->next_step) {
+        push @future_roles, $step->role;
+    }
+
+    my $user_group_roles = $self->user_group_roles->search({
+        role_id => { -in => [ map { $_->id } @future_roles ] },
+    });
+    return 1 if $user_group_roles->count > 0;
+
+    return 0;
+}
+
 =head2 pending_actions
 
 Return a L<DBIx::Class::ResultSet> containing
