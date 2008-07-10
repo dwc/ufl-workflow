@@ -233,6 +233,12 @@ width: 40px;
 color:#444;
 }
 
+#content p#restricted {
+margin-top:20px;
+padding:5px;
+background:#ffc;
+}
+
 #content li {
 clear:both;
 margin:5px 0;
