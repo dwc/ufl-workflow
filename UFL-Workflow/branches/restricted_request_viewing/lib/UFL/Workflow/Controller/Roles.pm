@@ -93,7 +93,7 @@ sub add_user : PathPart Chained('role') Args(0) {
             $c->detach('/default') unless $group;
 
             my $user_ids = $result->valid('user_id');
-            foreach my $user_id (@$user_ids) {
+            foreach my $user_id (ref $user_ids ? @$user_ids : $user_ids) {
                 my $user = $users->find($user_id);
                 $c->detach('/default') unless $user;
 
