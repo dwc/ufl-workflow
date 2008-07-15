@@ -15,6 +15,9 @@
 -%]
 
 <h3>Request details</h3>
+[% IF request.process.restricted %]
+<p id="restricted"><strong>Warning</strong>: This request may contain private information. Do not reveal the contents to anyone.</p>
+[% END %]
 <dl>
   <dt>Title</dt>
   <dd>[% request.title | html %]</dd>
@@ -30,6 +33,7 @@
   <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
+
 <h4>Description</h4>
 <div class="description">
 
