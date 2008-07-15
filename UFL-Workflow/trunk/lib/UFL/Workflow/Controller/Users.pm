@@ -93,9 +93,8 @@ sub user : PathPart('users') Chained('/') CaptureArgs(1) {
 
     my $user = $c->model('DBIC::User')->find({ username => $username });
     $c->detach('/default') unless $user;
-
-    $c->detach('/forbidden') unless $c->check_any_user_role('Administrator', 'Help Desk')
-        or $c->user->username eq $user->username;
+    $c->detach('/forbidden') unless $c->user->username eq $user->username
+        or $c->check_any_user_role('Administrator', 'Help Desk');
 
     $c->stash(user => $user);
 }

@@ -181,6 +181,8 @@ sub request : PathPart('requests') Chained('/') CaptureArgs(1) {
 
     my $request = $c->model('DBIC::Request')->find($request_id);
     $c->detach('/default') unless $request;
+    $c->detach('/forbidden') unless $c->user->can_view($request) or
+        $c->check_any_user_role('Administrator', 'Help Desk');
 
     $c->stash(request => $request);
 }
