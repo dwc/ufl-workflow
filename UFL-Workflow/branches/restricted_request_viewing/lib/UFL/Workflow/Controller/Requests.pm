@@ -85,7 +85,9 @@ sub reports : Local Args(0) {
 
     # Default to all requests
     my $requests = $c->model('DBIC::Request')->search(
-        undef,
+        {
+            'process.restricted' => 0,
+        },
         {
             join     => [ qw/submitter process documents/, { actions => [ qw/actor action_groups/ ] } ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],

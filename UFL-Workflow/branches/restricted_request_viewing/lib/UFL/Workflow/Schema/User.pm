@@ -324,14 +324,15 @@ sub group_requests {
     if (@groups) {
         $group_requests = $self->result_source->schema->resultset('Request')->search(
             {
-                'submitter.id'              => { '!=' => $self->id },
+                'process.restricted' => 0,
+                'submitter.id'       => { '!=' => $self->id },
                 -or => [
                     'group.id'              => { -in => [ map { $_->id } @groups ] },
                     'group.parent_group_id' => { -in => [ map { $_->id } @groups ] },
                 ],
             },
             {
-                join     => { submitter => { user_group_roles => 'group' } },
+                join     => [ 'process', { submitter => { user_group_roles => 'group' } } ],
                 distinct => 1,
                 order_by => \q[update_time DESC, insert_time DESC],
             },
