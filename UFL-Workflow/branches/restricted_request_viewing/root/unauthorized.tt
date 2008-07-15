@@ -1,3 +1,0 @@
-[% SET title = 'Unauthorized' -%]
-
-<p>Unfortunately, you don't appear to be logged in.</p>
