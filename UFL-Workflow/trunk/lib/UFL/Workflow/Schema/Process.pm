@@ -26,6 +26,10 @@ __PACKAGE__->add_columns(
         data_type     => 'boolean',
         default_value => 0,
     },
+    restricted => {
+        data_type     => 'boolean',
+        default_value => 0,
+    },
 );
 __PACKAGE__->add_standard_columns;
 
@@ -198,9 +202,10 @@ sub to_json {
     my ($self) = @_;
 
     my $process = {
-        id      => $self->id,
-        name    => $self->name,
-        enabled => int($self->enabled),
+        id         => $self->id,
+        name       => $self->name,
+        enabled    => int($self->enabled),
+        restricted => int($self->restricted),
     };
 
     return $process;
