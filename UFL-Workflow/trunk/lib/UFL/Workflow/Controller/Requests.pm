@@ -319,7 +319,9 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
             my $current_group = $request->current_action->groups->first;
             if (my $parent_group = $current_group->parent_group) {
                 # Default to the parent group
-                $c->stash(selected_group => $groups->find($parent_group->id)->to_json);
+                if ($groups->find($parent_group->id)) {
+                    $c->stash(selected_group => $groups->find($parent_group->id)->to_json);
+                }
             }
 
             if ($status->recycles_request and my $prev_action = $request->current_action->prev_action) {
