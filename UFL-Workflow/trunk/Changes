@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.31
+        - Fix group assignment list by checking that the group is
+          valid for the step (#18, #19)
+
 0.30  Tue Jul 15 17:48:29 EDT 2008
         - Add default sorting for various group and role views
         - Make the previous group the default when recycling

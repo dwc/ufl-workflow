@@ -318,9 +318,9 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
 
             my $current_group = $request->current_action->groups->first;
             if (my $parent_group = $current_group->parent_group) {
-                # Default to the parent group
-                if ($groups->find($parent_group->id)) {
-                    $c->stash(selected_group => $groups->find($parent_group->id)->to_json);
+                # Default to the parent group, but make sure it is a valid group for the action
+                if (my $selected_group = $groups->find($parent_group->id)) {
+                    $c->stash(selected_group => $selected_group->to_json);
                 }
             }
 
