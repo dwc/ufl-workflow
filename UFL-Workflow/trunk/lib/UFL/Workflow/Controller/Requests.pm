@@ -316,9 +316,10 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
             my $groups = $request->groups_for_status($status);
             $c->stash(groups => [ map { $_->to_json } $groups->all ]);
 
+            # Default to the parent group (for recycling)
             my $current_group = $request->current_action->groups->first;
             if (my $parent_group = $current_group->parent_group) {
-                # Default to the parent group, but make sure it is a valid group for the action
+                # Make sure the parent group is valid for the action
                 if (my $selected_group = $groups->find($parent_group->id)) {
                     $c->stash(selected_group => $selected_group->to_json);
                 }
