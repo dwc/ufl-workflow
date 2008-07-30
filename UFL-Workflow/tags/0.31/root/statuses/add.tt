@@ -1,0 +1,22 @@
+[% SET title = 'Add Status' -%]
+
+<h3>Status details</h3>
+<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE statuses/includes/status.tt %]
+[% END -%]
+
+  <label class="checkbox"><input type="checkbox" name="is_initial" value="1"[% IF status.is_initial %] checked="checked"[% END %] /> Initial status for new actions</label>
+
+  <fieldset>
+    <legend>When the status is used:</legend>
+    <label class="radio"><input type="radio" name="action" value="none"[% UNLESS status.continues_request OR status.finishes_request %] checked="checked"[% END %] /> Do nothing</label>
+    <label class="radio"><input type="radio" name="action" value="continue"[% IF status.continues_request %] checked="checked"[% END %] /> Continue to the next step</label>
+    <label class="radio"><input type="radio" name="action" value="reassign"[% IF status.reassigns_request %] checked="checked"[% END %] /> Reassign the request to a peer group</label>
+    <label class="radio"><input type="radio" name="action" value="recycle"[% IF status.recycles_request %] checked="checked"[% END %] /> Return request to previous step</label>
+    <label class="radio"><input type="radio" name="action" value="finish"[% IF status.finishes_request %] checked="checked"[% END %] /> Finish request</label>
+  </fieldset>
+
+  <input type="submit" class="submit" value="Add Status" />
+</form>
