@@ -40,7 +40,7 @@ Controller::Documents:
   destination: __path_to(documents)__
 
 Controller::Processes: &requestdocuments
-  accepted_extensions: [ doc, odt, pdf, rtf, txt, jpg, jpeg, tif, tiff ]
+  accepted_extensions: [ doc, docx, odt, pdf, rtf, txt, jpg, jpeg, tif, tiff ]
 
 Controller::Requests: *requestdocuments
 

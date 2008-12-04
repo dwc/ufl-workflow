@@ -1,6 +1,9 @@
 This file documents the revision history for UFL::Workflow.
+0.33  Thu Dec  4 15:49:02
+        - Added docx to list of accepted_extensions (#27)
+
 0.32  Thu Dec  4 15:33:00 EDT 2008
-        - Added link to FAQ
+        - Added link to FAQ (#25)
 
 0.31  Wed Jul 30 10:10:10 EDT 2008
         - Fix group assignment list by checking that the group is
