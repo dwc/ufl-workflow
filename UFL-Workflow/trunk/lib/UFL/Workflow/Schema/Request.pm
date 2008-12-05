@@ -294,8 +294,16 @@ sub add_document {
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;
 
-    my $type = MIME::Types->new->mimeTypeOf($extension);
-    die "Unknown type for extension [$extension]" unless $type;
+    my $docx = MIME::Type->new(
+            type => 'application',
+            extensions => ['docx'],
+        );
+
+    my $type = MIME::Types->new;
+    $type->addType($docx);
+
+    $type->mimeTypeOf($extension);
+        die "Unknown type for extension [$extension]" unless $type;
 
     my $document;
     $self->result_source->schema->txn_do(sub {
