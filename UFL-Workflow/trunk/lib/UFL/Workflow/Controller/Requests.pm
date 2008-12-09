@@ -238,6 +238,24 @@ sub add_document : PathPart Chained('request') Args(0) {
                 $result->valid('replaced_document_id'),
             );
 
+            my $replaced_document_id = $result->valid('replaced_document_id');
+
+            if ($replaced_document_id) {
+                my $replaced_document = $request->documents->find({
+                    document_id => $replaced_document_id,
+                });
+               
+                $c->stash(
+                    replaced_document => $replaced_document,
+		);
+	    }
+
+	    $c->stash(
+                new_document => $document,
+            );
+
+            $self->send_new_document_email($c, $request, $c->user->obj);
+
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
     }
@@ -433,6 +451,43 @@ sub send_new_action_email {
 
     $c->forward($c->view('Email'));
 }
+
+=head2 send_new_document_email
+
+Send notification that a new document was uploaded for a L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub send_new_document_email {
+    my ($self, $c, $request, $actor) = @_;
+
+    my $possible_actors = $request->possible_actors;
+    my $past_actors = $request->past_actors;
+
+    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
+    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
+
+    $c->stash(
+        request => $request,
+        actor   => $actor,
+        email   => {
+            from     => $c->config->{email}->{from_address},
+            to       => join(', ', @to_addresses),
+            subject  => $request->subject('New document added to '),
+            header   => [
+                'Return-Path' => $c->config->{email}->{admin_address},
+                'Reply-To'    => $actor->email,
+                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
+            ],
+            template => 'text_plain/new_document.tt',
+        },
+    );
+
+    $c->forward($c->view('Email'));
+}
+
+
 
 =head1 AUTHOR
 
