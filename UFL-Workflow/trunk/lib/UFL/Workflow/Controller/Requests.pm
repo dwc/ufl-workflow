@@ -230,31 +230,22 @@ sub add_document : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
+            my $replaced_document_id = $result->valid('replaced_document_id');
+
             my $document = $request->add_document(
                 $c->user->obj,
                 $upload->basename,
                 $upload->slurp,
                 $c->controller('Documents')->destination,
-                $result->valid('replaced_document_id'),
+                $replaced_document_id,
             );
 
-            my $replaced_document_id = $result->valid('replaced_document_id');
-
+            my $replaced_document;
             if ($replaced_document_id) {
-                my $replaced_document = $request->documents->find({
-                    document_id => $replaced_document_id,
-                });
-               
-                $c->stash(
-                    replaced_document => $replaced_document,
-		);
-	    }
+                $replaced_document = $request->documents->find($replaced_document_id);
+            }
 
-	    $c->stash(
-                new_document => $document,
-            );
-
-            $self->send_new_document_email($c, $request, $c->user->obj);
+            $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
@@ -454,12 +445,13 @@ sub send_new_action_email {
 
 =head2 send_new_document_email
 
-Send notification that a new document was uploaded for a L<UFL::Workflow::Schema::Request>.
+Send notification that a new document was uploaded for a
+L<UFL::Workflow::Schema::Request>.
 
 =cut
 
 sub send_new_document_email {
-    my ($self, $c, $request, $actor) = @_;
+    my ($self, $c, $request, $actor, $document, $replaced_document) = @_;
 
     my $possible_actors = $request->possible_actors;
     my $past_actors = $request->past_actors;
@@ -469,9 +461,11 @@ sub send_new_document_email {
     my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
 
     $c->stash(
-        request => $request,
-        actor   => $actor,
-        email   => {
+        request           => $request,
+        actor             => $actor,
+        document          => $document,
+        replaced_document => $replaced_document,
+        email             => {
             from     => $c->config->{email}->{from_address},
             to       => join(', ', @to_addresses),
             subject  => $request->subject('New document added to '),
@@ -486,8 +480,6 @@ sub send_new_document_email {
 
     $c->forward($c->view('Email'));
 }
-
-
 
 =head1 AUTHOR
 

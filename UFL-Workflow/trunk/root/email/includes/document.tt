@@ -1,1 +1,5 @@
-[% IF replaced_document %] [% new_document.name %] has replaced [% replaced_document.name %].                                                                                                   [% ELSE %]                                                                                                                                                                                      [% new_document.name %]                                                                                                                                                                         [% END -%]
+[% IF replaced_document %]
+[% document.name %] has replaced [% replaced_document.name %].
+[% ELSE %]
+[% document.name %]
+[% END -%]
