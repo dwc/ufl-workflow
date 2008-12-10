@@ -12,10 +12,13 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
-    # Replacement
+    # Refers to replacement document
     document_id => {
         data_type   => 'integer',
         is_nullable => 1,
+    },
+    user_id => {
+        data_type => 'integer',
     },
     name => {
         data_type => 'varchar',
@@ -45,6 +48,11 @@ __PACKAGE__->belongs_to(
     replacement => 'UFL::Workflow::Schema::Document',
     'document_id',
     { join_type => 'left' },
+);
+
+__PACKAGE__->belongs_to(
+    submitter => 'UFL::Workflow::Schema::User',
+    'user_id',
 );
 
 __PACKAGE__->resultset_attributes({
