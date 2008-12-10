@@ -19,7 +19,7 @@ __PACKAGE__->add_columns(
     },
     name => {
         data_type => 'varchar',
-        size      => 64,
+        size      => 128,
     },
     extension => {
         data_type => 'varchar',
@@ -27,7 +27,7 @@ __PACKAGE__->add_columns(
     },
     type => {
         data_type => 'varchar',
-        size      => 64,
+        size      => 128,
     },
     md5 => {
         data_type => 'varchar',
