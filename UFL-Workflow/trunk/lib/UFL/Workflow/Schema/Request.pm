@@ -295,15 +295,15 @@ sub add_document {
     $extension = lc $extension;
 
     my $docx = MIME::Type->new(
-            type => 'application',
-            extensions => ['docx'],
-        );
+        type       => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        extensions => ['docx'],
+    );
 
-    my $type = MIME::Types->new;
-    $type->addType($docx);
+    my $types = MIME::Types->new;
+    $types->addType($docx);
 
-    $type->mimeTypeOf($extension);
-        die "Unknown type for extension [$extension]" unless $type;
+    my $type = $types->mimeTypeOf($extension);
+    die "Unknown type for extension [$extension]" unless $type;
 
     my $document;
     $self->result_source->schema->txn_do(sub {
