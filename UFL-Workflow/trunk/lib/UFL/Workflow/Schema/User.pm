@@ -185,26 +185,14 @@ sub can_manage {
     $self->throw_exception('You must provide a request')
         unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
 
+    # Allow users with current (pending) step's group-role or a past group role
     my $has_group_role = 0;
-    if (my @actions = $request->actions) {
-        my $action = undef;
-        my $element = 0;
-        while ($action = @actions[$element]) {
-            if (my @groups = $action->groups) {
-                my $user_group_roles = $self->user_group_roles->search({
-                    group_id => { -in => [ map { $_->id } @groups ] },
-                    role_id  => $action->step->role->id,
-                });
 
-                if ($user_group_roles->count > 0) {
-                    $has_group_role = 1;
-                }
-            }
-            $element++;
-	}
-    }
+    my $possible_actors = $request->possible_actors;
+    $has_group_role = 1 if $possible_actors->count({ user_id => $self->id }) > 0;
+    $has_group_role = 1 if $self->_has_past_group_role($request);
 
-    return ($request->is_open and ($has_group_role || $self->id == $request->user_id));
+    return ($request->is_open and ($self->id == $request->user_id || $has_group_role));
 }
 
 =head2 can_view
