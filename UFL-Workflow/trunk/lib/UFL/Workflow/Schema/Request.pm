@@ -311,6 +311,7 @@ sub add_document {
 
         $document = $self->documents->create({
             name      => substr($name, 0, $length),
+            user_id      => $user->id,
             extension => $extension,
             type      => $type,
             md5       => Digest::MD5::md5_hex($contents),
