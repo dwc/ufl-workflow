@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base qw/DBIx::Class/;
 use Digest::MD5 ();
+use MIME::Type;
 use MIME::Types ();
 use Path::Class::File ();
 use Scalar::Util qw/blessed/;
@@ -294,6 +295,7 @@ sub add_document {
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;
 
+    # XXX: Remove when added to MIME::Types
     my $docx = MIME::Type->new(
         type       => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         extensions => ['docx'],
@@ -311,7 +313,7 @@ sub add_document {
 
         $document = $self->documents->create({
             name      => substr($name, 0, $length),
-            user_id      => $user->id,
+            user_id   => $user->id,
             extension => $extension,
             type      => $type,
             md5       => Digest::MD5::md5_hex($contents),
