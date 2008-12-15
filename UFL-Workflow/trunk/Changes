@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.32
+0.32  Mon Dec 15 14:44:12 EST 2008
         - Track submitter of each document
         - Accept the .docx file type (#27)
         - Added link to support faq (#25)
