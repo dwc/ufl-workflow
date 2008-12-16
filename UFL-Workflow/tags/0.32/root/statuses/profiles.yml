@@ -1,0 +1,10 @@
+add:
+  - name
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
+  - is_initial
+  - [ INT, [ IN_ARRAY, 0, 1 ] ]
+  - action
+  - [ NOT_BLANK, [ IN_ARRAY, none, continue, reassign, recycle, finish ] ]
+edit:
+  - name
+  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
