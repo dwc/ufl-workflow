@@ -10,8 +10,8 @@ use Catalyst qw/
     Authorization::ACL
     FillInForm
     Session
-    Session::Store::File
     Session::State::Cookie
+    Session::Store::File
     StackTrace
     Static::Simple
     Unicode::Encoding
