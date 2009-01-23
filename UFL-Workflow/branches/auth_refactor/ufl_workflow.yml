@@ -38,15 +38,14 @@ Plugin::Authentication:
   default_realm: users
   realms:
     users:
-      auto_create_user: 1
       credential:
         class:         Password
         password_type: none
       store:
-        class:            DBIx::Class
-        user_class:       DBIC::User
-        role_relation:    roles
-        role_field:       name
+        class:         DBIx::Class
+        user_class:    DBIC::User
+        role_relation: roles
+        role_field:    name
 
 View::Email:
   default_view:    Text
