@@ -5,9 +5,9 @@ encoding:     UTF-8
 default_view: HTML
 
 email:
-  admin_address: approval@ufl.edu
-  from_address:  approval@ufl.edu
-  domain:        ufl.edu
+  admin_address: workflow@example.com
+  from_address:  workflow@example.com
+  domain:        example.com
 
 Controller::Documents:
   destination: __path_to(documents)__
@@ -18,8 +18,8 @@ Controller::Processes: &requestdocuments
 Controller::Requests: *requestdocuments
 
 Model::LDAP:
-  host: ldap.ufl.edu
-  base: ou=People,dc=ufl,dc=edu
+  host: ldap.example.com
+  base: ou=People,dc=example,dc=com
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
