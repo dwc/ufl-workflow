@@ -1,5 +1,6 @@
-(function($) {
-    $.fn.jsonSuggest = function(optionSettings) {
+(function() {
+
+    jQuery.fn.jsonSuggest = function(optionSettings) {
 
 	// DEFAULT SETTINGS
         var searchField = '';
@@ -12,7 +13,7 @@
             resultName: 'name',
             resultId: 'id',
             suggestListStyle: 'none',
-            suggestMargin: '0',
+            suggestMargin: '0 0 5px 0',
             suggestPadding: '0',
             suggestFontSize: '12px',
             suggestPosition: 'absolute',
@@ -21,14 +22,16 @@
             suggestBorder: '1px solid #000',
             suggestLiPadding: '2px 0 0 5px',
             suggestLiMargin: '0px',
-            suggestSelectedClass: 'jsonSuggestSelected',
-         } 
-                   
+            suggestSelectedClass: 'jsonSuggestSelected'
+	}
+
+		
          // RESULT BEHAVIOR
          var clearResults = function() {
 	     searchResultContainer = searchResultId;
              $(searchResultContainer).hide();
              $(searchResultContainer).empty();
+             $(searchField).css("margin-bottom", "10px");
 	 }
 
          var displayResults = function(results) {
@@ -59,6 +62,7 @@
                      $(searchResultId + " > li").css("padding", settings.suggestLiPadding);
                      $(searchResultId + " > li").css("margin", settings.suggestLiMargin);
 
+                     $(searchField).css("margin-bottom", "0");
                      $(searchResultId).show();
                  }
 	     }
@@ -76,7 +80,7 @@
          }
 
 	 // replace this with the levenshtein sort
-         function sortResults(a,b) {
+         var sortResults = function(a,b) {
              a = a[1];
              b = b[1];
 
@@ -154,11 +158,13 @@
             query = $(searchField).attr("value");
 
             if(query != '') {
-                query = query.toLowerCase();
                 $.getJSON(settings.url + "?q=" + query, function(results) {
 			displayResults(results);
 		});
 	    }
+            else {
+                clearResults();
+            }
 	}
 
 	// INITIALIZATION
@@ -166,14 +172,13 @@
             settings = jQuery.extend(defaults, optionSettings);
             searchResultId = "#" + settings.suggestId;
 
-            $(searchField).css("margin-bottom", "0");
             $(searchField).attr("autocomplete","off");
 
             $(searchField).keyup(function (e) { 
 	        keySwitch(e); 
             });
 
-	    $("style").after("<style type='text/css' media='screen'>.jsonSuggestSelected { background-color:#D1DFFD; }</style>");
+	    $("head").append("<style type='text/css' media='screen'>.hintbox_list_container { display: block; } .jsonSuggestSelected { background-color:#D1DFFD; }</style>");
 
             $(searchField).click(function() {
                 $(this).focus(); //select the entire value
@@ -193,4 +198,4 @@
             initialize();
         }
     }
-})(jQuery);
+})();
