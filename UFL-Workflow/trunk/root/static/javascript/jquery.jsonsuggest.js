@@ -13,7 +13,7 @@
             resultName: 'name',
             resultId: 'id',
             suggestListStyle: 'none',
-            suggestMargin: '0 0 5px 0',
+            suggestMargin: '0',
             suggestPadding: '0',
             suggestFontSize: '12px',
             suggestPosition: 'absolute',
@@ -23,15 +23,13 @@
             suggestLiPadding: '2px 0 0 5px',
             suggestLiMargin: '0px',
             suggestSelectedClass: 'jsonSuggestSelected'
-	}
-
+	 }
 		
          // RESULT BEHAVIOR
          var clearResults = function() {
 	     searchResultContainer = searchResultId;
              $(searchResultContainer).hide();
              $(searchResultContainer).empty();
-             $(searchField).css("margin-bottom", "10px");
 	 }
 
          var displayResults = function(results) {
@@ -40,9 +38,11 @@
 
              position = $(searchField).position();
 	     height = $(searchField).outerHeight(true);
+	     marginBottom = parseInt($(searchField).css("margin-bottom"));
+             top = ((position.top + height) - marginBottom);
 
              $(searchResultId).css("position", "absolute");
-             $(searchResultId).css("top", (position.top + height));
+             $(searchResultId).css("top", top);
              $(searchResultId).css("left", position.left);
              $(searchResultId).css("list-style", settings.suggestListStyle);
 	     $(searchResultId).css("margin", settings.suggestMargin);
@@ -62,7 +62,6 @@
                      $(searchResultId + " > li").css("padding", settings.suggestLiPadding);
                      $(searchResultId + " > li").css("margin", settings.suggestLiMargin);
 
-                     $(searchField).css("margin-bottom", "0");
                      $(searchResultId).show();
                  }
 	     }
@@ -96,7 +95,7 @@
                 $(listId + " > li").each(function() {
                     if(index == count) {
                         $(this).addClass(settings.suggestSelectedClass);
-                        $(searchField).attr("value",this.innerHTML);
+			$(searchField).attr("value",this.innerHTML);
                     }
 
                     count++;
@@ -140,10 +139,6 @@
                         selectedIndex++;
                         selectItem(searchResultId, selectedIndex);
                         break;
-                    
-	 	    case "click":
-			selectItem(searchResultId, selectedIndex);
-                        break;
                 }           
             }
 	    else {
@@ -181,8 +176,7 @@
 	    $("head").append("<style type='text/css' media='screen'>.hintbox_list_container { display: block; } .jsonSuggestSelected { background-color:#D1DFFD; }</style>");
 
             $(searchField).click(function() {
-                $(this).focus(); //select the entire value
-                $(this).select();
+		    this.value = "";
             });
 
 	    $(window).resize(function() {
