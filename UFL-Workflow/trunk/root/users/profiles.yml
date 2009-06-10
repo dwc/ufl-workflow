@@ -1,3 +1,6 @@
+index:
+  - query
+  - [ NOT_BLANK, ASCII ]
 add:
   - users 
   - [ NOT_BLANK ]
