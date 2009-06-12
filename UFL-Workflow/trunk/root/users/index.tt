@@ -26,15 +26,13 @@
     <p>Unable to find any matches for [% query %].</p>
 [% END %]
 
-    <h3>Directory: [% letter FILTER upper | html %]</h3>
 [% IF directory.count > 0 %]
+    <h3>Directory: [% letter FILTER upper | html %]</h3>
     <ul id="directory">
   [% WHILE (entry = directory.next) %]
       <li>[% IF entry.get_column('letter') != letter %]<a href="[% c.uri_for(c.controller.action_for('/')) | html %]?directory=[% entry.get_column('letter') %]">[% END %][% entry.get_column('letter') FILTER upper | html %][% IF entry.get_column('letter') != letter %]</a>[% END %]</li>
   [% END %]
     </ul>
-[% ELSE %]
-    <p>None yet.</p>
 [% END %]
 
 [% IF users.count > 0 %]
@@ -45,4 +43,13 @@
     </ul>
 [% ELSE %]
     <p>None yet.</p>
+[% END %]
+
+[% IF directory.count > 0 %]
+    <h3>Directory: [% letter FILTER upper | html %]</h3>
+    <ul id="directory">
+  [% WHILE (entry = directory.next) %]
+      <li>[% IF entry.get_column('letter') != letter %]<a href="[% c.uri_for(c.controller.action_for('/')) | html %]?directory=[% entry.get_column('letter') %]">[% END %][% entry.get_column('letter') FILTER upper | html %][% IF entry.get_column('letter') != letter %]</a>[% END %]</li>
+  [% END %]
+    </ul>
 [% END %]
