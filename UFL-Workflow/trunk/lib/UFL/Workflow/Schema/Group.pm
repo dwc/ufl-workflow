@@ -148,7 +148,6 @@ sub add_role {
 
             $self->add_to_roles($role);                    
 	}
-
     });   
 
     return $role;
