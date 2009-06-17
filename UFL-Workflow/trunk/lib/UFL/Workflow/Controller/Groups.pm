@@ -170,11 +170,11 @@ Add a role to the stashed group.
 
 sub add_role : PathPart Chained('group') Args(0) {
     my ($self, $c) = @_;
-    my $group = $c->stash->{group};
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
+            my $group = $c->stash->{group};
             my $role  = $group->add_role($result->valid('name'));
             return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }
