@@ -16,7 +16,7 @@
     </form>
 
 [% IF results.count > 0 %]
-    <h3>Search results for [% query %]</h3>
+    <h3>Search results for <strong>&quot;[% query %]&quot;</strong></h3>
     <ul>
   [% WHILE (user = results.next) %]
         <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
@@ -26,14 +26,7 @@
     <p>Unable to find any matches for [% query %].</p>
 [% END %]
 
-[% IF directory.count > 0 %]
-    <h3>Directory: [% letter FILTER upper | html %]</h3>
-    <ul id="directory">
-  [% WHILE (entry = directory.next) %]
-      <li>[% IF entry.get_column('letter') != letter %]<a href="[% c.uri_for(c.controller.action_for('/')) | html %]?directory=[% entry.get_column('letter') %]">[% END %][% entry.get_column('letter') FILTER upper | html %][% IF entry.get_column('letter') != letter %]</a>[% END %]</li>
-  [% END %]
-    </ul>
-[% END %]
+[% INCLUDE users/includes/alphalist.tt %]
 
 [% IF users.count > 0 %]
     <ul>
@@ -45,11 +38,4 @@
     <p>None yet.</p>
 [% END %]
 
-[% IF directory.count > 0 %]
-    <h3>Directory: [% letter FILTER upper | html %]</h3>
-    <ul id="directory">
-  [% WHILE (entry = directory.next) %]
-      <li>[% IF entry.get_column('letter') != letter %]<a href="[% c.uri_for(c.controller.action_for('/')) | html %]?directory=[% entry.get_column('letter') %]">[% END %][% entry.get_column('letter') FILTER upper | html %][% IF entry.get_column('letter') != letter %]</a>[% END %]</li>
-  [% END %]
-    </ul>
-[% END %]
+[% INCLUDE users/includes/alphalist.tt %]

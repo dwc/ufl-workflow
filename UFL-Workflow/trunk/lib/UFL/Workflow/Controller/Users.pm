@@ -32,9 +32,7 @@ sub index : Path('') Args(0) {
     my $results;
     my $users;
 
-    my $directory = $c->model('DBIC::User')->search(undef, { select => [ 'distinct lower(substr(username,1,1))' ], as => [ 'letter' ], group_by => [ 'substr(username,1,1)' ] } );
-
-    if ($letter = $c->req->query_parameters->{'directory'}) {
+    if ($letter = $c->req->query_parameters->{'letter'}) {
         $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
     }
     else {
@@ -53,7 +51,6 @@ sub index : Path('') Args(0) {
     }
 
     $c->stash(
-        directory => $directory,
         letter    => $letter,
         query     => $query,
         results   => $results,
