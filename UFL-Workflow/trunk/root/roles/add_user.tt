@@ -4,7 +4,6 @@
    username_default = 'Search for a user'
    user_id = 'user_id'
    scripts = [
-     c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
    ]

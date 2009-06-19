@@ -5,7 +5,6 @@
    group_button_id = 'group_button_id'
    role_button_id = 'role_button_id'
    scripts = [
-     c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/GroupRoleAssignment.js'),
    ]
    snippets = [
