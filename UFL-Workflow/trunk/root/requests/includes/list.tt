@@ -37,8 +37,13 @@
     <td>[% request.update_time.strftime(datetime_format) | html %]</td>
   </tr>
   [% ELSE %]
-  <tr class="denied">
-    <td colspan="6">Restricted request</td>
+  <tr class="denied" title="You do not have sufficient permissions to view this request.">
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Restricted</td>
+    <td>-</td>
+    <td>-</td>
   </tr>
   [% END %]
   </tr>
