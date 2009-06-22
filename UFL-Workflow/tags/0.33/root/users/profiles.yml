@@ -1,0 +1,15 @@
+index:
+  - query
+  - [ NOT_BLANK, ASCII ]
+add:
+  - users 
+  - [ NOT_BLANK ]
+edit:
+  - wants_email
+  - [ INT ]
+add_group_role: &role
+  - group_id
+  - [ NOT_BLANK, INT ]
+  - role_id
+  - [ NOT_BLANK, INT ]
+delete_group_role: *role
