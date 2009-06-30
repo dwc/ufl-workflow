@@ -27,7 +27,7 @@ __PACKAGE__->has_many(
 __PACKAGE__->has_many(
     group_roles => 'UFL::Workflow::Schema::GroupRole',
     { 'foreign.role_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
+    { cascade_delete => 0, cascade_copy => 0, join => 'group', order_by => 'name' },
 );
 
 __PACKAGE__->has_many(
@@ -38,6 +38,10 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->many_to_many('groups', 'group_roles', 'group');
 __PACKAGE__->many_to_many('users', 'user_group_roles', 'actor');
+
+__PACKAGE__->resultset_attributes({
+    order_by => 'name',
+});
 
 =head1 NAME
 
@@ -63,6 +67,19 @@ sub uri_args {
     my ($self) = @_;
 
     return [ $self->id ];
+}
+
+=head2 to_json
+
+Return a hash suitable for conversion to JSON which represents this
+role.
+
+=cut
+
+sub to_json {
+    my ($self) = @_;
+
+    return { id => $self->id, name => $self->name };
 }
 
 =head1 AUTHOR

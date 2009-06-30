@@ -51,6 +51,7 @@ sub add : Local {
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
                 enabled     => $result->valid('enabled') ? 1 : 0,
+                restricted  => $result->valid('restricted') ? 1 : 0,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -104,6 +105,7 @@ sub edit : PathPart Chained('process') Args(0) {
                 name        => $result->valid('name'),
                 description => $result->valid('description'),
                 enabled     => $result->valid('enabled') ? 1 : 0,
+                restricted  => $result->valid('restricted') ? 1 : 0,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -243,7 +245,6 @@ sub add_request : PathPart Chained('process') Args(0) {
                 $request = $process->add_request(
                     $result->valid('title'),
                     $result->valid('description'),
-                    $result->valid('enabled'),
                     $c->user->obj,
                     $group,
                 );

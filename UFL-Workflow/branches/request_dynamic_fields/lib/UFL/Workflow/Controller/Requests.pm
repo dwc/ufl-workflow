@@ -85,10 +85,9 @@ sub reports : Local Args(0) {
 
     # Default to all requests
     my $requests = $c->model('DBIC::Request')->search(
-        undef,
+        {},
         {
-            join     => { actions => [ qw/actor action_groups/ ] },
-            prefetch => [ qw/submitter process documents/ ],
+            join     => [ qw/submitter process documents/, { actions => [ qw/actor action_groups/ ] } ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
             distinct => 1,
             page     => $page,
@@ -98,6 +97,7 @@ sub reports : Local Args(0) {
 
     if (my $query = $result->valid('query')) {
         my @fields = qw/
+            me.id
             me.title
             me.description
             submitter.username
@@ -182,6 +182,8 @@ sub request : PathPart('requests') Chained('/') CaptureArgs(1) {
 
     my $request = $c->model('DBIC::Request')->find($request_id);
     $c->detach('/default') unless $request;
+    $c->detach('/forbidden') unless $c->user->can_view($request) or
+        $c->check_any_user_role('Administrator', 'Help Desk');
 
     $c->stash(request => $request);
 }
@@ -195,7 +197,21 @@ Display basic information on the stashed request.
 sub view : PathPart('') Chained('request') Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'requests/view.tt');
+    my $request = $c->stash->{request};
+
+    my $documents = $request->documents->search({
+        document_id => undef,
+    });
+
+    my $replaced_documents = $request->documents->search({
+        document_id => { '!=' => undef },
+    });
+
+    $c->stash(
+        documents          => $documents,
+        replaced_documents => $replaced_documents,
+        template           => 'requests/view.tt',
+    );
 }
 
 =head2 add_document
@@ -213,13 +229,22 @@ sub add_document : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
+            my $replaced_document_id = $result->valid('replaced_document_id');
+
             my $document = $request->add_document(
                 $c->user->obj,
                 $upload->basename,
                 $upload->slurp,
                 $c->controller('Documents')->destination,
-                $result->valid('replaced_document_id'),
+                $replaced_document_id,
             );
+
+            my $replaced_document;
+            if ($replaced_document_id) {
+                $replaced_document = $request->documents->find($replaced_document_id);
+            }
+
+            $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
@@ -296,24 +321,26 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
         if ($status) {
             my $request = $c->stash->{request};
 
-            my @groups = $request->groups_for_status($status);
-            $c->stash(groups => [ map { $_->to_json } @groups ]);
+            my $groups = $request->groups_for_status($status);
+            $c->stash(groups => [ map { $_->to_json } $groups->all ]);
 
+            # Default to the parent group (for recycling)
             my $current_group = $request->current_action->groups->first;
             if (my $parent_group = $current_group->parent_group) {
-                # Default to the parent group
-                foreach my $group (@groups) {
-                    if ($group->id == $parent_group->id) {
-                        $c->stash(selected_group => $group->to_json);
-                        last;
-                    }
+                # Make sure the parent group is valid for the action
+                if (my $selected_group = $groups->find($parent_group->id)) {
+                    $c->stash(selected_group => $selected_group->to_json);
                 }
+            }
+
+            if ($status->recycles_request and my $prev_action = $request->current_action->prev_action) {
+                $c->stash(prev_group => $prev_action->group->to_json);
             }
         }
     }
 
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/groups selected_group/ ]);
+    $view->expose_stash([ qw/groups selected_group prev_group/ ]);
     $c->forward($view);
 }
 
@@ -409,6 +436,44 @@ sub send_new_action_email {
                 'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_action.tt',
+        },
+    );
+
+    $c->forward($c->view('Email'));
+}
+
+=head2 send_new_document_email
+
+Send notification that a new document was uploaded for a
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub send_new_document_email {
+    my ($self, $c, $request, $actor, $document, $replaced_document) = @_;
+
+    my $possible_actors = $request->possible_actors;
+    my $past_actors = $request->past_actors;
+
+    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
+    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
+
+    $c->stash(
+        request           => $request,
+        actor             => $actor,
+        document          => $document,
+        replaced_document => $replaced_document,
+        email             => {
+            from     => $c->config->{email}->{from_address},
+            to       => join(', ', @to_addresses),
+            subject  => $request->subject('New document added to '),
+            header   => [
+                'Return-Path' => $c->config->{email}->{admin_address},
+                'Reply-To'    => $actor->email,
+                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
+            ],
+            template => 'text_plain/new_document.tt',
         },
     );
 

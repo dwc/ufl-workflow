@@ -121,6 +121,47 @@ sub edit : PathPart Chained('group') Args(0) {
     );
 }
 
+=head2 list_action_groups
+
+List groups that are valid for the action, request, and the specified
+status via L<JSON>.
+
+=cut
+
+sub list_action_groups : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    my $status_id = $c->req->param('status_id');
+    $status_id =~ s/\D//g;
+
+    if ($status_id) {
+        my $status = $c->model('DBIC::Status')->find($status_id);
+        if ($status) {
+            my $request = $c->stash->{request};
+
+            my $groups = $request->groups_for_status($status);
+            $c->stash(groups => [ map { $_->to_json } $groups->all ]);
+
+            # Default to the parent group (for recycling)
+            my $current_group = $request->current_action->groups->first;
+            if (my $parent_group = $current_group->parent_group) {
+                # Make sure the parent group is valid for the action
+                if (my $selected_group = $groups->find($parent_group->id)) {
+                    $c->stash(selected_group => $selected_group->to_json);
+                }
+            }
+
+            if ($status->recycles_request and my $prev_action = $request->current_action->prev_action) {
+                $c->stash(prev_group => $prev_action->group->to_json);
+            }
+        }
+    }
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/groups selected_group prev_group/ ]);
+    $c->forward($view);
+}
+
 =head2 add_role
 
 Add a role to the stashed group.
@@ -135,12 +176,15 @@ sub add_role : PathPart Chained('group') Args(0) {
         if ($result->success) {
             my $group = $c->stash->{group};
             my $role  = $group->add_role($result->valid('name'));
-
             return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }
     }
 
-    $c->stash(template => 'groups/add_role.tt');
+    my $roles = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
+    $c->stash(
+        roles => $roles,
+        template => 'groups/add_role.tt',
+    );
 }
 
 =head1 AUTHOR

@@ -18,6 +18,8 @@
   <dd>[% process.name | html %]</dd>
   <dt>Active</dt>
   <dd>[% process.enabled ? 'Yes' : 'No' %]</dd>
+  <dt>Restrict viewing?</dt>
+  <dd>[% process.restricted ? 'Yes' : 'No' %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]
   <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.username | html %]</a></dd>

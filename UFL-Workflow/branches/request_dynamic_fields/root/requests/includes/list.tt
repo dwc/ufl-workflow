@@ -21,22 +21,34 @@
     <th>Created</th>
     <th>Updated</th>
   </tr>
-  [% SET i = 0 %]
-  [% WHILE (request = requests.next) %]
+[% SET i = 0 %]
+[% WHILE (request = requests.next) %]
+  [% IF c.user.can_view(request) %]
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
-[% IF show_submitter %]
+    [% IF show_submitter %]
     <td>[% request.submitter.username | html %]</td>
-[% END %]
+    [% END %]
     <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) | html %]">[% request.title | html %]</a></td>
-[% IF show_process %]
+    [% IF show_process %]
     <td>[% request.process.name | html %]</td>
-[% END %]
+    [% END %]
     <td>[% INCLUDE requests/includes/status.tt action = request.current_action, show_group = 1 -%]</td>
     <td>[% request.insert_time.strftime(datetime_format) | html %]</td>
     <td>[% request.update_time.strftime(datetime_format) | html %]</td>
   </tr>
-    [% SET i = i + 1 %]
+  [% ELSE %]
+  <tr class="denied" title="You do not have sufficient permissions to view this request.">
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Restricted</td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
   [% END %]
+  </tr>
+[% SET i = i + 1 %]
+[% END %]
 </table>
 [% ELSE %]
 <p>No requests found.</p>

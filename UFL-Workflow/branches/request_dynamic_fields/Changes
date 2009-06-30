@@ -1,7 +1,49 @@
 This file documents the revision history for UFL::Workflow.
 
-0.27
+0.33  Fri Jun 19 14:06:09 EDT 2009
+        - User listing pagination and searching (#45)
+        - Restricted report viewing (#21)
+        - Dynamic role listing and duplicate role assignment 
+          protection (#16 & #17)
+
+0.32  Mon Dec 15 14:44:12 EST 2008
+        - Track submitter of each document
+        - Accept the .docx file type (#27)
+        - Added link to support faq (#25)
+        - Send email when new document is uploaded (#30)
+        - Allow any past and possible approvers to upload a document
+          to a request (#28)
+
+0.31  Wed Jul 30 10:10:10 EDT 2008
+        - Fix group assignment list by checking that the group is
+          valid for the step (#18, #19)
+
+0.30  Tue Jul 15 17:48:29 EDT 2008
+        - Add default sorting for various group and role views
+        - Make the previous group the default when recycling
+        - Improve role assignment UI
+        - Move replaced documents to a separate list
+        - Add option to schema synchronization script to disable
+          exporting, for e.g. when we are syncing from workflow_prod
+          to workflow_test
+        - Controller::Processes: Remove extraneous parameter to
+          Schema::Process::add_request
+        - Allow for restricted viewing of requests based on process
+          (#13)
+
+0.29  Mon Apr 21 16:23:41 EDT 2008
+        - Schema::Action: Force actor relationship to a LEFT JOIN so
+          pending actions show up in /requests/reports
+
+0.28  Mon Apr 21 11:25:54 EDT 2008
+        - Fix paging on /requests/reports by removing buggy prefetch
+          (distinct => 1 was causing inappropriate GROUP BY for
+          paging)
+
+0.27  Mon Apr  7 19:14:03 EDT 2008
         - Update reporting UI with an "advanced options" section
+        - Extend ACLs to allow Help Desk users to add users
+        - Extend ACLs to allow Help Desk users to add users to roles
 
 0.26  Mon Mar 10 17:35:47 EDT 2008
         - Fix auto_create_user configuration for new

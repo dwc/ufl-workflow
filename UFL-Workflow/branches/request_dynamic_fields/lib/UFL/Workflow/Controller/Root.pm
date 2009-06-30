@@ -56,7 +56,7 @@ sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $requests  = $c->user->recent_requests;
-    my $processes = $c->model('DBIC::Process')->search({ 'enabled' => 1 });
+    my $processes = $c->model('DBIC::Process')->search({ enabled => 1 });
 
     $c->stash(
         requests  => $requests,

@@ -27,11 +27,35 @@ Display a list of current users.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $users = $c->model('DBIC::User')->search(undef, { order_by => 'username' });
+    my $letter;
+    my $query;
+    my $results;
+    my $users;
+
+    if ($letter = $c->req->query_parameters->{'letter'}) {
+        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+    }
+    else {
+        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', 'a%'  } }, { order_by => 'username' });
+        $letter = 'a';
+    }
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+
+        if ($query = $result->valid('query')) {
+            $results = $c->model('DBIC::User')->search({ 'LOWER(username)' => { 'like', $query . '%' } }, { order_by => 'username' });
+            $letter = substr($query,0,1);
+            $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+        }
+    }
 
     $c->stash(
-        users    => $users,
-        template => 'users/index.tt',
+        letter    => $letter,
+        query     => $query,
+        results   => $results,
+        template  => 'users/index.tt',
+        users     => $users,
     );
 }
 
@@ -46,7 +70,7 @@ sub add : Local {
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
-        if ($result->success) {	   
+        if ($result->success) {
             my @new_users = split /[ \r\n]+/, lc $result->valid('users');
 
             my (@added_users, @existing_users, @invalid_users);
@@ -93,9 +117,8 @@ sub user : PathPart('users') Chained('/') CaptureArgs(1) {
 
     my $user = $c->model('DBIC::User')->find({ username => $username });
     $c->detach('/default') unless $user;
-
-    $c->detach('/forbidden') unless $c->check_any_user_role('Administrator', 'Help Desk')
-        or $c->user->username eq $user->username;
+    $c->detach('/forbidden') unless $c->user->username eq $user->username
+        or $c->check_any_user_role('Administrator', 'Help Desk');
 
     $c->stash(user => $user);
 }
@@ -178,6 +201,33 @@ sub add_group_role : PathPart Chained('user') Args(0) {
         groups   => $groups,
         template => 'users/add_group_role.tt',
     );
+}
+
+=head2 list_group_roles
+
+List roles that are valid for the user, and the specified
+group via L<JSON>.
+
+=cut
+
+sub list_group_roles : PathPart Chained('user') Args(0) {
+    my ($self, $c) = @_;
+   
+    # Show the roles once a group is selected
+    if (my $group_id = $c->req->param('group_id')) {
+        $group_id =~ s/\D//g;
+        $c->detach('/default') unless $group_id;
+
+        my $group = $c->model('DBIC::Group')->find($group_id);
+        $c->detach('/default') unless $group;
+
+        my @roles = $group->roles;
+        $c->stash(roles => [ map { $_->to_json } @roles ]);
+    }
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/roles/ ]);
+    $c->forward($view);
 }
 
 =head2 delete_group_role

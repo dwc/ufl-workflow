@@ -185,7 +185,88 @@ sub can_manage {
     $self->throw_exception('You must provide a request')
         unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
 
-    return ($request->is_open and $self->id == $request->user_id);
+    # Allow users with current (pending) step's group-role or a past group role
+    my $has_group_role = 0;
+
+    my $possible_actors = $request->possible_actors;
+    $has_group_role = 1 if $possible_actors->count({ user_id => $self->id }) > 0;
+    $has_group_role = 1 if $self->_has_past_group_role($request);
+
+    return ($request->is_open and ($self->id == $request->user_id || $has_group_role));
+}
+
+=head2 can_view
+
+Return true if this user can view the specified
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub can_view {
+    my ($self, $request) = @_;
+
+    $self->throw_exception('You must provide a request')
+        unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
+
+    # Always allow access if the process is unrestricted
+    return 1 unless $request->process->restricted;
+
+    # Always allow the submitter
+    return 1 if $self->id == $request->user_id;
+
+    # Allow users with current (pending) step's group-role
+    my $possible_actors = $request->possible_actors;
+    return 1 if $possible_actors->count({ user_id => $self->id }) > 0;
+
+    return 1 if $self->_has_past_group_role($request);
+    return 1 if $self->_has_future_role($request);
+
+    return 0;
+}
+
+sub _has_past_group_role {
+    my ($self, $request) = @_;
+
+    my $has_past_group_role = 0;
+
+    my $action = $request->current_action;
+    while ($action = $action->prev_action) {
+        my $user_group_roles = $action->user_group_roles->search({
+            user_id => $self->id,
+            role_id => $action->step->role->id,
+        });
+
+        if ($user_group_roles->count > 0) {
+            $has_past_group_role = 1;
+            last;
+        }
+    }
+
+    return $has_past_group_role;
+}
+
+sub _has_future_role {
+    my ($self, $request) = @_;
+
+    my $step = $request->current_step;
+    my @future_roles;
+    while ($step = $step->next_step) {
+        push @future_roles, $step->role;
+    }
+
+    my $has_future_role = 0;
+
+    if (@future_roles) {
+        my $user_group_roles = $self->user_group_roles->search({
+            role_id => { -in => [ map { $_->id } @future_roles ] },
+        });
+
+        if ($user_group_roles->count > 0) {
+            $has_future_role = 1;
+        }
+    }
+
+    return $has_future_role;
 }
 
 =head2 pending_actions
@@ -250,14 +331,15 @@ sub group_requests {
     if (@groups) {
         $group_requests = $self->result_source->schema->resultset('Request')->search(
             {
-                'submitter.id'              => { '!=' => $self->id },
+                'process.restricted' => 0,
+                'submitter.id'       => { '!=' => $self->id },
                 -or => [
                     'group.id'              => { -in => [ map { $_->id } @groups ] },
                     'group.parent_group_id' => { -in => [ map { $_->id } @groups ] },
                 ],
             },
             {
-                join     => { submitter => { user_group_roles => 'group' } },
+                join     => [ 'process', { submitter => { user_group_roles => 'group' } } ],
                 distinct => 1,
                 order_by => \q[update_time DESC, insert_time DESC],
             },
