@@ -27,11 +27,35 @@ Display a list of current users.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $users = $c->model('DBIC::User')->search(undef, { order_by => 'username' });
+    my $letter;
+    my $query;
+    my $results;
+    my $users;
+
+    if ($letter = $c->req->query_parameters->{'letter'}) {
+        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+    }
+    else {
+        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', 'a%'  } }, { order_by => 'username' });
+        $letter = 'a';
+    }
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+
+        if ($query = $result->valid('query')) {
+            $results = $c->model('DBIC::User')->search({ 'LOWER(username)' => { 'like', $query . '%' } }, { order_by => 'username' });
+            $letter = substr($query,0,1);
+            $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+        }
+    }
 
     $c->stash(
-        users    => $users,
-        template => 'users/index.tt',
+        letter    => $letter,
+        query     => $query,
+        results   => $results,
+        template  => 'users/index.tt',
+        users     => $users,
     );
 }
 

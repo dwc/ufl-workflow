@@ -132,16 +132,23 @@ Add a role to this group.
 =cut
 
 sub add_role {
-    my ($self, $name) = @_;
+    my ($self, $name, $role_id) = @_;
 
     my $role;
-    $self->result_source->schema->txn_do(sub {
-        $role = $self->result_source->schema->resultset('Role')->find_or_create({
-            name => $name,
-        });
 
-        $self->add_to_roles($role);
-    });
+    $self->result_source->schema->txn_do(sub {
+
+        if ($self->roles->find(name => $name)) {
+   	    $self->throw_exception("Role already assigned to group.");
+        } 
+	else {
+            $role = $self->result_source->schema->resultset('Role')->find_or_create({ 
+	        name => $name, 
+            });            
+
+            $self->add_to_roles($role);                    
+	}
+    });   
 
     return $role;
 }

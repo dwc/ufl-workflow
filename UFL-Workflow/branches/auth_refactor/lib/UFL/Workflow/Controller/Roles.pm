@@ -114,6 +114,24 @@ sub add_user : PathPart Chained('role') Args(0) {
     );
 }
 
+=head2 list_roles
+
+List all available roles via L<JSON>.
+
+=cut
+
+sub list_roles : Local Args(0) {
+    my ($self, $c) = @_;
+
+    my $query = lc($c->request->parameters->{'q'});
+    my $roles = $c->model('DBIC::Role')->search({ "LOWER(name)" => { 'like', '%' . $query . '%' } });
+    $c->stash(roles => [ map { $_->to_json } $roles->all ]);
+
+    my $view = $c->view('JSON');
+    $view->expose_stash([ qw/roles/ ]);
+    $c->forward($view);
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

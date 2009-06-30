@@ -1,3 +1,6 @@
+index:
+  query:
+    DEFAULT: A character or word to search for
 add:
   users:
     DEFAULT: At least one GatorLink ID or UFID
