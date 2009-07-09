@@ -40,7 +40,7 @@
   <tr class="denied" title="You do not have sufficient permissions to view this request.">
     <td>-</td>
     <td>-</td>
-    <td>-</td>
+    <td>[% request.process.name | html %]</td>
     <td>Restricted</td>
     <td>-</td>
     <td>-</td>
