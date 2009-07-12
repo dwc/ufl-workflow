@@ -53,7 +53,7 @@ View::Email:
   stash_key:       email
   template_prefix: email
   sender:
-    method: Test
+    mailer: Test
 
 View::HTML:
   PRE_CHOMP: 1
