@@ -3,6 +3,7 @@ package UFL::Workflow::Model::DBIC;
 use strict;
 use warnings;
 use base qw/Catalyst::Model::DBIC::Schema/;
+use Class::C3;
 
 =head1 NAME
 
@@ -26,11 +27,11 @@ Set the domain for email addresses as configured on the application.
 
 sub new {
     my $self = shift->next::method(@_);
-    my $config = $_[0];
+    my $c = $_[0];
 
-    my $domain = $config->{email_domain};
-    die 'No email domain configured' unless $domain;
-
+    my $domain = $c->config->{email}->{domain};
+    die 'No email domain configured ($c->config->{email}->domain)'
+        unless $domain;
     $self->schema->email_domain($domain);
 
     return $self;
