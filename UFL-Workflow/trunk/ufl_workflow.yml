@@ -5,9 +5,8 @@ encoding:     UTF-8
 default_view: HTML
 
 email:
-  admin_address: approval@ufl.edu
-  from_address:  approval@ufl.edu
-  domain:        ufl.edu
+  admin_address: no-reply@example.com
+  from_address:  no-reply@example.com
 
 authentication:
   default_realm: users
@@ -60,6 +59,7 @@ Model::DBIC:
       PrintError:         0
       ShowErrorStatement: 1
       TraceLevel:         0
+  email_domain: example.com
 
 View::Email:
   default_view:    Text
