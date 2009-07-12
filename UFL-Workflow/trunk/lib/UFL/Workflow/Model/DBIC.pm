@@ -26,7 +26,9 @@ Set the domain for email addresses as configured on the application.
 
 sub new {
     my $self = shift->next::method(@_);
-    my $config = $_[0];
+
+    ### XXX: Catalyst 5.7 compatibility
+    my $config = ref $_[0] eq 'HASH' ? $_[0] : $_[1];
 
     my $domain = $config->{email_domain};
     die 'No email domain configured' unless $domain;
