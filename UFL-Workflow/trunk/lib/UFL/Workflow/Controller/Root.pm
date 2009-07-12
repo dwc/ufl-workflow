@@ -4,7 +4,13 @@ use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
 
-__PACKAGE__->config(namespace => '');
+__PACKAGE__->mk_accessors(qw/authentication_controller authentication_action/);
+
+__PACKAGE__->config(
+    namespace => '',
+    authentication_controller => 'Authentication',
+    authentication_action => 'login_via_form',
+);
 
 =head1 NAME
 
@@ -18,19 +24,41 @@ Root L<Catalyst> controller for L<UFL::Workflow>.
 
 =head2 auto
 
-Require authentication for all pages.
+Require authentication for all pages. The method used for
+authentication is flexible, using L<Catalyst::Plugin::Authentication>
+and two configuration values.
+
+By default, authentication happens via a standard form, displayed via
+L<UFL::Workflow::Controller::Authentication/login_via_form>. This is
+configured using the following keys:
+
+    authentication_controller
+    authentication_action
+
+You can set the C<authentication_controller> key to any other controller
+in your application (i.e. those accessible using C<< $c->controller >>).
+
+Additionally, you can set the C<authentication_action> key to another action
+on that L<Catalyst::Controller>. For example,
+L<UFL::Workflow::Controller::Authentication> contains a C<login_via_env>
+action, which uses the C<REMOTE_USER> environment variable instead of a
+basic form.
+
+Finally, you can configure all of this from your local configuration file:
+
+    Controller::Root:
+      authentication_action: login_via_env
 
 =cut
 
 sub auto : Private {
     my ($self, $c) = @_;
 
-    $c->forward($c->controller('Authentication')->action_for('login'))
-        if $c->controller('Authentication')->auto_login and not $c->user_exists;
-    $c->forward('unauthorized') and return 0
-        unless $c->user_exists;
+    my $controller = $self->authentication_controller;
+    my $action = $self->authentication_action;
 
-    return 1;
+    return $c->forward($c->controller($controller)->action_for($action))
+        unless $c->user_exists;
 }
 
 =head2 default

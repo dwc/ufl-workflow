@@ -9,12 +9,15 @@ use Catalyst qw/
     Authorization::Roles
     Authorization::ACL
     FillInForm
+    Session
+    Session::Store::File
+    Session::State::Cookie
     StackTrace
     Static::Simple
     Unicode::Encoding
 /;
 
-our $VERSION = '0.33';
+our $VERSION = '0.34_01';
 
 __PACKAGE__->setup;
 
