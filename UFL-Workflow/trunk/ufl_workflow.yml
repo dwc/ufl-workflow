@@ -5,9 +5,8 @@ encoding:     UTF-8
 default_view: HTML
 
 email:
-  admin_address: workflow@example.com
-  from_address:  workflow@example.com
-  domain:        example.com
+  admin_address: no-reply@example.com
+  from_address:  no-reply@example.com
 
 Controller::Documents:
   destination: __path_to(documents)__
@@ -33,6 +32,7 @@ Model::DBIC:
       PrintError:         0
       ShowErrorStatement: 1
       TraceLevel:         0
+  email_domain: example.com
 
 Plugin::Authentication:
   default_realm: users
