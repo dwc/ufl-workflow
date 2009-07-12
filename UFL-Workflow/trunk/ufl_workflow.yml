@@ -48,10 +48,12 @@ Plugin::Authentication:
         role_field:    name
 
 View::Email:
-  default_view:    Text
-  content_type:    text/plain
   stash_key:       email
   template_prefix: email
+  default:
+    view:         Text
+    content_type: text/plain
+    charset:      UTF-8
   sender:
     mailer: Test
 
