@@ -25,8 +25,11 @@ sub login_via_env : Private {
 
     my $logged_in = 0;
 
-    if ($c->authenticate({ username => $c->req->user })) {
+    if ($c->authenticate()) {
         $logged_in = 1;
+    }
+    else {
+        $c->forward('/forbidden');
     }
 
     return $logged_in;
@@ -41,8 +44,8 @@ Log the user in via a standard username and password form.
 sub login_via_form : Private {
     my ($self, $c) = @_;
 
-    # Allow access to the login form
-    if ($c->action eq $self->action_for('login')) {
+    # Allow access for logged-in users and also to the login form
+    if ($c->user_exists or $c->action eq $self->action_for('login')) {
         return 1;
     }
 

@@ -58,8 +58,7 @@ sub auto : Private {
     my $controller = $self->authentication_controller;
     my $action = $self->authentication_action;
 
-    return $c->forward($c->controller($controller)->action_for($action))
-        unless $c->user_exists;
+    return $c->forward($c->controller($controller)->action_for($action));
 }
 
 =head2 default
