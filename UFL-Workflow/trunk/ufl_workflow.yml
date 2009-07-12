@@ -17,8 +17,8 @@ Controller::Processes: &requestdocuments
 Controller::Requests: *requestdocuments
 
 Model::LDAP:
-  host: ldap.ufl.edu
-  base: ou=People,dc=ufl,dc=edu
+  host: ldap.example.com
+  base: ou=People,dc=example,dc=com
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
