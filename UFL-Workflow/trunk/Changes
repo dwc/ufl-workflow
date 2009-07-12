@@ -5,6 +5,7 @@ This file documents the revision history for UFL::Workflow.
           changes in how Catalyst 5.8 instantiates models
         - Replace hackish UFL::Controller::Authentication with a
           cleaner setup
+        - Require newer Catalyst::View::Email to work with Catalyst 5.8
 
 0.33  Fri Jun 19 14:06:09 EDT 2009
         - User listing pagination and searching (#45)
