@@ -29,8 +29,9 @@ authentication is flexible, using L<Catalyst::Plugin::Authentication>
 and two configuration values.
 
 By default, authentication happens via a standard form, displayed via
-L<UFL::Workflow::Controller::Authentication/login_via_form>. This is
-configured using the following keys:
+L<UFL::Workflow::Controller::Authentication/login_via_form>.
+
+This is configured using the following keys:
 
     authentication_controller
     authentication_action

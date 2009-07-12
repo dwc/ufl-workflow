@@ -61,7 +61,7 @@ sub index : Path('') Args(0) {
 
 =head2 add
 
-Add a new user.
+Add one or more new users.
 
 =cut
 
