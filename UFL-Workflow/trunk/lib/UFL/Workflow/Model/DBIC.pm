@@ -18,19 +18,16 @@ L<DBIx::Class> L<Catalyst> model component.
 
 =head1 METHODS
 
-=head2 new
+=head2 COMPONENT
 
 Set the domain for email addresses as configured on the application.
 
 =cut
 
-sub new {
+sub COMPONENT {
     my $self = shift->next::method(@_);
 
-    ### XXX: Catalyst 5.7 compatibility
-    my $config = ref $_[0] eq 'HASH' ? $_[0] : $_[1];
-
-    my $domain = $config->{email_domain};
+    my $domain = $_[1]->{email_domain};
     die 'No email domain configured' unless $domain;
 
     $self->schema->email_domain($domain);
