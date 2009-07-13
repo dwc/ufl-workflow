@@ -201,6 +201,12 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $documents = $request->documents->search({
         document_id => undef,
+        active      => 1,
+    });
+
+    my $removed_documents = $request->documents->search({
+        document_id => undef,
+        active      => 0,
     });
 
     my $replaced_documents = $request->documents->search({
@@ -209,6 +215,7 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     $c->stash(
         documents          => $documents,
+        removed_documents  => $removed_documents,
         replaced_documents => $replaced_documents,
         template           => 'requests/view.tt',
     );
@@ -260,6 +267,62 @@ sub add_document : PathPart Chained('request') Args(0) {
         template  => 'requests/add_document.tt',
     );
 }
+
+=head2 remove_document
+
+Remove the document.
+
+=cut
+
+sub remove_document : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+    
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $request = $c->stash->{request};
+
+    my $result = $self->validate_form($c);
+    $c->detach('view', $request->uri_args) unless $result->success;
+
+    my $removed_document = $c->model('DBIC::Document')->find($result->valid('document_id'));
+    $c->detach('/default') unless $removed_document;
+
+    $removed_document->remove_document;
+
+    $self->send_new_document_email($c, $request, $c->user->obj, $removed_document, undef, $removed_document);
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
+}
+
+=head2 remove_document
+
+Include the document.
+
+=cut
+
+sub include_document : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+    
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $request = $c->stash->{request};
+
+    my $result = $self->validate_form($c);
+    $c->detach('view', $request->uri_args) unless $result->success;
+
+    my $included_document = $c->model('DBIC::Document')->find($result->valid('document_id'));
+    $c->detach('/default') unless $included_document;
+
+    $included_document->include_document;
+
+    # Make sure we get update_time
+    $request->discard_changes;
+
+    $self->send_new_document_email($c, $request, $c->user->obj, $included_document, , , $included_document);
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
+}
+
 
 =head2 update_status
 
@@ -450,7 +513,7 @@ L<UFL::Workflow::Schema::Request>.
 =cut
 
 sub send_new_document_email {
-    my ($self, $c, $request, $actor, $document, $replaced_document) = @_;
+    my ($self, $c, $request, $actor, $document, $replaced_document, $removed_document, $include_document) = @_;
 
     my $possible_actors = $request->possible_actors;
     my $past_actors = $request->past_actors;
@@ -464,6 +527,8 @@ sub send_new_document_email {
         actor             => $actor,
         document          => $document,
         replaced_document => $replaced_document,
+        removed_document  => $removed_document,
+        include_document  => $include_document,
         email             => {
             from     => $c->config->{email}->{from_address},
             to       => join(', ', @to_addresses),
@@ -476,7 +541,6 @@ sub send_new_document_email {
             template => 'text_plain/new_document.tt',
         },
     );
-
     $c->forward($c->view('Email'));
 }
 

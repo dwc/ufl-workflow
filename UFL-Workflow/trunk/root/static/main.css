@@ -454,3 +454,7 @@ text-align:left;
 .denied {
 background: #ffffcc;
 }
+
+#removed_documents input { 
+width: auto; 
+}

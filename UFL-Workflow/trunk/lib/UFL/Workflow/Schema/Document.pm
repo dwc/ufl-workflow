@@ -14,8 +14,12 @@ __PACKAGE__->add_columns(
     },
     # Refers to replacement document
     document_id => {
-        data_type   => 'integer',
+        data_type  => 'integer',
         is_nullable => 1,
+    },
+    active => {
+        data_type     => 'boolean',
+        default_value => 1,
     },
     user_id => {
         data_type => 'integer',
@@ -99,6 +103,38 @@ sub uri_args {
     my ($self) = @_;
 
     return [ $self->id ];
+}
+
+=head2 uri_args
+
+Include the document.
+
+=cut
+
+sub include_document {
+    my ($self) = @_;
+
+    $self->result_source->schema->txn_do(sub {
+        $self->update({
+            active => 1,
+        });    
+    });
+}
+
+=head2 uri_args
+
+Remove the document.
+
+=cut
+
+sub remove_document {
+    my ($self) = @_;
+
+    $self->result_source->schema->txn_do(sub {
+        $self->update({
+            active => 0,
+        });    
+    });
 }
 
 =head1 AUTHOR

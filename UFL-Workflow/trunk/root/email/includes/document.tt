@@ -3,3 +3,9 @@
 [% ELSE %]
 [% document.name %]
 [% END -%]
+[% IF removed_document %]
+[% document.name %] was removed.
+[% END -%]
+[% IF include_document %]
+[% document.name %] was included back into the request.
+[% END -%]

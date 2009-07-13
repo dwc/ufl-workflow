@@ -23,6 +23,12 @@ add_document:
   - [ NOT_BLANK ]
   - replaced_document_id
   - [ INT ]
+include_document:
+  - document_id
+  - [ INT ]
+remove_document:
+  - document_id
+  - [ INT ]
 update_status:
   - status_id
   - [ NOT_BLANK, INT ]
