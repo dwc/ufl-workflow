@@ -221,6 +221,49 @@ sub view : PathPart('') Chained('request') Args(0) {
     );
 }
 
+=head2 edit
+
+Edit the stashed request.
+
+=cut
+
+sub edit : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $request = $c->stash->{request};
+            my $comment = "Request details updated.";
+            my $group;
+
+            my $status = $c->model('DBIC::Status')->find({ name => 'Comment' });
+            $c->detach('/default') unless $status;
+
+            my $previous_title = $request->title
+                unless($result->valid('title') eq $request->title);
+
+            my $previous_description = $request->description
+		unless($result->valid('description') eq $request->description);
+
+            $request->update({
+                title       => $result->valid('title'),
+                description => $result->valid('description'),
+            });
+
+            $c->model('DBIC')->schema->txn_do(sub {
+                $request->update_status($status, $c->user->obj, $group, $comment);
+	    });
+
+            $self->send_changed_request_email($c, $request, $c->user->obj, $comment, $previous_title, $previous_description);
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
+        }
+    }
+
+    $c->stash(template => 'requests/edit.tt');
+}
+
 =head2 add_document
 
 Add a document to the stashed request.
@@ -445,7 +488,7 @@ to the submitter and to users who have previously acted on it.
 =cut
 
 sub send_changed_request_email {
-    my ($self, $c, $request, $actor, $comment) = @_;
+    my ($self, $c, $request, $actor, $comment, $previous_title, $previous_description) = @_;
 
     my $past_actors  = $request->past_actors;
     my @to_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
@@ -454,6 +497,8 @@ sub send_changed_request_email {
         request => $request,
         actor   => $actor,
         comment => $comment,
+        previous_title => $previous_title,
+        previous_description => $previous_description,
         email => {
             from     => $c->config->{email}->{from_address},
             to       => join(', ', @to_addresses),

@@ -17,6 +17,13 @@ reports:
     DEFAULT: An end date
   page:
     DEFAULT: A page number
+edit:
+  title:
+    DEFAULT: A title
+    LENGTH:  A shorter title
+  description:
+    DEFAULT: A description
+    LENGTH:  A shorter description
 add_document:
   document:
     DEFAULT:   A document

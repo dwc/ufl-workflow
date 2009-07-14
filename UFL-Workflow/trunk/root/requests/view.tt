@@ -13,6 +13,9 @@
    ]
 -%]
 <h3>Request details</h3>
+[% IF c.user.can_manage(request) %]
+<p><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></p>
+[% END -%]
 [% IF request.process.restricted %]
 <p id="restricted"><strong>Warning</strong>: This request may contain private information. Do not reveal the contents to anyone.</p>
 [% END %]
