@@ -41,6 +41,9 @@ requires 'Template::Plugin::Textile';
 requires 'Template::Plugin::Wrap';
 requires 'YAML';
 
+# XXX: Replace with Catalyst::Authentication::Credential::Remote in the future
+recommends 'UFL::Authentication::Credential::GatorLink';
+
 build_requires 'Catalyst::Test';
 build_requires 'DBD::SQLite';
 build_requires 'Test::More';
