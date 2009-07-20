@@ -49,7 +49,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->has_many(
     documents => 'UFL::Workflow::Schema::Document',
-    { 'foreign.request_id' => 'self.id'},
+    { 'foreign.request_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
 

@@ -578,7 +578,7 @@ sub send_new_document_email {
 
 =head2 send_changed_document_email
 
-Send notification that a document was chnaged for a
+Send notification that a document was changed for a
 L<UFL::Workflow::Schema::Request>.
 
 =cut
