@@ -49,7 +49,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->has_many(
     documents => 'UFL::Workflow::Schema::Document',
-    { 'foreign.request_id' => 'self.id' },
+    { 'foreign.request_id' => 'self.id'},
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
@@ -337,6 +337,61 @@ sub add_document {
     });
 
     return $document;
+}
+
+=head2 active_documents
+
+Return a resultset of active documents without an id.
+
+=cut
+
+sub active_documents {
+    my ($self) = @_;
+
+    my $active_documents = $self->documents->search({ 
+        document_id => undef,
+        active      => 1, },
+        { order_by    => 'insert_time' },
+    );
+
+    return $active_documents;
+}
+
+=head2 removed_documents
+
+Return a resultset of inactive documents that do not have an id.
+
+=cut
+
+sub removed_documents {
+    my ($self) = @_;
+
+    my $removed_documents = $self->documents->search({
+        document_id => undef,
+        active      => 0, },
+        { order_by    => 'insert_time' },
+    );
+
+    return $removed_documents;
+}
+
+
+=head2 active_documents
+
+Return a resultset of inactive documents that have an id.
+
+=cut
+
+sub replaced_documents {
+    my ($self) = @_;
+
+    my $replaced_documents = $self->documents->search(
+        { document_id => { '!=' => undef }, 
+          active      => 0 },
+        { order_by    => 'insert_time' },
+    );
+
+    return $replaced_documents;
 }
 
 =head2 update_status

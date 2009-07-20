@@ -110,7 +110,7 @@
       <td><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
       <td>[% document.submitter.username | html %]</td>
       <td>[% document.insert_time.strftime(datetime_format) | html %]</td>
-      <td>[% UNLESS document.active %]<form action="[% c.uri_for(c.controller.action_for('include_document'), request.uri_args) | html %]" method="post"><input type="hidden" name="document_id" value="[% document.id | html %]" /><input type="submit" value="Include" /></form>[% END %]</td>
+      <td>[% UNLESS document.active %]<form action="[% c.uri_for(c.controller.action_for('recover_document'), request.uri_args) | html %]" method="post"><input type="hidden" name="document_id" value="[% document.id | html %]" /><input type="submit" value="Recover" /></form>[% END %]</td>
     </tr>
     [% SET i = i + 1 %]
   [% END %]

@@ -28,7 +28,7 @@ add_document:
   - [ NOT_BLANK ]
   - replaced_document_id
   - [ INT ]
-include_document:
+recover_document:
   - document_id
   - [ INT ]
 remove_document:

@@ -107,34 +107,30 @@ sub uri_args {
 
 =head2 uri_args
 
-Include the document.
+Recover the document by updating it as active again for the given request.
 
 =cut
 
-sub include_document {
+sub recover {
     my ($self) = @_;
 
-    $self->result_source->schema->txn_do(sub {
-        $self->update({
-            active => 1,
-        });    
-    });
+    $self->update({
+        active => 1,
+    });    
 }
 
 =head2 uri_args
 
-Remove the document.
+Remove the document from the request by making it inactive.
 
 =cut
 
-sub remove_document {
+sub remove {
     my ($self) = @_;
 
-    $self->result_source->schema->txn_do(sub {
-        $self->update({
-            active => 0,
-        });    
-    });
+    $self->update({
+        active => 0,
+    });    
 }
 
 =head1 AUTHOR

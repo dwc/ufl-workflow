@@ -30,7 +30,7 @@ add_document:
     EXTENSION: A document with one of the allowed types
   replaced_document_id:
     DEFAULT: The document being replaced
-include_document:
+recover_document:
   document_id:
     DEFAULT:   The document being included
 remove_document:

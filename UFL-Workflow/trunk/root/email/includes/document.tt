@@ -6,6 +6,6 @@
 [% IF removed_document %]
 [% document.name %] was removed.
 [% END -%]
-[% IF include_document %]
-[% document.name %] was included back into the request.
+[% IF recovered_document %]
+[% document.name %] was recovered for the request.
 [% END -%]

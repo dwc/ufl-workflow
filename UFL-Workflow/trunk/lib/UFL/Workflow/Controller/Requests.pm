@@ -199,19 +199,11 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $request = $c->stash->{request};
 
-    my $documents = $request->documents->search({
-        document_id => undef,
-        active      => 1,
-    });
+    my $documents = $request->active_documents;
 
-    my $removed_documents = $request->documents->search({
-        document_id => undef,
-        active      => 0,
-    });
+    my $removed_documents = $request->removed_documents;
 
-    my $replaced_documents = $request->documents->search({
-        document_id => { '!=' => undef },
-    });
+    my $replaced_documents = $request->replaced_documents;
 
     $c->stash(
         documents          => $documents,
@@ -300,10 +292,7 @@ sub add_document : PathPart Chained('request') Args(0) {
         }
     }
 
-    my $documents = $request->documents->search(
-        { document_id => undef },
-        { order_by    => 'insert_time' },
-    );
+    my $documents = $request->active_documents;
 
     $c->stash(
         documents => $documents,
@@ -327,23 +316,23 @@ sub remove_document : PathPart Chained('request') Args(0) {
     my $result = $self->validate_form($c);
     $c->detach('view', $request->uri_args) unless $result->success;
 
-    my $removed_document = $c->model('DBIC::Document')->find($result->valid('document_id'));
-    $c->detach('/default') unless $removed_document;
+    my $document = $c->model('DBIC::Document')->find($result->valid('document_id'));
+    $c->detach('/default') unless $document;
 
-    $removed_document->remove_document;
+    $document->remove;
 
-    $self->send_new_document_email($c, $request, $c->user->obj, $removed_document, undef, $removed_document);
+    $self->send_changed_document_email($c, $request, $c->user->obj, $document, $document, undef);
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
 
-=head2 remove_document
+=head2 recover_document
 
-Include the document.
+Recover the document for this request.
 
 =cut
 
-sub include_document : PathPart Chained('request') Args(0) {
+sub recover_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
     
     die 'Method must be POST' unless $c->req->method eq 'POST';
@@ -353,15 +342,15 @@ sub include_document : PathPart Chained('request') Args(0) {
     my $result = $self->validate_form($c);
     $c->detach('view', $request->uri_args) unless $result->success;
 
-    my $included_document = $c->model('DBIC::Document')->find($result->valid('document_id'));
-    $c->detach('/default') unless $included_document;
+    my $document = $c->model('DBIC::Document')->find($result->valid('document_id'));
+    $c->detach('/default') unless $document;
 
-    $included_document->include_document;
+    $document->recover;
 
     # Make sure we get update_time
     $request->discard_changes;
 
-    $self->send_new_document_email($c, $request, $c->user->obj, $included_document, , , $included_document);
+    $self->send_changed_document_email($c, $request, $c->user->obj, $document, undef, $document);
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
@@ -558,7 +547,7 @@ L<UFL::Workflow::Schema::Request>.
 =cut
 
 sub send_new_document_email {
-    my ($self, $c, $request, $actor, $document, $replaced_document, $removed_document, $include_document) = @_;
+    my ($self, $c, $request, $actor, $document, $replaced_document) = @_;
 
     my $possible_actors = $request->possible_actors;
     my $past_actors = $request->past_actors;
@@ -572,8 +561,6 @@ sub send_new_document_email {
         actor             => $actor,
         document          => $document,
         replaced_document => $replaced_document,
-        removed_document  => $removed_document,
-        include_document  => $include_document,
         email             => {
             from     => $c->config->{email}->{from_address},
             to       => join(', ', @to_addresses),
@@ -584,6 +571,44 @@ sub send_new_document_email {
                 'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_document.tt',
+        },
+    );
+    $c->forward($c->view('Email'));
+}
+
+=head2 send_changed_document_email
+
+Send notification that a document was chnaged for a
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub send_changed_document_email {
+    my ($self, $c, $request, $actor, $document, $removed_document, $recovered_document) = @_;
+
+    my $possible_actors = $request->possible_actors;
+    my $past_actors = $request->past_actors;
+
+    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
+    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
+
+    $c->stash(
+        request            => $request,
+        actor              => $actor,
+        document           => $document,
+        removed_document   => $removed_document,
+        recovered_document => $recovered_document,
+        email             => {
+            from     => $c->config->{email}->{from_address},
+            to       => join(', ', @to_addresses),
+            subject  => $request->subject('New document added to '),
+            header   => [
+                'Return-Path' => $c->config->{email}->{admin_address},
+                'Reply-To'    => $actor->email,
+                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
+            ],
+            template => 'text_plain/changed_document.tt',
         },
     );
     $c->forward($c->view('Email'));

@@ -1,0 +1,7 @@
+A document was changed for a request.
+
+[% INCLUDE email/includes/header.tt -%]
+
+[% INCLUDE email/includes/document.tt -%]
+
+[% INCLUDE email/includes/footer.tt -%]
