@@ -222,35 +222,33 @@ Edit the stashed request.
 sub edit : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
+    my $request = $c->stash->{request};
+
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $request = $c->stash->{request};
             my $comment = "Request details updated.";
             my $group;
 
             my $status = $c->model('DBIC::Status')->find({ name => 'Comment' });
             $c->detach('/default') unless $status;
 
-            my $previous_title = $request->title
-                unless($result->valid('title') eq $request->title);
+            my $previous_title = $request->title;
+            my $previous_description = $request->description;
 
-            my $previous_description = $request->description
-		unless($result->valid('description') eq $request->description);
+            $c->model('DBIC')->schema->txn_do(sub {            
+                $request->update({
+                    title       => $result->valid('title'),
+                    description => $result->valid('description'),
+                });
 
-            $request->update({
-                title       => $result->valid('title'),
-                description => $result->valid('description'),
-            });
-
-            $c->model('DBIC')->schema->txn_do(sub {
                 $request->update_status($status, $c->user->obj, $group, $comment);
+
+                $self->send_changed_request_email($c, $request, $c->user->obj, $comment, $previous_title, $previous_description);
 	    });
+	}
 
-            $self->send_changed_request_email($c, $request, $c->user->obj, $comment, $previous_title, $previous_description);
-
-            return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
-        }
+        return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
     }
 
     $c->stash(template => 'requests/edit.tt');
