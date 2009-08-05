@@ -23,16 +23,10 @@ Log the user in based on the environment (via C<REMOTE_USER>).
 sub login_via_env : Private {
     my ($self, $c) = @_;
 
-    my $logged_in = 0;
+    $c->forward('/forbidden') and return 0 
+        unless $c->authenticate();
 
-    if ($c->authenticate()) {
-        $logged_in = 1;
-    }
-    else {
-        $c->forward('/forbidden');
-    }
-
-    return $logged_in;
+    return 1;
 }
 
 =head2 login_via_form
