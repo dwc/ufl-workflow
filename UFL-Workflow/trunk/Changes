@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.34
+0.34  Thu Aug  6 12:45:34 EDT 2009
         - Move email domain configuration to model class due to
           changes in how Catalyst 5.8 instantiates models
         - Replace hackish UFL::Controller::Authentication with a
