@@ -105,9 +105,10 @@ sub uri_args {
     return [ $self->id ];
 }
 
-=head2 uri_args
+=head2 recover
 
-Recover the document by updating it as active again for the given request.
+Recover the document by updating it as active again for the given
+request.
 
 =cut
 
@@ -119,7 +120,7 @@ sub recover {
     });    
 }
 
-=head2 uri_args
+=head2 remove
 
 Remove the document from the request by making it inactive.
 

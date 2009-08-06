@@ -376,7 +376,7 @@ sub removed_documents {
 }
 
 
-=head2 active_documents
+=head2 replaced_documents
 
 Return a resultset of inactive documents that have an id.
 
