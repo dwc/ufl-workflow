@@ -99,7 +99,7 @@ Display the FAQ page.
 
 =cut
 
-sub faq : Path Args(0) {
+sub faq : Path('faq') Args(0) {
     my ($self, $c) = @_;
 
     $c->stash(template => 'faq.tt');
