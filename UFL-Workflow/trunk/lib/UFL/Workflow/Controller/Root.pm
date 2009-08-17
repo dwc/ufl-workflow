@@ -93,6 +93,18 @@ sub index : Path('') Args(0) {
     );
 }
 
+=head2 faq
+
+Display the FAQ page.
+
+=cut
+
+sub faq : Path Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'faq.tt');
+}
+
 =head2 unauthorized
 
 Display a page stating the user is not logged in.
