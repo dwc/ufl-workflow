@@ -1,0 +1,39 @@
+[% USE Textile %]
+[% SET
+   title = request.title
+   status_id = 'status_id'
+   group_id = 'group_id'
+   scripts = [
+     c.uri_for('/static/javascript/UFL/Workflow/Form/StatusGroupAssignment.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Expandable.js'),
+   ]
+   snippets = [
+     "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
+     "new UFL.Workflow.Form.Expandable();",
+   ]
+-%]
+<h3>Request details</h3>
+[% IF request.process.restricted %]
+<p id="restricted"><strong>Warning</strong>: This request may contain private information. Do not reveal the contents to anyone.</p>
+[% END %]
+<dl>
+  <dt>Title</dt>
+  <dd>[% request.title | html %]</dd>
+  <dt>Version</dt>
+  <dd>[% request.id | html %]</dd>
+  <dt>Process</dt>
+  <dd>[% request.process.name | html %]</dd>
+  <dt>Submitter</dt>
+  <dd>[% request.submitter.username | html %]</dd>
+  <dt>Updated</dt>
+  <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
+</dl>
+<br style="clear:both" />
+
+<h4>Description</h4>
+<div class="description">
+
+[% FILTER indent('  ') %]
+  [% request.description.replace('\bh[12346]\.', 'h5.') | textile %]
+[% END %]
+</div>

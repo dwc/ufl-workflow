@@ -188,6 +188,25 @@ sub request : PathPart('requests') Chained('/') CaptureArgs(1) {
     $c->stash(request => $request);
 }
 
+=head2 version
+
+Display basic information on the requested version.
+
+=cut
+
+sub version : PathPart('versions') Chained('request') Args(1) {
+    my ($self, $c, $version_id) = @_;
+
+    my $request = $c->model('DBIC::RequestVersion')->find($version_id);
+
+    $c->log->debug("In the version");
+
+    $c->stash(
+        request  => $request,
+        template => 'requests/version.tt',
+    );
+}
+
 =head2 view
 
 Display basic information on the stashed request.
@@ -199,6 +218,8 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $request = $c->stash->{request};
 
+    my $versions = $request->versions;
+
     my $documents = $request->active_documents;
 
     my $removed_documents = $request->removed_documents;
@@ -206,6 +227,7 @@ sub view : PathPart('') Chained('request') Args(0) {
     my $replaced_documents = $request->replaced_documents;
 
     $c->stash(
+        versions           => $versions,
         documents          => $documents,
         removed_documents  => $removed_documents,
         replaced_documents => $replaced_documents,
@@ -227,14 +249,10 @@ sub edit : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $comment = "Request details updated.";
-            my $group;
 
-            my $status = $c->model('DBIC::Status')->find({ name => 'Comment' });
-            $c->detach('/default') unless $status;
-
-            my $previous_title = $request->title;
-            my $previous_description = $request->description;
+            my $version = $request->add_version(
+                $c->user->obj,
+	    );
 
             $c->model('DBIC')->schema->txn_do(sub {            
                 $request->update({
@@ -242,9 +260,6 @@ sub edit : PathPart Chained('request') Args(0) {
                     description => $result->valid('description'),
                 });
 
-                $request->update_status($status, $c->user->obj, $group, $comment);
-
-                $self->send_changed_request_email($c, $request, $c->user->obj, $comment, $previous_title, $previous_description);
 	    });
 	}
 

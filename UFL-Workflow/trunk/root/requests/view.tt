@@ -43,6 +43,28 @@
 [% END %]
 </div>
 
+[% IF versions.count > 0 %]
+<div class="expandable collapsed">
+  <h4>Request Versions ([% versions.count | html %])</h4>
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Submitter</th>
+      <th>Created</th>
+    </tr>
+  [% SET i = 0 %]
+  [% WHILE (version = versions.next) %]
+    <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+      <td><a href="[% c.uri_for(c.controller('Requests').action_for('version'), request.uri_args, version.id) | html %]">[% version.title | html %]</a></td>
+      <td>[% version.submitter.username | html %]</td>
+      <td>[% version.insert_time.strftime(datetime_format) | html %]</td>
+    </tr>
+    [% SET i = i + 1 %]
+  [% END %]
+  </table>
+</div><!-- .expandable -->
+[% END -%]
+
 <h3>Documents</h3>
 [% IF c.user.can_manage(request) %]
 <p><a href="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]">Add a document</a></p>

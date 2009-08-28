@@ -53,6 +53,12 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
+__PACKAGE__->has_many(
+    versions => 'UFL::Workflow::Schema::RequestVersion',
+    { 'foreign.request_id' => 'self.id' },
+    { cascade_delete => 0, cascade_copy => 0 },
+);
+
 __PACKAGE__->resultset_attributes({
     order_by => \q[me.update_time DESC, me.insert_time DESC],
 });
@@ -462,6 +468,40 @@ sub update_status {
             $current_action->update;
         }
     });
+}
+
+=head2 add_version
+
+Add a new L<UFL::Workflow::Schema::RequestVersion> to this request.
+
+=cut
+
+sub add_version {
+    my ($self, $user) = @_;
+
+    $self->throw_exception('You must provide a request')
+        unless $self;
+    $self->throw_exception('You must provide a user')
+        unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('User cannot manage request')
+        unless $user->can_manage($self);
+
+    my $version;
+    $self->result_source->schema->txn_do(sub {
+        my $id = $self->versions->count;
+        $id++;
+
+        $version = $self->versions->create({
+	    id          => $id,
+ 	    process_id  => $self->process->id,
+            user_id     => $user->id,
+            title       => $self->title,
+            description => $self->description,
+        });
+
+    });
+
+    return $version;
 }
 
 =head2 message_id
