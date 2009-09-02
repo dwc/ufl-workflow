@@ -1,7 +1,6 @@
 --- #YAML:1.0
 # Do not use tabs for indentation or label/value separation!
 name:         Workflow
-encoding:     UTF-8
 default_view: HTML
 
 email:

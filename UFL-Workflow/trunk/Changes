@@ -2,6 +2,7 @@ This file documents the revision history for UFL::Workflow.
 
 0.35
         - Add FAQ page to application since it went missing
+        - Update to latest version of Catalyst scripts
 
 0.34  Thu Aug  6 12:45:34 EDT 2009
         - Move email domain configuration to model class due to
