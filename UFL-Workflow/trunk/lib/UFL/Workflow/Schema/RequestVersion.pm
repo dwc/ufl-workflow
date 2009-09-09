@@ -8,14 +8,10 @@ __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/
 
 __PACKAGE__->table('request_versions');
 __PACKAGE__->add_columns(
-    id => {
-        data_type         => 'integer',
-        is_auto_increment => 0,
-    },
     request_id => {
         data_type         => 'integer',
     },
-    process_id => {
+    num => {
         data_type         => 'integer',
     },
     user_id => {
@@ -31,13 +27,8 @@ __PACKAGE__->add_columns(
     },
 );
 
-__PACKAGE__->set_primary_key('id');
+__PACKAGE__->set_primary_key(qw/request_id num/);
 __PACKAGE__->add_standard_columns;
-
-__PACKAGE__->belongs_to(
-    process => 'UFL::Workflow::Schema::Process',
-    'process_id',
-);
 
 __PACKAGE__->belongs_to(
     request => 'UFL::Workflow::Schema::Request',
@@ -48,22 +39,6 @@ __PACKAGE__->belongs_to(
     submitter => 'UFL::Workflow::Schema::User',
     'user_id',
 );
-
-__PACKAGE__->has_many(
-    actions => 'UFL::Workflow::Schema::Action',
-    { 'foreign.requestVersion_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
-);
-
-__PACKAGE__->has_many(
-    documents => 'UFL::Workflow::Schema::Document',
-    { 'foreign.requestVersion_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
-);
-
-__PACKAGE__->resultset_attributes({
-    order_by => \q[me.update_time DESC, me.insert_time DESC],
-});
 
 =head1 NAME
 

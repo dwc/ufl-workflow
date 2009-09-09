@@ -488,12 +488,11 @@ sub add_version {
 
     my $version;
     $self->result_source->schema->txn_do(sub {
-        my $id = $self->versions->count;
-        $id++;
+        my $num = $self->versions->get_column('num')->max;
+        $num++;
 
         $version = $self->versions->create({
-	    id          => $id,
- 	    process_id  => $self->process->id,
+	    num         => $num,
             user_id     => $user->id,
             title       => $self->title,
             description => $self->description,

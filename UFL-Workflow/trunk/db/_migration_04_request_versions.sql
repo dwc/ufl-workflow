@@ -1,13 +1,14 @@
+DROP TABLE request_versions;
+
 CREATE TABLE request_versions (
-  id INTEGER NOT NULL,
   request_id INTEGER NOT NULL,
-  process_id INTEGER NOT NULL,
+  num INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   title VARCHAR(64) NOT NULL,
   description VARCHAR(8192) NOT NULL,
   insert_time TIMESTAMP NOT NULL DEFAULT CURRENT TIMESTAMP,
   update_time TIMESTAMP NOT NULL DEFAULT CURRENT TIMESTAMP,
-  PRIMARY KEY (id)
+  PRIMARY KEY (request_id, num)
 );
 
 ALTER TABLE request_versions ADD CONSTRAINT request_versions_fk_process_id FOREIGN KEY (process_id) REFERENCES processes(id);

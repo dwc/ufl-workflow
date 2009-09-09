@@ -218,7 +218,7 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $request = $c->stash->{request};
 
-    my $versions = $request->versions;
+    my $versions = $request->versions->search( {}, { order_by => 'num' });
 
     my $documents = $request->active_documents;
 
