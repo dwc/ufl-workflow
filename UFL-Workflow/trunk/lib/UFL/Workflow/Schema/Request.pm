@@ -393,7 +393,7 @@ sub replaced_documents {
 
     my $replaced_documents = $self->documents->search(
         { document_id => { '!=' => undef }, 
-          active      => 0 },
+          active      => 1 },
         { order_by    => 'insert_time' },
     );
 
