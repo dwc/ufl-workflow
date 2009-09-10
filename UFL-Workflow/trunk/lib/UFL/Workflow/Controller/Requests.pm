@@ -190,21 +190,29 @@ sub request : PathPart('requests') Chained('/') CaptureArgs(1) {
 
 =head2 version
 
-Display basic information on the requested version.
+Fetch the specified version.
 
 =cut
 
-sub version : PathPart('versions') Chained('request') Args(1) {
-    my ($self, $c, $version_id) = @_;
+sub version : PathPart('versions') Chained('request') CaptureArgs(1) {
+    my ($self, $c, $num) = @_;
 
-    my $request = $c->model('DBIC::RequestVersion')->find($version_id);
+    my $request = $c->stash->{request};
+    my $version = $request->versions->find({num => $num});
 
-    $c->log->debug("In the version");
+    $c->stash(version  => $version);
+}
 
-    $c->stash(
-        request  => $request,
-        template => 'requests/version.tt',
-    );
+=head2 view_version
+
+Display basic information about the stashed version.
+
+=cut
+
+sub view_version : PathPart('') Chained('version') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'requests/version.tt');
 }
 
 =head2 view
