@@ -1,11 +1,13 @@
 This file documents the revision history for UFL::Workflow.
 
-0.35  Fri Sep 11 15:52:39 EDT 2009
-        - Add FAQ page to application since it went missing
-        - Update to latest version of Catalyst scripts
+0.36  Mon Sep 14 09:05:55 EDT 2009
         - Split up request view into separate templates for better
           management
         - Request versioning (#31)
+
+0.35  Fri Sep 11 15:52:39 EDT 2009
+        - Add FAQ page to application since it went missing
+        - Update to latest version of Catalyst scripts
 
 0.34  Thu Aug  6 12:45:34 EDT 2009
         - Move email domain configuration to model class due to
