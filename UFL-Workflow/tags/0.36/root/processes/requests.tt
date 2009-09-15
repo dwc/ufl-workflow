@@ -1,0 +1,4 @@
+[% SET title = "${process.name} Requests" -%]
+
+<h3>Requests entered for [% process.name | html %]</h3>
+[% INCLUDE requests/includes/list.tt requests = process.requests_rs, show_submitter = 1 %]

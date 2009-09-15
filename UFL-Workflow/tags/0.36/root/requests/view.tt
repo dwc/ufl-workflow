@@ -1,0 +1,25 @@
+[% USE Textile %]
+[% SET
+   title = request.title
+   status_id = 'status_id'
+   group_id = 'group_id'
+   scripts = [
+     c.uri_for('/static/javascript/UFL/Workflow/Form/StatusGroupAssignment.js'),
+     c.uri_for('/static/javascript/UFL/Workflow/Form/Expandable.js'),
+   ]
+   snippets = [
+     "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
+     "new UFL.Workflow.Form.Expandable();",
+   ]
+-%]
+
+[% INCLUDE requests/includes/details.tt 
+   show_edit = 1
+   show_status = 1
+%]
+
+[% INCLUDE requests/includes/versions.tt %]
+
+[% INCLUDE requests/includes/documents.tt %]
+
+[% INCLUDE requests/includes/actions.tt %]

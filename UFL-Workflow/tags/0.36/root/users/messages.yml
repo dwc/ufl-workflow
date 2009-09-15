@@ -1,0 +1,15 @@
+index:
+  query:
+    DEFAULT: A character or word to search for
+add:
+  users:
+    DEFAULT: At least one GatorLink ID or UFID
+edit:
+  wants_email:
+    DEFAULT: Whether you want to receive email
+add_group_role: &role
+  group_id:
+    DEFAULT: A group
+  role_id:
+    DEFAULT: A role
+delete_group_role: *role
