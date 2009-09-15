@@ -1,2 +1,5 @@
 <label>Title: <input type="text" name="title" value="[% request.title | html %]" maxlength="64" /></label>
+[% IF (request.description == '') && (process.def_req_desc != '') %]
+[% request.description = process.def_req_desc %]
+[% END %]
 <label>Description: <textarea name="description">[% request.description | html | escape_newlines %]</textarea></label>

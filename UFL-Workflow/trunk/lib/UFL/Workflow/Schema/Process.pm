@@ -22,6 +22,12 @@ __PACKAGE__->add_columns(
         size        => 8192,
         is_nullable => 1,
     },
+    # Refers to default request description 
+    def_req_desc => { 
+        data_type   => 'varchar',
+        size        => 8192,
+        is_nullable => 1,
+    },
     enabled => {
         data_type     => 'boolean',
         default_value => 0,

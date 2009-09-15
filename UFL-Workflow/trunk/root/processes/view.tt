@@ -38,6 +38,18 @@
 <p>None yet.</p>
 [% END %]
 
+<h4>Default request description</h4>
+[% IF process.def_req_desc %]
+<div class="description">
+
+  [% FILTER indent('  ') %]
+    [% process.def_req_desc.replace('\bh[12346]\.', 'h5.') | textile %]
+  [% END %]
+</div>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+
 <h3>Steps</h3>
 [% SET step = process.first_step %]
 [% IF step %]

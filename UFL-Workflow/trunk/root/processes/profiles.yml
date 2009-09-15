@@ -3,6 +3,8 @@ add: &process
   - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
   - description
   - [ [ LENGTH, 0, 8192 ] ]
+  - def_req_desc
+  - [ [ LENGTH, 0, 8192 ] ]
   - enabled
   - [ INT ]
   - restricted
