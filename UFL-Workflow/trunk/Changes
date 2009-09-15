@@ -1,5 +1,8 @@
 This file documents the revision history for UFL::Workflow.
 
+0.37 Tue Sep 15 16:48:07 EDT 2009
+        - Default request description (#62)
+
 0.36  Mon Sep 14 09:05:55 EDT 2009
         - Split up request view into separate templates for better
           management
