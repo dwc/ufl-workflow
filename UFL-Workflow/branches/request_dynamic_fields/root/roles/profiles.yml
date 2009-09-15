@@ -1,9 +1,0 @@
-edit:
-  - name
-  - [ NOT_BLANK, [ NOT_REGEX, '^Administrator$' ] ]
-add_user:
-  # This should be INT, but FormValidator::Simple barfs on multivalues currently
-  - user_id
-  - []
-  - group_id
-  - [ NOT_BLANK, INT ]
