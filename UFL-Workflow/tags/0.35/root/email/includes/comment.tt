@@ -1,0 +1,11 @@
+The change was entered by [% actor.username %].[% IF comment %] Their comment:
+
+[% comment | wrap(68) | indent('    ') %]
+[% END -%]
+[% IF previous_title != request.title %]
+Previous title: [% previous_title %]
+[% END -%]
+[% IF previous_description != request.description %]
+Previous description: 
+[% previous_description %]
+[% END -%]
