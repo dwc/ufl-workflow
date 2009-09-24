@@ -97,7 +97,6 @@ sub reports : Local Args(0) {
 
     if (my $query = $result->valid('query')) {
         my @fields = qw/
-            me.id
             me.title
             me.description
             submitter.username
@@ -112,9 +111,9 @@ sub reports : Local Args(0) {
         my @words = split / /, lc $query;
         my @queries;
         foreach my $field (@selected_fields) {
-            foreach my $word (@words) {
+ 	     foreach my $word (@words) {
                 push @queries, { "LOWER($field)" => { 'like', '%' . $word . '%' } };
-            }
+	     }
         }
 
         $requests = $requests->search({ -or => [ @queries ] });
