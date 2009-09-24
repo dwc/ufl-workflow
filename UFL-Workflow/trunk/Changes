@@ -1,5 +1,8 @@
 This file documents the revision history for UFL::Workflow.
 
+0.38
+        - Removed request ID for request report search criteria
+
 0.37 Tue Sep 15 16:48:07 EDT 2009
         - Default request description (#62)
 
