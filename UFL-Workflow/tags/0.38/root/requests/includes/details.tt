@@ -1,0 +1,40 @@
+[% DEFAULT
+   heading = 'Request details'
+   show_edit = 0
+   show_status = 0
+   process = request.process
+%]
+<h3>[% heading | html %]</h3>
+[% IF show_edit %]
+  [% IF c.user.can_manage(request) %]
+<p><a href="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]">Edit this request</a></p>
+  [% END -%]
+[% END %]
+[% IF process.restricted %]
+<p id="restricted"><strong>Warning</strong>: This request may contain private information. Do not reveal the contents to anyone.</p>
+[% END %]
+<dl>
+  <dt>Title</dt>
+  <dd>[% request.title | html %]</dd>
+  <dt>Process</dt>
+  <dd>[% process.name | html %]</dd>
+  [% IF show_status %]
+  <dt>Status</dt>
+  <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
+  [% END %]
+  <dt>Submitter</dt>
+  <dd>[% request.submitter.username | html %]</dd>
+  <dt>Created</dt>
+  <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
+  <dt>Updated</dt>
+  <dd>[% request.update_time.strftime(datetime_format) | html %]</dd>
+</dl>
+<br style="clear:both" />
+
+<h4>Description</h4>
+<div class="description">
+
+[% FILTER indent('  ') %]
+  [% request.description.replace('\bh[12346]\.', 'h5.') | textile %]
+[% END %]
+</div>
