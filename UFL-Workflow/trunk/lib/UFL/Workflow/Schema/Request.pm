@@ -226,6 +226,44 @@ sub groups_for_status {
     );
 }
 
+=head2 default_group_for_status
+
+Find the assigned group from the previous step, for having an easy
+default when recycling.  Returns C<undef> when no reasonable default
+can be found.
+
+Note: This is intended to be advisory; no verification is done that
+the group is valid for the status.
+
+=cut
+
+sub default_group_for_status {
+    my ($self, $status) = @_;
+
+    my $default_group = undef;
+
+    # Default to the parent group
+    my $current_group = $self->current_action->groups->first;
+    if (my $parent_group = $current_group->parent_group) {
+        $default_group = $parent_group;
+    }
+
+    # Recycling sends the request back to the previous step
+    if (my $prev_step = $self->prev_step) {
+        # Find an action in the sequence corresponding to the previous step
+        # (not necessarily the previous action; see e.g. https://approval.ufl.edu/requests/2907)
+        my $action = $self->prev_action;
+        while (my $prev_action = $action->prev_action
+               and $action->step->id != $prev_step->id) {
+            $action = $prev_action;
+        }
+
+        $default_group = $action->groups->first;
+    }
+
+    return $default_group;
+}
+
 =head2 past_actors
 
 Return a L<DBIx::Class::ResultSet> of L<UFL::Workflow::Schema::User>s

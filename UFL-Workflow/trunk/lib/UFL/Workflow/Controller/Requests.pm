@@ -197,9 +197,9 @@ sub version : PathPart('versions') Chained('request') CaptureArgs(1) {
     my ($self, $c, $num) = @_;
 
     my $request = $c->stash->{request};
-    my $version = $request->versions->find({num => $num});
+    my $version = $request->versions->find({ num => $num });
 
-    $c->stash(version  => $version);
+    $c->stash(version => $version);
 }
 
 =head2 view_version
@@ -225,12 +225,10 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $request = $c->stash->{request};
 
-    my $versions = $request->versions->search( {}, { order_by => 'num' });
+    my $versions = $request->versions->search({}, { order_by => 'num' });
 
     my $documents = $request->active_documents;
-
     my $removed_documents = $request->removed_documents;
-
     my $replaced_documents = $request->replaced_documents;
 
     $c->stash(
@@ -266,7 +264,6 @@ sub edit : PathPart Chained('request') Args(0) {
                     title       => $result->valid('title'),
                     description => $result->valid('description'),
                 });
-
 	    });
 	}
 
@@ -439,23 +436,14 @@ sub list_action_groups : PathPart Chained('request') Args(0) {
             my $groups = $request->groups_for_status($status);
             $c->stash(groups => [ map { $_->to_json } $groups->all ]);
 
-            # Default to the parent group (for recycling)
-            my $current_group = $request->current_action->groups->first;
-            if (my $parent_group = $current_group->parent_group) {
-                # Make sure the parent group is valid for the action
-                if (my $selected_group = $groups->find($parent_group->id)) {
-                    $c->stash(selected_group => $selected_group->to_json);
-                }
-            }
-
-            if ($status->recycles_request and my $prev_action = $request->current_action->prev_action) {
-                $c->stash(prev_group => $prev_action->group->to_json);
+            if (my $selected_group = $request->default_group_for_status($status)) {
+                $c->stash(selected_group => $selected_group->to_json);
             }
         }
     }
 
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/groups selected_group prev_group/ ]);
+    $view->expose_stash([ qw/groups selected_group/ ]);
     $c->forward($view);
 }
 
