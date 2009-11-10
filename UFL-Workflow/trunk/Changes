@@ -2,6 +2,8 @@ This file documents the revision history for UFL::Workflow.
 
 0.39
         - Fix default group calculation for recycling requests
+        - Remove /roles/add_user, since it hits the TT loop iteration
+          limit easily
 
 0.38 Thu Sep 24 14:47:43 EDT 2009
         - Removed request ID for request report search criteria

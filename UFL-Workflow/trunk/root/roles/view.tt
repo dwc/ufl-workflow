@@ -1,12 +1,9 @@
 [% SET title = "${role.name} Role" -%]
 
-[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
+[% IF c.check_user_roles('Administrator') %]
 <h3>Manage role</h3>
 <ul>
-[% IF c.check_user_roles('Administrator') %]
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), role.uri_args) | html %]">Edit this role</a></li>
-[% END %]
-  <li><a href="[% c.uri_for(c.controller.action_for('add_user'), role.uri_args) | html %]">Grant this role to a user</a></li>
 </ul>
 [% END %]
 

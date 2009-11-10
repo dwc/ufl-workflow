@@ -54,7 +54,7 @@ __PACKAGE__->allow_access_if(
 __PACKAGE__->allow_access_if(
     "/roles/$_",
     [ 'Help Desk' ],
-) for qw/role view add_user/;
+) for qw/role view/;
 
 __PACKAGE__->allow_access_if(
     "/statuses/$_",
