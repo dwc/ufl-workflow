@@ -1,0 +1,44 @@
+[% SET title = "${role.name} Role" -%]
+
+[% IF c.check_user_roles('Administrator') %]
+<h3>Manage role</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), role.uri_args) | html %]">Edit this role</a></li>
+</ul>
+[% END %]
+
+<h3>Role details</h3>
+<dl>
+  <dt>Name</dt>
+  <dd>[% role.name | html %]</dd>
+  <dt>Created</dt>
+  <dd>[% role.insert_time.strftime(datetime_format) | html %]</dd>
+</dl>
+<br style="clear:both" />
+
+<h3>Users by group</h3>
+[% SET group_roles = role.group_roles_rs %]
+[% IF group_roles.count > 0 %]
+<ul>
+  [% WHILE (group_role = group_roles.next) %]
+    [% SET group = group_role.group %]
+    [% SET users = group_role.users_rs %]
+    [% SET num_users = users.count %]
+  <li>
+    <a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>
+    [% IF num_users > 0 %]
+    ([% num_users | html %] user[% num_users == 1 ? '' : 's' %])
+    <ul>
+      [% WHILE (user = users.next) %]
+      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
+      [% END %]
+    </ul>
+    [% ELSE %]
+    (no users)
+    [% END %]
+  </li>
+  [% END %]
+</ul>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]

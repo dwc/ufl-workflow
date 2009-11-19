@@ -1,0 +1,5 @@
+<label>Name: <input type="text" name="name" value="[% process.name | html %]" maxlength="64" /></label>
+<label>Description: <textarea name="description">[% process.description | html | escape_newlines %]</textarea></label>
+<label>Default Request Description: <textarea name="def_req_desc">[% process.def_req_desc | html | escape_newlines %]</textarea></label>
+<label class="checkbox">Active: <input type="checkbox" name="enabled" value="1"[% IF process.enabled %] checked="checked"[% END %] /></label>
+<label class="checkbox">Restrict viewing? <input type="checkbox" name="restricted" value="1"[% IF process.restricted %] checked="checked"[% END %] /></label>
