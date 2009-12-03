@@ -3,7 +3,6 @@ use inc::Module::Install;
 name     'UFL-Workflow';
 all_from 'lib/UFL/Workflow.pm';
 
-requires 'Carp';
 requires 'Catalyst' => '5.7006';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Authentication::Store::DBIx::Class' => '0.102';
@@ -29,7 +28,6 @@ requires 'DateTime::Format::DB2' => '0.05';
 requires 'DBD::DB2';
 requires 'DBIx::Class' => '0.07000';
 requires 'Digest::MD5';
-requires 'File::stat';
 requires 'FormValidator::Simple';
 requires 'FormValidator::Simple::ProfileManager::YAML';
 requires 'Getopt::Long';
