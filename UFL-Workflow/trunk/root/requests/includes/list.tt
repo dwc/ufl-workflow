@@ -38,9 +38,13 @@
   </tr>
   [% ELSE %]
   <tr class="denied" title="You do not have sufficient permissions to view this request.">
+    [% IF show_submitter %]
     <td>-</td>
+    [% END %]
     <td>-</td>
+    [% IF show_process %]
     <td>[% request.process.name | html %]</td>
+    [% END %]
     <td>Restricted</td>
     <td>-</td>
     <td>-</td>

@@ -291,7 +291,23 @@ List requests for the stashed L<UFL::Workflow::Schema::Process>.
 sub requests : PathPart Chained('process') Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'processes/requests.tt');
+    my $page = $c->req->params->{page} || 1;
+    $page =~ s/\D//g;
+
+    my $process = $c->stash->{process};
+    my $requests = $process->requests->search(
+        {},
+        {
+            order_by => \q[me.update_time DESC, me.insert_time DESC],
+            page     => $page,
+            rows     => 10,
+        },
+    );
+
+    $c->stash(
+        requests => $requests,
+        template => 'processes/requests.tt',
+    );
 }
 
 =head2 send_new_request_email
