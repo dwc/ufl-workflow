@@ -254,18 +254,20 @@ sub edit : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
+            my $version = $request->add_version($c->user->obj);
 
-            my $version = $request->add_version(
-                $c->user->obj,
-	    );
+            my $previous_title = $request->title;
+            my $previous_description = $request->description;
 
             $c->model('DBIC')->schema->txn_do(sub {            
                 $request->update({
                     title       => $result->valid('title'),
                     description => $result->valid('description'),
                 });
-	    });
-	}
+            });
+
+            $self->send_changed_request_email($c, $request, $c->user->obj, '', $previous_title, $previous_description);
+        }
 
         return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
     }

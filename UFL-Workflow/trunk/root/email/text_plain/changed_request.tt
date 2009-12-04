@@ -3,5 +3,6 @@ There has been a change to a request you acted on previously.
 [% INCLUDE email/includes/header.tt -%]
 
 [% INCLUDE email/includes/comment.tt -%]
+[% INCLUDE email/includes/diff.tt -%]
 
 [% INCLUDE email/includes/footer.tt -%]

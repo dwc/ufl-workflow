@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.40
+        - Actually send request change notification when someone edits
+          the request
+
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests
         - Remove /roles/add_user, since it hits the TT loop iteration
