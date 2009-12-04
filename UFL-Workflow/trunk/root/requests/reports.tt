@@ -16,7 +16,6 @@
    end_date_month_id = 'end_date_month'
    end_date_day_id = 'end_date_day'
    scripts = [
-     c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/Input.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/SelectSearch.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/DateRange.js'),
