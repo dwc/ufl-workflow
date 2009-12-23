@@ -10,15 +10,23 @@ use UFL::Workflow::Schema;
 
 =head1 NAME
 
-ufl_workflow_generate_schema.pl - Generate the schema for UFL::Workflow
+ufl_workflow_purge_inactive_users.pl - Remove users that have no associated data
 
 =head1 SYNOPSIS
 
-    ./script/ufl_workflow_generate_schema.pl | db2 -vtd%
+    ./script/ufl_workflow_purge_inactive_users.pl --password=xxxxx
 
 =head1 DESCRIPTION
 
-Generate the SQL statements for L<UFL::Workflow::Schema>.
+Remove any users that have no associated data (roles, requests,
+etc.). These users logged in at some point but didn't actually do
+anything with the system.
+
+This can be used to rebuild the customer listserv. Use this script to
+purge inactive users, select out the remaining users, and then replace
+the subscriber list with the result. For example:
+
+    db2 "SELECT username || '@ufl.edu' FROM users" > ~/users.txt
 
 =head1 AUTHOR
 
