@@ -26,7 +26,7 @@ This can be used to rebuild the customer listserv. Use this script to
 purge inactive users, select out the remaining users, and then replace
 the subscriber list with the result. For example:
 
-    db2 "SELECT username || '@ufl.edu' FROM users" > ~/users.txt
+    db2 "SELECT email FROM users" > ~/users.txt
 
 =head1 AUTHOR
 
