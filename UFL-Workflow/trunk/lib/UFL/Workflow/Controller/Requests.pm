@@ -136,7 +136,7 @@ sub reports : Local Args(0) {
 
     # Constrain requests based on a date range
     # XXX: Remove formatter junk when DBIx::Class gets support for objects
-    my $formatter = $c->model('DBIC')->storage->datetime_parser_type;
+    my $formatter = $c->model('DBIC')->schema->storage->datetime_parser_type;
     eval "require $formatter"; die $@ if $@;
     if (my $start_date = $result->valid('start_date')) {
         $start_date->set_formatter($formatter);

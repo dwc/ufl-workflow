@@ -5,6 +5,9 @@ This file documents the revision history for UFL::Workflow.
           the request
         - Fix the table on /processes/requests and add paging
         - Add a script to purge inactive users
+        - Update /requests/reports to use DBIx::Class::Schema to get
+          storage instead of the convenience method previously
+          provided by Catalyst::Model::DBIC::Schema
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests
