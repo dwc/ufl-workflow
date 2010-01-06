@@ -31,7 +31,6 @@ Model::DBIC:
       PrintError:         0
       ShowErrorStatement: 1
       TraceLevel:         0
-  email_domain: example.com
 
 Plugin::Authentication:
   default_realm: users

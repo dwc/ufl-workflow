@@ -5,7 +5,6 @@ use warnings;
 use base qw/DBIx::Class::Schema/;
 
 __PACKAGE__->load_classes;
-__PACKAGE__->mk_group_accessors(simple => 'email_domain');
 
 =head1 NAME
 

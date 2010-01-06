@@ -16,25 +16,6 @@ See L<UFL::Workflow>.
 
 L<DBIx::Class> L<Catalyst> model component.
 
-=head1 METHODS
-
-=head2 COMPONENT
-
-Set the domain for email addresses as configured on the application.
-
-=cut
-
-sub COMPONENT {
-    my $self = shift->next::method(@_);
-
-    my $domain = $_[1]->{email_domain};
-    die 'No email domain configured' unless $domain;
-
-    $self->schema->email_domain($domain);
-
-    return $self;
-}
-
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

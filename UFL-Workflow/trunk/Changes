@@ -15,6 +15,8 @@ This file documents the revision history for UFL::Workflow.
         - Add a new action, /users/edit, to mark users inactive (and
           edit users where the information is not pulled from external
           sources)
+        - Remove automatic setting of email address for users on
+          insert and update, in favor of Shibboleth
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests
