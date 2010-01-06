@@ -23,8 +23,11 @@ Log the user in based on the environment (via C<REMOTE_USER>).
 sub login_via_env : Private {
     my ($self, $c) = @_;
 
-    $c->forward('/forbidden') and return 0 
-        unless $c->authenticate();
+    # XXX: Catalyst::Plugin::Authentication supports checking active flag
+    # XXX: in $c->authenticate, but it conflicts with auto_create_user
+    $c->authenticate();
+    $c->forward('/forbidden') and return 0
+        unless $c->user_exists and $c->user->active;
 
     return 1;
 }
@@ -69,6 +72,7 @@ sub login : Global {
             $c->detach('redirect') if $c->authenticate({
                 username => $username,
                 password => $password,
+                active   => 1,
             });
         }
 
