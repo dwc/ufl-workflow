@@ -12,6 +12,9 @@ This file documents the revision history for UFL::Workflow.
           database and prepare for Shibboleth
         - Add flag to make users inactive
         - Disallow inactive users from logging in
+        - Add a new action, /users/edit, to mark users inactive (and
+          edit users where the information is not pulled from external
+          sources)
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests

@@ -39,7 +39,7 @@ __PACKAGE__->allow_access_if(
 __PACKAGE__->allow_access_if(
     "/users/$_",
     sub { $_[0]->user_exists },
-) for qw/user view edit/;
+) for qw/user view toggle_email/;
 
 __PACKAGE__->allow_access_if(
     "/processes/$_",

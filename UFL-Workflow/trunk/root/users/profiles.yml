@@ -5,6 +5,17 @@ add:
   - users 
   - [ NOT_BLANK ]
 edit:
+  - username
+  - [ NOT_BLANK ]
+  - display_name
+  - [ NOT_BLANK ]
+  - email
+  - [ NOT_BLANK ]
+  - wants_email
+  - [ INT ]
+  - active
+  - [ INT ]
+toggle_email:
   - wants_email
   - [ INT ]
 add_group_role: &role

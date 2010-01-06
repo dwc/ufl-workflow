@@ -137,12 +137,41 @@ sub view : PathPart('') Chained('user') Args(0) {
 
 =head2 edit
 
-Edit the user's information, including whether they want to receive
-email or not.
+Edit the stashed user.
 
 =cut
 
 sub edit : PathPart Chained('user') Args(0) {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $user = $c->stash->{user};
+
+            $user->update({
+                username     => $result->valid('username'),
+                display_name => $result->valid('display_name'),
+                email        => $result->valid('email'),
+                wants_email  => $result->valid('wants_email') ? 1 : 0,
+                active       => $result->valid('active') ? 1 : 0,
+            });
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
+        }
+    }
+
+    $c->stash(template => 'users/edit.tt');
+}
+
+=head2 toggle_email
+
+Toggle whether the stashed user wants to receive email or not. This is
+an action that users can perform themselves.
+
+=cut
+
+sub toggle_email : PathPart Chained('user') Args(0) {
     my ($self, $c) = @_;
 
     my $user = $c->stash->{user};

@@ -102,7 +102,7 @@ Override L<DBIx::Class::Row/update> to update the email address field.
 sub update {
     my $self = shift;
 
-    $self->_update_email;
+#    $self->_update_email;
     $self->next::method(@_);
 }
 
