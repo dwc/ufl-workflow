@@ -45,7 +45,6 @@ Plugin::Authentication:
         user_class:            DBIC::User
         role_relation:         roles
         role_field:            name
-        ignore_fields_in_find: [ id ]
 
 View::Email:
   stash_key:       email
