@@ -8,6 +8,8 @@ This file documents the revision history for UFL::Workflow.
         - Update /requests/reports to use DBIx::Class::Schema to get
           storage instead of the convenience method previously
           provided by Catalyst::Model::DBIC::Schema
+        - Add a script to convert GatorLink IDs to UFIDs in the
+          database and prepare for Shibboleth
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests

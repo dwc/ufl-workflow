@@ -15,11 +15,19 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 16,
     },
+    display_name => {
+        data_type => 'varchar',
+        size      => 256,
+    },
     email => {
         data_type => 'varchar',
         size      => 64,
     },
     wants_email => {
+        data_type     => 'boolean',
+        default_value => 1,
+    },
+    active => {
         data_type     => 'boolean',
         default_value => 1,
     },
