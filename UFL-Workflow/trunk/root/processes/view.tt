@@ -15,7 +15,7 @@
 <dl>
   <dt>Name</dt>
   <dd>[% process.name | html %]</dd>
-  <dt>Active</dt>
+  <dt>Active?</dt>
   <dd>[% process.enabled ? 'Yes' : 'No' %]</dd>
   <dt>Restrict viewing?</dt>
   <dd>[% process.restricted ? 'Yes' : 'No' %]</dd>
