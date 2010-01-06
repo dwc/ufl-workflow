@@ -92,6 +92,9 @@ sub main {
         while (my $user = $users->next) {
             $total++;
 
+            # Assume the user in inactive until we find her
+            $user->active(0);
+
             my $uid = $user->username;
             $mesg = $ldap->search(
                 base   => $ldap_base,
@@ -115,14 +118,16 @@ sub main {
                 $user->username($ufid);
                 $user->display_name($display_name);
 
-                # Fallback to current default (glid@ufl.edu)
                 if ($mail) {
+                    # Fallback to current default (glid@ufl.edu)
                     $user->email($mail);
                 }
 
-                $user->update;
                 $num_updated++;
             }
+
+            # Make sure we mark the user inactive
+            $user->update;
         }
     });
 
