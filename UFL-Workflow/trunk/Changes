@@ -10,6 +10,8 @@ This file documents the revision history for UFL::Workflow.
           provided by Catalyst::Model::DBIC::Schema
         - Add a script to convert GatorLink IDs to UFIDs in the
           database and prepare for Shibboleth
+        - Add flag to make users inactive
+        - Disallow inactive users from logging in
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests
