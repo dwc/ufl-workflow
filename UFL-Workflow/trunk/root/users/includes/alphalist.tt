@@ -1,7 +1,7 @@
 [% SET alphabet = [ 'a' .. 'z' ] %]
 
 [% IF alphabet.size > 0 %]
-<h3>Directory [% IF letter %]&quot;[% letter | upper | html %]&quot;[% END %]</h3>
+<h3>Directory for [% IF letter %]&quot;[% letter | upper | html %]&quot;[% END %]</h3>
 <ul class="alphabet">
   [% FOREACH alpha IN alphabet %]
       [% IF letter != alpha %]<li><a href="[% c.uri_for(c.controller.action_for('/')) | html %]?letter=[% alpha | html  %]">[% alpha | upper | html %]</a></li>

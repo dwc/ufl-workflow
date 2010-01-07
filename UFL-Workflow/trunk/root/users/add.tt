@@ -5,7 +5,7 @@
 <p>The following users have been added to the system:</p>
 <ul>
   [% FOREACH user IN added_users %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
   [% END %]
 </ul>
 
@@ -15,7 +15,7 @@
 <p>The following users already exist in the system:</p>
 <ul>
   [% FOREACH user IN existing_users %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
   [% END %]
 </ul>
 

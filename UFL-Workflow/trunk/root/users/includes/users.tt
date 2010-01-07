@@ -12,7 +12,7 @@
   <select name="[% field_name | html %]"[% IF field_id %] id="[% field_id | html %]"[% END %]>
     <option value=""></option>
 [% WHILE (user = users.next) %]
-    <option value="[% user.id | html %]"[% IF user.id == field_value %] selected="selected"[% END %]>[% prefix %][% user.username | html %]</option>
+    <option value="[% user.id | html %]"[% IF user.id == field_value %] selected="selected"[% END %]>[% prefix %][% user.display_name | html %]</option>
 [% END %]
   </select>
 </label>

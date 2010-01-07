@@ -10,7 +10,7 @@ Process
 Status
     [%+ INCLUDE requests/includes/status.tt action = request.current_action %]
 Submitter
-    [% request.submitter.username %]
+    [% request.submitter.display_name %] <[% request.submitter.email %]>
 Created
     [% request.insert_time.strftime(datetime_format) %]
 Updated

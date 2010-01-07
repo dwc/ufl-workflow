@@ -26,7 +26,7 @@
   [% IF c.user.can_view(request) %]
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
     [% IF show_submitter %]
-    <td>[% request.submitter.username | html %]</td>
+    <td>[% request.submitter.display_name | html %]</td>
     [% END %]
     <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) | html %]">[% request.title | html %]</a></td>
     [% IF show_process %]

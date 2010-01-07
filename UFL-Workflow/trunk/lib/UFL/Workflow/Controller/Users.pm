@@ -27,35 +27,40 @@ Display a list of current users.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $letter;
+    my $field = 'display_name';
+    my $letter = $c->req->query_parameters->{letter} || 'a';
     my $query;
     my $results;
     my $users;
 
-    if ($letter = $c->req->query_parameters->{'letter'}) {
-        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
-    }
-    else {
-        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', 'a%'  } }, { order_by => 'username' });
-        $letter = 'a';
-    }
+    $users = $c->model('DBIC::User')->search(
+        { "LOWER($field)" => { 'like', $letter . '%'  } },
+        { order_by => $field }
+    );
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
 
         if ($query = $result->valid('query')) {
-            $results = $c->model('DBIC::User')->search({ 'LOWER(username)' => { 'like', $query . '%' } }, { order_by => 'username' });
-            $letter = substr($query,0,1);
-            $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+            $results = $c->model('DBIC::User')->search(
+                { "LOWER($field)" => { 'like', $query . '%' } },
+                { order_by => $field }
+            );
+
+            $letter = substr($query, 0, 1);
+            $users = $c->model('DBIC::User')->search(
+                { "LOWER($field)" => { 'like', $letter . '%'  } },
+                { order_by => $field }
+            );
         }
     }
 
     $c->stash(
-        letter    => $letter,
-        query     => $query,
-        results   => $results,
-        template  => 'users/index.tt',
-        users     => $users,
+        letter   => $letter,
+        query    => $query,
+        results  => $results,
+        template => 'users/index.tt',
+        users    => $users,
     );
 }
 

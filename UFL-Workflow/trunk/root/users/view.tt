@@ -1,4 +1,4 @@
-[% SET title = user.username -%]
+[% SET title = user.display_name -%]
 
 [% IF c.check_any_user_role('Administrator', 'Help Desk') %]
 <h3>Manage user</h3>

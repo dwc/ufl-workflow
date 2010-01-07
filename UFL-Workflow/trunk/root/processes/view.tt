@@ -21,7 +21,7 @@
   <dd>[% process.restricted ? 'Yes' : 'No' %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]
-  <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.username | html %]</a></dd>
+  <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.display_name | html %]</a></dd>
   <dt>Created</dt>
   <dd>[% process.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>

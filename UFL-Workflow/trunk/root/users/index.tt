@@ -19,7 +19,7 @@
     <h3>Search results for <strong>&quot;[% query %]&quot;</strong></h3>
     <ul>
   [% WHILE (user = results.next) %]
-        <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
+        <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
   [% END %]
     </ul>
 [% ELSIF query %]
@@ -31,7 +31,7 @@
 [% IF users.count > 0 %]
     <ul>
   [% WHILE (user = users.next) %]
-      <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
+      <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
   [% END %]
     </ul>
 [% ELSE %]

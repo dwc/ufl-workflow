@@ -17,6 +17,7 @@ This file documents the revision history for UFL::Workflow.
           sources)
         - Remove automatic setting of email address for users on
           insert and update, in favor of Shibboleth
+        - Use display name for referencing users instead of username
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests
