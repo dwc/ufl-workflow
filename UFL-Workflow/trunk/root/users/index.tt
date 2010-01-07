@@ -28,16 +28,19 @@
 <p>Unable to find any matches for <strong>[% query | html %]</strong>.</p>
 [% END %]
 
-[%- INCLUDE users/includes/alphalist.tt -%]
+[% UNLESS letter.search('^\d+$') %]
+<h3>Directory for <strong>[% letter | upper | html %]</strong></h3>
+  [%- INCLUDE users/includes/alphalist.tt -%]
 
-[% IF users.count > 0 %]
+  [% IF users.count > 0 %]
 <ul>
-  [% WHILE (user = users.next) %]
+    [% WHILE (user = users.next) %]
   <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
-  [% END %]
+    [% END %]
 </ul>
-[% ELSE %]
+  [% ELSE %]
 <p>None yet.</p>
-[% END %]
+  [% END %]
 
-[%- INCLUDE users/includes/alphalist.tt -%]
+  [%- INCLUDE users/includes/alphalist.tt -%]
+[% END -%]
