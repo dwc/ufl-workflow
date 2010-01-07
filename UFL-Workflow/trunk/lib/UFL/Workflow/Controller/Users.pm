@@ -29,30 +29,30 @@ sub index : Path('') Args(0) {
 
     my $field = 'display_name';
     my $letter = $c->req->query_parameters->{letter} || 'a';
-    my $query;
+    my $query = $c->req->query_parameters->{query};
     my $results;
-    my $users;
 
-    $users = $c->model('DBIC::User')->search(
+    my $users = $c->model('DBIC::User')->search(
         { "LOWER($field)" => { 'like', $letter . '%'  } },
-        { order_by => $field }
+        { order_by => $field },
     );
 
-    if ($c->req->method eq 'POST') {
-        my $result = $self->validate_form($c);
+    if ($query) {
+        $results = $c->model('DBIC::User')->search(
+            {
+                -or => [
+                     "LOWER($field)" => { 'like', '%' . lc($query) . '%' },
+                     "username"      => { like => '%' . $query . '%' },
+                ],
+            },
+            { order_by => $field },
+        );
 
-        if ($query = $result->valid('query')) {
-            $results = $c->model('DBIC::User')->search(
-                { "LOWER($field)" => { 'like', $query . '%' } },
-                { order_by => $field }
-            );
-
-            $letter = substr($query, 0, 1);
-            $users = $c->model('DBIC::User')->search(
-                { "LOWER($field)" => { 'like', $letter . '%'  } },
-                { order_by => $field }
-            );
-        }
+        $letter = substr($query, 0, 1);
+        $users = $c->model('DBIC::User')->search(
+            { "LOWER($field)" => { 'like', $letter . '%'  } },
+            { order_by => $field },
+        );
     }
 
     $c->stash(
