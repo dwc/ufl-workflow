@@ -176,7 +176,9 @@
 	    $("head").append("<style type='text/css' media='screen'>.hintbox_list_container { display: block; } .jsonSuggestSelected { background-color:#D1DFFD; }</style>");
 
             $(searchField).click(function() {
-		    this.value = "";
+                if (this.value == this.defaultValue) {
+                    this.value = "";
+                }
             });
 
 	    $(window).resize(function() {
