@@ -97,19 +97,7 @@ sub add : Local {
                         push @existing_users, $user;
                     }
                     else {
-                        my $user = $c->model('DBIC::User')->new({
-                            username => $entry->$field,
-                        });
-
-                        $user->display_name($entry->displayName)
-                            if $entry->exists('displayName');
-                        if ($entry->exists('mail')) {
-                            $user->email($entry->mail);
-                        }
-                        else {
-                            $user->wants_email(0);
-                        }
-
+                        my $user = $c->model('DBIC::User')->from_ldap_entry($entry, $field);
                         $user->insert;
 
                         push @added_users, $user;
