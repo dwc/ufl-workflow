@@ -1,11 +1,10 @@
-[% SET alphabet = [ 'a' .. 'z' ] %]
+[% SET alphabet = [ 'a' .. 'z' ] -%]
 
 [% IF alphabet.size > 0 %]
-<h3>Directory for [% IF letter %]&quot;[% letter | upper | html %]&quot;[% END %]</h3>
-<ul class="alphabet">
+<h3>Directory for <strong>[% letter | upper | html %]</strong></h3>
+<ul class="paging">
   [% FOREACH alpha IN alphabet %]
-      [% IF letter != alpha %]<li><a href="[% c.uri_for(c.controller.action_for('/')) | html %]?letter=[% alpha | html  %]">[% alpha | upper | html %]</a></li>
-      [% ELSE %]<li><span>[% alpha | upper | html %]</span></li>[% END %]
+  <li[% IF letter == alpha %] class="current"[% END %]>[% IF letter == alpha %]<span>[% ELSE %]<a href="[% c.req.uri_with(letter = alpha) | html %]">[% END %][% alpha | upper | html %][% IF letter == alpha %]</span>[% ELSE %]</a>[% END %]</li>
   [% END %]
-</ul>
+</ul><!-- .paging -->
 [% END %]
