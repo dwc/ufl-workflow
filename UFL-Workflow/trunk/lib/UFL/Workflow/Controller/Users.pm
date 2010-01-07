@@ -3,6 +3,9 @@ package UFL::Workflow::Controller::Users;
 use strict;
 use warnings;
 use base qw/UFL::Workflow::BaseController/;
+use UFL::Workflow::Util;
+
+__PACKAGE__->mk_accessors(qw/ldap_username_field ldap_search_fields/);
 
 =head1 NAME
 
@@ -38,6 +41,8 @@ sub index : Path('') Args(0) {
     );
 
     if ($query) {
+        $query = UFL::Workflow::Util::strip_ufid_hyphen($query);
+
         $results = $c->model('DBIC::User')->search(
             {
                 -or => [
@@ -80,18 +85,33 @@ sub add : Local {
 
             my (@added_users, @existing_users, @invalid_users);
             foreach my $new_user (@new_users) {
-                # Remove the hyphen in the UFID to match LDAP
-                if ($new_user =~ /\d{4}-\d{4}/) {
-                    $new_user =~ s/-//;
-                }
+                $new_user = UFL::Workflow::Util::strip_ufid_hyphen($new_user);
 
-                my $attribute = $new_user =~ /\d{8}/ ? 'uflEduUniversityId' : 'uid';
-                if (my $entry = $c->model('LDAP')->search("($attribute=$new_user)")->shift_entry) {
-                    if (my $user = $c->model('DBIC::User')->find({ username => $entry->uid })) {
+                my $filter = $self->_ldap_filter($new_user);
+                my $mesg = $c->model('LDAP')->search($filter);
+                my $entry = $mesg->shift_entry;
+
+                my $field = $self->ldap_username_field;
+                if ($entry and $entry->exists($field)) {
+                    if (my $user = $c->model('DBIC::User')->find({ username => $entry->$field })) {
                         push @existing_users, $user;
                     }
                     else {
-                        my $user = $c->model('DBIC::User')->create({ username => $entry->uid });
+                        my $user = $c->model('DBIC::User')->new({
+                            username => $entry->$field,
+                        });
+
+                        $user->display_name($entry->displayName)
+                            if $entry->exists('displayName');
+                        if ($entry->exists('mail')) {
+                            $user->email($entry->mail);
+                        }
+                        else {
+                            $user->wants_email(0);
+                        }
+
+                        $user->insert;
+
                         push @added_users, $user;
                     }
                 }
@@ -289,6 +309,22 @@ sub delete_group_role : PathPart Chained('user') Args(0) {
     }
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
+}
+
+=head2 _ldap_filter
+
+Based on the configured LDAP search fields, return a filter string.
+
+=cut
+
+sub _ldap_filter {
+    my ($self, $query) = @_;
+
+    my $filter = join '', map { "($_=$query)" } @{ $self->ldap_search_fields };
+    $filter = "(|$filter)";
+    warn "filter = [$filter]";
+
+    return $filter;
 }
 
 =head1 AUTHOR

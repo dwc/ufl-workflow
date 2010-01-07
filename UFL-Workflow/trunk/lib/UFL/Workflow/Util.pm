@@ -32,6 +32,23 @@ sub escape_newlines {
     return $string;
 }
 
+=head2 strip_ufid_hyphen
+
+Strip the hyphen from the specified string if it looks like a UFID
+(NNNN-NNNN).
+
+=cut
+
+sub strip_ufid_hyphen {
+    my ($ufid) = @_;
+
+    if ($ufid =~ /\d{4}-\d{4}/) {
+        $ufid =~ s/-//;
+    }
+
+    return $ufid;
+}
+
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>

@@ -27,7 +27,7 @@
 <p><em>Note</em>: Your display name is populated automatically from the UF Directory. To change it, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Update My Directory Profile".</p>
 
 <h3>Email options</h3>
-<p>Email from [% c.config.name | html %] is sent to your business email address, <a href="mailto:[% user.email | html %]">[% user.email | html %]</a>. To change this, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Modify My UF Business Email".</p>
+<p>Email from [% c.config.name | html %] is sent to your business email address, [% IF user.email %]<a href="mailto:[% user.email | html %]">[% user.email | html %]</a>[% ELSE %]which we were unable to determine[% END %]. To change this, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Modify My UF Business Email".</p>
 [% IF user.wants_email %]
 <p>If you <em>do not</em> want to receive any mail from [% c.config.name | html %], uncheck the box below and press save.</p>
 [% ELSE %]

@@ -21,6 +21,8 @@ This file documents the revision history for UFL::Workflow.
         - Update /users to handle display name
         - Optimize alphabet paging CSS
         - Update width of site to be 960px to fit 1024x768
+        - Make users.email field nullable
+        - Make /users/add more robust in its use of LDAP
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests

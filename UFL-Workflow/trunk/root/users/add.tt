@@ -22,7 +22,7 @@
 [% END %]
 [% IF invalid_users AND invalid_users.size > 0 %]
 <h3>Invalid users</h3>
-<p>The following users were not found in the directory:</p>
+<p>The following users were not found in the directory or do not have the required attributes:</p>
 <ul>
   [% FOREACH user IN invalid_users %]
   <li>[% user | html %]</li>

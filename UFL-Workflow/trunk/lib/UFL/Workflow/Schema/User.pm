@@ -16,12 +16,14 @@ __PACKAGE__->add_columns(
         size      => 16,
     },
     display_name => {
-        data_type => 'varchar',
-        size      => 256,
+        data_type     => 'varchar',
+        size          => 256,
+        default_value => '(Unknown)',
     },
     email => {
-        data_type => 'varchar',
-        size      => 64,
+        data_type   => 'varchar',
+        size        => 256,
+        is_nullable => 1,
     },
     wants_email => {
         data_type     => 'boolean',
