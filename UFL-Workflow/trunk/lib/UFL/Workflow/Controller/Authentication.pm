@@ -4,7 +4,11 @@ use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
 
-__PACKAGE__->mk_accessors(qw/logout_uri/);
+__PACKAGE__->mk_accessors(qw/logout_uri update_user_fields_on_login/);
+
+__PACKAGE__->config(
+    update_user_fields_on_login => [],
+);
 
 =head1 NAME
 
@@ -28,6 +32,14 @@ sub login_via_env : Private {
     $c->authenticate();
     $c->forward('/forbidden') and return 0
         unless $c->user_exists and $c->user->active;
+
+    # Pass any additional information from the environment
+    foreach my $field (@{ $self->update_user_fields_on_login }) {
+        $c->user->obj->$field($c->engine->env->{$field});
+    }
+
+    # Update the user object to cache the values from the environment
+    $c->user->obj->update if $c->user->obj->can('update');
 
     return 1;
 }

@@ -43,6 +43,7 @@ recommends 'Catalyst::Authentication::Credential::Remote';
 
 build_requires 'Catalyst::Test';
 build_requires 'DBD::SQLite';
+build_requires 'Test::MockObject';
 build_requires 'Test::More';
 build_requires 'Test::YAML::Valid';
 
