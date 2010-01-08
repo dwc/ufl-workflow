@@ -24,6 +24,8 @@ This file documents the revision history for UFL::Workflow.
         - Make users.email field nullable
         - Make /users/add more robust in its use of LDAP
         - Add a new credential to handle Shibboleth authentication
+        - Add ability to update user fields from environment (to pass
+          business email and display name in from Shibboleth)
 
 0.39  Wed Nov 18 15:13:46 EST 2009
         - Fix default group calculation for recycling requests
