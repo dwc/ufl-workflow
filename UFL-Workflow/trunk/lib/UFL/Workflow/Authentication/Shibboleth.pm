@@ -75,7 +75,7 @@ By default, this is set to C<username>.
 
 =head1 METHODS
 
-=head2 news
+=head2 new
 
 Instantiate a new object using the configuration hash.
 
