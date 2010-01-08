@@ -7,9 +7,9 @@ use base qw/Catalyst::Controller/;
 __PACKAGE__->mk_accessors(qw/authentication_controller authentication_action/);
 
 __PACKAGE__->config(
-    namespace => '',
+    namespace                 => '',
     authentication_controller => 'Authentication',
-    authentication_action => 'login_via_form',
+    authentication_action     => 'login_via_form',
 );
 
 =head1 NAME

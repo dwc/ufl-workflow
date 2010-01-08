@@ -7,6 +7,11 @@ use UFL::Workflow::Util;
 
 __PACKAGE__->mk_accessors(qw/ldap_username_field ldap_search_fields/);
 
+__PACKAGE__->config(
+    ldap_username_field => 'uid',
+    ldap_search_fields  => [ qw/uid/ ],
+);
+
 =head1 NAME
 
 UFL::Workflow::Controller::Users - Users controller component

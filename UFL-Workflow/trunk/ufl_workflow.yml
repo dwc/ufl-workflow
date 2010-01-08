@@ -15,10 +15,6 @@ Controller::Processes: &requestdocuments
 
 Controller::Requests: *requestdocuments
 
-Controller::Users:
-  ldap_username_field: uid
-  ldap_search_fields: [ uid ]
-
 Model::LDAP:
   host: ldap.example.com
   base: ou=People,dc=example,dc=com
