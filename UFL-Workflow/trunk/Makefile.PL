@@ -23,7 +23,7 @@ requires 'Catalyst::Plugin::Unicode::Encoding';
 requires 'Catalyst::View::Email' => '0.10';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::TT';
-requires 'Class::C3' => '0.12';  # For next::can
+requires 'Class::Accessor::Fast';
 requires 'DateTime::Format::DB2' => '0.05';
 requires 'DBD::DB2';
 requires 'DBIx::Class' => '0.07000';
@@ -34,13 +34,14 @@ requires 'Getopt::Long';
 requires 'MIME::Type';
 requires 'MIME::Types';
 requires 'Module::Find';
+requires 'MRO::Compat';
+requires 'Path::Class::File';
 requires 'Scalar::Util';
 requires 'Template::Plugin::Textile';
 requires 'Template::Plugin::Wrap';
 requires 'YAML';
 
-recommends 'Catalyst::Authentication::Credential::Remote';
-
+build_requires 'Catalyst::Authentication::User::Hash';
 build_requires 'Catalyst::Test';
 build_requires 'DBD::SQLite';
 build_requires 'Test::MockObject';
