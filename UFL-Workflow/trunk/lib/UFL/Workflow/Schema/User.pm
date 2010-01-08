@@ -3,7 +3,7 @@ package UFL::Workflow::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
-use Class::C3;
+use MRO::Compat;
 use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
