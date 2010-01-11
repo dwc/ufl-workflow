@@ -7,7 +7,7 @@ use base qw/Catalyst::Controller/;
 __PACKAGE__->mk_accessors(qw/logout_uri update_user_fields_on_login/);
 
 __PACKAGE__->config(
-    update_user_fields_on_login => [],
+    update_user_fields_on_login => {},
 );
 
 =head1 NAME
@@ -34,8 +34,10 @@ sub login_via_env : Private {
         unless $c->user_exists and $c->user->active;
 
     # Pass any additional information from the environment
-    foreach my $field (@{ $self->update_user_fields_on_login }) {
-        $c->user->obj->$field($c->engine->env->{$field});
+    my %update_fields = %{ $self->update_user_fields_on_login };
+    foreach my $env_key (keys %update_fields) {
+        my $field = $update_fields{$env_key};
+        $c->user->obj->$field($c->engine->env->{$env_key});
     }
 
     # Update the user object to cache the values from the environment

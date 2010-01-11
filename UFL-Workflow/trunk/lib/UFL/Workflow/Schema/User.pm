@@ -82,32 +82,6 @@ User table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
-=head2 mail
-
-Handle the C<mail> field from Shibboleth, mapping it to the C<email>
-field on this class.
-
-=cut
-
-sub mail {
-    my $self = shift;
-
-    $self->email(@_);
-}
-
-=head2 businessName
-
-Handle the C<businessName> field from Shibboleth, mapping it to the
-C<display_name> field on this class.
-
-=cut
-
-sub businessName {
-    my $self = shift;
-
-    $self->display_name(@_);
-}
-
 =head2 has_role
 
 Return true if this user has the specified
