@@ -71,3 +71,24 @@
 </ul>
   [% END %]
 [% END %]
+[% IF c.user.id == user.id %]
+
+<h3>Request Environment</h3>
+<p>Below is the raw information sent via the server environment. You may be asked to provide values from this table for support.</p>
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Key</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+  [% FOREACH key IN env.keys.sort %]
+    <tr>
+      <th scope="row">[% key | html %]</th>
+      <td>[% env.$key || '-' | html %]</td>
+    </tr>
+  [% END %]
+  </tbody>
+</table>
+[% END %]
