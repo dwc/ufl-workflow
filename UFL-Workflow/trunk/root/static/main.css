@@ -261,6 +261,11 @@ padding:5px;
 text-align:left;
 }
 
+#content td .env {
+overflow:auto;
+width:700px;
+}
+
 #content textarea {
 height:15em;
 }
