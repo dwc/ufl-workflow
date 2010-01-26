@@ -1,5 +1,9 @@
 This file documents the revision history for UFL::Workflow.
 
+0.41
+        - Add environment dump to error page
+        - Improve error for missing environment keys
+
 0.40  Tue Jan 19 14:19:07 EST 2010
         - Actually send request change notification when someone edits
           the request

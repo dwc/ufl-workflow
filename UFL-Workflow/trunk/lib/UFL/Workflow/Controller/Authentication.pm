@@ -3,6 +3,7 @@ package UFL::Workflow::Controller::Authentication;
 use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
+use Carp qw/croak/;
 
 __PACKAGE__->mk_accessors(qw/logout_uri update_user_fields_on_login/);
 
@@ -36,8 +37,12 @@ sub login_via_env : Private {
     # Pass any additional information from the environment
     my %update_fields = %{ $self->update_user_fields_on_login };
     foreach my $env_key (keys %update_fields) {
+        my $env = $c->engine->env;
+        croak "Missing '$env_key' attribute in environment"
+            unless exists $env->{$env_key} and $env->{$env_key};
+
         my $field = $update_fields{$env_key};
-        $c->user->obj->$field($c->engine->env->{$env_key});
+        $c->user->obj->$field($env->{$env_key});
     }
 
     # Update the user object to cache the values from the environment
