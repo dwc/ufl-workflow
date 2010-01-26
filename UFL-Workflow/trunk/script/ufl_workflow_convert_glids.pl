@@ -53,7 +53,7 @@ sub main {
         'dsn|d=s'           => \$db_dsn,
         'username|u=s'      => \$db_username,
         'db-password|p=s'   => \$db_password,
-        'schema|s=s'        => \$db_schema_name,
+        'schema=s'          => \$db_schema_name,
         'host|H=s'          => \$ldap_host,
         'dn|D=s'            => \$ldap_dn,
         'ldap-password|S=s' => \$ldap_password,
@@ -159,7 +159,7 @@ Available options:
   -d, --dsn              The DBI data source (e.g. dbi:DB2:p01t03wa)
   -u, --username         The username to connect with
   -p, --db-password      The password to connect with
-  -s, --schema           The schema to operate on
+      --schema           The schema to operate on
   -H, --host             The LDAP host to connect to
   -D, --dn               The bind DN to connect to LDAP with
   -S, --ldap-password    The LDAP password
