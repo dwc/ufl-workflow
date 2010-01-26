@@ -1,0 +1,3 @@
+[% INCLUDE includes/month.tt field_name = month_field_name, field_id = month_field_id -%]
+<input type="text" name="[% day_field_name | html %]" maxlength="2" id="[% day_field_id | html %]" class="day" />,
+<input type="text" name="[% year_field_name | html %]" maxlength="4" id="[% year_field_id | html %]" class="year" />

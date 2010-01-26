@@ -1,0 +1,14 @@
+[% DEFAULT
+   field_id    = ''
+   field_name  = 'group_id'
+   field_label = 'Group'
+-%]
+
+<label>[% field_label | html %]:
+  <select name="[% field_name | html %]"[% IF field_id %] id="[% field_id | html %]"[% END %]>
+    <option value=""></option>
+[% WHILE(group = groups.next) %]
+    <option value="[% group.id | html %]"[% IF group.id == field_value %] selected="selected"[% END %]>[% prefix %][% group.name | html %]</option>
+[% END %]
+  </select>
+</label>
