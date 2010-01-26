@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.40
+0.40  Tue Jan 19 14:19:07 EST 2010
         - Actually send request change notification when someone edits
           the request
         - Fix the table on /processes/requests and add paging
