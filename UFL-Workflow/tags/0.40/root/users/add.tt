@@ -1,0 +1,41 @@
+[% SET title = 'Add New Users' -%]
+
+[% IF added_users AND added_users.size > 0 %]
+<h3>Added users</h3>
+<p>The following users have been added to the system:</p>
+<ul>
+  [% FOREACH user IN added_users %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
+  [% END %]
+</ul>
+
+[% END %]
+[% IF existing_users AND existing_users.size > 0 %]
+<h3>Existing users</h3>
+<p>The following users already exist in the system:</p>
+<ul>
+  [% FOREACH user IN existing_users %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
+  [% END %]
+</ul>
+
+[% END %]
+[% IF invalid_users AND invalid_users.size > 0 %]
+<h3>Invalid users</h3>
+<p>The following users were not found in the directory or do not have the required attributes:</p>
+<ul>
+  [% FOREACH user IN invalid_users %]
+  <li>[% user | html %]</li>
+  [% END %]
+</ul>
+
+[% END -%]
+
+<h3>Add[% IF (added_users AND added_users.size > 0) OR (existing_users AND existing_users.size > 0) OR (invalid_users AND invalid_users.size > 0) %] more[% END %] users</h3>
+<p>Provide each person's Gatorlink ID or UFID, one per line.</p>
+<form action="[% c.uri_for(c.controller.action_for('add')) | html %]" method="post">
+  <label id="users">GatorLink IDs or UFIDs:
+    <textarea name="users"></textarea>
+  </label>
+  <input type="submit" class="submit" value="Add Users" />
+</form>
