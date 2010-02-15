@@ -254,12 +254,12 @@ sub edit : PathPart Chained('request') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $version = $request->add_version($c->user->obj);
-
             my $previous_title = $request->title;
             my $previous_description = $request->description;
 
             $c->model('DBIC')->schema->txn_do(sub {            
+                my $version = $request->add_version($c->user->obj);
+
                 $request->update({
                     title       => $result->valid('title'),
                     description => $result->valid('description'),
