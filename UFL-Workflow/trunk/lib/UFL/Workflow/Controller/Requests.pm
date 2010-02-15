@@ -285,7 +285,7 @@ sub add_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
-    die 'User cannot manage request' unless $c->user->can_manage($request);
+    $c->detach('/forbidden') unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
@@ -331,6 +331,7 @@ sub remove_document : PathPart Chained('request') Args(0) {
     die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $request = $c->stash->{request};
+    $c->detach('/forbidden') unless $c->user->can_manage($request);
 
     my $result = $self->validate_form($c);
     $c->detach('view', $request->uri_args) unless $result->success;
@@ -357,6 +358,7 @@ sub recover_document : PathPart Chained('request') Args(0) {
     die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $request = $c->stash->{request};
+    $c->detach('/forbidden') unless $c->user->can_manage($request);
 
     my $result = $self->validate_form($c);
     $c->detach('view', $request->uri_args) unless $result->success;
