@@ -562,9 +562,9 @@ sub send_new_document_email {
     my $possible_actors = $request->possible_actors;
     my $past_actors = $request->past_actors;
 
-    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
-    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
-    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
+    my @to_addresses;
+    push @to_addresses, map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    push @to_addresses, map { $_->email } grep { $_->wants_email } $past_actors->all;
 
     $c->stash(
         request           => $request,
@@ -578,11 +578,13 @@ sub send_new_document_email {
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
+                Cc            => $request->submitter->email,
                 'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_document.tt',
         },
     );
+
     $c->forward($c->view('Email'));
 }
 
@@ -599,9 +601,9 @@ sub send_changed_document_email {
     my $possible_actors = $request->possible_actors;
     my $past_actors = $request->past_actors;
 
-    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
-    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
-    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
+    my @to_addresses;
+    push @to_addresses, map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    push @to_addresses, map { $_->email } grep { $_->wants_email } $past_actors->all;
 
     $c->stash(
         request            => $request,
@@ -616,11 +618,13 @@ sub send_changed_document_email {
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
+                Cc            => $request->submitter->email,
                 'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/changed_document.tt',
         },
     );
+
     $c->forward($c->view('Email'));
 }
 
