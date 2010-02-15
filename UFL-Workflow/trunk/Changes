@@ -3,7 +3,8 @@ This file documents the revision history for UFL::Workflow.
 0.42
         - Update Catalyst::View::Email dependency and fix dumping of
           emails for debugging
-        - Cc the submitter when a document is add, updated, or removed
+        - Cc the submitter when a document is added, updated, or
+          removed
         - Restrict document management to those who can manage the
           request
         - Move document removal code to documents controller to clean
