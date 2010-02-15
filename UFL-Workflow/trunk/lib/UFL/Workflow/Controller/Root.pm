@@ -182,8 +182,14 @@ sub end : Private {
     # XXX: Catalyst::View::Email doesn't provide an API for this, so we resort to ugliness
     my $view = $c->view('Email');
     if ($view->can('sender') and $view->sender->{mailer} eq 'Test' and $view->can('_mailer_obj')) {
-        use Data::Dumper;
-        $c->log->debug("Emails: " . Dumper($view->_mailer_obj->deliveries));
+        my $mailer_obj = $view->_mailer_obj;
+
+        if (my @deliveries = @{ $mailer_obj->deliveries }) {
+            use Data::Dumper;
+            $c->log->debug("Emails: " . Dumper(\@deliveries));
+
+            $mailer_obj->clear_deliveries;
+        }
     }
 
     $c->forward('render');
