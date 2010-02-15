@@ -16,10 +16,10 @@
 [% INCLUDE requests/includes/details.tt 
    show_edit = 1
    show_status = 1
-%]
+-%]
 
-[% INCLUDE requests/includes/versions.tt %]
+[% INCLUDE requests/includes/versions.tt -%]
 
-[% INCLUDE requests/includes/documents.tt %]
+[% INCLUDE requests/includes/documents.tt -%]
 
-[% INCLUDE requests/includes/actions.tt %]
+[% INCLUDE requests/includes/actions.tt -%]
