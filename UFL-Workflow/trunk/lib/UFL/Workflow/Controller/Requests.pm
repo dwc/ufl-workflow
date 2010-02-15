@@ -264,9 +264,9 @@ sub edit : PathPart Chained('request') Args(0) {
                     title       => $result->valid('title'),
                     description => $result->valid('description'),
                 });
-            });
 
-            $self->send_changed_request_email($c, $request, $c->user->obj, '', $previous_title, $previous_description);
+                $self->send_changed_request_email($c, $request, $c->user->obj, '', $previous_title, $previous_description);
+            });
         }
 
         return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
@@ -292,20 +292,22 @@ sub add_document : PathPart Chained('request') Args(0) {
         if ($result->success and my $upload = $c->req->upload('document')) {
             my $replaced_document_id = $result->valid('replaced_document_id');
 
-            my $document = $request->add_document(
-                $c->user->obj,
-                $upload->basename,
-                $upload->slurp,
-                $c->controller('Documents')->destination,
-                $replaced_document_id,
-            );
+            $c->model('DBIC')->schema->txn_do(sub {            
+                my $document = $request->add_document(
+                    $c->user->obj,
+                    $upload->basename,
+                    $upload->slurp,
+                    $c->controller('Documents')->destination,
+                    $replaced_document_id,
+                );
 
-            my $replaced_document;
-            if ($replaced_document_id) {
-                $replaced_document = $request->documents->find($replaced_document_id);
-            }
+                my $replaced_document;
+                if ($replaced_document_id) {
+                    $replaced_document = $request->documents->find($replaced_document_id);
+                }
 
-            $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
+                $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
+            });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
@@ -348,9 +350,6 @@ sub update_status : PathPart Chained('request') Args(0) {
     $c->model('DBIC')->schema->txn_do(sub {
         my $comment = $result->valid('comment');
         $request->update_status($status, $c->user->obj, $group, $comment);
-
-        # Make sure we get update_time
-        $request->discard_changes;
 
         $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
         if ($request->is_open) {
@@ -436,6 +435,9 @@ sub send_changed_request_email {
     my $past_actors  = $request->past_actors;
     my @to_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
 
+    # Get latest request information
+    $request->discard_changes;
+
     $c->stash(
         request => $request,
         actor   => $actor,
@@ -473,6 +475,9 @@ sub send_new_action_email {
     my $possible_actors = $request->possible_actors;
     my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
 
+    # Get latest request information
+    $request->discard_changes;
+
     $c->stash(
         request => $request,
         actor   => $actor,
@@ -509,6 +514,9 @@ sub send_new_document_email {
     my @to_addresses;
     push @to_addresses, map { $_->email } grep { $_->wants_email } $possible_actors->all;
     push @to_addresses, map { $_->email } grep { $_->wants_email } $past_actors->all;
+
+    # Get latest request information
+    $request->discard_changes;
 
     $c->stash(
         request           => $request,
