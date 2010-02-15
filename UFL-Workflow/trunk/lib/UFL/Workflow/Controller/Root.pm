@@ -179,10 +179,11 @@ sub end : Private {
     my ($self, $c) = @_;
 
     # If we're using the stub email sender, flush any messages to the console
-    if ($c->view('Email')->mailer->mailer eq 'Test') {
-        require Email::Send::Test;
-        $c->log->_dump(Email::Send::Test->emails);
-        Email::Send::Test->clear;
+    # XXX: Catalyst::View::Email doesn't provide an API for this, so we resort to ugliness
+    my $view = $c->view('Email');
+    if ($view->can('sender') and $view->sender->{mailer} eq 'Test' and $view->can('_mailer_obj')) {
+        use Data::Dumper;
+        $c->log->debug("Emails: " . Dumper($view->_mailer_obj->deliveries));
     }
 
     $c->forward('render');

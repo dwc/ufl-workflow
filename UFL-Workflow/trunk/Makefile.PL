@@ -20,7 +20,7 @@ requires 'Catalyst::Plugin::Setenv';
 requires 'Catalyst::Plugin::StackTrace';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
-requires 'Catalyst::View::Email' => '0.10';
+requires 'Catalyst::View::Email' => '0.23';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::TT';
 requires 'Class::Accessor::Fast';
