@@ -20,7 +20,7 @@
     <td>[% document.submitter.display_name | html %]</td>
     <td>[% document.insert_time.strftime(datetime_format) | html %]</td>
     [% IF can_manage %]
-    <td><form action="[% c.uri_for(c.controller.action_for('remove_document'), request.uri_args) | html %]" method="post"><input type="hidden" name="document_id" value="[% document.id | html %]" /><input type="submit" value="Remove" /></form></td>
+    <td><form action="[% c.uri_for(c.controller('Documents').action_for('remove'), document.uri_args) | html %]" method="post"><input type="submit" value="Remove" /></form></td>
     [% END %]
   </tr>
     [% SET i = i + 1 %]
@@ -44,7 +44,7 @@
     [% SET replacement = document.replacement %]
     <tr[% IF i % 2 == 0 %] class="even"[% END %]>
       <td><a href="[% c.uri_for(c.controller('Documents').action_for('download'), document.uri_args) | html %]">[% document.name | html %]</a></td>
-      <td><a href="#document_[% replacement.id | html %]">[% replacement.name | html %]</a></td>
+      <td><a href="[% c.uri_for(c.controller('Documents').action_for('download'), replacement.uri_args) | html %]">[% replacement.name | html %]</a></td>
       <td>[% document.submitter.display_name | html %]</td>
       <td>[% document.insert_time.strftime(datetime_format) | html %]</td>
     </tr>
@@ -73,7 +73,7 @@
       <td>[% document.submitter.display_name | html %]</td>
       <td>[% document.insert_time.strftime(datetime_format) | html %]</td>
     [% IF can_manage %]
-      <td><form action="[% c.uri_for(c.controller.action_for('recover_document'), request.uri_args) | html %]" method="post"><input type="hidden" name="document_id" value="[% document.id | html %]" /><input type="submit" value="Recover" /></form></td>
+      <td><form action="[% c.uri_for(c.controller('Documents').action_for('recover'), document.uri_args) | html %]" method="post"><input type="submit" value="Recover" /></form></td>
     [% END %]
     </tr>
     [% SET i = i + 1 %]

@@ -319,64 +319,6 @@ sub add_document : PathPart Chained('request') Args(0) {
     );
 }
 
-=head2 remove_document
-
-Remove the document.
-
-=cut
-
-sub remove_document : PathPart Chained('request') Args(0) {
-    my ($self, $c) = @_;
-    
-    die 'Method must be POST' unless $c->req->method eq 'POST';
-
-    my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
-
-    my $result = $self->validate_form($c);
-    $c->detach('view', $request->uri_args) unless $result->success;
-
-    my $document = $c->model('DBIC::Document')->find($result->valid('document_id'));
-    $c->detach('/default') unless $document;
-
-    $document->remove;
-
-    $self->send_changed_document_email($c, $request, $c->user->obj, $document, $document, undef);
-
-    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
-}
-
-=head2 recover_document
-
-Recover the document for this request.
-
-=cut
-
-sub recover_document : PathPart Chained('request') Args(0) {
-    my ($self, $c) = @_;
-    
-    die 'Method must be POST' unless $c->req->method eq 'POST';
-
-    my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
-
-    my $result = $self->validate_form($c);
-    $c->detach('view', $request->uri_args) unless $result->success;
-
-    my $document = $c->model('DBIC::Document')->find($result->valid('document_id'));
-    $c->detach('/default') unless $document;
-
-    $document->recover;
-
-    # Make sure we get update_time
-    $request->discard_changes;
-
-    $self->send_changed_document_email($c, $request, $c->user->obj, $document, undef, $document);
-
-    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
-}
-
-
 =head2 update_status
 
 Add an action to this request, i.e., a decision by one of the users
@@ -584,46 +526,6 @@ sub send_new_document_email {
                 'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_document.tt',
-        },
-    );
-
-    $c->forward($c->view('Email'));
-}
-
-=head2 send_changed_document_email
-
-Send notification that a document was changed for a
-L<UFL::Workflow::Schema::Request>.
-
-=cut
-
-sub send_changed_document_email {
-    my ($self, $c, $request, $actor, $document, $removed_document, $recovered_document) = @_;
-
-    my $possible_actors = $request->possible_actors;
-    my $past_actors = $request->past_actors;
-
-    my @to_addresses;
-    push @to_addresses, map { $_->email } grep { $_->wants_email } $possible_actors->all;
-    push @to_addresses, map { $_->email } grep { $_->wants_email } $past_actors->all;
-
-    $c->stash(
-        request            => $request,
-        actor              => $actor,
-        document           => $document,
-        removed_document   => $removed_document,
-        recovered_document => $recovered_document,
-        email             => {
-            from     => $c->config->{email}->{from_address},
-            to       => join(', ', @to_addresses),
-            subject  => $request->subject('New document added to '),
-            header   => [
-                'Return-Path' => $c->config->{email}->{admin_address},
-                'Reply-To'    => $actor->email,
-                Cc            => $request->submitter->email,
-                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
-            ],
-            template => 'text_plain/changed_document.tt',
         },
     );
 
