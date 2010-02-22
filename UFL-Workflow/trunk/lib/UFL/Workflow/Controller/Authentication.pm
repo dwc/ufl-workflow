@@ -3,7 +3,6 @@ package UFL::Workflow::Controller::Authentication;
 use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
-use Carp qw/croak/;
 
 __PACKAGE__->mk_accessors(qw/logout_uri update_user_fields_on_login/);
 
@@ -30,23 +29,11 @@ sub login_via_env : Private {
 
     # XXX: Catalyst::Plugin::Authentication supports checking active flag
     # XXX: in $c->authenticate, but it conflicts with auto_create_user
-    $c->authenticate();
     $c->forward('/forbidden') and return 0
-        unless $c->user_exists and $c->user->active;
+        unless $c->authenticate and $c->user->active;
 
-    # Pass any additional information from the environment
-    my %update_fields = %{ $self->update_user_fields_on_login };
-    foreach my $env_key (keys %update_fields) {
-        my $env = $c->engine->env;
-        croak "Missing '$env_key' attribute in environment"
-            unless exists $env->{$env_key} and $env->{$env_key};
-
-        my $field = $update_fields{$env_key};
-        $c->user->obj->$field($env->{$env_key});
-    }
-
-    # Update the user object to cache the values from the environment
-    $c->user->obj->update if $c->user->obj->can('update');
+    my %fields = %{ $self->update_user_fields_on_login };
+    $c->user->update_from_env($c->engine->env, \%fields);
 
     return 1;
 }
