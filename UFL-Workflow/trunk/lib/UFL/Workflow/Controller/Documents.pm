@@ -32,6 +32,7 @@ sub document : PathPart('documents') Chained('/') CaptureArgs(1) {
 
     my $document = $c->model('DBIC::Document')->find($document_id);
     $c->detach('/default') unless $document;
+    $c->detach('/forbidden') unless $c->user->can_view($document->request);
 
     $c->stash(document => $document);
 }
