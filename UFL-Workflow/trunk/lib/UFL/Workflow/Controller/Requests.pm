@@ -198,20 +198,9 @@ sub version : PathPart('versions') Chained('request') CaptureArgs(1) {
 
     my $request = $c->stash->{request};
     my $version = $request->versions->find({ num => $num });
+    $c->detach('/default') unless $version;
 
     $c->stash(version => $version);
-}
-
-=head2 view_version
-
-Display basic information about the stashed version.
-
-=cut
-
-sub view_version : PathPart('') Chained('version') Args(0) {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'requests/version.tt');
 }
 
 =head2 view
@@ -238,6 +227,18 @@ sub view : PathPart('') Chained('request') Args(0) {
         replaced_documents => $replaced_documents,
         template           => 'requests/view.tt',
     );
+}
+
+=head2 view_version
+
+Display basic information about the stashed version.
+
+=cut
+
+sub view_version : PathPart('') Chained('version') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'requests/version.tt');
 }
 
 =head2 edit
