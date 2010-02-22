@@ -241,13 +241,26 @@ sub view_version : PathPart('') Chained('version') Args(0) {
     $c->stash(template => 'requests/version.tt');
 }
 
+=head2 manage
+
+Ensure that the current user can manage the stashed request.
+
+=cut
+
+sub manage : Chained('request') CaptureArgs(0) {
+    my ($self, $c) = @_;
+
+    my $request = $c->stash->{request};
+    $c->detach('/forbidden') unless $c->user->can_manage($request);
+}
+
 =head2 edit
 
 Edit the stashed request.
 
 =cut
 
-sub edit : PathPart Chained('request') Args(0) {
+sub edit : PathPart Chained('manage') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
@@ -282,11 +295,10 @@ Add a document to the stashed request.
 
 =cut
 
-sub add_document : PathPart Chained('request') Args(0) {
+sub add_document : PathPart Chained('manage') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
@@ -322,6 +334,19 @@ sub add_document : PathPart Chained('request') Args(0) {
     );
 }
 
+=head2 decide_on
+
+Ensure that the current user can decide on the stashed request.
+
+=cut
+
+sub decide_on : Chained('request') CaptureArgs(0) {
+    my ($self, $c) = @_;
+
+    my $request = $c->stash->{request};
+    $c->detach('/forbidden') unless $c->user->can_decide_on($request->current_action);
+}
+
 =head2 update_status
 
 Add an action to this request, i.e., a decision by one of the users
@@ -329,7 +354,7 @@ with the role on the current step.
 
 =cut
 
-sub update_status : PathPart Chained('request') Args(0) {
+sub update_status : PathPart Chained('decide_on') Args(0) {
     my ($self, $c) = @_;
 
     die 'Method must be POST' unless $c->req->method eq 'POST';
@@ -368,7 +393,7 @@ status via L<JSON>.
 
 =cut
 
-sub list_action_groups : PathPart Chained('request') Args(0) {
+sub list_action_groups : PathPart Chained('decide_on') Args(0) {
     my ($self, $c) = @_;
 
     my $status_id = $c->req->param('status_id');

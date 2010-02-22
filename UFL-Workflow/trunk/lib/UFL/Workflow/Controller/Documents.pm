@@ -65,6 +65,20 @@ sub download : PathPart Chained('document') Args(0) {
     $c->res->body($fh);
 }
 
+=head2 manage
+
+Ensure that the current user can manage the request associated with
+the specified document.
+
+=cut
+
+sub manage : Chained('document') CaptureArgs(0) {
+    my ($self, $c) = @_;
+
+    my $document = $c->stash->{document};
+    $c->detach('/forbidden') unless $c->user->can_manage($document->request);
+}
+
 =head2 remove
 
 Remove the stashed document from the request. The document isn't
@@ -72,14 +86,13 @@ actually removed; we just set a flag to hide it.
 
 =cut
 
-sub remove : PathPart Chained('document') Args(0) {
+sub remove : PathPart Chained('manage') Args(0) {
     my ($self, $c) = @_;
     
     die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $document = $c->stash->{document};
     my $request = $document->request;
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
 
     $document->remove;
     $self->send_changed_document_email($c, $request, $c->user->obj, $document, $document, undef);
@@ -93,14 +106,13 @@ Recover the document for this request.
 
 =cut
 
-sub recover : PathPart Chained('document') Args(0) {
+sub recover : PathPart Chained('manage') Args(0) {
     my ($self, $c) = @_;
     
     die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $document = $c->stash->{document};
     my $request = $document->request;
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
 
     $document->recover;
     $self->send_changed_document_email($c, $request, $c->user->obj, $document, undef, $document);
