@@ -9,21 +9,21 @@ __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/
 __PACKAGE__->table('request_versions');
 __PACKAGE__->add_columns(
     request_id => {
-        data_type         => 'integer',
+        data_type => 'integer',
     },
     num => {
-        data_type         => 'integer',
+        data_type => 'integer',
     },
     user_id => {
-        data_type         => 'integer',
+        data_type => 'integer',
     },
     title => {
-        data_type         => 'varchar',
-        size              => 64,
+        data_type => 'varchar',
+        size      => 64,
     },
     description => {
-        data_type         => 'varchar',
-        size              => 8192,
+        data_type => 'varchar',
+        size      => 8192,
     },
 );
 
@@ -52,15 +52,13 @@ See L<UFL::Workflow>.
 
 Request version table class for L<UFL::Workflow::Schema>.
 
+=head1 METHODS
 
 =head2 uri_args
 
-Return the L<UFL::Workflow::Schema::Step> in the
-L<UFL::Workflow::Schema::Process> associated with the first
-L<UFL::Workflow::Schema::Action> on this request.
-
-
-Return the list of URI path arguments needed to identify the L<UFL::Workflow::Schema::RequestVersion> of the L<UFL::Workflow::Schema::Request>.
+Return the list of URI path arguments needed to identify this
+L<UFL::Workflow::Schema::RequestVersion> of the
+L<UFL::Workflow::Schema::Request>.
 
 =cut
 
@@ -72,7 +70,7 @@ sub uri_args {
 
 =head1 AUTHOR
 
-Joey Spooner<lt>spooner@ufl.eduE<gt>
+Joey Spooner E<lt>spooner@ufl.eduE<gt>
 
 =head1 LICENSE
 
