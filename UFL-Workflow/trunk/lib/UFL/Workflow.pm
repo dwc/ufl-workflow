@@ -21,26 +21,31 @@ our $VERSION = '0.41';
 
 __PACKAGE__->setup;
 
+# Restrict administrative interface to 'Administrator' role
 __PACKAGE__->deny_access_unless(
     "/$_",
     [ qw/Administrator/ ],
 ) for qw/groups processes roles statuses steps/;
 
+# Restrict user administration to 'Administrator' and 'Help Desk' roles
 __PACKAGE__->deny_access_unless(
     "/users",
     sub { shift->check_any_user_role('Administrator', 'Help Desk') },
 );
 
+# Allow any logged-in user to add requests
 __PACKAGE__->allow_access_if(
     "/processes/$_",
     sub { $_[0]->user_exists },
 ) for qw/process add_request/;
 
+# Allow any logged-in user to view their user page and toggle email preference
 __PACKAGE__->allow_access_if(
     "/users/$_",
     sub { $_[0]->user_exists },
 ) for qw/user view toggle_email/;
 
+# Allow users with 'Help Desk' role to view administrative information
 __PACKAGE__->allow_access_if(
     "/processes/$_",
     [ 'Help Desk' ],
