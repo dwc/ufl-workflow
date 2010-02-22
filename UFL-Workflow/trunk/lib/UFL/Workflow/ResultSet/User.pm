@@ -58,6 +58,9 @@ sub auto_create {
         username => $authinfo->{username},
     });
 
+    # Force a SELECT to get default data
+    $user->discard_changes;
+
     return $user;
 }
 
