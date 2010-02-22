@@ -100,7 +100,7 @@ Take the username from the environment and attempt to find a user.
 =cut
 
 sub authenticate {
-    my ($self, $c, $realm, $auth_info) = @_;
+    my ($self, $c, $realm, $authinfo) = @_;
 
     my $env = $c->engine->env;
 
@@ -108,11 +108,11 @@ sub authenticate {
     my $remote_user = $env->{$source};
     return if not defined $remote_user or $remote_user eq '';
 
-    my $auth_user = $auth_info->{username};
+    my $auth_user = $authinfo->{username};
     return if defined $auth_user and $auth_user ne $remote_user;
 
-    $auth_info->{$self->username_field} = $remote_user;
-    my $user_obj = $realm->find_user($auth_info, $c);
+    $authinfo->{$self->username_field} = $remote_user;
+    my $user_obj = $realm->find_user($authinfo, $c);
 
     return $user_obj;
 }
