@@ -94,8 +94,10 @@ sub remove : PathPart Chained('manage') Args(0) {
     my $document = $c->stash->{document};
     my $request = $document->request;
 
-    $document->remove;
-    $self->send_changed_document_email($c, $request, $c->user->obj, $document, $document, undef);
+    $c->model('DBIC')->schema->txn_do(sub {
+        $document->remove;
+        $self->send_changed_document_email($c, $request, $c->user->obj, $document, $document, undef);
+    });
 
     return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
 }
@@ -114,8 +116,10 @@ sub recover : PathPart Chained('manage') Args(0) {
     my $document = $c->stash->{document};
     my $request = $document->request;
 
-    $document->recover;
-    $self->send_changed_document_email($c, $request, $c->user->obj, $document, undef, $document);
+    $c->model('DBIC')->schema->txn_do(sub {
+        $document->recover;
+        $self->send_changed_document_email($c, $request, $c->user->obj, $document, undef, $document);
+    });
 
     return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
 }
@@ -157,7 +161,7 @@ sub send_changed_document_email {
         },
     );
 
-    $c->forward($c->view('Email'));
+    $self->send_email($c);
 }
 
 =head1 AUTHOR

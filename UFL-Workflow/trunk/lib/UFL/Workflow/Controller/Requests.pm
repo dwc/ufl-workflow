@@ -271,7 +271,7 @@ sub edit : PathPart Chained('manage') Args(0) {
             my $previous_title = $request->title;
             my $previous_description = $request->description;
 
-            $c->model('DBIC')->schema->txn_do(sub {            
+            $c->model('DBIC')->schema->txn_do(sub {
                 my $version = $request->add_version($c->user->obj);
 
                 $request->update({
@@ -484,7 +484,7 @@ sub send_changed_request_email {
         },
     );
 
-    $c->forward($c->view('Email'));
+    $self->send_email($c);
 }
 
 =head2 send_new_action_email
@@ -521,7 +521,7 @@ sub send_new_action_email {
         },
     );
 
-    $c->forward($c->view('Email'));
+    $self->send_email($c);
 }
 
 =head2 send_new_document_email
@@ -563,7 +563,7 @@ sub send_new_document_email {
         },
     );
 
-    $c->forward($c->view('Email'));
+    $self->send_email($c);
 }
 
 =head1 AUTHOR

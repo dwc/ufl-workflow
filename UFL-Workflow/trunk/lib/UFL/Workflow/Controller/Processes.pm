@@ -341,7 +341,7 @@ sub send_new_request_email {
         },
     );
 
-    $c->forward($c->view('Email'));
+    $self->send_email($c);
 }
 
 =head1 AUTHOR
