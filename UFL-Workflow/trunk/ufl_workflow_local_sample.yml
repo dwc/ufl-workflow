@@ -60,4 +60,4 @@ Plugin::ErrorCatcher::Email:
 #  sender:
 #    mailer: SMTP
 #    mailer_args:
-#      Host: smtp.example.com
+#      host: smtp.example.com
