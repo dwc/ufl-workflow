@@ -3,7 +3,7 @@ use inc::Module::Install;
 name     'UFL-Workflow';
 all_from 'lib/UFL/Workflow.pm';
 
-requires 'Catalyst' => '5.7006';
+requires 'Catalyst' => '5.80019';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Authentication::Store::DBIx::Class' => '0.102';
 requires 'Catalyst::Model::DBIC::Schema';
