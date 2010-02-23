@@ -47,7 +47,7 @@ stacktrace:
   enable: 1
 
 Plugin::ErrorCatcher:
-  emit_module: Catalyst::Plugin::ErrorCatcher::Email
+  emit_module: UFL::Workflow::ErrorCatcher::Email
 
 Plugin::ErrorCatcher::Email:
   to:   developers@example.com

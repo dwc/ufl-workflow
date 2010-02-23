@@ -32,6 +32,7 @@ requires 'Digest::MD5';
 requires 'FormValidator::Simple';
 requires 'FormValidator::Simple::ProfileManager::YAML';
 requires 'Getopt::Long';
+requires 'MIME::Lite';
 requires 'MIME::Type';
 requires 'MIME::Types';
 requires 'Module::Find';
