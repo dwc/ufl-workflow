@@ -42,6 +42,20 @@ Plugin::Authentication:
       credential:
         class: +UFL::Workflow::Authentication::Shibboleth
 
+# Enable stacktrace to get better ErrorCatcher messages
+stacktrace:
+  enable: 1
+
+Plugin::ErrorCatcher:
+  emit_module: Catalyst::Plugin::ErrorCatcher::Email
+
+Plugin::ErrorCatcher::Email:
+  to:   developers@example.com
+  from: approval@example.com
+  send:
+    type: smtp
+    args: [ smtp.example.com ]
+
 #View::Email:
 #  sender:
 #    mailer: SMTP

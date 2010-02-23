@@ -12,6 +12,7 @@ requires 'Catalyst::Plugin::Authentication' => '0.10003';
 requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::ConfigLoader';
+requires 'Catalyst::Plugin::ErrorCatcher';
 requires 'Catalyst::Plugin::FillInForm';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::State::Cookie';

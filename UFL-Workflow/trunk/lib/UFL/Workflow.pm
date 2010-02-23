@@ -2,12 +2,14 @@ package UFL::Workflow;
 
 use strict;
 use warnings;
+use MRO::Compat;
 use Catalyst qw/
     ConfigLoader
     Setenv
     Authentication
     Authorization::Roles
     Authorization::ACL
+    ErrorCatcher
     FillInForm
     Session
     Session::State::Cookie
@@ -87,6 +89,34 @@ processes.
 For example, professors at the University of Florida identify new or
 modified undergraduate and graduate courses for the student body.
 This application allows professors to submit course requests.
+
+=head1 METHODS
+
+=head2 finalize_error
+
+Output a more friendly error page. This is based loosely on
+L<Catalyst::Plugin::CustomErrorMessage>.
+
+=cut
+
+sub finalize_error {
+    my $c = shift;
+
+    # Allow ErrorCatcher to run
+    $c->next::method(@_);
+
+    # Allow StackTrace to take over in debug mode
+    return if $c->debug;
+
+    # Forward to the more friendly error page
+    eval {
+        $c->res->body($c->view('HTML')->render($c, 'error.tt'));
+    };
+    if ($@) {
+        # Handle view-level errors by logging them
+        $c->log->error($@);
+    }
+}
 
 =head1 SEE ALSO
 
