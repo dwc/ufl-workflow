@@ -135,15 +135,12 @@ sub add_role : PathPart Chained('group') Args(0) {
         if ($result->success) {
             my $group = $c->stash->{group};
             my $role  = $group->add_role($result->valid('name'));
+
             return $c->res->redirect($c->uri_for($self->action_for('view'), $group->uri_args));
         }
     }
 
-    my $roles = $c->model('DBIC::Role')->search(undef, { order_by => 'name' });
-    $c->stash(
-        roles => $roles,
-        template => 'groups/add_role.tt',
-    );
+    $c->stash(template => 'groups/add_role.tt');
 }
 
 =head1 AUTHOR

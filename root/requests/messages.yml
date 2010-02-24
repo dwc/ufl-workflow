@@ -17,13 +17,6 @@ reports:
     DEFAULT: An end date
   page:
     DEFAULT: A page number
-edit:
-  title:
-    DEFAULT: A title
-    LENGTH:  A shorter title
-  description:
-    DEFAULT: A description
-    LENGTH:  A shorter description
 add_document:
   document:
     DEFAULT:   A document
@@ -38,3 +31,10 @@ update_status:
   comment:
     DEFAULT: A comment
     LENGTH:  A shorter comment
+pending_decision:
+  status_id:
+    DEFAULT: A Status
+  group_id:
+    DEFAULT: A group
+  comment:
+    DEFAULT: A Comment
