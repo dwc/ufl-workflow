@@ -2,8 +2,8 @@
 
 <h3>Document details</h3>
 <p>Upload your document using the form below. Documents above 10 MB in size are not recommended.</p>
-[% SET extensions = c.controller.accepted_extensions.sort %]
-<p>At this time, documents of type [% FOREACH extension IN extensions %]<code>[% extension | html %]</code>[% IF extension != extensions.last %], [% END %][% IF loop.next == extensions.last %]and [% END %][% END %] are accepted.</p>
+[% SET extensions = c.config.documents.accepted_extensions.sort %]
+<p>At this time, documents of type [% FOREACH extension IN extensions %]<code>[% extension | html %]</code>[% IF extension != extensions.last %], [% END %][% END %] are accepted.</p>
 <p>The title of the document is taken from the filename. Please name your documents as you would like them to appear alongside your request.</p>
 <form action="[% c.uri_for(c.controller.action_for('add_document'), request.uri_args) | html %]" enctype="multipart/form-data" method="post">
   <label>File: <input type="file" name="document" /></label>
@@ -12,7 +12,7 @@
     <select name="replaced_document_id">
       <option value=""></option>
   [% WHILE (document = documents.next) %]
-      <option value="[% document.id | html %]">[% document.name | html %] ([% document.insert_time.strftime(datetime_format) | html %])</option>
+      <option value="[% document.id | html %]">[% document.title | html %] ([% document.insert_time.strftime(datetime_format) | html %])</option>
   [% END %]
     </select>
   </label>

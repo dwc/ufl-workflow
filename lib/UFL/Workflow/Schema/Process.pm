@@ -15,26 +15,7 @@ __PACKAGE__->add_columns(
     },
     name => {
         data_type => 'varchar',
-        size      => 64,
-    },
-    description => {
-        data_type   => 'varchar',
-        size        => 8192,
-        is_nullable => 1,
-    },
-    # Refers to default request description 
-    def_req_desc => { 
-        data_type   => 'varchar',
-        size        => 8192,
-        is_nullable => 1,
-    },
-    enabled => {
-        data_type     => 'boolean',
-        default_value => 0,
-    },
-    restricted => {
-        data_type     => 'boolean',
-        default_value => 0,
+        size      => 32,
     },
 );
 __PACKAGE__->add_standard_columns;
@@ -55,10 +36,6 @@ __PACKAGE__->has_many(
     { 'foreign.process_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
-
-__PACKAGE__->resultset_attributes({
-    order_by => 'me.name',
-});
 
 =head1 NAME
 
@@ -124,10 +101,13 @@ Add a new step to the end of the chain for this process.
 =cut
 
 sub add_step {
-    my ($self, $name, $role) = @_;
+    my ($self, $values) = @_;
 
     $self->throw_exception('You must provide a name for the step')
-        unless $name;
+        unless ref $values eq 'HASH' and $values->{name};
+
+    my $role = delete $values->{role};
+
     $self->throw_exception('You must provide a role')
         unless blessed $role and $role->isa('UFL::Workflow::Schema::Role');
     $self->throw_exception('Process cannot be edited')
@@ -137,8 +117,8 @@ sub add_step {
     $self->result_source->schema->txn_do(sub {
         my $last_step = $self->last_step;
 
-        $step = $self->steps->create({
-            name    => $name,
+        $step = $self->steps->find_or_create({
+            %$values,
             role_id => $role->id,
         });
 
@@ -161,25 +141,28 @@ Add a request that follows this process.
 =cut
 
 sub add_request {
-    my ($self, $title, $description, $user, $initial_group) = @_;
+    my ($self, $values) = @_;
 
-    $self->throw_exception('You must provide a title and description for the request')
-        unless $title and $description;
+    $self->throw_exception('You must provide a user, title, description, and initial group for the request')
+        unless ref $values eq 'HASH' and $values->{title} and $values->{description};
+
+    my $user  = delete $values->{user};
+    my $group = delete $values->{group};
+
     $self->throw_exception('You must provide a user')
         unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
     $self->throw_exception('You must provide a group')
-        unless blessed $initial_group and $initial_group->isa('UFL::Workflow::Schema::Group');
+        unless blessed $group and $group->isa('UFL::Workflow::Schema::Group');
 
     my $request;
     $self->result_source->schema->txn_do(sub {
-        $request = $self->requests->create({
-            user_id     => $user->id,
-            title       => $title,
-            description => $description,
+        $request = $self->requests->find_or_create({
+            %$values,
+            user_id => $user->id,
         });
 
         my $action = $request->add_action($self->first_step);
-        $action->assign_to_group($initial_group);
+        $action->assign_to_group($group);
     });
 
     return $request;
@@ -195,26 +178,6 @@ sub uri_args {
     my ($self) = @_;
 
     return [ $self->id ];
-}
-
-=head2 to_json
-
-Return a hash suitable for conversion to JSON which represents this
-process.
-
-=cut
-
-sub to_json {
-    my ($self) = @_;
-
-    my $process = {
-        id         => $self->id,
-        name       => $self->name,
-        enabled    => int($self->enabled),
-        restricted => int($self->restricted),
-    };
-
-    return $process;
 }
 
 =head1 AUTHOR

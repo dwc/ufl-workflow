@@ -2,7 +2,7 @@ package UFL::Workflow::Controller::Processes;
 
 use strict;
 use warnings;
-use base qw/UFL::Workflow::BaseController::Uploads/;
+use base qw/UFL::Workflow::BaseController/;
 
 =head1 NAME
 
@@ -18,7 +18,7 @@ L<Catalyst> controller component for managing processes.
 
 =head1 METHODS
 
-=head2 index
+=head2 index 
 
 Display a list of current processes.
 
@@ -47,12 +47,8 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $process = $c->user->processes->create({
-                name         => $result->valid('name'),
-                description  => $result->valid('description'),
-                def_req_desc => $result->valid('def_req_desc'),
-                enabled      => $result->valid('enabled') ? 1 : 0,
-                restricted   => $result->valid('restricted') ? 1 : 0,
+            my $process = $c->user->processes->find_or_create({
+                name => $result->valid('name'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -102,13 +98,8 @@ sub edit : PathPart Chained('process') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->stash->{process};
-
             $process->update({
-                name         => $result->valid('name'),
-                description  => $result->valid('description'),
-                def_req_desc => $result->valid('def_req_desc'),
-                enabled      => $result->valid('enabled') ? 1 : 0,
-                restricted   => $result->valid('restricted') ? 1 : 0,
+                name => $result->valid('name'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -135,7 +126,10 @@ sub add_step : PathPart Chained('process') Args(0) {
             my $role = $c->model('DBIC::Role')->find($result->valid('role_id'));
             $c->detach('/default') unless $role;
 
-            my $step = $process->add_step($result->valid('name'), $role);
+            my $step = $process->add_step({
+                role => $role,
+                name => $result->valid('name'),
+            });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
         }
@@ -221,127 +215,6 @@ sub move_step_down : PathPart Chained('process') Args(0) {
     }
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
-}
-
-=head2 add_request
-
-Add a request that follows the specified process.
-
-=cut
-
-sub add_request : PathPart Chained('process') Args(0) {
-    my ($self, $c) = @_;
-
-    my $process = $c->stash->{process};
-    die 'Process is not enabled' unless $process->enabled;
-
-    if ($c->req->method eq 'POST') {
-        my $result = $self->validate_form($c);
-        if ($result->success) {
-            my $group = $c->model('DBIC::Group')->find($result->valid('group_id'));
-            $c->detach('/default') unless $group;
-
-            # Use a transaction so e.g. if the document is bad the request isn't added
-            my $request;
-            $c->model('DBIC')->schema->txn_do(sub {
-                $request = $process->add_request(
-                    $result->valid('title'),
-                    $result->valid('description'),
-                    $c->user->obj,
-                    $group,
-                );
-
-                if (my $upload = $c->req->upload('document')) {
-                    my $document = $request->add_document(
-                        $c->user->obj,
-                        $upload->basename,
-                        $upload->slurp,
-                        $c->controller('Documents')->destination,
-                    );
-                }
-
-                $self->send_new_request_email($c, $request);
-            });
-
-            return $c->res->redirect($c->uri_for($c->controller('Requests')->action_for('view'), $request->uri_args));
-        }
-    }
-
-    my $groups;
-    if (my $first_step = $process->first_step) {
-        $groups = $first_step->role->groups->search(undef, { order_by => 'name' });
-    }
-
-    $c->stash(
-        process  => $process,
-        groups   => $groups,
-        template => 'processes/add_request.tt',
-    );
-}
-
-=head2 requests
-
-List requests for the stashed L<UFL::Workflow::Schema::Process>.
-
-=cut
-
-sub requests : PathPart Chained('process') Args(0) {
-    my ($self, $c) = @_;
-
-    my $page = $c->req->params->{page} || 1;
-    $page =~ s/\D//g;
-
-    my $process = $c->stash->{process};
-    my $requests = $process->requests->search(
-        {},
-        {
-            order_by => \q[me.update_time DESC, me.insert_time DESC],
-            page     => $page,
-            rows     => 10,
-        },
-    );
-
-    $c->stash(
-        requests => $requests,
-        template => 'processes/requests.tt',
-    );
-}
-
-=head2 send_new_request_email
-
-Send notification that a new L<UFL::Workflow::Schema::Request> has
-been entered to those who can act on it.
-
-=cut
-
-sub send_new_request_email {
-    my ($self, $c, $request) = @_;
-
-    my $submitter = $request->submitter;
-
-    my $possible_actors = $request->possible_actors;
-    my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
-
-    $c->stash(
-        request => $request,
-        email => {
-            from     => $c->config->{email}->{from_address},
-            to       => join(', ', @to_addresses),
-            subject  => $request->subject('New: '),
-            header   => [
-                'Return-Path' => $c->config->{email}->{admin_address},
-                'Reply-To'    => $submitter->email,
-                Cc            => $submitter->email,
-                'Message-Id'  => '<' . $request->message_id($c->req->uri->host_port) . '>',
-            ],
-            template => 'text_plain/new_request.tt',
-        },
-    );
-
-    $self->send_email($c);
 }
 
 =head1 AUTHOR

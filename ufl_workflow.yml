@@ -1,68 +1,37 @@
 --- #YAML:1.0
 # Do not use tabs for indentation or label/value separation!
-name:         Workflow
-default_view: HTML
+name:       Workflow
+logout_uri: http://login.gatorlink.ufl.edu/quit.cgi
+encoding:   UTF-8
 
-email:
-  admin_address: no-reply@example.com
-  from_address:  no-reply@example.com
+documents:
+  destination:         documents
+  accepted_extensions: [ doc, pdf, odt, txt ]
 
-Controller::Documents:
-  destination: __path_to(documents)__
+authentication:
+  dbic:
+    user_class:           DBIC::User
+    user_field:           username
+    auto_create_user:     1
 
-Controller::Processes: &requestdocuments
-  accepted_extensions: [ doc, docx, odt, pdf, rtf, txt, jpg, jpeg, tif, tiff ]
-
-Controller::Requests: *requestdocuments
-
-Model::LDAP:
-  host: ldap.example.com
-  base: ou=People,dc=example,dc=com
+authorization:
+  dbic:
+    role_class:           DBIC::Role
+    role_field:           name
+    role_rel:             user_group_roles
+    user_role_user_field: user_id
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
-  # Placeholder connect_info for make test
   connect_info:
-    - dbi:SQLite:dbname=__path_to(ufl_workflow.db)__
-    - 
-    - 
     -
       RaiseError:         1
       PrintError:         0
       ShowErrorStatement: 1
       TraceLevel:         0
 
-Plugin::Authentication:
-  default_realm: users
-  realms:
-    users:
-      credential:
-        class:         Password
-        password_type: none
-      store:
-        class:         DBIx::Class
-        user_class:    DBIC::User
-        role_relation: roles
-        role_field:    name
-
-Plugin::ErrorCatcher:
-  enable: 1
-
-View::Email:
-  stash_key:       email
-  template_prefix: email
-  default:
-    view:         Text
-    content_type: text/plain
-    charset:      UTF-8
-  sender:
-    mailer: Test
-
-View::HTML:
+View::TT:
   PRE_CHOMP: 1
   WRAPPER:   wrapper.tt
-  VARIABLES: &ttvariables
+  VARIABLES:
     datetime_format: %a, %B %e, %Y %l:%M %p
-
-View::Text:
-  VARIABLES: *ttvariables

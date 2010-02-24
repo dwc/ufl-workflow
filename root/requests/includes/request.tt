@@ -1,9 +1,10 @@
 <input type="hidden" name="process_id" value="[% process.id | html %]" />
-[% INCLUDE requests/includes/request_details.tt %]
-[% IF groups.count == 1 -%]
-<input type="hidden" name="group_id" value="[% groups.first.id | html %]" />
-[% ELSE %]
-  [% INCLUDE groups/includes/groups_simple.tt field_label = 'Send to group' %]
-[% END -%]
-
-<label>Document: <input type="file" name="document" /></label>
+<label>Title: <input type="text" name="title" value="[% request.title | html %]" maxlength="64" /></label>
+<label>Description: <textarea name="description">[% request.description | html %]</textarea></label>
+<label>Send to group:
+  <select name="group_id" id="group_id">
+[% FOREACH group IN groups %]
+    <option value="[% group.id | html %]">[% group.name | html %]</option>
+[% END %]
+  </select>
+</label>
