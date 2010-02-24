@@ -12,21 +12,14 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
-    # Refers to replacement document
+    # Replacement
     document_id => {
-        data_type  => 'integer',
+        data_type   => 'integer',
         is_nullable => 1,
-    },
-    active => {
-        data_type     => 'boolean',
-        default_value => 1,
-    },
-    user_id => {
-        data_type => 'integer',
     },
     name => {
         data_type => 'varchar',
-        size      => 128,
+        size      => 64,
     },
     extension => {
         data_type => 'varchar',
@@ -34,7 +27,7 @@ __PACKAGE__->add_columns(
     },
     type => {
         data_type => 'varchar',
-        size      => 128,
+        size      => 64,
     },
     md5 => {
         data_type => 'varchar',
@@ -53,15 +46,6 @@ __PACKAGE__->belongs_to(
     'document_id',
     { join_type => 'left' },
 );
-
-__PACKAGE__->belongs_to(
-    submitter => 'UFL::Workflow::Schema::User',
-    'user_id',
-);
-
-__PACKAGE__->resultset_attributes({
-    order_by => \q[me.update_time DESC, me.insert_time DESC],
-});
 
 =head1 NAME
 
@@ -103,35 +87,6 @@ sub uri_args {
     my ($self) = @_;
 
     return [ $self->id ];
-}
-
-=head2 recover
-
-Recover the document by updating it as active again for the given
-request.
-
-=cut
-
-sub recover {
-    my ($self) = @_;
-
-    $self->update({
-        active => 1,
-    });    
-}
-
-=head2 remove
-
-Remove the document from the request by making it inactive.
-
-=cut
-
-sub remove {
-    my ($self) = @_;
-
-    $self->update({
-        active => 0,
-    });    
 }
 
 =head1 AUTHOR

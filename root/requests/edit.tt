@@ -1,9 +1,0 @@
-[% SET title = "Edit ${request.title}" -%]
-
-<h3>Edit request "[% request.title | html %]"</h3>
-<form action="[% c.uri_for(c.controller.action_for('edit'), request.uri_args) | html %]" enctype="multipart/form-data" method="post">
-[% FILTER indent('  ') %]
-  [% INCLUDE requests/includes/request_details.tt %]
-[% END -%]
-  <input type="submit" class="submit" value="Edit Request" />
-</form>
