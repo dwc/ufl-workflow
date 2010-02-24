@@ -34,7 +34,7 @@ __PACKAGE__->has_many(
 __PACKAGE__->has_many(
     group_roles => 'UFL::Workflow::Schema::GroupRole',
     { 'foreign.group_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0, join => 'role', order_by => 'name' },
+    { cascade_delete => 0, cascade_copy => 0 },
 );
 
 __PACKAGE__->has_many(
@@ -49,14 +49,10 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
-__PACKAGE__->many_to_many('roles', 'group_roles', 'role', { order_by => 'name' });
+__PACKAGE__->many_to_many('roles', 'group_roles', 'role');
 __PACKAGE__->many_to_many('actions', 'action_groups', 'action');
 
 __PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Group');
-
-__PACKAGE__->resultset_attributes({
-    order_by => 'name',
-});
 
 =head1 NAME
 
@@ -132,23 +128,16 @@ Add a role to this group.
 =cut
 
 sub add_role {
-    my ($self, $name, $role_id) = @_;
+    my ($self, $name) = @_;
 
     my $role;
-
     $self->result_source->schema->txn_do(sub {
+        $role = $self->result_source->schema->resultset('Role')->find_or_create({
+            name => $name,
+        });
 
-        if ($self->roles->find(name => $name)) {
-   	    $self->throw_exception("Role already assigned to group.");
-        } 
-	else {
-            $role = $self->result_source->schema->resultset('Role')->find_or_create({ 
-	        name => $name, 
-            });            
-
-            $self->add_to_roles($role);                    
-	}
-    });   
+        $self->add_to_roles($role);
+    });
 
     return $role;
 }

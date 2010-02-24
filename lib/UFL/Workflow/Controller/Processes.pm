@@ -18,7 +18,7 @@ L<Catalyst> controller component for managing processes.
 
 =head1 METHODS
 
-=head2 index
+=head2 index 
 
 Display a list of current processes.
 
@@ -48,11 +48,9 @@ sub add : Local {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->user->processes->create({
-                name         => $result->valid('name'),
-                description  => $result->valid('description'),
-                def_req_desc => $result->valid('def_req_desc'),
-                enabled      => $result->valid('enabled') ? 1 : 0,
-                restricted   => $result->valid('restricted') ? 1 : 0,
+                name        => $result->valid('name'),
+                description => $result->valid('description'),
+                enabled     => $result->valid('enabled'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -102,13 +100,10 @@ sub edit : PathPart Chained('process') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->stash->{process};
-
             $process->update({
-                name         => $result->valid('name'),
-                description  => $result->valid('description'),
-                def_req_desc => $result->valid('def_req_desc'),
-                enabled      => $result->valid('enabled') ? 1 : 0,
-                restricted   => $result->valid('restricted') ? 1 : 0,
+                name        => $result->valid('name'),
+                description => $result->valid('description'),
+                enabled     => $result->valid('enabled'),
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -247,6 +242,7 @@ sub add_request : PathPart Chained('process') Args(0) {
                 $request = $process->add_request(
                     $result->valid('title'),
                     $result->valid('description'),
+                    $result->valid('enabled'),
                     $c->user->obj,
                     $group,
                 );
@@ -267,43 +263,15 @@ sub add_request : PathPart Chained('process') Args(0) {
         }
     }
 
-    my $groups;
+    my @groups;
     if (my $first_step = $process->first_step) {
-        $groups = $first_step->role->groups->search(undef, { order_by => 'name' });
+        @groups = $first_step->role->groups;
     }
 
     $c->stash(
         process  => $process,
-        groups   => $groups,
+        groups   => \@groups,
         template => 'processes/add_request.tt',
-    );
-}
-
-=head2 requests
-
-List requests for the stashed L<UFL::Workflow::Schema::Process>.
-
-=cut
-
-sub requests : PathPart Chained('process') Args(0) {
-    my ($self, $c) = @_;
-
-    my $page = $c->req->params->{page} || 1;
-    $page =~ s/\D//g;
-
-    my $process = $c->stash->{process};
-    my $requests = $process->requests->search(
-        {},
-        {
-            order_by => \q[me.update_time DESC, me.insert_time DESC],
-            page     => $page,
-            rows     => 10,
-        },
-    );
-
-    $c->stash(
-        requests => $requests,
-        template => 'processes/requests.tt',
     );
 }
 
@@ -317,31 +285,23 @@ been entered to those who can act on it.
 sub send_new_request_email {
     my ($self, $c, $request) = @_;
 
-    my $submitter = $request->submitter;
-
     my $possible_actors = $request->possible_actors;
-    my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
 
     $c->stash(
         request => $request,
         email => {
-            from     => $c->config->{email}->{from_address},
-            to       => join(', ', @to_addresses),
-            subject  => $request->subject('New: '),
+            from     => $c->config->{email}->{administrative_address},
+            to       => join(', ', map { $_->email } $possible_actors->all),
+            subject  => '[Request ' . $request->id . '] New: "' . $request->title . '"',
             header   => [
-                'Return-Path' => $c->config->{email}->{admin_address},
-                'Reply-To'    => $submitter->email,
-                Cc            => $submitter->email,
-                'Message-Id'  => '<' . $request->message_id($c->req->uri->host_port) . '>',
+                Cc           => $request->submitter->email,
+                'Message-Id' => $request->message_id($c->req->uri->host_port),
             ],
             template => 'text_plain/new_request.tt',
         },
     );
 
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR
