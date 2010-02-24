@@ -1,20 +1,17 @@
 [% SET title = 'Processes' -%]
 
-[% IF c.check_user_roles('Administrator') %]
-<h3>Manage processes</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new process</a></li>
-</ul>
-[% END %]
-
 <h3>Current processes</h3>
 [% IF processes.count > 0 %]
 <ul>
   [% WHILE (process = processes.next) %]
-    [% SET num_requests = process.requests_rs.count %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a> ([% process.enabled ? 'Active' : 'Inactive' %], <a href="[% c.uri_for(c.controller.action_for('requests'), process.uri_args) | html %]">[% num_requests | html %] request[% num_requests == 1 ? '' : 's' %]</a>)</li>
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
+
+<h3>Manage processes</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new process</a></li>
+</ul>
