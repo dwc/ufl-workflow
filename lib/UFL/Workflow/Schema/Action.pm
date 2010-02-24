@@ -69,7 +69,6 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     actor => 'UFL::Workflow::Schema::User',
     'user_id',
-    { join_type => 'left' },
 );
 
 __PACKAGE__->has_many(

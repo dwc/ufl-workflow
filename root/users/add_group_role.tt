@@ -1,28 +1,30 @@
-[% SET title = "Add a Role to ${user.display_name}'s Account" -%]
-[% SET
-   group_id = 'group_id'
-   role_id = 'role_id'
-   group_button_id = 'group_button_id'
-   role_button_id = 'role_button_id'
-   scripts = [
-     c.uri_for('/static/javascript/UFL/Workflow/Form/GroupRoleAssignment.js'),
-   ]
-   snippets = [
-     "new UFL.Workflow.Form.GroupRoleAssignment('${c.uri_for(c.controller.action_for('list_group_roles'), user.uri_args)}', '$group_id', '$role_id', '$group_button_id', '$role_button_id');",
-   ]
--%]
+[% SET title = "Add a Role to ${user.username}'s Account" -%]
 
-<p>Choose the group and then the role to which <strong>[% user.display_name | html %]</strong> belongs.</p>
-<form action="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]" method="[% IF group %]post[% ELSE %]get[% END %]">
-[% FILTER indent('  ') %]
-  [% INCLUDE groups/includes/groups.tt field_id = $group_id, field_value = group.id %]
-[% END %]
-[% IF ! group %]
-  <input type="submit" id="[% group_button_id | html %]" class="submit" value="Select Group" />
-[% END %]
+[% SET action = c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) %]
+[% IF group %]
+<h3>Group</h3>
+<dl>
+  <dt>Group</dt>
+  <dd>[% group.name | html %] (<a href="[% action | html %]">Choose a different group</a>)</dd>
+</dl>
+<br style="clear:both" />
 
-[% FILTER indent('  ') %]
-  [% INCLUDE roles/includes/roles.tt roles = group.roles_rs, field_id = $role_id %]
-[% END %]
-  <input type="submit" id="[% role_button_id | html %]" class="submit" value="Add Role"[% IF ! group %] disabled="disabled"[% END %] />
+<h3>Role</h3>
+<form action="[% action | html %]" method="post">
+  <input type="hidden" name="group_id" value="[% group.id | html %]" />
+
+  [% FILTER indent('  ') %]
+    [% INCLUDE roles/includes/roles.tt roles = group.roles_rs %]
+  [% END -%]
+  <input type="submit" class="submit" value="Add Role" />
 </form>
+[% ELSE %]
+<h3>Group</h3>
+<p>First, choose the group to which <strong>[% user.username | html %]</strong> belongs.</p>
+<form action="[% action | html %]" method="get">
+[% FILTER indent('  ') %]
+  [% INCLUDE groups/includes/groups.tt %]
+[% END -%]
+  <input type="submit" class="submit" value="Select Group" />
+</form>
+[% END %]

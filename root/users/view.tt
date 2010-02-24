@@ -1,9 +1,8 @@
-[% SET title = user.display_name -%]
+[% SET title = user.username -%]
 
-[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
+[% IF c.check_user_roles('Administrator') %]
 <h3>Manage user</h3>
 <ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('edit'), user.uri_args) | html %]">Edit this user</a></li>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
 </ul>
 [% END %]
@@ -12,32 +11,27 @@
 <dl>
   <dt>Username</dt>
   <dd>[% user.username | html %]</dd>
-  <dt>Display name</dt>
-  <dd>[% user.display_name | html %]</dd>
   <dt>Email delivery</dt>
   <dd>[% IF user.wants_email %]On[% ELSE %]Off[% END %]</dd>
-  <dt>Active?</dt>
-  <dd>[% user.active ? 'Yes' : 'No' %]</dd>
   <dt>Created</dt>
   <dd>[% user.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
   <dd>[% user.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
-<p><em>Note</em>: Your display name is populated automatically from the UF Directory. To change it, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Update My Directory Profile".</p>
 
 <h3>Email options</h3>
-<p>Email from [% c.config.name | html %] is sent to your business email address, [% IF user.email %]<a href="mailto:[% user.email | html %]">[% user.email | html %]</a>[% ELSE %]which we were unable to determine[% END %]. To change this, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Modify My UF Business Email".</p>
+<p>Email is being sent to your GatorLink email address, <a href="mailto:[% user.email | html %]">[% user.email | html %]</a>. To change this login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Set GatorLink Email Forwarding".</p>
 [% IF user.wants_email %]
-<p>If you <em>do not</em> want to receive any mail from [% c.config.name | html %], uncheck the box below and press save.</p>
+<p>If you do not want to receive any mail from [% c.config.name | html %], uncheck the box below and press save.</p>
 [% ELSE %]
 <p>If you want to receive mail from [% c.config.name | html %], check the box below and press save.</p>
 [% END %]
-<form action="[% c.uri_for(c.controller.action_for('toggle_email'), user.uri_args) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('edit'), user.uri_args) | html %]" method="post">
   <label class="checkbox"><input type="checkbox" name="wants_email" value="1"[% IF user.wants_email %] checked="checked"[% END %] /> Email when a request is added or updated</label>
-  <input type="submit" class="submit" value="Save Options" />
+  <input type="submit" class="submit" value="Save options" />
 </form>
-[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
+[% IF c.check_user_roles('Administrator') OR c.check_user_roles('Help Desk') %]
 
 <h3>Roles</h3>
   [% SET user_group_roles = user.user_group_roles %]
@@ -49,11 +43,13 @@
   <li>
     <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>)
+      [% IF c.check_user_roles('Administrator') %]
     <form class="roles" action="[% c.uri_for(c.controller.action_for('delete_group_role'), user.uri_args) | html %]" method="post">
       <input type="hidden" name="group_id" value="[% group.id | html %]" />
       <input type="hidden" name="role_id" value="[% role.id | html %]" />
       <input type="submit" class="submit" value="Remove" />
     </form>
+      [% END %]
   </li>
     [% END %]
 </ul>
@@ -70,8 +66,4 @@
     [% END %]
 </ul>
   [% END %]
-[% END %]
-[% IF c.user.id == user.id %]
-
-[% INCLUDE includes/env.tt %]
 [% END %]

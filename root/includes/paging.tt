@@ -3,13 +3,13 @@
    plural = ''
 -%]
 
-[% IF pager AND pager.total_entries > 0 %]
+[% IF pager %]
   [% IF singular AND plural %]
-<p>Found [% pager.total_entries | html %][% pager.total_entries == 1 ? " $singular" : " $plural" | html %].[% IF pager.first_page != pager.last_page %] Displaying [% pager.first | html %] through [% pager.last | html %].[% END %]</p>
+<p>Found [% pager.total_entries | html %][% pager.total_entries == 1 ? " $singular" : " $plural" | html %]. Displaying [% pager.first | html %] through [% pager.last | html %].</p>
   [% END %]
   [% IF pager.first_page != pager.last_page %]
 <ul class="paging">
-  <li class="prev">[% IF pager.current_page == pager.first_page %]<span>[% ELSE %]<a href="[% c.req.uri_with(page = pager.previous_page) | html %]">[% END %]&larr;&nbsp;Prev[% IF pager.current_page == pager.first_page %]</span>[% ELSE %]</a>[% END %]</li>
+  <li class="prev">[% IF pager.current_page == pager.first_page %]<span>[% ELSE %]<a href="[% c.req.uri_with(page = pager.previous_page) | html %]">[% END %]&larr; Prev[% IF pager.current_page == pager.first_page %]</span>[% ELSE %]</a>[% END %]</li>
     [% SET start_page = 1 %]
     [% SET end_page = pager.last_page -%]
     [% IF pager.current_page > 11 %]
@@ -34,7 +34,7 @@
       [% SET high = pager.last_page %]
   <li><a href="[% c.request.uri_with(page => end_page) | html %]">[% low _ '..' _ high | html %]</a></li>
     [% END %]
-  <li class="next">[% IF pager.current_page == pager.last_page %]<span>[% ELSE %]<a href="[% c.req.uri_with(page = pager.next_page) | html %]">[% END %]Next&nbsp;&rarr;[% IF pager.current_page == pager.last_page %]</span>[% ELSE %]</a>[% END %]</li>
+  <li class="next">[% IF pager.current_page == pager.last_page %]<span>[% ELSE %]<a href="[% c.req.uri_with(page = pager.next_page) | html %]">[% END %]Next &rarr;[% IF pager.current_page == pager.last_page %]</span>[% ELSE %]</a>[% END %]</li>
 </ul><!-- .paging -->
   [% END %]
 [% END %]
