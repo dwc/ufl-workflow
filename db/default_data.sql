@@ -40,6 +40,12 @@ INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
 );
 
 INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
+  (SELECT id FROM users WHERE username = 'mlj1790'),
+  (SELECT id FROM groups WHERE name = 'Web Administration'),
+  (SELECT id FROM roles WHERE name = 'Administrator')
+);
+
+INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
   (SELECT id FROM users WHERE username = 'spooner'),
   (SELECT id FROM groups WHERE name = 'Web Administration'),
   (SELECT id FROM roles WHERE name = 'Administrator')

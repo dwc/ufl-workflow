@@ -1,27 +1,23 @@
 [% USE Textile %]
 [% SET title = "${process.name} Process" -%]
 
-[% IF c.check_user_roles('Administrator') %]
 <h3>Manage process</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), process.uri_args) | html %]">Edit this process</a></li>
-  [% IF process.is_editable %]
+[% IF process.is_editable %]
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]">Add new step</a></li>
-  [% END %]
-</ul>
 [% END %]
+</ul>
 
 <h3>Process details</h3>
 <dl>
   <dt>Name</dt>
   <dd>[% process.name | html %]</dd>
-  <dt>Active?</dt>
+  <dt>Enabled</dt>
   <dd>[% process.enabled ? 'Yes' : 'No' %]</dd>
-  <dt>Restrict viewing?</dt>
-  <dd>[% process.restricted ? 'Yes' : 'No' %]</dd>
   <dt>Creator</dt>
 [% SET creator = process.creator %]
-  <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.display_name | html %]</a></dd>
+  <dd><a href="[% c.uri_for(c.controller('Users').action_for('view'), creator.uri_args) | html %]">[% creator.username | html %]</a></dd>
   <dt>Created</dt>
   <dd>[% process.insert_time.strftime(datetime_format) | html %]</dd>
 </dl>
@@ -38,18 +34,6 @@
 <p>None yet.</p>
 [% END %]
 
-<h4>Default request description</h4>
-[% IF process.def_req_desc %]
-<div class="description">
-
-  [% FILTER indent('  ') %]
-    [% process.def_req_desc.replace('\bh[12346]\.', 'h5.') | textile %]
-  [% END %]
-</div>
-[% ELSE %]
-<p>None yet.</p>
-[% END %]
-
 <h3>Steps</h3>
 [% SET step = process.first_step %]
 [% IF step %]
@@ -60,7 +44,7 @@
     [% SET role = step.role %]
   <li><a href="[% c.uri_for(c.controller('Steps').action_for('view'), step.uri_args) | html %]">[% step.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>)
-    [% IF process.is_editable AND c.check_user_roles('Administrator') %]
+    [% IF process.is_editable %]
     <br />
     <form class="process-steps" action="[% c.uri_for(c.controller.action_for('delete_step'), process.uri_args) | html %]" method="post">
       <input type="hidden" name="step_id" value="[% step.id | html %]" />

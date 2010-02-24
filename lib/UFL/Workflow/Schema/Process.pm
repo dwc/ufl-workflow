@@ -22,17 +22,7 @@ __PACKAGE__->add_columns(
         size        => 8192,
         is_nullable => 1,
     },
-    # Refers to default request description 
-    def_req_desc => { 
-        data_type   => 'varchar',
-        size        => 8192,
-        is_nullable => 1,
-    },
     enabled => {
-        data_type     => 'boolean',
-        default_value => 0,
-    },
-    restricted => {
         data_type     => 'boolean',
         default_value => 0,
     },
@@ -195,26 +185,6 @@ sub uri_args {
     my ($self) = @_;
 
     return [ $self->id ];
-}
-
-=head2 to_json
-
-Return a hash suitable for conversion to JSON which represents this
-process.
-
-=cut
-
-sub to_json {
-    my ($self) = @_;
-
-    my $process = {
-        id         => $self->id,
-        name       => $self->name,
-        enabled    => int($self->enabled),
-        restricted => int($self->restricted),
-    };
-
-    return $process;
 }
 
 =head1 AUTHOR

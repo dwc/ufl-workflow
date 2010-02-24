@@ -18,7 +18,7 @@ L<Catalyst> controller component for managing statuses.
 
 =head1 METHODS
 
-=head2 index
+=head2 index 
 
 Display a list of current statuses.
 
