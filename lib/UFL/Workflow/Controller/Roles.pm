@@ -58,33 +58,20 @@ sub edit : PathPart Chained('role') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $role = $c->stash->{role};
-            $role->update({
-                name => $result->valid('name'),
-            });
+
+            my $values = $result->valid;
+            foreach my $key (keys %$values) {
+                $role->$key($values->{$key}) if $role->can($key);
+            }
+
+            # TODO: Unique check
+            $role->update;
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
         }
     }
 
     $c->stash(template => 'roles/edit.tt');
-}
-
-=head2 list_roles
-
-List all available roles via L<JSON>.
-
-=cut
-
-sub list_roles : Local Args(0) {
-    my ($self, $c) = @_;
-
-    my $query = lc($c->request->parameters->{'q'});
-    my $roles = $c->model('DBIC::Role')->search({ "LOWER(name)" => { 'like', '%' . $query . '%' } });
-    $c->stash(roles => [ map { $_->to_json } $roles->all ]);
-
-    my $view = $c->view('JSON');
-    $view->expose_stash([ qw/roles/ ]);
-    $c->forward($view);
 }
 
 =head1 AUTHOR

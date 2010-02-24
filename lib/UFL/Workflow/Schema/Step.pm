@@ -25,7 +25,7 @@ __PACKAGE__->add_columns(
     },
     name => {
         data_type => 'varchar',
-        size      => 64,
+        size      => 32,
     },
 );
 __PACKAGE__->add_standard_columns;
@@ -100,8 +100,11 @@ sub delete {
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
-    my $next = $self->next::can;
-    $self->result_source->schema->txn_do(sub {
+    # Not using txn_do for $self->next::method
+    my $schema = $self->result_source->schema;
+    eval {
+        $schema->txn_begin;
+
         my $prev_step = $self->prev_step;
         my $next_step = $self->next_step;
 
@@ -117,8 +120,13 @@ sub delete {
             $next_step->update;
         }
 
-        $next->($self, @args);
-    });
+        $self->next::method(@args);
+        $schema->txn_commit;
+    };
+    if (my $error = $@) {
+        eval { $schema->txn_rollback; $self->throw_exception($error) };
+        $self->throw_exception($@) if $@;
+    }
 }
 
 =head2 move_up

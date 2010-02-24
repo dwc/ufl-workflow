@@ -33,7 +33,7 @@ __PACKAGE__->add_columns(
     },
     comment => {
         data_type   => 'varchar',
-        size        => 8192,
+        size        => 1024,
         is_nullable => 1,
     },
 );
@@ -69,7 +69,6 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     actor => 'UFL::Workflow::Schema::User',
     'user_id',
-    { join_type => 'left' },
 );
 
 __PACKAGE__->has_many(
@@ -79,10 +78,6 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->many_to_many('groups', 'action_groups', 'group');
-__PACKAGE__->many_to_many('group_roles', 'action_groups', 'group_role');
-__PACKAGE__->many_to_many('user_group_roles', 'action_groups', 'user_group_role');
-
-__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Action');
 
 =head1 NAME
 
@@ -98,39 +93,65 @@ Action table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
-=head2 statuses
+=head2 update_status
 
-Return a L<DBIx::Class::ResultSet> of valid statuses for this action.
-
-=cut
-
-sub statuses {
-    my ($self) = @_;
-
-    my $statuses = $self->result_source->schema->resultset('Status')->search(
-        { is_initial => 0 },
-        { order_by   => 'name' },
-    );
-
-    return $statuses;
-}
-
-=head2 group
-
-Return the L<UFL::Workflow::Schema::Group> to which this action is
-currently assigned.
+Update the status of this action, driving the process to the next
+step.
 
 =cut
 
-sub group {
-    my ($self) = @_;
+sub update_status {
+    my ($self, $values) = @_;
 
-    my $group;
-    if (my $groups = $self->groups) {
-        $group = $groups->first;
-    }
+    my $status  = delete $values->{status};
+    my $actor   = delete $values->{actor};
+    my $group   = delete $values->{group};
+    my $comment = delete $values->{comment};
+    my $request = $self->request;
 
-    return $group;
+    $self->throw_exception('You must provide a status')
+        unless blessed $status and $status->isa('UFL::Workflow::Schema::Status');
+    $self->throw_exception('You must provide an actor')
+        unless blessed $actor and $actor->isa('UFL::Workflow::Schema::User');
+    $self->throw_exception('Actor cannot decide on this action')
+        unless $actor->can_decide_on($self);
+    $self->throw_exception('Decision already made')
+        unless $self->status->is_initial;
+    $self->throw_exception('Action does not appear to be the current one')
+        unless $self->id == $request->current_action->id;
+
+    $self->result_source->schema->txn_do(sub {
+        $self->status($status);
+        $self->actor($actor);
+        $self->comment($comment);
+        $self->update;
+
+        my $action;
+        if ($status->continues_request) {
+            my $step = $request->next_step;
+            if ($step) {
+                $action = $request->add_action({ step_id => $step->id });
+            }
+        }
+        elsif ($status->finishes_request) {
+            # Done
+        }
+        else {
+            # Add a copy of the current step
+            $action = $request->add_action({ step_id => $self->step_id });
+        }
+
+        if ($action) {
+            $action->assign_to_group($group);
+
+            # Update pointers
+            $action->prev_action($self);
+            $action->update;
+
+            $self->next_action($action);
+            $self->update;
+        }
+    });
 }
 
 =head2 assign_to_group
@@ -148,28 +169,6 @@ sub assign_to_group {
         unless $group->can_decide_on($self);
 
     $self->set_groups($group);
-}
-
-=head2 possible_actors
-
-Return a L<DBIx::Class::ResultSet> of L<UFL::Workflow::Schema::User>s
-who can act on this action.
-
-=cut
-
-sub possible_actors {
-    my ($self) = @_;
-
-    # Find the actors based on the assigned groups and the step-required role
-    my $user_group_roles = $self->user_group_roles->search({
-        role_id => $self->step->role->id,
-    });
-
-    my $possible_actors = $user_group_roles
-        ->related_resultset('actor')
-        ->search(undef, { distinct => 1 });
-
-    return $possible_actors;
 }
 
 =head2 uri_args

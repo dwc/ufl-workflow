@@ -11,21 +11,13 @@ __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
     name => {
         data_type => 'varchar',
-        size      => 64,
+        size      => 32,
     },
     is_initial => {
         data_type     => 'boolean',
         default_value => 0,
     },
     continues_request => {
-        data_type     => 'boolean',
-        default_value => 0,
-    },
-    reassigns_request => {
-        data_type     => 'boolean',
-        default_value => 0,
-    },
-    recycles_request => {
         data_type     => 'boolean',
         default_value => 0,
     },
@@ -43,8 +35,6 @@ __PACKAGE__->has_many(
     { 'foreign.status_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
-
-__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Status');
 
 =head1 NAME
 

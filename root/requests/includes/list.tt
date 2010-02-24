@@ -1,59 +1,27 @@
-[% DEFAULT
-   show_submitter = 0
-   show_process   = 0
--%]
-
-[% SET num_requests = requests.count %]
-[% IF num_requests > 0 %]
+[% IF requests.count > 0 %]
   [% IF comment %]
 <p>[% comment | html %]</p>
   [% END %]
 <table>
   <tr>
-[% IF show_submitter %]
     <th>Submitter</th>
-[% END %]
     <th>Title</th>
-[% IF show_process %]
     <th>Process</th>
-[% END %]
     <th>Status</th>
-    <th>Created</th>
-    <th>Updated</th>
+    <th>Added</th>
   </tr>
-[% SET i = 0 %]
-[% WHILE (request = requests.next) %]
-  [% IF c.user.can_view(request) %]
+  [% SET i = 0 %]
+  [% WHILE (request = requests.next) %]
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
-    [% IF show_submitter %]
-    <td>[% request.submitter.display_name | html %]</td>
-    [% END %]
+    <td>[% request.submitter.username | html %]</td>
     <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) | html %]">[% request.title | html %]</a></td>
-    [% IF show_process %]
     <td>[% request.process.name | html %]</td>
-    [% END %]
     <td>[% INCLUDE requests/includes/status.tt action = request.current_action, show_group = 1 -%]</td>
     <td>[% request.insert_time.strftime(datetime_format) | html %]</td>
-    <td>[% request.update_time.strftime(datetime_format) | html %]</td>
   </tr>
-  [% ELSE %]
-  <tr class="denied" title="You do not have sufficient permissions to view this request.">
-    [% IF show_submitter %]
-    <td>-</td>
-    [% END %]
-    <td>-</td>
-    [% IF show_process %]
-    <td>[% request.process.name | html %]</td>
-    [% END %]
-    <td>Restricted</td>
-    <td>-</td>
-    <td>-</td>
-  </tr>
+    [% SET i = i + 1 %]
   [% END %]
-  </tr>
-[% SET i = i + 1 %]
-[% END %]
 </table>
 [% ELSE %]
-<p>No requests found.</p>
+<p>None yet.</p>
 [% END -%]

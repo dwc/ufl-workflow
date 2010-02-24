@@ -58,9 +58,14 @@ sub edit : PathPart Chained('step') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $step = $c->stash->{step};
-            $step->update({
-                name => $result->valid('name'),
-            });
+
+            my $values = $result->valid;
+            foreach my $key (keys %$values) {
+                $step->$key($values->{$key}) if $step->can($key);
+            }
+
+            # TODO: Unique check
+            $step->update;
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $step->uri_args));
         }

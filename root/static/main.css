@@ -1,8 +1,12 @@
-* {margin:0;padding:0;}
-
-*:target {
-background:#ffc !important;
+/*a.add {
+background:url(images/add.gif) left center no-repeat;
+border:none;
+padding-left:17px;
+text-decoration:underline;
 }
+*/
+
+* {margin:0;padding:0;}
 
 body {
 background:#FFF url(images/bg.gif) repeat-x;
@@ -23,11 +27,11 @@ color:#ff4a00;
 }
 
 dl#statuses dd {
-width:640px;
+width:500px;
 }
 
 dl#statuses dt {
-width:300px;
+width:250px;
 }
 
 h3 {
@@ -41,27 +45,14 @@ padding:5px;
 text-align:left;
 }
 
-h4,h5,h6 {
-text-align:left;
-padding:5px;
-}
-
-h4 {
-font-size:1.05em;
-}
-
-h5 {
-font-size:1em;
-}
-
-p,li,form {
+p,li,form,h4 {
 text-align:left;
 }
 
 #container {
 font-size:1.4em;
 margin:0 auto;
-width:960px;
+width:770px;
 }
 
 #content dd {
@@ -69,7 +60,7 @@ border-bottom:1px solid #ccc;
 float:right;
 padding:3px 0;
 text-align:left;
-width:790px;
+width:650px;
 }
 
 #content dt {
@@ -79,33 +70,11 @@ float:left;
 font-weight:700;
 padding:3px 0 3px 3px;
 text-align:left;
-width:150px;
-}
-
-#content fieldset {
-border:0;
-border-bottom:1px solid #eee;
-margin:5px 0 10px;
-padding-bottom:5px;
+width:100px;
 }
 
 #content form {
-margin-left:5px;
-}
-
-#content form.reports p.clear {
-text-align:right;
-margin:0;
-}
-
-#content form.reports p.clear a {
-border:0;
-background:transparent url(images/clear.png) no-repeat left;
-padding-left:18px;
-}
-
-#content form.reports select.multiple {
-margin-bottom:0;
+margin-left: 5px;
 }
 
 #content form.process-steps {
@@ -129,7 +98,7 @@ clear:none;
 display:inline;
 float:left;
 width:auto;
-margin:2px 0 10px;
+margin: 2px 0 10px;
 }
 
 #content h2 {
@@ -141,102 +110,34 @@ clear:both;
 display:block;
 font-size:1em;
 margin:0 0 10px;
-width:80%;
+width:60%;
+}
+
+#content input.checkbox,#content label.radio input {
+display:inline;
+height:15px;
+width:20px;
+margin:0;
+}
+
+#content input.checkbox {
+margin-right:8px;
+margin-bottom:1px;
+}
+
+#content label.radio input {
+margin-right:2px;
+margin-bottom:2px;
 }
 
 #content input.submit {
 width:auto;
 }
 
-#content input.day {
-width:2em;
-}
-
-#content select.month {
-width:auto;
-display:inline;
-margin:0;
-}
-
-#content input.year {
-width:4em;
-}
-
-#content input.inactive {
-color:#ccc;
-}
-
-#content .date input, #content .date_range input {
-clear:none;
-display:inline;
-margin:0;
-}
-
-#content .expandable h4, #content .expandable legend {
-background:transparent none no-repeat scroll left;
-cursor:default;
-padding-left:18px;
-}
-
-#content .expanded h4, #content .expanded legend {
-background-image:url(images/expanded.gif);
-}
-
-#content .collapsed h4, #content .collapsed legend {
-background-image:url(images/collapsed.gif);
-}
-
-#content label.checkbox {
-margin-right:12px;
-}
-
-#content label.checkbox input,#content label.radio input {
-display:inline;
-height:14px;
-width:14px;
-margin:0 4px 2px 0;
-}
-
 #content label.radio {
 clear:both;
 display:block;
 height:1.4em;
-}
-
-#content label.radio input {
-margin-bottom:-2px;
-}
-
-#content fieldset#search label {
-margin-right: 12px;
-}
-
-#content fieldset#search select {
-display:inline;
-margin: 0pt 4px 2px 0pt;
-width: 200px;
-}
-
-#content fieldset#search input {
-display:inline;
-margin: 0pt 4px 2px 0pt;
-width: 400px;
-}
-
-#content fieldset#search input.submit {
-display: inline;
-margin: 0pt 4px 2px 0pt;
-width: 40px;
-}
-
-#content legend {
-color:#444;
-}
-
-#content p#restricted {
-margin-top:20px;
-padding:5px;
-background:#ffc;
 }
 
 #content li {
@@ -261,23 +162,14 @@ padding:5px;
 text-align:left;
 }
 
-#content td .env {
-overflow:auto;
-width:700px;
-}
-
 #content textarea {
-height:15em;
+height:5em;
 }
 
 #content th {
 border-bottom:3px solid #aaa;
 padding:0 5px;
 text-align:left;
-}
-
-#content th[scope="row"] {
-border-bottom:1px solid #ccc;
 }
 
 #content tr {
@@ -288,57 +180,9 @@ border-bottom:1px solid #ccc;
 margin:0 25px 10px;
 }
 
-#content ul.paging {
-display:block;
-height:30px;
-}
-
-#content ul.paging li {
-display:inline;
-list-style:none;
-}
-
-/* Need an additional hook to make the boxes work in IE */
-#content ul.paging li span, #content ul.paging li a {
-border:1px solid #eee;
-margin:0 0 0 5px;
-padding:0 5px;
-text-align:left;
-}
-
-#content ul.paging li.current {
-font-weight:bold;
-color:#ff4a00;
-}
-
-#content ul.paging li.current {
-font-weight:bold;
-color:#ff4a00;
-}
-
-#content ul.paging li.prev {
-margin-right:5px;
-}
-
-#content ul.paging li.next {
-margin-left:10px;
-}
-
-#content ul.paging li.prev span, #content ul.paging li.next span {
-color:#ddd;
-}
-
-#content ul.paging li a:hover {
-background:#eee;
-}
-
-#content .description {
-text-align:left;
-}
-
 #header {
 position:relative;
-width:960px;
+width:770px;
 }
 
 #header h1 {
@@ -346,7 +190,7 @@ font-size:14px;
 height:30px;
 overflow:hidden;
 position:relative;
-width:138px;
+width:105px;
 }
 
 #header h1 a span {
@@ -380,11 +224,6 @@ background:#fff;
 color:#000;
 }
 
-#header p a.user {
-font-weight:bold;
-text-decoration:none;
-}
-
 #header,.directories h3 {
 text-align:left;
 }
@@ -406,7 +245,7 @@ border-width:3px 3px 0;
 display:block;
 float:left;
 font-size:1em;
-margin:0 5px 5px 0;
+margin:0 10px 5px 0;
 padding:0 5px;
 text-align:left;
 }
@@ -431,16 +270,4 @@ width:40em;
 
 .even {
 background:#eee;
-}
-
-.error {
-color: #FF0000;
-}
-
-.denied {
-background: #ffffcc;
-}
-
-#removed_documents input { 
-width: auto; 
 }

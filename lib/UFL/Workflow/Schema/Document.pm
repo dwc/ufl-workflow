@@ -12,29 +12,17 @@ __PACKAGE__->add_columns(
     request_id => {
         data_type => 'integer',
     },
-    # Refers to replacement document
     document_id => {
-        data_type  => 'integer',
+        data_type   => 'integer',
         is_nullable => 1,
     },
-    active => {
-        data_type     => 'boolean',
-        default_value => 1,
-    },
-    user_id => {
-        data_type => 'integer',
-    },
-    name => {
+    title => {
         data_type => 'varchar',
-        size      => 128,
+        size      => 32,
     },
     extension => {
         data_type => 'varchar',
         size      => 8,
-    },
-    type => {
-        data_type => 'varchar',
-        size      => 128,
     },
     md5 => {
         data_type => 'varchar',
@@ -54,15 +42,6 @@ __PACKAGE__->belongs_to(
     { join_type => 'left' },
 );
 
-__PACKAGE__->belongs_to(
-    submitter => 'UFL::Workflow::Schema::User',
-    'user_id',
-);
-
-__PACKAGE__->resultset_attributes({
-    order_by => \q[me.update_time DESC, me.insert_time DESC],
-});
-
 =head1 NAME
 
 UFL::Workflow::Schema::Document - Document table class
@@ -77,21 +56,6 @@ Document table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
 
-=head2 path
-
-Return the obfuscated path for this document (currently based on MD5).
-
-=cut
-
-sub path {
-    my ($self) = @_;
-
-    # Based on Cache::FileCache
-    my @path = unpack 'A2' x 2 . 'A*', $self->md5 . '.' . $self->extension;
-
-    return @path;
-}
-
 =head2 uri_args
 
 Return the list of URI path arguments needed to identify this
@@ -102,36 +66,10 @@ document.
 sub uri_args {
     my ($self) = @_;
 
-    return [ $self->id ];
-}
+    # Based on Cache::FileCache
+    my @path = unpack 'A2' x 2 . 'A*', $self->md5 . '.' . $self->extension;
 
-=head2 recover
-
-Recover the document by updating it as active again for the given
-request.
-
-=cut
-
-sub recover {
-    my ($self) = @_;
-
-    $self->update({
-        active => 1,
-    });    
-}
-
-=head2 remove
-
-Remove the document from the request by making it inactive.
-
-=cut
-
-sub remove {
-    my ($self) = @_;
-
-    $self->update({
-        active => 0,
-    });    
+    return \@path;
 }
 
 =head1 AUTHOR

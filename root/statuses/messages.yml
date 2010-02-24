@@ -5,7 +5,7 @@ add:
   is_initial:
     DEFAULT: Whether the status is the initial one for new actions
   action:
-    DEFAULT: What to do when the status is used
+    DEFAULT: Whether the status continues or finishes the request
 edit:
   name:
     DEFAULT: A status name

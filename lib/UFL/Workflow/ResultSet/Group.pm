@@ -28,15 +28,13 @@ groups.
 sub root_groups {
     my ($self, $attrs) = @_;
 
-    $attrs->{prefetch} ||= 'child_groups';
     $attrs->{order_by} ||= 'me.name';
+    $attrs->{prefetch} ||= 'child_groups';
 
-    my $root_groups = $self->search(
+    return $self->search(
         { 'me.parent_group_id' => undef },
         $attrs,
     );
-
-    return $root_groups;
 }
 
 =head1 AUTHOR
