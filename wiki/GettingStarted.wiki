@@ -53,3 +53,5 @@ Now you should be able to run the built-in development server. This server allow
 Once loaded, the script will tell you to connect to e.g. http://localhost:3000/.
 
 The default data contains a test process, to which you can add requests to test the system.
+
+See TrackingRequests for an example of how the system operates.
