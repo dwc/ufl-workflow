@@ -251,6 +251,9 @@ sub add_request : PathPart Chained('process') Args(0) {
                     $group,
                 );
 
+                # Make sure we get insert_time and update_time
+                $request->discard_changes;
+
                 if (my $upload = $c->req->upload('document')) {
                     my $document = $request->add_document(
                         $c->user->obj,
@@ -322,9 +325,6 @@ sub send_new_request_email {
     my $possible_actors = $request->possible_actors;
     my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
 
-    # Get latest request information
-    $request->discard_changes;
-
     $c->stash(
         request => $request,
         email => {
@@ -341,7 +341,7 @@ sub send_new_request_email {
         },
     );
 
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR

@@ -1,10 +1,10 @@
-[% IF c.user.can_decide_on(current_action) %]
+   [% IF c.user.can_decide_on(current_action) %]
 <h3>Decision</h3>
 <p>You can make a decision on the <strong>[% current_action.step.name | html %]</strong> step of this request.</p>
 <form action="[% c.uri_for(c.controller.action_for('update_status'), request.uri_args) | html %]" method="post">
-  [% FILTER indent('  ') %]
-    [% INCLUDE statuses/includes/statuses.tt statuses = current_action.statuses, field_id = status_id, field_label = 'Set status to' %]
-  [% END %]
+    [% FILTER indent('  ') %]
+      [% INCLUDE statuses/includes/statuses.tt statuses = current_action.statuses, field_id = status_id, field_label = 'Set status to' %]
+    [% END %]
   <label>Send to group:
     <select name="group_id" id="[% group_id | html %]">
     </select>
@@ -12,4 +12,4 @@
   <label>Comment: <textarea name="comment"></textarea></label>
   <input type="submit" class="submit" value="Submit Decision" />
 </form>
-[% END -%]
+  [% END %]

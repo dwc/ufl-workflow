@@ -40,13 +40,10 @@ Plugin::Authentication:
         class:         Password
         password_type: none
       store:
-        class:         DBIx::Class
-        user_class:    DBIC::User
-        role_relation: roles
-        role_field:    name
-
-Plugin::ErrorCatcher:
-  enable: 1
+        class:                 DBIx::Class
+        user_class:            DBIC::User
+        role_relation:         roles
+        role_field:            name
 
 View::Email:
   stash_key:       email

@@ -92,24 +92,6 @@ sub validate_form {
     return $result;
 }
 
-=head2 send_email
-
-Wrap L<UFL::Workflow::View::Email> to rethrow errors on sending
-mail. This allows us to rollback database transactions if sending
-email fails.
-
-=cut
-
-sub send_email {
-    my ($self, $c) = @_;
-
-    $c->forward($c->view('Email'));
-
-    if (my @errors = @{ $c->error }) {
-        croak @errors;
-    }
-}
-
 =head1 AUTHOR
 
 Daniel Westermann-Clark E<lt>dwc@ufl.eduE<gt>
