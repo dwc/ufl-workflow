@@ -1,30 +1,27 @@
 [% SET title = step.name -%]
 
-[% IF c.check_user_roles('Administrator') %]
-<h3>Manage step</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), step.uri_args) | html %]">Edit this step</a></li>
-</ul>
-[% END %]
-
-<h3>Step details</h3>
-<dl>
-  <dt>Name</dt>
-  <dd>[% step.name | html %]</dd>
-  <dt>Process</dt>
+<h3>Process</h3>
 [% SET process = step.process %]
-  <dd><a href="[% c.uri_for(c.controller('Processes').action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></dd>
+<p><a href="[% c.uri_for(c.controller('Processes').action_for('view'), [ process.uri_args ]) | html %]">[% process.name | html %]</a></p>
+
 [% SET prev_step = step.prev_step %]
 [% IF prev_step %]
-  <dt>Previous Step</dt>
-  <dd><a href="[% c.uri_for(c.controller.action_for('view'), prev_step.uri_args) | html %]">[% prev_step.name | html %]</a></dd>
+<h3>Previous Step</h3>
+<p><a href="[% c.uri_for(c.controller.action_for('view'), [ prev_step.uri_args ]) | html %]">[% prev_step.name | html %]</a></p>
 [% END %]
+
 [% SET next_step = step.next_step %]
 [% IF next_step %]
-  <dt>Next Step</dt>
-  <dd><a href="[% c.uri_for(c.controller.action_for('view'), next_step.uri_args) | html %]">[% next_step.name | html %]</a></dd>
+<h3>Next Step</h3>
+<p><a href="[% c.uri_for(c.controller.action_for('view'), [ next_step.uri_args ]) | html %]">[% next_step.name | html %]</a></p>
 [% END %]
-  <dt>Role</dt>
+
+<h3>Role</h3>
 [% SET role = step.role %]
-  <dd><a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a></dd>
-</dl>
+[% SET group = role.group %]
+<p><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a> (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</a>)</p>
+
+<h3>Manage</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ step.uri_args ]) | html %]">Edit this step</a></li>
+</ul>

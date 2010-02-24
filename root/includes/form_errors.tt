@@ -1,8 +1,8 @@
-[% IF form_errors AND form_errors.size > 0 %]
-<p>Please provide the following:</p>
+[% IF form_errors %]
+<p>Please check that you've provided the following:</p>
 <ul>
   [% FOREACH form_error IN form_errors %]
-  <li class="error">[% form_error | trim | html %]</li>
+  <li>[% form_error | trim | html %]</li>
   [% END %]
 </ul>
 

@@ -1,25 +1,94 @@
-[% USE Textile %]
-[% SET
-   title = request.title
-   status_id = 'status_id'
-   group_id = 'group_id'
-   scripts = [
-     c.uri_for('/static/javascript/UFL/Workflow/Form/StatusGroupAssignment.js'),
-     c.uri_for('/static/javascript/UFL/Workflow/Form/Expandable.js'),
-   ]
-   snippets = [
-     "new UFL.Workflow.Form.StatusGroupAssignment('${c.uri_for(c.controller('Requests').action_for('list_action_groups'), request.uri_args)}', '$status_id', '$group_id');",
-     "new UFL.Workflow.Form.Expandable();",
-   ]
--%]
+[% SET title = request.title -%]
 
-[% INCLUDE requests/includes/details.tt 
-   show_edit = 1
-   show_status = 1
--%]
+<h3>Request Details</h3>
 
-[% INCLUDE requests/includes/versions.tt -%]
+<h3>Process</h3>
+[% SET process = request.process %]
+<p>[% process.name | html %]</p>
 
-[% INCLUDE requests/includes/documents.tt -%]
+<h4>Status</h4>
+<p>[% INCLUDE requests/includes/status.tt action = request.current_action %]</p>
+<p><a href="#actions">Details</a></p>
 
-[% INCLUDE requests/includes/actions.tt -%]
+<h4>Title</h4>
+<p>[% request.title | html %]</p>
+
+<h4>Description</h4>
+<p>[% request.description | html %]</p>
+
+<h4>Added</h4>
+<p>[% request.insert_time | html %]</p>
+
+<h4>Updated</h4>
+<p>[% request.update_time | html %]</p>
+
+<h3>Documents</h3>
+[% IF documents.count > 0 %]
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Replacement</th>
+    <th>Added</th>
+    <th>Updated</th>
+  </tr>
+  [% WHILE (document = documents.next) %]
+    [% SET replacement = document.replacement %]
+  <tr>
+    <td[% IF replacement %] class="replaced"[% END %]><a href="[% c.uri_for('/documents', document.uri_args.join('/')) | html %]">[% document.title | html %]</a></td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% IF replacement %]<a href="[% c.uri_for('/documents', replacement.uri_args.join('/')) | html %]">[% replacement.title | html %]</a>[% END %]</td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% document.insert_time | html %]</td>
+    <td[% IF replacement %] class="replaced"[% END %]>[% document.update_time | html %]</td>
+  </tr>
+  [% END %]
+</table>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
+[% IF request.is_open %]
+<p><a href="[% c.uri_for(c.controller.action_for('add_document'), [ request.uri_args ]) | html %]">Add document</a></p>
+[% END %]
+
+<h3 id="actions">Actions</h3>
+[% SET action = request.first_action %]
+[% SET current_action = request.current_action %]
+[% IF action %]
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Status</th>
+    <th>User</th>
+    <th>Comment</th>
+    <th>Added</th>
+    <th>Updated</th>
+  </tr>
+  [% WHILE action %]
+  <tr>
+    <td>[% action.step.name | html %]</td>
+    <td>[% action.status.name | html %]</td>
+    <td>[% action.actor.username || '-' | html %]</td>
+    <td>[% action.comment || '-' | html %]</td>
+    <td>[% action.insert_time | html %]</td>
+    <td>[% action.update_time | html %]</td>
+  </tr>
+    [% SET action = action.next_action %]
+  [% END %]
+</table>
+
+  [% IF c.user.can_decide_on(current_action) %]
+<p>You can make a decision on the [% current_action.step.name | html %] step of this request.</p>
+<form action="[% c.uri_for(c.controller.action_for('add_action'), [ request.uri_args ]) | html %]" method="post">
+  <input type="hidden" name="action_id" value="[% current_action.id | html %]" />
+  <label>Set status to:
+    <select name="status_id">
+    [% WHILE (status = statuses.next) %]
+      <option value="[% status.id | html %]">[% status.name | html %]</option>
+    [% END %]
+    </select>
+  </label>
+  <label>Comment: <textarea name="comment"></textarea></label>
+  <input type="submit" value="Submit Decision" />
+</form>
+  [% END %]
+[% ELSE %]
+<p>None yet.</p>
+[% END %]

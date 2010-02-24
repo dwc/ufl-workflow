@@ -1,21 +1,8 @@
-[% BLOCK nav_link %]
-<li[% IF c.req.uri.match("^$uri") %] id="active"[% END %]><a href="[% uri | html %]">[% label | html %]</a></li>
-[% END -%]
-
 <ul id="nav">
-[% FILTER indent('  ') %]
-  [% IF c.user_exists %]
-    [% IF c.check_any_user_role('Administrator', 'Help Desk') %]
-      [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses' ] %]
-        [% INCLUDE nav_link uri = c.uri_for(c.controller(name).action_for('index')), label = name %]
-      [% END %]
-    [% END %]
-    [% INCLUDE nav_link uri = c.uri_for(c.controller('Requests').action_for('pending_decision')), label = "Pending decisions (${c.user.pending_actions.count})" %]
-    [% INCLUDE nav_link uri = c.uri_for(c.controller('Requests').action_for('for_user')), label = 'Your requests' %]
-    [% INCLUDE nav_link uri = c.uri_for(c.controller('Requests').action_for('by_group')), label = 'Group requests' %]
-    [% INCLUDE nav_link uri = c.uri_for(c.controller('Requests').action_for('reports')), label = 'Reports' %]
-  [% ELSE %]
-&nbsp;
+[% IF c.check_user_roles('Administrator') %]
+  [% FOREACH name IN [ 'Users', 'Groups', 'Processes', 'Statuses' ] %]
+  <li><a href="[% c.uri_for(c.controller(name).action_for('index')) | html %]">[% name | html %]</a></li>
   [% END %]
 [% END %]
+  <li><a href="[% c.uri_for(c.controller('Requests').action_for('index')) | html %]">Requests</a></li>
 </ul>

@@ -1,11 +1,10 @@
 [% SET title = "Add Step to ${process.name} Process" -%]
 
-<h3>Step details</h3>
-<p>To add a new step to the <strong>[% process.name | html %]</strong> process, provide a name and role. The role determines which users can decide on the step.</p>
-<form action="[% c.uri_for(c.controller.action_for('add_step'), process.uri_args) | html %]" method="post">
+<form action="[% c.uri_for(c.controller.action_for('add_step'), [ process.uri_args ]) | html %]" method="post">
+
 [% FILTER indent('  ') %]
   [% INCLUDE steps/includes/step.tt %]
-  [% INCLUDE roles/includes/roles.tt %]
+  [% INCLUDE roles/includes/roles.tt selected_role = step.role %]
 [% END -%]
-  <input type="submit" class="submit" value="Add Step" />
+  <input type="submit" value="Add Step" />
 </form>

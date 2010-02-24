@@ -1,18 +1,10 @@
 add: &process
   - name
-  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
-  - description
-  - [ [ LENGTH, 0, 8192 ] ]
-  - def_req_desc
-  - [ [ LENGTH, 0, 8192 ] ]
-  - enabled
-  - [ INT ]
-  - restricted
-  - [ INT ]
+  - [ NOT_BLANK ]
 edit: *process
 add_step:
   - name
-  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
+  - [ NOT_BLANK ]
   - role_id
   - [ NOT_BLANK, INT ]
 delete_step:
@@ -22,12 +14,3 @@ move_step_up: &move
   - step_id
   - [ NOT_BLANK, INT ]
 move_step_down: *move
-add_request:
-  - title
-  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
-  - description
-  - [ NOT_BLANK, [ LENGTH, 0, 8192 ] ]
-  - group_id
-  - [ NOT_BLANK, INT ]
-  - document
-  - []

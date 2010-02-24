@@ -2,3 +2,6 @@ edit:
   name:
     DEFAULT:   A role name
     NOT_REGEX: An available role name (Administrator is reserved)
+add_users:
+  usernames:
+    DEFAULT: One or more username

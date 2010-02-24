@@ -1,62 +1,26 @@
 [% SET title = "${group.name} Group" -%]
 
-[% IF c.check_user_roles('Administrator') %]
-<h3>Manage group</h3>
-<ul>
-  <li><a href="[% c.uri_for(c.controller.action_for('edit'), group.uri_args) | html %]">Edit this group</a></li>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add'), parent_group_id = group.id) | html %]">Add a child group</a></li>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_role'), group.uri_args) | html %]">Add a role to this group</a></li>
-</ul>
-[% END %]
-
-<h3>Group details</h3>
-<dl>
-  <dt>Name</dt>
-  <dd>[% group.name | html %]</dd>
-  <dt>Created</dt>
-  <dd>[% group.insert_time.strftime(datetime_format) | html %]</dd>
-</dl>
-<br style="clear:both" />
-
-[% SET parent_group = group.parent_group %]
-[% IF parent_group %]
-<h3>Parent group</h3>
-<p><a href="[% c.uri_for(c.controller.action_for('view'), parent_group.uri_args) | html %]">[% parent_group.name | html %]</a></p>
-[% END -%]
-
-[% SET child_groups = group.child_groups_rs %]
-[% IF child_groups.count > 0 %]
-<h3>Child groups</h3>
-<ul>
-  [% WHILE (child_group = child_groups.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), child_group.uri_args) | html %]">[% child_group.name | html %]</a></li>
-  [% END %]
-</ul>
-[% END -%]
-
+[% SET roles = group.roles_rs %]
+[% IF roles.count > 0 %]
 <h3>Users by role</h3>
-[% SET group_roles = group.group_roles_rs %]
-[% IF group_roles.count > 0 %]
 <ul>
-  [% WHILE (group_role = group_roles.next) %]
-    [% SET role = group_role.role %]
-    [% SET users = group_role.users_rs %]
-    [% SET num_users = users.count %]
-  <li>
-    <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
-    [% IF num_users > 0 %]
-    ([% num_users | html %] user[% num_users == 1 ? '' : 's' %])
+  [% WHILE (role = roles.next) %]
+  <li><a href="[% c.uri_for(c.controller('Roles').action_for('view'), [ role.uri_args ]) | html %]">[% role.name | html %]</a>
+  [% SET users = role.users %]
+  [% IF users %]
     <ul>
-      [% WHILE (user = users.next) %]
-      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
-      [% END %]
-    </ul>
-    [% ELSE %]
-    (no users)
+    [% FOREACH user IN users %]
+      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), [ user.uri_args ]) | html %]">[% user.username | html %]</a></li>
     [% END %]
+    </ul>
+  [% END %]
   </li>
   [% END %]
 </ul>
-[% ELSE %]
-<p>None yet.</p>
 [% END %]
+
+<h3>Manage</h3>
+<ul>
+  <li><a href="[% c.uri_for(c.controller.action_for('edit'), [ group.uri_args ]) | html %]">Edit this group</a></li>
+  <li><a href="[% c.uri_for(c.controller.action_for('add_role'), [ group.uri_args ]) | html %]">Add a role to this group</a></li>
+</ul>

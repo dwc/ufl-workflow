@@ -2,5 +2,5 @@ use strict;
 use warnings;
 use Test::More tests => 2;
 
-use_ok('Catalyst::Test', 'UFL::Workflow');
-use_ok('UFL::Workflow::Controller::Users');
+use_ok('Catalyst::Test', 'UFL::Curriculum');
+use_ok('UFL::Curriculum::Controller::Users');

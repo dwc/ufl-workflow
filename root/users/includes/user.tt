@@ -1,5 +1,1 @@
-<label>Username: <input type="text" name="username" value="[% user.username | html %]" maxlength="16" /></label>
-<label>Display name: <input type="text" name="display_name" value="[% user.display_name | html %]" maxlength="256" /></label>
-<label>Email: <input type="text" name="email" value="[% user.email | html %]" maxlength="16" /></label>
-<label class="checkbox">Wants email? <input type="checkbox" name="wants_email" value="1"[% IF user.wants_email %] checked="checked"[% END %] /></label>
-<label class="checkbox">Active? <input type="checkbox" name="active" value="1"[% IF user.active %] checked="checked"[% END %] /></label>
+<label>Username: <input type="text" name="username" value="[% user.username | html %]" /></label>

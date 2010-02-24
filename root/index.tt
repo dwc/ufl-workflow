@@ -1,15 +1,53 @@
 [% SET title = '' -%]
 
-<h3>Recent requests</h3>
-[% INCLUDE requests/includes/list.tt comment = 'The following is a list of your recently updated requests and their current status:', show_process = 1 %]
-<p>You can also see <a href="[% c.uri_for(c.controller('Requests').action_for('for_user')) | html %]">all your requests</a>, regardless of when they were last updated.</p>
+[% IF actions.count > 0 %]
+<h3>Pending actions</h3>
+<table>
+  <tr>
+    <th>Request</th>
+    <th>Action</th>
+    <th>Added</th>
+  </tr>
+  [% WHILE (action = actions.next) %]
+  <tr>
+    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ action.request.uri_args ]) | html %]#actions">[% action.request.title | html %]</a></td>
+    <td>[% action.step.name | html %]</td>
+    <td>[% action.insert_time | html %]</td>
+  </tr>
+  [% END %]
+</table>
+[% END %]
+
+<h3>Your requests</h3>
+[% IF requests.count > 0 %]
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Process</th>
+    <th>Status</th>
+    <th>Added</th>
+    <th>Updated</th>
+  </tr>
+  [% WHILE (request = requests.next) %]
+  <tr>
+    <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), [ request.uri_args ]) | html %]">[% request.title | html %]</a></td>
+    <td>[% request.process.name | html %]</td>
+    <td>[% INCLUDE requests/includes/status.tt action = request.current_action -%]</td>
+    <td>[% request.insert_time | html %]</td>
+    <td>[% request.update_time | html %]</td>
+  </tr>
+  [% END %]
+</table>
+[% ELSE %]
+<p>None yet.</p>
+[% END %]
 
 <h3>Add new request</h3>
 [% IF processes.count > 0 %]
 <p>You can add a new request for one of the following processes:</p>
 <ul>
   [% WHILE (process = processes.next) %]
-  <li><a href="[% c.uri_for(c.controller('Processes').action_for('add_request'), process.uri_args) | html %]">[% process.name | html %]</a></li>
+  <li><a href="[% c.uri_for(c.controller('Requests').action_for('add'), process_id = process.id) | html %]">[% process.name | html %]</a></li>
   [% END %]
 </ul>
 [% ELSE %]

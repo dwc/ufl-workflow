@@ -1,0 +1,11 @@
+[% SET title = "Add a Role to ${user.username}'s Account" -%]
+
+<p>Select the role from the list below. Note that roles are specific to a group.</p>
+
+<form action="[% c.uri_for(c.controller.action_for('add_role'), [ user.uri_args ]) | html %]" method="post">
+
+[% FILTER indent('  ') %]
+  [% INCLUDE roles/includes/roles.tt %]
+[% END -%]
+  <input type="submit" value="Add Role" />
+</form>

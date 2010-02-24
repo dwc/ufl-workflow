@@ -1,6 +1,1 @@
-[% SET 
-   role_name    = 'name' 
-   role_name_id = 'name_id'
-   role_name_default_value = 'Search for a role or enter a new role'
-%]
-<label>Name: <input type="text" name="[% role_name | html %]" id="[% role_name_id | html %]" value="[% IF role.name %] [% role.name | html %] [% ELSE %] [% role_name_default_value | html %] [% END %]" maxlength="64" /></label>
+<label>Name: <input type="text" name="name" value="[% role.name | html %]" /></label>

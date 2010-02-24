@@ -1,31 +1,14 @@
 [% SET title = 'Groups' -%]
 
-[% IF c.check_user_roles('Administrator') %]
-<h3>Manage groups</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></li>
-</ul>
-[% END %]
-
-[% BLOCK group_list %]
-<ul>
-  [% WHILE (group = groups.next) %]
-    [% SET child_groups = group.child_groups_rs %]
-  <li>
-    <a href="[% c.uri_for(c.controller.action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>
-    [% IF child_groups.count > 0 %]
-      [% FILTER indent('    ') %]
-        [% INCLUDE group_list groups = child_groups %]
-      [% END %]
-    [% END %]
-  </li>
-  [% END %]
-</ul>
-[% END -%]
-
 [% IF groups.count > 0 %]
 <h3>Current groups</h3>
-  [% INCLUDE group_list %]
+<ul>
+  [% WHILE (group = groups.next) %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), [ group.uri_args ]) | html %]">[% group.name | html %]</li>
+  [% END %]
+</ul>
 [% ELSE %]
 <p>None yet.</p>
 [% END %]
+
+<p><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></p>
