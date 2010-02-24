@@ -1,5 +1,7 @@
 <input type="hidden" name="process_id" value="[% process.id | html %]" />
-[% INCLUDE requests/includes/request_details.tt %]
+<label>Title: <input type="text" name="title" value="[% request.title | html %]" maxlength="64" /></label>
+<label>Description: <textarea name="description">[% request.description | html | escape_newlines %]</textarea></label>
+
 [% IF groups.count == 1 -%]
 <input type="hidden" name="group_id" value="[% groups.first.id | html %]" />
 [% ELSE %]
