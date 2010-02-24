@@ -1,4 +1,4 @@
-#summary Some information on how the database is structured.
+#summary Some information on how requests are tracked.
 
 = Introduction =
 
