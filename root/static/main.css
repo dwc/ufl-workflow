@@ -1,9 +1,5 @@
 * {margin:0;padding:0;}
 
-*:target {
-background:#ffc !important;
-}
-
 body {
 background:#FFF url(images/bg.gif) repeat-x;
 color:#444;
@@ -23,11 +19,11 @@ color:#ff4a00;
 }
 
 dl#statuses dd {
-width:640px;
+width:500px;
 }
 
 dl#statuses dt {
-width:300px;
+width:250px;
 }
 
 h3 {
@@ -61,7 +57,7 @@ text-align:left;
 #container {
 font-size:1.4em;
 margin:0 auto;
-width:960px;
+width:770px;
 }
 
 #content dd {
@@ -69,7 +65,7 @@ border-bottom:1px solid #ccc;
 float:right;
 padding:3px 0;
 text-align:left;
-width:790px;
+width:650px;
 }
 
 #content dt {
@@ -79,7 +75,7 @@ float:left;
 font-weight:700;
 padding:3px 0 3px 3px;
 text-align:left;
-width:150px;
+width:100px;
 }
 
 #content fieldset {
@@ -233,12 +229,6 @@ width: 40px;
 color:#444;
 }
 
-#content p#restricted {
-margin-top:20px;
-padding:5px;
-background:#ffc;
-}
-
 #content li {
 clear:both;
 margin:5px 0;
@@ -261,11 +251,6 @@ padding:5px;
 text-align:left;
 }
 
-#content td .env {
-overflow:auto;
-width:700px;
-}
-
 #content textarea {
 height:15em;
 }
@@ -274,10 +259,6 @@ height:15em;
 border-bottom:3px solid #aaa;
 padding:0 5px;
 text-align:left;
-}
-
-#content th[scope="row"] {
-border-bottom:1px solid #ccc;
 }
 
 #content tr {
@@ -306,16 +287,6 @@ padding:0 5px;
 text-align:left;
 }
 
-#content ul.paging li.current {
-font-weight:bold;
-color:#ff4a00;
-}
-
-#content ul.paging li.current {
-font-weight:bold;
-color:#ff4a00;
-}
-
 #content ul.paging li.prev {
 margin-right:5px;
 }
@@ -338,7 +309,7 @@ text-align:left;
 
 #header {
 position:relative;
-width:960px;
+width:770px;
 }
 
 #header h1 {
@@ -435,12 +406,4 @@ background:#eee;
 
 .error {
 color: #FF0000;
-}
-
-.denied {
-background: #ffffcc;
-}
-
-#removed_documents input { 
-width: auto; 
 }
