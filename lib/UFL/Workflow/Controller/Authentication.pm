@@ -4,107 +4,19 @@ use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
 
-__PACKAGE__->mk_accessors(qw/logout_uri update_user_fields_on_login/);
-
-__PACKAGE__->config(
-    update_user_fields_on_login => {},
-);
-
 =head1 NAME
 
 UFL::Workflow::Controller::Authentication - Authentication controller component
 
 =head1 SYNOPSIS
 
-See L<Catalyst::Controller>.
+See L<UFL::Workflow>.
 
-=head2 login_via_env
+=head1 DESCRIPTION
 
-Log the user in based on the environment (via C<REMOTE_USER>).
+L<Catalyst> controller component for authentication.
 
-=cut
-
-sub login_via_env : Private {
-    my ($self, $c) = @_;
-
-    # XXX: Catalyst::Plugin::Authentication supports checking active flag
-    # XXX: in $c->authenticate, but it conflicts with auto_create_user
-    $c->forward('/forbidden') and return 0
-        unless $c->authenticate and $c->user->active;
-
-    my %fields = %{ $self->update_user_fields_on_login };
-    $c->user->update_from_env($c->engine->env, \%fields);
-
-    return 1;
-}
-
-=head2 login_via_form
-
-Log the user in via a standard username and password form.
-
-=cut
-
-sub login_via_form : Private {
-    my ($self, $c) = @_;
-
-    # Allow access for logged-in users and also to the login form
-    if ($c->user_exists or $c->action eq $self->action_for('login')) {
-        return 1;
-    }
-
-    $c->res->redirect($c->uri_for($self->action_for('login'), { return_to => $c->req->uri }));
-
-    return 0;
-}
-
-=head2 login
-
-Public action (C</login>) for L</login_via_form>.
-
-=cut
-
-sub login : Global {
-    my ($self, $c) = @_;
-
-    if ($c->req->method eq 'POST') {
-        my $username = $c->req->param('username');
-        my $password = $c->req->param('password');
-
-        if ($username and $password) {
-            if (my $return_to = $c->req->param('return_to')) {
-                $c->stash(return_to => $return_to);
-            }
-
-            $c->detach('redirect') if $c->authenticate({
-                username => $username,
-                password => $password,
-                active   => 1,
-            });
-        }
-
-        $c->stash(authentication_error => 1) unless $c->user_exists;
-    }
-
-    $c->stash(template => 'authentication/login.tt');
-}
-
-=head2 redirect
-
-Determine where to send the user after successful login. We default to
-the home page but allow specification of a C<return_to> parameter in
-case the calling login method knows a better place to send the user.
-
-=cut
-
-sub redirect : Private {
-    my ($self, $c) = @_;
-
-    # Determine where to send the user
-    my $location = $c->stash->{return_to}
-        || $c->uri_for($c->controller('Root')->action_for('index'));
-
-    return $c->res->redirect($location);
-}
+=head1 METHODS
 
 =head2 logout
 
@@ -117,8 +29,7 @@ sub logout : Global {
 
     $c->logout;
 
-    my $logout_uri = $self->logout_uri
-        || $c->uri_for($c->controller('Root')->action_for('index'));
+    my $logout_uri = $c->config->{logout_uri} || $c->uri_for('/');
     $c->res->redirect($logout_uri);
 }
 

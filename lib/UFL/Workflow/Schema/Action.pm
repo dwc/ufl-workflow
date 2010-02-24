@@ -69,7 +69,6 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     actor => 'UFL::Workflow::Schema::User',
     'user_id',
-    { join_type => 'left' },
 );
 
 __PACKAGE__->has_many(
@@ -113,24 +112,6 @@ sub statuses {
     );
 
     return $statuses;
-}
-
-=head2 group
-
-Return the L<UFL::Workflow::Schema::Group> to which this action is
-currently assigned.
-
-=cut
-
-sub group {
-    my ($self) = @_;
-
-    my $group;
-    if (my $groups = $self->groups) {
-        $group = $groups->first;
-    }
-
-    return $group;
 }
 
 =head2 assign_to_group
