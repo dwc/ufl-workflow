@@ -1,13 +1,5 @@
 reports:
-  - query
-  - []
-  - query_field
-  - [ INT ]
-  # These should be INT, but FormValidator::Simple barfs on multivalues currently
-  - process_id
-  - []
-  - inactive_processes
-  - [ INT ]
+  # group_id and status_id should be INT, but FormValidator::Simple barfs on multivalues currently
   - group_id
   - []
   - status_id
@@ -16,13 +8,6 @@ reports:
   - [ DATE_ALLOWING_BLANK ]
   - { end_date: [ end_date_year, end_date_month, end_date_day ] }
   - [ DATE_ALLOWING_BLANK ]
-  - page
-  - [ INT ]
-edit:
-  - title
-  - [ NOT_BLANK, [ LENGTH, 0, 64 ] ]
-  - description
-  - [ NOT_BLANK, [ LENGTH, 0, 8192 ] ]
 add_document:
   - document
   - [ NOT_BLANK ]

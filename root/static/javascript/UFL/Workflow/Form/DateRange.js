@@ -37,13 +37,5 @@ UFL.Workflow.Form.DateRange = function(selectId, startYearId, startMonthId, star
             endMonthInput.get(0).selectedIndex = parseInt(endDateParts[1], 10);
             endDayInput.get(0).value = parseInt(endDateParts[2], 10);
         }
-        else {
-            startYearInput.get(0).value = "";
-            startMonthInput.get(0).selectedIndex = 0;
-            startDayInput.get(0).value = "";
-            endYearInput.get(0).value = "";
-            endMonthInput.get(0).selectedIndex = 0;
-            endDayInput.get(0).value = "";
-        }
     }
 }

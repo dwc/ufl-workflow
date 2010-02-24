@@ -18,10 +18,11 @@
    ]
 -%]
 
-[% IF field_label %]<label for="[% field_id | html %]">[% field_label | html %]</label>[% END %]
-<select name="[% field_name | html %]" id="[% field_id | html %]" class="month">
-  <option value=""></option>
+[% IF field_label %]<label>[% field_label | html %][% END %]
+  <select name="[% field_name | html %]" id="[% field_id | html %]" class="month">
+    <option value=""></option>
 [% FOREACH month IN months %]
-  <option value="[% loop.count | html %]"[% IF loop.count == date.month %] selected="selected"[% END %]>[% month | html %]</option>
+    <option value="[% loop.count | html %]"[% IF loop.count == date.month %] selected="selected"[% END %]>[% month | html %]</option>
 [% END %]
-</select>
+  </select>
+[% IF field_label %]</label>[% END %]
