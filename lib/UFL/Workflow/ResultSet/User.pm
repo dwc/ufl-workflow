@@ -18,36 +18,9 @@ L<DBIx::Class::ResultSet> for L<UFL::Workflow::Schema::User>.
 
 =head1 METHODS
 
-=head2 from_ldap_entry
-
-Create a new user object based on the specified LDAP entry.
-
-=cut
-
-sub from_ldap_entry {
-    my ($self, $entry, $username_field) = @_;
-
-    my $user = $self->new_result({
-        username => $entry->$username_field,
-    });
-
-    $user->display_name($entry->displayName)
-        if $entry->exists('displayName');
-
-    if ($entry->exists('mail')) {
-        $user->email($entry->mail);
-    }
-    else {
-        $user->wants_email(0);
-    }
-
-    return $user;
-}
-
 =head2 auto_create
 
-Automatically create a user account with the specified username. This
-method is a callback for L<Catalyst::Plugin::Authentication>.
+Automatically create a user account with the specified username.
 
 =cut
 
@@ -57,9 +30,6 @@ sub auto_create {
     my $user = $self->find_or_create({
         username => $authinfo->{username},
     });
-
-    # Force a SELECT to get default data
-    $user->discard_changes;
 
     return $user;
 }

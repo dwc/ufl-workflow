@@ -69,8 +69,7 @@ sub main {
             push @first_pass_statements, "SET CURRENT SCHEMA $from$separator";
             push @first_pass_statements, $schema->export_statements($separator);
         }
-
-        push @second_pass_statements, "SET CURRENT SCHEMA $to$separator";
+        push @first_pass_statements, "SET CURRENT SCHEMA $to$separator";
     }
 
     foreach my $statement (@statements) {
