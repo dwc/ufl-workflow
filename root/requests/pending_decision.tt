@@ -16,7 +16,7 @@
   [% WHILE (action = actions.next) %]
     [% SET request = action.request %]
   <tr[% IF i % 2 == 0 %] class="even"[% END %]>
-    <td>[% request.submitter.display_name | html %]</td>
+    <td>[% request.submitter.username | html %]</td>
     <td><a href="[% c.uri_for(c.controller('Requests').action_for('view'), request.uri_args) | html %]#actions">[% request.title | html %]</a></td>
     <td>[% request.process.name | html %]</td>
     <td>[% action.step.name | html %]</td>

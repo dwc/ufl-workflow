@@ -1,11 +1,9 @@
 [% SET title = step.name -%]
 
-[% IF c.check_user_roles('Administrator') %]
 <h3>Manage step</h3>
 <ul>
   <li><a href="[% c.uri_for(c.controller.action_for('edit'), step.uri_args) | html %]">Edit this step</a></li>
 </ul>
-[% END %]
 
 <h3>Step details</h3>
 <dl>
