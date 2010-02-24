@@ -1,23 +1,6 @@
-index:
-  - query
-  - [ NOT_BLANK, ASCII ]
 add:
-  - users 
-  - [ NOT_BLANK ]
-edit:
   - username
-  - [ NOT_BLANK ]
-  - display_name
-  - [ NOT_BLANK ]
-  - email
-  - [ NOT_BLANK ]
-  - wants_email
-  - [ INT ]
-  - active
-  - [ INT ]
-toggle_email:
-  - wants_email
-  - [ INT ]
+  - [ NOT_BLANK, [ LENGTH, 0, 16 ] ]
 add_group_role: &role
   - group_id
   - [ NOT_BLANK, INT ]

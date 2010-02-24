@@ -69,7 +69,6 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to(
     actor => 'UFL::Workflow::Schema::User',
     'user_id',
-    { join_type => 'left' },
 );
 
 __PACKAGE__->has_many(
@@ -79,10 +78,6 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->many_to_many('groups', 'action_groups', 'group');
-__PACKAGE__->many_to_many('group_roles', 'action_groups', 'group_role');
-__PACKAGE__->many_to_many('user_group_roles', 'action_groups', 'user_group_role');
-
-__PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Action');
 
 =head1 NAME
 
@@ -115,24 +110,6 @@ sub statuses {
     return $statuses;
 }
 
-=head2 group
-
-Return the L<UFL::Workflow::Schema::Group> to which this action is
-currently assigned.
-
-=cut
-
-sub group {
-    my ($self) = @_;
-
-    my $group;
-    if (my $groups = $self->groups) {
-        $group = $groups->first;
-    }
-
-    return $group;
-}
-
 =head2 assign_to_group
 
 Assign this action to the specified L<UFL::Workflow::Schema::Group>.
@@ -148,28 +125,6 @@ sub assign_to_group {
         unless $group->can_decide_on($self);
 
     $self->set_groups($group);
-}
-
-=head2 possible_actors
-
-Return a L<DBIx::Class::ResultSet> of L<UFL::Workflow::Schema::User>s
-who can act on this action.
-
-=cut
-
-sub possible_actors {
-    my ($self) = @_;
-
-    # Find the actors based on the assigned groups and the step-required role
-    my $user_group_roles = $self->user_group_roles->search({
-        role_id => $self->step->role->id,
-    });
-
-    my $possible_actors = $user_group_roles
-        ->related_resultset('actor')
-        ->search(undef, { distinct => 1 });
-
-    return $possible_actors;
 }
 
 =head2 uri_args

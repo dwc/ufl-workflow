@@ -100,8 +100,10 @@ sub delete {
     $self->throw_exception('Step has associated actions')
         if $self->actions->count > 0;
 
-    my $next = $self->next::can;
-    $self->result_source->schema->txn_do(sub {
+    my $schema = $self->result_source->schema;
+    eval {
+        $schema->txn_begin;
+
         my $prev_step = $self->prev_step;
         my $next_step = $self->next_step;
 
@@ -117,8 +119,13 @@ sub delete {
             $next_step->update;
         }
 
-        $next->($self, @args);
-    });
+        $self->next::method(@args);
+        $schema->txn_commit;
+    };
+    if (my $error = $@) {
+        $schema->txn_rollback;
+        $self->throw_exception($error);
+    }
 }
 
 =head2 move_up

@@ -1,12 +1,19 @@
-package UFL::Workflow::View::Text;
+package UFL::Workflow::View::TT;
 
 use strict;
 use warnings;
 use base qw/Catalyst::View::TT/;
+use UFL::Workflow::Util;
+
+__PACKAGE__->config(
+    FILTERS => {
+        escape_newlines => \&UFL::Workflow::Util::escape_newlines,
+    }
+);
 
 =head1 NAME
 
-UFL::Workflow::View::Text - Text view component, using Template Toolkit
+UFL::Workflow::View::TT - TT view component
 
 =head1 SYNOPSIS
 
