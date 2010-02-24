@@ -3,8 +3,7 @@ package UFL::Workflow::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
-use Carp qw/croak/;
-use MRO::Compat;
+use Class::C3;
 use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
@@ -16,21 +15,11 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 16,
     },
-    display_name => {
-        data_type     => 'varchar',
-        size          => 256,
-        default_value => '(Unknown)',
-    },
     email => {
-        data_type   => 'varchar',
-        size        => 256,
-        is_nullable => 1,
+        data_type => 'varchar',
+        size      => 64,
     },
     wants_email => {
-        data_type     => 'boolean',
-        default_value => 1,
-    },
-    active => {
         data_type     => 'boolean',
         default_value => 1,
     },
@@ -82,6 +71,39 @@ See L<UFL::Workflow>.
 User table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
+
+=head2 insert
+
+Override L<DBIx::Class::Row/insert> to update the email address field.
+
+=cut
+
+sub insert {
+    my $self = shift;
+
+    $self->_update_email;
+    $self->next::method(@_);
+}
+
+=head2 update
+
+Override L<DBIx::Class::Row/update> to update the email address field.
+
+=cut
+
+sub update {
+    my $self = shift;
+
+    $self->_update_email;
+    $self->next::method(@_);
+}
+
+sub _update_email {
+    my $self = shift;
+
+    my $domain = $self->result_source->schema->email_domain;
+    $self->email($self->username . '@' . $domain);
+}
 
 =head2 has_role
 
@@ -163,88 +185,7 @@ sub can_manage {
     $self->throw_exception('You must provide a request')
         unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
 
-    # Allow users with current (pending) step's group-role or a past group role
-    my $has_group_role = 0;
-
-    my $possible_actors = $request->possible_actors;
-    $has_group_role = 1 if $possible_actors->count({ user_id => $self->id }) > 0;
-    $has_group_role = 1 if $self->_has_past_group_role($request);
-
-    return ($request->is_open and ($self->id == $request->user_id || $has_group_role));
-}
-
-=head2 can_view
-
-Return true if this user can view the specified
-L<UFL::Workflow::Schema::Request>.
-
-=cut
-
-sub can_view {
-    my ($self, $request) = @_;
-
-    $self->throw_exception('You must provide a request')
-        unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
-
-    # Always allow access if the process is unrestricted
-    return 1 unless $request->process->restricted;
-
-    # Always allow the submitter
-    return 1 if $self->id == $request->user_id;
-
-    # Allow users with current (pending) step's group-role
-    my $possible_actors = $request->possible_actors;
-    return 1 if $possible_actors->count({ user_id => $self->id }) > 0;
-
-    return 1 if $self->_has_past_group_role($request);
-    return 1 if $self->_has_future_role($request);
-
-    return 0;
-}
-
-sub _has_past_group_role {
-    my ($self, $request) = @_;
-
-    my $has_past_group_role = 0;
-
-    my $action = $request->current_action;
-    while ($action = $action->prev_action) {
-        my $user_group_roles = $action->user_group_roles->search({
-            user_id => $self->id,
-            role_id => $action->step->role->id,
-        });
-
-        if ($user_group_roles->count > 0) {
-            $has_past_group_role = 1;
-            last;
-        }
-    }
-
-    return $has_past_group_role;
-}
-
-sub _has_future_role {
-    my ($self, $request) = @_;
-
-    my $step = $request->current_step;
-    my @future_roles;
-    while ($step = $step->next_step) {
-        push @future_roles, $step->role;
-    }
-
-    my $has_future_role = 0;
-
-    if (@future_roles) {
-        my $user_group_roles = $self->user_group_roles->search({
-            role_id => { -in => [ map { $_->id } @future_roles ] },
-        });
-
-        if ($user_group_roles->count > 0) {
-            $has_future_role = 1;
-        }
-    }
-
-    return $has_future_role;
+    return ($request->is_open and $self->id == $request->user_id);
 }
 
 =head2 pending_actions
@@ -309,15 +250,14 @@ sub group_requests {
     if (@groups) {
         $group_requests = $self->result_source->schema->resultset('Request')->search(
             {
-                'process.restricted' => 0,
-                'submitter.id'       => { '!=' => $self->id },
+                'submitter.id'              => { '!=' => $self->id },
                 -or => [
                     'group.id'              => { -in => [ map { $_->id } @groups ] },
                     'group.parent_group_id' => { -in => [ map { $_->id } @groups ] },
                 ],
             },
             {
-                join     => [ 'process', { submitter => { user_group_roles => 'group' } } ],
+                join     => { submitter => { user_group_roles => 'group' } },
                 distinct => 1,
                 order_by => \q[update_time DESC, insert_time DESC],
             },
@@ -325,27 +265,6 @@ sub group_requests {
     }
 
     return $group_requests;
-}
-
-=head2 update_from_env
-
-Update this user with information from the environment according to
-the configuration.
-
-=cut
-
-sub update_from_env {
-    my ($self, $env, $field_map) = @_;
-
-    foreach my $env_key (keys %$field_map) {
-        croak "Missing '$env_key' attribute in environment"
-            unless exists $env->{$env_key} and $env->{$env_key};
-
-        my $field = $field_map->{$env_key};
-        $self->$field($env->{$env_key});
-    }
-
-    $self->update;
 }
 
 =head2 uri_args

@@ -2,3 +2,8 @@ edit:
   name:
     DEFAULT:   A role name
     NOT_REGEX: An available role name (Administrator is reserved)
+add_user:
+  user_id:
+    DEFAULT: A user
+  group_id:
+    DEFAULT: A group
