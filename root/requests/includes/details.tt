@@ -23,7 +23,7 @@
   <dd>[% INCLUDE requests/includes/status.tt action = request.current_action %] (<a href="#actions">Details</a>)</dd>
   [% END %]
   <dt>Submitter</dt>
-  <dd>[% request.submitter.display_name | html %]</dd>
+  <dd>[% request.submitter.username | html %]</dd>
   <dt>Created</dt>
   <dd>[% request.insert_time.strftime(datetime_format) | html %]</dd>
   <dt>Updated</dt>
