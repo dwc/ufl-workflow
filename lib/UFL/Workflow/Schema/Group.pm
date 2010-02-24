@@ -34,7 +34,7 @@ __PACKAGE__->has_many(
 __PACKAGE__->has_many(
     group_roles => 'UFL::Workflow::Schema::GroupRole',
     { 'foreign.group_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0, join => 'role', order_by => 'name' },
+    { cascade_delete => 0, cascade_copy => 0 },
 );
 
 __PACKAGE__->has_many(
@@ -49,14 +49,10 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
-__PACKAGE__->many_to_many('roles', 'group_roles', 'role', { order_by => 'name' });
+__PACKAGE__->many_to_many('roles', 'group_roles', 'role');
 __PACKAGE__->many_to_many('actions', 'action_groups', 'action');
 
 __PACKAGE__->resultset_class('UFL::Workflow::ResultSet::Group');
-
-__PACKAGE__->resultset_attributes({
-    order_by => 'name',
-});
 
 =head1 NAME
 
@@ -82,13 +78,20 @@ the check passes, update the record.
 sub update {
     my ($self, @args) = @_;
 
-    my $next = $self->next::can;
-    $self->result_source->schema->txn_do(sub {
-        $next->($self, @args);
+    my $schema = $self->result_source->schema;
+    eval {
+        $schema->txn_begin;
 
-        die 'Parent group cannot be the same as the group'
+        $self->next::method(@args);
+
+        $self->throw_exception('Parent group cannot be the same as the group')
             if $self->parent_group_id and $self->id == $self->parent_group_id;
-    });
+        $schema->txn_commit;
+    };
+    if (my $error = $@) {
+        $schema->txn_rollback;
+        $self->throw_exception($error);
+    }
 }
 
 =head2 has_role
@@ -132,23 +135,16 @@ Add a role to this group.
 =cut
 
 sub add_role {
-    my ($self, $name, $role_id) = @_;
+    my ($self, $name) = @_;
 
     my $role;
-
     $self->result_source->schema->txn_do(sub {
+        $role = $self->result_source->schema->resultset('Role')->find_or_create({
+            name => $name,
+        });
 
-        if ($self->roles->find(name => $name)) {
-   	    $self->throw_exception("Role already assigned to group.");
-        } 
-	else {
-            $role = $self->result_source->schema->resultset('Role')->find_or_create({ 
-	        name => $name, 
-            });            
-
-            $self->add_to_roles($role);                    
-	}
-    });   
+        $self->add_to_roles($role);
+    });
 
     return $role;
 }
@@ -164,7 +160,7 @@ this group.
 sub requests {
     my ($self) = @_;
 
-    my $requests = $self->result_source->schema->resultset('Request')->search(
+    my $rs = $self->result_source->schema->resultset('Request')->search(
         {
             'group.id' => $self->id,
         },
@@ -174,7 +170,7 @@ sub requests {
         },
     );
 
-    return $requests;
+    return $rs;
 }
 
 =head2 open_requests
@@ -188,7 +184,7 @@ this group.
 sub open_requests {
     my ($self) = @_;
 
-    my $open_requests = $self->requests->search(
+    my $rs = $self->requests->search(
         {
             'actions.next_action_id' => undef,
             'status.is_initial'      => 1,
@@ -198,7 +194,7 @@ sub open_requests {
         },
     );
 
-    return $open_requests;
+    return $rs;
 }
 
 =head2 uri_args

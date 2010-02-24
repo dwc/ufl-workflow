@@ -2,16 +2,12 @@ package UFL::Workflow::BaseController;
 
 use strict;
 use warnings;
-use base qw/Catalyst::Controller/;
+use base qw/Catalyst::Controller Class::Accessor::Fast/;
 use Carp qw/croak/;
 use FormValidator::Simple;
 use FormValidator::Simple::ProfileManager::YAML;
-use Module::Find ();
 
-__PACKAGE__->mk_accessors(qw/profiles_file messages_file datetime_class/);
-
-# For FormValidator::Simple
-our $DEFAULT_DATETIME_CLASS = 'DateTime';
+__PACKAGE__->mk_accessors(qw/_path/);
 
 =head1 NAME
 
@@ -30,26 +26,51 @@ validation code.
 
 =head2 new
 
-Create a new controller, also setting up various data for validation.
+Create a new controller, also instantiating the associated form
+validation stuff.
 
 =cut
 
 sub new {
     my $self = shift->SUPER::new(@_);
-    my ($c, $config) = @_;
+    my $c = $_[0];
 
     my $path = $c->path_to('root', $self->path_prefix($c));
-    if (-d $path) {
-        $self->profiles_file($path->file('profiles.yml'))
-            unless $self->profiles_file;
-        $self->messages_file($path->file('messages.yml'))
-            unless $self->messages_file;
-    }
-
-    $self->datetime_class($DEFAULT_DATETIME_CLASS)
-        unless $self->datetime_class;
+    $self->_path($path);
 
     return $self;
+}
+
+=head2 profiles_file
+
+Return a L<Path::Class> object referring to the form validation
+profile definition file for this controller.
+
+=cut
+
+sub profiles_file {
+    my ($self) = @_;
+
+    return unless -d $self->_path;
+
+    my $filename = $self->config->{profiles_file} || 'profiles.yml';
+    return $self->_path->file($filename);
+}
+
+=head2 messages_file
+
+Return a L<Path::Class> object referring to the form validation
+messages definition file for this controller.
+
+=cut
+
+sub messages_file {
+    my ($self) = @_;
+
+    return unless -d $self->_path;
+
+    my $filename = $self->config->{messages_file} || 'messages.yml';
+    return $self->_path->file($filename);
 }
 
 =head2 validate_form
@@ -73,9 +94,6 @@ sub validate_form {
     # XXX: Would love to instantiate these in new, but FVS holds some class data
     my $manager   = FormValidator::Simple::ProfileManager::YAML->new($profiles_file);
     my $validator = FormValidator::Simple->new;
-    $validator->load_plugin($_)
-        for Module::Find::findallmod('UFL::Workflow::Plugin::FormValidator');
-    $validator->set_option(datetime_class => $self->datetime_class);
     $validator->set_messages($messages_file);
 
     my $name    = $c->action->name;
@@ -90,24 +108,6 @@ sub validate_form {
     );
 
     return $result;
-}
-
-=head2 send_email
-
-Wrap L<UFL::Workflow::View::Email> to rethrow errors on sending
-mail. This allows us to rollback database transactions if sending
-email fails.
-
-=cut
-
-sub send_email {
-    my ($self, $c) = @_;
-
-    $c->forward($c->view('Email'));
-
-    if (my @errors = @{ $c->error }) {
-        croak @errors;
-    }
 }
 
 =head1 AUTHOR
