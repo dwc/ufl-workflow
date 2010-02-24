@@ -1,12 +1,5 @@
 [% SET title = 'Statuses' -%]
 
-[% IF c.check_user_roles('Administrator') %]
-<h3>Manage statuses</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new status</a></li>
-</ul>
-[% END %]
-
 <h3>Current statuses</h3>
 [% IF statuses.count > 0 %]
 <ul>
@@ -24,3 +17,7 @@
 <p>None yet.</p>
 [% END %]
 
+<h3>Manage statuses</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new status</a></li>
+</ul>

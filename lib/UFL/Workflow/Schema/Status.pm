@@ -11,7 +11,7 @@ __PACKAGE__->add_standard_primary_key;
 __PACKAGE__->add_columns(
     name => {
         data_type => 'varchar',
-        size      => 64,
+        size      => 32,
     },
     is_initial => {
         data_type     => 'boolean',
