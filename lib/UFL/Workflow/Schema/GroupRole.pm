@@ -38,7 +38,7 @@ __PACKAGE__->has_many(
     { cascade_delete => 0, cascade_copy => 0 },
 );
 
-__PACKAGE__->many_to_many('users', 'user_group_roles', 'actor', { order_by => 'username' });
+__PACKAGE__->many_to_many('users', 'user_group_roles', 'actor');
 
 =head1 NAME
 

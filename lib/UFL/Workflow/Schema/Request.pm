@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use base qw/DBIx::Class/;
 use Digest::MD5 ();
-use MIME::Type;
 use MIME::Types ();
 use Path::Class::File ();
 use Scalar::Util qw/blessed/;
@@ -49,12 +48,6 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->has_many(
     documents => 'UFL::Workflow::Schema::Document',
-    { 'foreign.request_id' => 'self.id' },
-    { cascade_delete => 0, cascade_copy => 0 },
-);
-
-__PACKAGE__->has_many(
-    versions => 'UFL::Workflow::Schema::RequestVersion',
     { 'foreign.request_id' => 'self.id' },
     { cascade_delete => 0, cascade_copy => 0 },
 );
@@ -215,53 +208,12 @@ sub groups_for_status {
         $step = $self->prev_step;
     }
 
-    return $self->result_source->schema->resultset('Group')->search(
-        {
-            'role.id' => $step ? $step->role->id : 0,
-        },
-        {
-            join     => [ { group_roles => 'role' } ],
-            order_by => 'me.name',
-        },
-    );
-}
-
-=head2 default_group_for_status
-
-Find the assigned group from the previous step, for having an easy
-default when recycling.  Returns C<undef> when no reasonable default
-can be found.
-
-Note: This is intended to be advisory; no verification is done that
-the group is valid for the status.
-
-=cut
-
-sub default_group_for_status {
-    my ($self, $status) = @_;
-
-    my $default_group = undef;
-
-    # Default to the parent group
-    my $current_group = $self->current_action->groups->first;
-    if (my $parent_group = $current_group->parent_group) {
-        $default_group = $parent_group;
+    my @groups;
+    if ($step) {
+        @groups = $step->role->groups;
     }
 
-    # Recycling sends the request back to the previous step
-    if (my $prev_step = $self->prev_step) {
-        # Find an action in the sequence corresponding to the previous step
-        # (not necessarily the previous action; see e.g. https://approval.ufl.edu/requests/2907)
-        my $action = $self->prev_action;
-        while (my $prev_action = $action->prev_action
-               and $action->step->id != $prev_step->id) {
-            $action = $prev_action;
-        }
-
-        $default_group = $action->groups->first;
-    }
-
-    return $default_group;
+    return @groups;
 }
 
 =head2 past_actors
@@ -339,16 +291,7 @@ sub add_document {
     my ($name, $extension) = ($filename =~ /(.+)\.([^.]+)$/);
     $extension = lc $extension;
 
-    # XXX: Remove when added to MIME::Types
-    my $docx = MIME::Type->new(
-        type       => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        extensions => ['docx'],
-    );
-
-    my $types = MIME::Types->new;
-    $types->addType($docx);
-
-    my $type = $types->mimeTypeOf($extension);
+    my $type = MIME::Types->new->mimeTypeOf($extension);
     die "Unknown type for extension [$extension]" unless $type;
 
     my $document;
@@ -357,7 +300,6 @@ sub add_document {
 
         $document = $self->documents->create({
             name      => substr($name, 0, $length),
-            user_id   => $user->id,
             extension => $extension,
             type      => $type,
             md5       => Digest::MD5::md5_hex($contents),
@@ -381,61 +323,6 @@ sub add_document {
     });
 
     return $document;
-}
-
-=head2 active_documents
-
-Return a resultset of active documents without an id.
-
-=cut
-
-sub active_documents {
-    my ($self) = @_;
-
-    my $active_documents = $self->documents->search({ 
-        document_id => undef,
-        active      => 1, },
-        { order_by    => 'insert_time' },
-    );
-
-    return $active_documents;
-}
-
-=head2 removed_documents
-
-Return a resultset of inactive documents that do not have an id.
-
-=cut
-
-sub removed_documents {
-    my ($self) = @_;
-
-    my $removed_documents = $self->documents->search({
-        document_id => undef,
-        active      => 0, },
-        { order_by    => 'insert_time' },
-    );
-
-    return $removed_documents;
-}
-
-
-=head2 replaced_documents
-
-Return a resultset of inactive documents that have an id.
-
-=cut
-
-sub replaced_documents {
-    my ($self) = @_;
-
-    my $replaced_documents = $self->documents->search(
-        { document_id => { '!=' => undef }, 
-          active      => 1 },
-        { order_by    => 'insert_time' },
-    );
-
-    return $replaced_documents;
 }
 
 =head2 update_status
@@ -506,39 +393,6 @@ sub update_status {
             $current_action->update;
         }
     });
-}
-
-=head2 add_version
-
-Add a new L<UFL::Workflow::Schema::RequestVersion> to this request.
-
-=cut
-
-sub add_version {
-    my ($self, $user) = @_;
-
-    $self->throw_exception('You must provide a request')
-        unless $self;
-    $self->throw_exception('You must provide a user')
-        unless blessed $user and $user->isa('UFL::Workflow::Schema::User');
-    $self->throw_exception('User cannot manage request')
-        unless $user->can_manage($self);
-
-    my $version;
-    $self->result_source->schema->txn_do(sub {
-        my $num = $self->versions->get_column('num')->max;
-        $num++;
-
-        $version = $self->versions->create({
-	    num         => $num,
-            user_id     => $user->id,
-            title       => $self->title,
-            description => $self->description,
-        });
-
-    });
-
-    return $version;
 }
 
 =head2 message_id

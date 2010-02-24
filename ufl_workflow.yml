@@ -1,23 +1,52 @@
 --- #YAML:1.0
 # Do not use tabs for indentation or label/value separation!
 name:         Workflow
+encoding:     UTF-8
 default_view: HTML
 
 email:
-  admin_address: no-reply@example.com
-  from_address:  no-reply@example.com
+  admin_address: approval@ufl.edu
+  from_address:  approval@ufl.edu
+  domain:        ufl.edu
+
+authentication:
+  default_realm: users
+  realms:
+    users:
+      credential:
+        class:         Password
+        password_type: none
+      store:
+        class:            DBIx::Class
+        user_class:       DBIC::User
+        role_relation:    roles
+        role_field:       name
+        auto_create_user: 1
+
+authorization:
+  dbic:
+    role_class:           DBIC::Role
+    role_field:           name
+    role_rel:             user_group_roles
+    user_role_user_field: user_id
+
+Controller::Authentication:
+  use_login_form:  0
+  use_environment: 1
+  username_field:  username
+  logout_uri:      http://login.gatorlink.ufl.edu/quit.cgi
 
 Controller::Documents:
   destination: __path_to(documents)__
 
 Controller::Processes: &requestdocuments
-  accepted_extensions: [ doc, docx, odt, pdf, rtf, txt, jpg, jpeg, tif, tiff ]
+  accepted_extensions: [ doc, odt, pdf, rtf, txt, jpg, jpeg, tif, tiff ]
 
 Controller::Requests: *requestdocuments
 
 Model::LDAP:
-  host: ldap.example.com
-  base: ou=People,dc=example,dc=com
+  host: ldap.ufl.edu
+  base: ou=People,dc=ufl,dc=edu
 
 Model::DBIC:
   schema_class: UFL::Workflow::Schema
@@ -32,31 +61,13 @@ Model::DBIC:
       ShowErrorStatement: 1
       TraceLevel:         0
 
-Plugin::Authentication:
-  default_realm: users
-  realms:
-    users:
-      credential:
-        class:         Password
-        password_type: none
-      store:
-        class:         DBIx::Class
-        user_class:    DBIC::User
-        role_relation: roles
-        role_field:    name
-
-Plugin::ErrorCatcher:
-  enable: 1
-
 View::Email:
+  default_view:    Text
+  content_type:    text/plain
   stash_key:       email
   template_prefix: email
-  default:
-    view:         Text
-    content_type: text/plain
-    charset:      UTF-8
   sender:
-    mailer: Test
+    method: Test
 
 View::HTML:
   PRE_CHOMP: 1
