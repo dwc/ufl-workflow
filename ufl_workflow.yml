@@ -1,6 +1,7 @@
 --- #YAML:1.0
 # Do not use tabs for indentation or label/value separation!
 name:         Workflow
+encoding:     UTF-8
 default_view: HTML
 
 email:
@@ -31,6 +32,7 @@ Model::DBIC:
       PrintError:         0
       ShowErrorStatement: 1
       TraceLevel:         0
+  email_domain: example.com
 
 Plugin::Authentication:
   default_realm: users
@@ -40,13 +42,11 @@ Plugin::Authentication:
         class:         Password
         password_type: none
       store:
-        class:         DBIx::Class
-        user_class:    DBIC::User
-        role_relation: roles
-        role_field:    name
-
-Plugin::ErrorCatcher:
-  enable: 1
+        class:                 DBIx::Class
+        user_class:            DBIC::User
+        role_relation:         roles
+        role_field:            name
+        ignore_fields_in_find: [ id ]
 
 View::Email:
   stash_key:       email

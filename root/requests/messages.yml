@@ -30,6 +30,12 @@ add_document:
     EXTENSION: A document with one of the allowed types
   replaced_document_id:
     DEFAULT: The document being replaced
+recover_document:
+  document_id:
+    DEFAULT:   The document being included
+remove_document:
+  document_id:
+    DEFAULT:   The document being removed
 update_status:
   status_id:
     DEFAULT: A status

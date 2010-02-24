@@ -3,14 +3,6 @@ package UFL::Workflow::Controller::Users;
 use strict;
 use warnings;
 use base qw/UFL::Workflow::BaseController/;
-use UFL::Workflow::Util;
-
-__PACKAGE__->mk_accessors(qw/ldap_username_field ldap_search_fields/);
-
-__PACKAGE__->config(
-    ldap_username_field => 'uid',
-    ldap_search_fields  => [ qw/uid/ ],
-);
 
 =head1 NAME
 
@@ -35,42 +27,35 @@ Display a list of current users.
 sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
-    my $field = 'display_name';
-    my $letter = $c->req->query_parameters->{letter} || 'a';
-    my $query = $c->req->query_parameters->{query};
+    my $letter;
+    my $query;
     my $results;
+    my $users;
 
-    my $users = $c->model('DBIC::User')->search(
-        { "LOWER($field)" => { 'like', $letter . '%'  } },
-        { order_by => $field },
-    );
+    if ($letter = $c->req->query_parameters->{'letter'}) {
+        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+    }
+    else {
+        $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', 'a%'  } }, { order_by => 'username' });
+        $letter = 'a';
+    }
 
-    if ($query) {
-        $query = UFL::Workflow::Util::strip_ufid_hyphen($query);
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
 
-        $results = $c->model('DBIC::User')->search(
-            {
-                -or => [
-                     "LOWER($field)" => { 'like', '%' . lc($query) . '%' },
-                     "username"      => { like => '%' . $query . '%' },
-                ],
-            },
-            { order_by => $field },
-        );
-
-        $letter = substr($query, 0, 1);
-        $users = $c->model('DBIC::User')->search(
-            { "LOWER($field)" => { 'like', $letter . '%'  } },
-            { order_by => $field },
-        );
+        if ($query = $result->valid('query')) {
+            $results = $c->model('DBIC::User')->search({ 'LOWER(username)' => { 'like', $query . '%' } }, { order_by => 'username' });
+            $letter = substr($query,0,1);
+            $users = $c->model('DBIC::User')->search({ "LOWER(username)" => { 'like', $letter . '%'  } }, { order_by => 'username' });
+        }
     }
 
     $c->stash(
-        letter   => $letter,
-        query    => $query,
-        results  => $results,
-        template => 'users/index.tt',
-        users    => $users,
+        letter    => $letter,
+        query     => $query,
+        results   => $results,
+        template  => 'users/index.tt',
+        users     => $users,
     );
 }
 
@@ -90,21 +75,18 @@ sub add : Local {
 
             my (@added_users, @existing_users, @invalid_users);
             foreach my $new_user (@new_users) {
-                $new_user = UFL::Workflow::Util::strip_ufid_hyphen($new_user);
+                # Remove the hyphen in the UFID to match LDAP
+                if ($new_user =~ /\d{4}-\d{4}/) {
+                    $new_user =~ s/-//;
+                }
 
-                my $filter = $self->_ldap_filter($new_user);
-                my $mesg = $c->model('LDAP')->search($filter);
-                my $entry = $mesg->shift_entry;
-
-                my $field = $self->ldap_username_field;
-                if ($entry and $entry->exists($field)) {
-                    if (my $user = $c->model('DBIC::User')->find({ username => $entry->$field })) {
+                my $attribute = $new_user =~ /\d{8}/ ? 'uflEduUniversityId' : 'uid';
+                if (my $entry = $c->model('LDAP')->search("($attribute=$new_user)")->shift_entry) {
+                    if (my $user = $c->model('DBIC::User')->find({ username => $entry->uid })) {
                         push @existing_users, $user;
                     }
                     else {
-                        my $user = $c->model('DBIC::User')->from_ldap_entry($entry, $field);
-                        $user->insert;
-
+                        my $user = $c->model('DBIC::User')->create({ username => $entry->uid });
                         push @added_users, $user;
                     }
                 }
@@ -155,41 +137,12 @@ sub view : PathPart('') Chained('user') Args(0) {
 
 =head2 edit
 
-Edit the stashed user.
+Edit the user's information, including whether they want to receive
+email or not.
 
 =cut
 
 sub edit : PathPart Chained('user') Args(0) {
-    my ($self, $c) = @_;
-
-    if ($c->req->method eq 'POST') {
-        my $result = $self->validate_form($c);
-        if ($result->success) {
-            my $user = $c->stash->{user};
-
-            $user->update({
-                username     => $result->valid('username'),
-                display_name => $result->valid('display_name'),
-                email        => $result->valid('email'),
-                wants_email  => $result->valid('wants_email') ? 1 : 0,
-                active       => $result->valid('active') ? 1 : 0,
-            });
-
-            return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
-        }
-    }
-
-    $c->stash(template => 'users/edit.tt');
-}
-
-=head2 toggle_email
-
-Toggle whether the stashed user wants to receive email or not. This is
-an action that users can perform themselves.
-
-=cut
-
-sub toggle_email : PathPart Chained('user') Args(0) {
     my ($self, $c) = @_;
 
     my $user = $c->stash->{user};
@@ -302,22 +255,6 @@ sub delete_group_role : PathPart Chained('user') Args(0) {
     }
 
     return $c->res->redirect($c->uri_for($self->action_for('view'), $user->uri_args));
-}
-
-=head2 _ldap_filter
-
-Based on the configured LDAP search fields, return a filter string.
-
-=cut
-
-sub _ldap_filter {
-    my ($self, $query) = @_;
-
-    my $filter = join '', map { "($_=$query)" } @{ $self->ldap_search_fields };
-    $filter = "(|$filter)";
-    warn "filter = [$filter]";
-
-    return $filter;
 }
 
 =head1 AUTHOR
