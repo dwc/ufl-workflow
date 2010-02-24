@@ -69,22 +69,49 @@ sub edit : PathPart Chained('role') Args(0) {
     $c->stash(template => 'roles/edit.tt');
 }
 
-=head2 list_roles
+=head2 add_user
 
-List all available roles via L<JSON>.
+Add a user to the stashed role.
 
 =cut
 
-sub list_roles : Local Args(0) {
+sub add_user : PathPart Chained('role') Args(0) {
     my ($self, $c) = @_;
 
-    my $query = lc($c->request->parameters->{'q'});
-    my $roles = $c->model('DBIC::Role')->search({ "LOWER(name)" => { 'like', '%' . $query . '%' } });
-    $c->stash(roles => [ map { $_->to_json } $roles->all ]);
+    my $role = $c->stash->{role};
 
-    my $view = $c->view('JSON');
-    $view->expose_stash([ qw/roles/ ]);
-    $c->forward($view);
+    my $users  = $c->model('DBIC::User')->search(undef, { order_by => 'username' });
+    my $groups = $c->model('DBIC::Group')->search(
+        { 'group_roles.role_id' => $role->id },
+        { join => 'group_roles' },
+    );
+
+    if ($c->req->method eq 'POST') {
+        my $result = $self->validate_form($c);
+        if ($result->success) {
+            my $group = $groups->find($result->valid('group_id'));
+            $c->detach('/default') unless $group;
+
+            my $user_ids = $result->valid('user_id');
+            foreach my $user_id (ref $user_ids ? @$user_ids : $user_ids) {
+                my $user = $users->find($user_id);
+                $c->detach('/default') unless $user;
+
+                $user->user_group_roles->find_or_create({
+                    group_id => $group->id,
+                    role_id  => $role->id,
+                });
+            }
+
+            return $c->res->redirect($c->uri_for($self->action_for('view'), $role->uri_args));
+        }
+    }
+
+    $c->stash(
+        users    => $users,
+        groups   => $groups,
+        template => 'roles/add_user.tt',
+    );
 }
 
 =head1 AUTHOR
