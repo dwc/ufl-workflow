@@ -100,7 +100,7 @@ Take the username from the environment and attempt to find a user.
 =cut
 
 sub authenticate {
-    my ($self, $c, $realm, $authinfo) = @_;
+    my ($self, $c, $realm, $auth_info) = @_;
 
     my $env = $c->engine->env;
 
@@ -108,24 +108,11 @@ sub authenticate {
     my $remote_user = $env->{$source};
     return if not defined $remote_user or $remote_user eq '';
 
-    # Support having a username specified in the call to $c->authenticate
-    my $auth_user = $authinfo->{username};
+    my $auth_user = $auth_info->{username};
     return if defined $auth_user and $auth_user ne $remote_user;
 
-    my $username_field = $self->username_field;
-    $authinfo->{$username_field} = $remote_user;
-
-    if ($c->debug) {
-        use Data::Dumper; $c->log->debug("authinfo before find_user = " . Dumper($authinfo));
-    }
-
-    $c->log->debug("Authenticating via Shibboleth: source = [$source], remote_user = [$remote_user], auth_user = [" . (defined $auth_user ? $auth_user : "undef") . "], username_field = [$username_field]");
-    my $user_obj = $realm->find_user($authinfo, $c);
-    $c->log->debug($user_obj ? "Authenticated user via Shibboleth: id = [" . $user_obj->id . "], username = [" . $user_obj->$username_field . "]" : "Did not find user via Shibboleth");
-
-    if ($c->debug) {
-        use Data::Dumper; $c->log->debug("authinfo after find_user = " . Dumper($authinfo));
-    }
+    $auth_info->{$self->username_field} = $remote_user;
+    my $user_obj = $realm->find_user($auth_info, $c);
 
     return $user_obj;
 }

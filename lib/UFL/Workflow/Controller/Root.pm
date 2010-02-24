@@ -146,14 +146,27 @@ sub access_denied : Private {
 
 =head2 render
 
-Attempt to render a view, if needed. This hook is necessary to allow
-L<Catalyst::Plugin::FillInForm> and L<Catalyst::Action::RenderView> to
-play nice.
+Attempt to render a view, if needed.
 
 =cut
 
 sub render : ActionClass('RenderView') {
     my ($self, $c) = @_;
+
+    if (@{ $c->error }) {
+        $c->res->status(500);
+
+        # Override the ugly Catalyst debug screen
+        unless ($c->debug) {
+            $c->log->error($_) for @{ $c->error };
+
+            $c->stash(
+                errors   => $c->error,
+                template => 'error.tt',
+            );
+            $c->clear_errors;
+        }
+    }
 }
 
 =head2 end
@@ -166,17 +179,10 @@ sub end : Private {
     my ($self, $c) = @_;
 
     # If we're using the stub email sender, flush any messages to the console
-    # XXX: Catalyst::View::Email doesn't provide an API for this, so we resort to ugliness
-    my $view = $c->view('Email');
-    if ($view->can('sender') and $view->sender->{mailer} eq 'Test' and $view->can('_mailer_obj')) {
-        my $mailer_obj = $view->_mailer_obj;
-
-        if (my @deliveries = @{ $mailer_obj->deliveries }) {
-            use Data::Dumper;
-            $c->log->debug("Emails: " . Dumper(\@deliveries));
-
-            $mailer_obj->clear_deliveries;
-        }
+    if ($c->view('Email')->mailer->mailer eq 'Test') {
+        require Email::Send::Test;
+        $c->log->_dump(Email::Send::Test->emails);
+        Email::Send::Test->clear;
     }
 
     $c->forward('render');

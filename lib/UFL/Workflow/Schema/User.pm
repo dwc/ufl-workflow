@@ -3,7 +3,6 @@ package UFL::Workflow::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
-use Carp qw/croak/;
 use MRO::Compat;
 use Scalar::Util qw/blessed/;
 
@@ -325,27 +324,6 @@ sub group_requests {
     }
 
     return $group_requests;
-}
-
-=head2 update_from_env
-
-Update this user with information from the environment according to
-the configuration.
-
-=cut
-
-sub update_from_env {
-    my ($self, $env, $field_map) = @_;
-
-    foreach my $env_key (keys %$field_map) {
-        croak "Missing '$env_key' attribute in environment"
-            unless exists $env->{$env_key} and $env->{$env_key};
-
-        my $field = $field_map->{$env_key};
-        $self->$field($env->{$env_key});
-    }
-
-    $self->update;
 }
 
 =head2 uri_args

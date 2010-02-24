@@ -29,11 +29,19 @@ sub login_via_env : Private {
 
     # XXX: Catalyst::Plugin::Authentication supports checking active flag
     # XXX: in $c->authenticate, but it conflicts with auto_create_user
+    $c->authenticate();
     $c->forward('/forbidden') and return 0
-        unless $c->authenticate and $c->user->active;
+        unless $c->user_exists and $c->user->active;
 
-    my %fields = %{ $self->update_user_fields_on_login };
-    $c->user->update_from_env($c->engine->env, \%fields);
+    # Pass any additional information from the environment
+    my %update_fields = %{ $self->update_user_fields_on_login };
+    foreach my $env_key (keys %update_fields) {
+        my $field = $update_fields{$env_key};
+        $c->user->obj->$field($c->engine->env->{$env_key});
+    }
+
+    # Update the user object to cache the values from the environment
+    $c->user->obj->update if $c->user->obj->can('update');
 
     return 1;
 }

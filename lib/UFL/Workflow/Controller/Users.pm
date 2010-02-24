@@ -150,7 +150,10 @@ Display basic information on the stashed user.
 sub view : PathPart('') Chained('user') Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash(template => 'users/view.tt');
+    $c->stash(
+        env      => $c->engine->env,
+        template => 'users/view.tt',
+    );
 }
 
 =head2 edit

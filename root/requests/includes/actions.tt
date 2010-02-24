@@ -39,8 +39,8 @@
   [% END %]
 </table>
 
-[% INCLUDE requests/includes/decisions.tt -%]
+[% INCLUDE requests/includes/decisions.tt %]
 
 [% ELSE %]
 <p>None yet.</p>
-[% END -%]
+[% END %]

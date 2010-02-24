@@ -198,9 +198,20 @@ sub version : PathPart('versions') Chained('request') CaptureArgs(1) {
 
     my $request = $c->stash->{request};
     my $version = $request->versions->find({ num => $num });
-    $c->detach('/default') unless $version;
 
     $c->stash(version => $version);
+}
+
+=head2 view_version
+
+Display basic information about the stashed version.
+
+=cut
+
+sub view_version : PathPart('') Chained('version') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->stash(template => 'requests/version.tt');
 }
 
 =head2 view
@@ -229,38 +240,13 @@ sub view : PathPart('') Chained('request') Args(0) {
     );
 }
 
-=head2 view_version
-
-Display basic information about the stashed version.
-
-=cut
-
-sub view_version : PathPart('') Chained('version') Args(0) {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'requests/version.tt');
-}
-
-=head2 manage
-
-Ensure that the current user can manage the stashed request.
-
-=cut
-
-sub manage : Chained('request') CaptureArgs(0) {
-    my ($self, $c) = @_;
-
-    my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
-}
-
 =head2 edit
 
 Edit the stashed request.
 
 =cut
 
-sub edit : PathPart Chained('manage') Args(0) {
+sub edit : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
@@ -268,19 +254,19 @@ sub edit : PathPart Chained('manage') Args(0) {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
+            my $version = $request->add_version($c->user->obj);
+
             my $previous_title = $request->title;
             my $previous_description = $request->description;
 
-            $c->model('DBIC')->schema->txn_do(sub {
-                my $version = $request->add_version($c->user->obj);
-
+            $c->model('DBIC')->schema->txn_do(sub {            
                 $request->update({
                     title       => $result->valid('title'),
                     description => $result->valid('description'),
                 });
-
-                $self->send_changed_request_email($c, $request, $c->user->obj, '', $previous_title, $previous_description);
             });
+
+            $self->send_changed_request_email($c, $request, $c->user->obj, '', $previous_title, $previous_description);
         }
 
         return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
@@ -295,32 +281,31 @@ Add a document to the stashed request.
 
 =cut
 
-sub add_document : PathPart Chained('manage') Args(0) {
+sub add_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
+    die 'User cannot manage request' unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
             my $replaced_document_id = $result->valid('replaced_document_id');
 
-            $c->model('DBIC')->schema->txn_do(sub {            
-                my $document = $request->add_document(
-                    $c->user->obj,
-                    $upload->basename,
-                    $upload->slurp,
-                    $c->controller('Documents')->destination,
-                    $replaced_document_id,
-                );
+            my $document = $request->add_document(
+                $c->user->obj,
+                $upload->basename,
+                $upload->slurp,
+                $c->controller('Documents')->destination,
+                $replaced_document_id,
+            );
 
-                my $replaced_document;
-                if ($replaced_document_id) {
-                    $replaced_document = $request->documents->find($replaced_document_id);
-                }
+            my $replaced_document;
+            if ($replaced_document_id) {
+                $replaced_document = $request->documents->find($replaced_document_id);
+            }
 
-                $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
-            });
+            $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
@@ -334,18 +319,61 @@ sub add_document : PathPart Chained('manage') Args(0) {
     );
 }
 
-=head2 decide_on
+=head2 remove_document
 
-Ensure that the current user can decide on the stashed request.
+Remove the document.
 
 =cut
 
-sub decide_on : Chained('request') CaptureArgs(0) {
+sub remove_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
+    
+    die 'Method must be POST' unless $c->req->method eq 'POST';
 
     my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_decide_on($request->current_action);
+
+    my $result = $self->validate_form($c);
+    $c->detach('view', $request->uri_args) unless $result->success;
+
+    my $document = $c->model('DBIC::Document')->find($result->valid('document_id'));
+    $c->detach('/default') unless $document;
+
+    $document->remove;
+
+    $self->send_changed_document_email($c, $request, $c->user->obj, $document, $document, undef);
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
 }
+
+=head2 recover_document
+
+Recover the document for this request.
+
+=cut
+
+sub recover_document : PathPart Chained('request') Args(0) {
+    my ($self, $c) = @_;
+    
+    die 'Method must be POST' unless $c->req->method eq 'POST';
+
+    my $request = $c->stash->{request};
+
+    my $result = $self->validate_form($c);
+    $c->detach('view', $request->uri_args) unless $result->success;
+
+    my $document = $c->model('DBIC::Document')->find($result->valid('document_id'));
+    $c->detach('/default') unless $document;
+
+    $document->recover;
+
+    # Make sure we get update_time
+    $request->discard_changes;
+
+    $self->send_changed_document_email($c, $request, $c->user->obj, $document, undef, $document);
+
+    return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
+}
+
 
 =head2 update_status
 
@@ -354,7 +382,7 @@ with the role on the current step.
 
 =cut
 
-sub update_status : PathPart Chained('decide_on') Args(0) {
+sub update_status : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     die 'Method must be POST' unless $c->req->method eq 'POST';
@@ -377,6 +405,9 @@ sub update_status : PathPart Chained('decide_on') Args(0) {
         my $comment = $result->valid('comment');
         $request->update_status($status, $c->user->obj, $group, $comment);
 
+        # Make sure we get update_time
+        $request->discard_changes;
+
         $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
         if ($request->is_open) {
             $self->send_new_action_email($c, $request, $c->user->obj, $comment);
@@ -393,7 +424,7 @@ status via L<JSON>.
 
 =cut
 
-sub list_action_groups : PathPart Chained('decide_on') Args(0) {
+sub list_action_groups : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $status_id = $c->req->param('status_id');
@@ -461,9 +492,6 @@ sub send_changed_request_email {
     my $past_actors  = $request->past_actors;
     my @to_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
 
-    # Get latest request information
-    $request->discard_changes;
-
     $c->stash(
         request => $request,
         actor   => $actor,
@@ -484,7 +512,7 @@ sub send_changed_request_email {
         },
     );
 
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head2 send_new_action_email
@@ -500,9 +528,6 @@ sub send_new_action_email {
 
     my $possible_actors = $request->possible_actors;
     my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
 
     $c->stash(
         request => $request,
@@ -521,7 +546,7 @@ sub send_new_action_email {
         },
     );
 
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head2 send_new_document_email
@@ -537,12 +562,9 @@ sub send_new_document_email {
     my $possible_actors = $request->possible_actors;
     my $past_actors = $request->past_actors;
 
-    my @to_addresses;
-    push @to_addresses, map { $_->email } grep { $_->wants_email } $possible_actors->all;
-    push @to_addresses, map { $_->email } grep { $_->wants_email } $past_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
+    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
+    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
 
     $c->stash(
         request           => $request,
@@ -556,14 +578,50 @@ sub send_new_document_email {
             header   => [
                 'Return-Path' => $c->config->{email}->{admin_address},
                 'Reply-To'    => $actor->email,
-                Cc            => $request->submitter->email,
                 'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
             ],
             template => 'text_plain/new_document.tt',
         },
     );
+    $c->forward($c->view('Email'));
+}
 
-    $self->send_email($c);
+=head2 send_changed_document_email
+
+Send notification that a document was changed for a
+L<UFL::Workflow::Schema::Request>.
+
+=cut
+
+sub send_changed_document_email {
+    my ($self, $c, $request, $actor, $document, $removed_document, $recovered_document) = @_;
+
+    my $possible_actors = $request->possible_actors;
+    my $past_actors = $request->past_actors;
+
+    my @possible_actors_addresses = map { $_->email } grep { $_->wants_email } $possible_actors->all;
+    my @past_actors_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
+    my @to_addresses = (@possible_actors_addresses, @past_actors_addresses);
+
+    $c->stash(
+        request            => $request,
+        actor              => $actor,
+        document           => $document,
+        removed_document   => $removed_document,
+        recovered_document => $recovered_document,
+        email             => {
+            from     => $c->config->{email}->{from_address},
+            to       => join(', ', @to_addresses),
+            subject  => $request->subject('New document added to '),
+            header   => [
+                'Return-Path' => $c->config->{email}->{admin_address},
+                'Reply-To'    => $actor->email,
+                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
+            ],
+            template => 'text_plain/changed_document.tt',
+        },
+    );
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR
