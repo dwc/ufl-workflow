@@ -2,14 +2,10 @@
 [% SET title = "Add Request to ${process.name}" -%]
 
 <h3>[% process.name | html %]</h3>
-<h4>Instructions</h4>
 [% IF process.description %]
-<div class="description">
 
-  [% FILTER indent('  ') %]
-    [% process.description.replace('\bh[12346]\.', 'h5.') | textile %]
-  [% END %]
-</div>
+<h4>Instructions</h4>
+[%+ process.description | textile %]
 [% ELSE %]
 <p>To add a new request which follows the <strong>[% process.name | html %]</strong> process, enter a title, description, and initial group for review. After the request is added, you can attach documents and view its progress.</p>
 [% END -%]
@@ -19,5 +15,6 @@
 [% FILTER indent('  ') %]
   [% INCLUDE requests/includes/request.tt %]
 [% END -%]
+  <label>Document: <input type="file" name="document" /></label>
   <input type="submit" class="submit" value="Add Request" />
 </form>

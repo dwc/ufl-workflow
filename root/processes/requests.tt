@@ -1,6 +1,0 @@
-[% SET title = "${process.name} Requests" -%]
-
-<h3>Requests entered for [% process.name | html %]</h3>
-[% INCLUDE includes/paging.tt pager = requests.pager, singular = 'request', plural = 'requests' %]
-[% INCLUDE requests/includes/list.tt show_submitter = 1 %]
-[% INCLUDE includes/paging.tt pager = requests.pager -%]

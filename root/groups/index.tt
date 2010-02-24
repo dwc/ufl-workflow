@@ -1,11 +1,9 @@
 [% SET title = 'Groups' -%]
 
-[% IF c.check_user_roles('Administrator') %]
 <h3>Manage groups</h3>
 <ul>
   <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new group</a></li>
 </ul>
-[% END %]
 
 [% BLOCK group_list %]
 <ul>
