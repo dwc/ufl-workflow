@@ -48,7 +48,7 @@
     ([% num_users | html %] user[% num_users == 1 ? '' : 's' %])
     <ul>
       [% WHILE (user = users.next) %]
-      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
+      <li><a href="[% c.uri_for(c.controller('Users').action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
       [% END %]
     </ul>
     [% ELSE %]

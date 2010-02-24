@@ -48,11 +48,10 @@ sub add : Local {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->user->processes->create({
-                name         => $result->valid('name'),
-                description  => $result->valid('description'),
-                def_req_desc => $result->valid('def_req_desc'),
-                enabled      => $result->valid('enabled') ? 1 : 0,
-                restricted   => $result->valid('restricted') ? 1 : 0,
+                name        => $result->valid('name'),
+                description => $result->valid('description'),
+                enabled     => $result->valid('enabled') ? 1 : 0,
+                restricted  => $result->valid('restricted') ? 1 : 0,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -102,13 +101,11 @@ sub edit : PathPart Chained('process') Args(0) {
         my $result = $self->validate_form($c);
         if ($result->success) {
             my $process = $c->stash->{process};
-
             $process->update({
-                name         => $result->valid('name'),
-                description  => $result->valid('description'),
-                def_req_desc => $result->valid('def_req_desc'),
-                enabled      => $result->valid('enabled') ? 1 : 0,
-                restricted   => $result->valid('restricted') ? 1 : 0,
+                name        => $result->valid('name'),
+                description => $result->valid('description'),
+                enabled     => $result->valid('enabled') ? 1 : 0,
+                restricted  => $result->valid('restricted') ? 1 : 0,
             });
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $process->uri_args));
@@ -251,6 +248,9 @@ sub add_request : PathPart Chained('process') Args(0) {
                     $group,
                 );
 
+                # Make sure we get insert_time and update_time
+                $request->discard_changes;
+
                 if (my $upload = $c->req->upload('document')) {
                     my $document = $request->add_document(
                         $c->user->obj,
@@ -288,23 +288,7 @@ List requests for the stashed L<UFL::Workflow::Schema::Process>.
 sub requests : PathPart Chained('process') Args(0) {
     my ($self, $c) = @_;
 
-    my $page = $c->req->params->{page} || 1;
-    $page =~ s/\D//g;
-
-    my $process = $c->stash->{process};
-    my $requests = $process->requests->search(
-        {},
-        {
-            order_by => \q[me.update_time DESC, me.insert_time DESC],
-            page     => $page,
-            rows     => 10,
-        },
-    );
-
-    $c->stash(
-        requests => $requests,
-        template => 'processes/requests.tt',
-    );
+    $c->stash(template => 'processes/requests.tt');
 }
 
 =head2 send_new_request_email
@@ -322,9 +306,6 @@ sub send_new_request_email {
     my $possible_actors = $request->possible_actors;
     my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
 
-    # Get latest request information
-    $request->discard_changes;
-
     $c->stash(
         request => $request,
         email => {
@@ -341,7 +322,7 @@ sub send_new_request_email {
         },
     );
 
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR

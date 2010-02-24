@@ -17,7 +17,7 @@
     <td>[% action.step.name | html %]</td>
     <td>[% action.status.name | html %]</td>
     <td>[% action.group.name | html %]</td>
-    <td>[% action.actor.display_name || '-' | html %]</td>
+    <td>[% action.actor.username || '-' | html %]</td>
     <td>[% action.comment || '-' | html %]</td>
     <td>[% action.update_time.strftime(datetime_format) | html %]</td>
   </tr>
@@ -39,8 +39,8 @@
   [% END %]
 </table>
 
-[% INCLUDE requests/includes/decisions.tt -%]
+[% INCLUDE requests/includes/decisions.tt %]
 
 [% ELSE %]
 <p>None yet.</p>
-[% END -%]
+[% END %]

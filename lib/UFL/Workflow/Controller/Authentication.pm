@@ -4,11 +4,7 @@ use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
 
-__PACKAGE__->mk_accessors(qw/logout_uri update_user_fields_on_login/);
-
-__PACKAGE__->config(
-    update_user_fields_on_login => {},
-);
+__PACKAGE__->mk_accessors(qw/logout_uri/);
 
 =head1 NAME
 
@@ -27,13 +23,8 @@ Log the user in based on the environment (via C<REMOTE_USER>).
 sub login_via_env : Private {
     my ($self, $c) = @_;
 
-    # XXX: Catalyst::Plugin::Authentication supports checking active flag
-    # XXX: in $c->authenticate, but it conflicts with auto_create_user
-    $c->forward('/forbidden') and return 0
-        unless $c->authenticate and $c->user->active;
-
-    my %fields = %{ $self->update_user_fields_on_login };
-    $c->user->update_from_env($c->engine->env, \%fields);
+    $c->forward('/forbidden') and return 0 
+        unless $c->authenticate();
 
     return 1;
 }
@@ -78,7 +69,6 @@ sub login : Global {
             $c->detach('redirect') if $c->authenticate({
                 username => $username,
                 password => $password,
-                active   => 1,
             });
         }
 
