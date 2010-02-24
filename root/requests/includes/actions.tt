@@ -1,0 +1,46 @@
+<h3 id="actions">Actions</h3>
+[% SET action = request.first_action %]
+[% SET current_action = request.current_action %]
+[% IF action %]
+<table>
+  <tr>
+    <th>Step</th>
+    <th>Status</th>
+    <th>Group</th>
+    <th>User</th>
+    <th>Comment</th>
+    <th>Updated</th>
+  </tr>
+  [% SET i = 0 %]
+  [% WHILE action %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td>[% action.step.name | html %]</td>
+    <td>[% action.status.name | html %]</td>
+    <td>[% action.group.name | html %]</td>
+    <td>[% action.actor.display_name || '-' | html %]</td>
+    <td>[% action.comment || '-' | html %]</td>
+    <td>[% action.update_time.strftime(datetime_format) | html %]</td>
+  </tr>
+    [% SET action = action.next_action %]
+    [% SET i = i + 1 %]
+  [% END %]
+  [% SET step = request.next_step %]
+  [% WHILE step %]
+  <tr[% IF i % 2 == 0 %] class="even"[% END %]>
+    <td>[% step.name | html %]</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+    [% SET step = step.next_step %]
+    [% SET i = i + 1 %]
+  [% END %]
+</table>
+
+[% INCLUDE requests/includes/decisions.tt -%]
+
+[% ELSE %]
+<p>None yet.</p>
+[% END -%]
