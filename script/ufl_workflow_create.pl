@@ -1,10 +1,26 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl -w
 
 use strict;
 use warnings;
+use Getopt::Long;
+use Pod::Usage;
+use Catalyst::Helper;
 
-use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('UFL::Workflow', 'Create');
+my $force = 0;
+my $mech  = 0;
+my $help  = 0;
+
+GetOptions(
+    'nonew|force'    => \$force,
+    'mech|mechanize' => \$mech,
+    'help|?'         => \$help
+ );
+
+pod2usage(1) if ( $help || !$ARGV[0] );
+
+my $helper = Catalyst::Helper->new( { '.newfiles' => !$force, mech => $mech } );
+
+pod2usage(1) unless $helper->mk_component( 'UFL::Workflow', @ARGV );
 
 1;
 
@@ -17,9 +33,9 @@ ufl_workflow_create.pl - Create a new Catalyst Component
 ufl_workflow_create.pl [options] model|view|controller name [helper] [options]
 
  Options:
-   --force        don't create a .new file where a file to be created exists
-   --mechanize    use Test::WWW::Mechanize::Catalyst for tests if available
-   --help         display this help and exits
+   -force        don't create a .new file where a file to be created exists
+   -mechanize    use Test::WWW::Mechanize::Catalyst for tests if available
+   -help         display this help and exits
 
  Examples:
    ufl_workflow_create.pl controller My::Controller
@@ -45,13 +61,14 @@ Existing component files are not overwritten.  If any of the component files
 to be created already exist the file will be written with a '.new' suffix.
 This behavior can be suppressed with the C<-force> option.
 
-=head1 AUTHORS
+=head1 AUTHOR
 
-Catalyst Contributors, see Catalyst.pm
+Sebastian Riedel, C<sri@oook.de>
+Maintained by the Catalyst Core Team.
 
 =head1 COPYRIGHT
 
-This library is free software. You can redistribute it and/or modify
+This library is free software, you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
