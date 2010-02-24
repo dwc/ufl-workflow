@@ -18,7 +18,7 @@ L<Catalyst> controller component for managing statuses.
 
 =head1 METHODS
 
-=head2 index
+=head2 index 
 
 Display a list of current statuses.
 
@@ -47,11 +47,11 @@ sub add : Local {
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success) {
-            my $is_initial        = $result->valid('is_initial') ? 1 : 0;
-            my $continues_request = $result->valid('action') eq 'continue' ? 1 : 0;
-            my $reassigns_request = $result->valid('action') eq 'reassign' ? 1 : 0;
-            my $recycles_request  = $result->valid('action') eq 'recycle' ? 1 : 0;
-            my $finishes_request  = $result->valid('action') eq 'finish' ? 1 : 0;
+            my $is_initial        = ($result->valid('is_initial') == 1);
+            my $continues_request = ($result->valid('action') eq 'continue');
+            my $reassigns_request = ($result->valid('action') eq 'reassign');
+            my $recycles_request  = ($result->valid('action') eq 'recycle');
+            my $finishes_request  = ($result->valid('action') eq 'finish');
             ($continues_request, $reassigns_request, $recycles_request, $finishes_request) = (0, 0, 0, 0)
                 if $is_initial;
 

@@ -1,7 +1,14 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl -w
 
-use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('UFL::Workflow', 'CGI');
+BEGIN { $ENV{CATALYST_ENGINE} ||= 'CGI' }
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use UFL::Workflow;
+
+UFL::Workflow->run;
 
 1;
 
@@ -17,14 +24,14 @@ See L<Catalyst::Manual>
 
 Run a Catalyst application as a cgi script.
 
-=head1 AUTHORS
+=head1 AUTHOR
 
-Catalyst Contributors, see Catalyst.pm
+Sebastian Riedel, C<sri@oook.de>
 
 =head1 COPYRIGHT
 
-This library is free software. You can redistribute it and/or modify
+
+This library is free software, you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
-
