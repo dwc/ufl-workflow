@@ -1,6 +1,6 @@
 This file documents the revision history for UFL::Workflow.
 
-0.42
+0.42  Wed Feb 24 16:10:22 EST 2010
         - Update Catalyst::View::Email dependency and fix dumping of
           emails for debugging
         - Cc the submitter when a document is added, updated, or
