@@ -4,6 +4,6 @@
 
 [%- action.status.name | html %] at [% action.step.name | html -%]
 [% IF show_group %]
-  [% SET group = action.group %]
-  [% IF group %]<br />([% group.name | html -%])[% END %]
+  [% SET groups = action.groups %]
+  [% IF groups %]<br />([% groups.first.name | html -%])[% END %]
 [% END -%]

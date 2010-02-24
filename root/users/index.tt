@@ -1,46 +1,19 @@
 [% SET title = 'Users' -%]
 
-[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
 <h3>Manage users</h3>
 <ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new users</a></li>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add')) | html %]">Add new user</a></li>
 </ul>
-[% END %]
 
-<h3>Search for a user</h3>
-<p>Enter part of a name or UFID to find users.</p>
-<form action="[% c.uri_for(c.controller.action_for('search')) | html %]" method="get" class="search">
-  <input type="hidden" name="letter" value="[% letter | html %]"/>
-  <fieldset id="search">
-    <input type="text" name="query" value="[% query | html %]"/>
-    <input type="submit" class="submit" value="Go" />
-  </fieldset>
-</form>
-
-[% IF results.count > 0 %]
-<h3>Search results for <strong>[% query | html %]</strong></h3>
+<h3>Current users</h3>
+[% IF users.count > 0 %]
 <ul>
-  [% WHILE (user = results.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
+  [% WHILE (user = users.next) %]
+  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.username | html %]</a></li>
   [% END %]
 </ul>
-[% ELSIF query %]
-<p>Unable to find any matches for <strong>[% query | html %]</strong>.</p>
-[% END %]
-
-[% UNLESS letter.search('^\d+$') %]
-<h3>Directory for <strong>[% letter | upper | html %]</strong></h3>
-  [%- INCLUDE users/includes/alphalist.tt -%]
-
-  [% IF users.count > 0 %]
-<ul>
-    [% WHILE (user = users.next) %]
-  <li><a href="[% c.uri_for(c.controller.action_for('view'), user.uri_args) | html %]">[% user.display_name | html %]</a></li>
-    [% END %]
-</ul>
-  [% ELSE %]
+[% ELSE %]
 <p>None yet.</p>
-  [% END %]
+[% END %]
 
-  [%- INCLUDE users/includes/alphalist.tt -%]
-[% END -%]
+

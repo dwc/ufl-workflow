@@ -1,7 +1,8 @@
-INSERT INTO users (username, email) VALUES ('mhoit', 'mhoit@ufl.edu');
-INSERT INTO users (username, email) VALUES ('cschoaf', 'cschoaf@ufl.edu');
-INSERT INTO users (username, email) VALUES ('dwc', 'dwc@ufl.edu');
-INSERT INTO users (username, email) VALUES ('spooner', 'spooner@ufl.edu');
+INSERT INTO users (username) VALUES ('mhoit');
+INSERT INTO users (username) VALUES ('cschoaf');
+INSERT INTO users (username) VALUES ('dwc');
+INSERT INTO users (username) VALUES ('mlj1790');
+INSERT INTO users (username) VALUES ('spooner');
 
 INSERT INTO groups (name) VALUES ('Information Technology');
 INSERT INTO groups (parent_group_id, name) VALUES (
@@ -35,6 +36,12 @@ INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
 
 INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
   (SELECT id FROM users WHERE username = 'dwc'),
+  (SELECT id FROM groups WHERE name = 'Web Administration'),
+  (SELECT id FROM roles WHERE name = 'Administrator')
+);
+
+INSERT INTO user_group_roles (user_id, group_id, role_id) VALUES (
+  (SELECT id FROM users WHERE username = 'mlj1790'),
   (SELECT id FROM groups WHERE name = 'Web Administration'),
   (SELECT id FROM roles WHERE name = 'Administrator')
 );

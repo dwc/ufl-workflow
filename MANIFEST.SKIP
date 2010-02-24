@@ -23,10 +23,9 @@
 \.tmp$
 \.old$
 \.bak$
-\.del$
 \#$
 \.#
 
 # Runtime files and directories
 _local.yml$
-\bdocuments/
+\bdocuments\b
