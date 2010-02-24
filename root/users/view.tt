@@ -1,51 +1,21 @@
-[% SET title = user.display_name -%]
-
-[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
-<h3>Manage user</h3>
-<ul>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('edit'), user.uri_args) | html %]">Edit this user</a></li>
-  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
-</ul>
-[% END %]
+[% SET title = user.username -%]
 
 <h3>User details</h3>
 <dl>
   <dt>Username</dt>
   <dd>[% user.username | html %]</dd>
-  <dt>Display name</dt>
-  <dd>[% user.display_name | html %]</dd>
-  <dt>Email delivery</dt>
-  <dd>[% IF user.wants_email %]On[% ELSE %]Off[% END %]</dd>
-  <dt>Active?</dt>
-  <dd>[% user.active ? 'Yes' : 'No' %]</dd>
-  <dt>Created</dt>
+  <dt>Added</dt>
   <dd>[% user.insert_time.strftime(datetime_format) | html %]</dd>
-  <dt>Updated</dt>
-  <dd>[% user.update_time.strftime(datetime_format) | html %]</dd>
 </dl>
 <br style="clear:both" />
-<p><em>Note</em>: Your display name is populated automatically from the UF Directory. To change it, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Update My Directory Profile".</p>
-
-<h3>Email options</h3>
-<p>Email from [% c.config.name | html %] is sent to your business email address, [% IF user.email %]<a href="mailto:[% user.email | html %]">[% user.email | html %]</a>[% ELSE %]which we were unable to determine[% END %]. To change this, login to <a href="http://my.ufl.edu/">myUFL</a>, go to "My Account", and then choose "Modify My UF Business Email".</p>
-[% IF user.wants_email %]
-<p>If you <em>do not</em> want to receive any mail from [% c.config.name | html %], uncheck the box below and press save.</p>
-[% ELSE %]
-<p>If you want to receive mail from [% c.config.name | html %], check the box below and press save.</p>
-[% END %]
-<form action="[% c.uri_for(c.controller.action_for('toggle_email'), user.uri_args) | html %]" method="post">
-  <label class="checkbox"><input type="checkbox" name="wants_email" value="1"[% IF user.wants_email %] checked="checked"[% END %] /> Email when a request is added or updated</label>
-  <input type="submit" class="submit" value="Save Options" />
-</form>
-[% IF c.check_any_user_role('Administrator', 'Help Desk') %]
 
 <h3>Roles</h3>
-  [% SET user_group_roles = user.user_group_roles %]
-  [% IF user_group_roles %]
+[% SET user_group_roles = user.user_group_roles %]
+[% IF user_group_roles %]
 <ul>
-    [% FOREACH user_group_role IN user_group_roles %]
-      [% SET role = user_group_role.role %]
-      [% SET group = user_group_role.group %]
+  [% FOREACH user_group_role IN user_group_roles %]
+    [% SET role = user_group_role.role %]
+    [% SET group = user_group_role.group %]
   <li>
     <a href="[% c.uri_for(c.controller('Roles').action_for('view'), role.uri_args) | html %]">[% role.name | html %]</a>
     (<a href="[% c.uri_for(c.controller('Groups').action_for('view'), group.uri_args) | html %]">[% group.name | html %]</a>)
@@ -55,23 +25,23 @@
       <input type="submit" class="submit" value="Remove" />
     </form>
   </li>
-    [% END %]
+  [% END %]
 </ul>
-  [% ELSE %]
+[% ELSE %]
 <p>None yet.</p>
-  [% END -%]
+[% END -%]
 
-  [% SET processes = user.processes %]
-  [% IF processes %]
+[% SET processes = user.processes %]
+[% IF processes %]
 <h3>Processes</h3>
 <ul>
-    [% FOREACH process IN processes %]
+  [% FOREACH process IN processes %]
   <li><a href="[% c.uri_for(c.controller('Processes').action_for('view'), process.uri_args) | html %]">[% process.name | html %]</a></li>
-    [% END %]
-</ul>
   [% END %]
+</ul>
 [% END %]
-[% IF c.user.id == user.id %]
 
-[% INCLUDE includes/env.tt %]
-[% END %]
+<h3>Manage user</h3>
+<ul>
+  <li class="add"><a href="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]">Add this user to a role</a></li>
+</ul>

@@ -28,6 +28,3 @@ add_request:
     LENGTH:  A shorter description
   group_id:
     DEFAULT: A group
-  document:
-    DEFAULT:   A document
-    EXTENSION: A document with one of the allowed types
