@@ -1,0 +1,9 @@
+[% IF replaced_document %]
+[% actor.display_name %] replaced "[% replaced_document.name %]" with "[% document.name %]".
+[% ELSIF removed_document %]
+[% actor.display_name %] removed "[% document.name %]".
+[% ELSIF recovered_document %]
+[% actor.display_name %] recovered "[% document.name %]".
+[% ELSE %]
+[% actor.display_name %] added "[% document.name %]".
+[% END -%]
