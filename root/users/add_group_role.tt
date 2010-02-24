@@ -1,10 +1,11 @@
-[% SET title = "Add a Role to ${user.display_name}'s Account" -%]
+[% SET title = "Add a Role to ${user.username}'s Account" -%]
 [% SET
    group_id = 'group_id'
    role_id = 'role_id'
    group_button_id = 'group_button_id'
    role_button_id = 'role_button_id'
    scripts = [
+     c.uri_for('/static/javascript/jquery.js'),
      c.uri_for('/static/javascript/UFL/Workflow/Form/GroupRoleAssignment.js'),
    ]
    snippets = [
@@ -12,7 +13,7 @@
    ]
 -%]
 
-<p>Choose the group and then the role to which <strong>[% user.display_name | html %]</strong> belongs.</p>
+<p>Choose the group and then the role to which <strong>[% user.username | html %]</strong> belongs.</p>
 <form action="[% c.uri_for(c.controller.action_for('add_group_role'), user.uri_args) | html %]" method="[% IF group %]post[% ELSE %]get[% END %]">
 [% FILTER indent('  ') %]
   [% INCLUDE groups/includes/groups.tt field_id = $group_id, field_value = group.id %]

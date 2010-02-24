@@ -85,7 +85,9 @@ sub reports : Local Args(0) {
 
     # Default to all requests
     my $requests = $c->model('DBIC::Request')->search(
-        {},
+        {
+            'process.restricted' => 0,
+        },
         {
             join     => [ qw/submitter process documents/, { actions => [ qw/actor action_groups/ ] } ],
             order_by => \q[me.update_time DESC, me.insert_time DESC],
@@ -111,9 +113,9 @@ sub reports : Local Args(0) {
         my @words = split / /, lc $query;
         my @queries;
         foreach my $field (@selected_fields) {
- 	     foreach my $word (@words) {
+            foreach my $word (@words) {
                 push @queries, { "LOWER($field)" => { 'like', '%' . $word . '%' } };
-	     }
+            }
         }
 
         $requests = $requests->search({ -or => [ @queries ] });
@@ -136,7 +138,7 @@ sub reports : Local Args(0) {
 
     # Constrain requests based on a date range
     # XXX: Remove formatter junk when DBIx::Class gets support for objects
-    my $formatter = $c->model('DBIC')->schema->storage->datetime_parser_type;
+    my $formatter = $c->model('DBIC')->storage->datetime_parser_type;
     eval "require $formatter"; die $@ if $@;
     if (my $start_date = $result->valid('start_date')) {
         $start_date->set_formatter($formatter);
@@ -187,22 +189,6 @@ sub request : PathPart('requests') Chained('/') CaptureArgs(1) {
     $c->stash(request => $request);
 }
 
-=head2 version
-
-Fetch the specified version.
-
-=cut
-
-sub version : PathPart('versions') Chained('request') CaptureArgs(1) {
-    my ($self, $c, $num) = @_;
-
-    my $request = $c->stash->{request};
-    my $version = $request->versions->find({ num => $num });
-    $c->detach('/default') unless $version;
-
-    $c->stash(version => $version);
-}
-
 =head2 view
 
 Display basic information on the stashed request.
@@ -214,79 +200,19 @@ sub view : PathPart('') Chained('request') Args(0) {
 
     my $request = $c->stash->{request};
 
-    my $versions = $request->versions->search({}, { order_by => 'num' });
+    my $documents = $request->documents->search({
+        document_id => undef,
+    });
 
-    my $documents = $request->active_documents;
-    my $removed_documents = $request->removed_documents;
-    my $replaced_documents = $request->replaced_documents;
+    my $replaced_documents = $request->documents->search({
+        document_id => { '!=' => undef },
+    });
 
     $c->stash(
-        versions           => $versions,
         documents          => $documents,
-        removed_documents  => $removed_documents,
         replaced_documents => $replaced_documents,
         template           => 'requests/view.tt',
     );
-}
-
-=head2 view_version
-
-Display basic information about the stashed version.
-
-=cut
-
-sub view_version : PathPart('') Chained('version') Args(0) {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'requests/version.tt');
-}
-
-=head2 manage
-
-Ensure that the current user can manage the stashed request.
-
-=cut
-
-sub manage : Chained('request') CaptureArgs(0) {
-    my ($self, $c) = @_;
-
-    my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_manage($request);
-}
-
-=head2 edit
-
-Edit the stashed request.
-
-=cut
-
-sub edit : PathPart Chained('manage') Args(0) {
-    my ($self, $c) = @_;
-
-    my $request = $c->stash->{request};
-
-    if ($c->req->method eq 'POST') {
-        my $result = $self->validate_form($c);
-        if ($result->success) {
-            my $previous_title = $request->title;
-            my $previous_description = $request->description;
-
-            $c->model('DBIC')->schema->txn_do(sub {
-                my $version = $request->add_version($c->user->obj);
-
-                $request->update({
-                    title       => $result->valid('title'),
-                    description => $result->valid('description'),
-                });
-
-                $self->send_changed_request_email($c, $request, $c->user->obj, '', $previous_title, $previous_description);
-            });
-        }
-
-        return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
-    }
-
-    $c->stash(template => 'requests/edit.tt');
 }
 
 =head2 add_document
@@ -295,56 +221,36 @@ Add a document to the stashed request.
 
 =cut
 
-sub add_document : PathPart Chained('manage') Args(0) {
+sub add_document : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $request = $c->stash->{request};
+    die 'User cannot manage request' unless $c->user->can_manage($request);
 
     if ($c->req->method eq 'POST') {
         my $result = $self->validate_form($c);
         if ($result->success and my $upload = $c->req->upload('document')) {
-            my $replaced_document_id = $result->valid('replaced_document_id');
-
-            $c->model('DBIC')->schema->txn_do(sub {            
-                my $document = $request->add_document(
-                    $c->user->obj,
-                    $upload->basename,
-                    $upload->slurp,
-                    $c->controller('Documents')->destination,
-                    $replaced_document_id,
-                );
-
-                my $replaced_document;
-                if ($replaced_document_id) {
-                    $replaced_document = $request->documents->find($replaced_document_id);
-                }
-
-                $self->send_new_document_email($c, $request, $c->user->obj, $document, $replaced_document);
-            });
+            my $document = $request->add_document(
+                $c->user->obj,
+                $upload->basename,
+                $upload->slurp,
+                $c->controller('Documents')->destination,
+                $result->valid('replaced_document_id'),
+            );
 
             return $c->res->redirect($c->uri_for($self->action_for('view'), $request->uri_args));
         }
     }
 
-    my $documents = $request->active_documents;
+    my $documents = $request->documents->search(
+        { document_id => undef },
+        { order_by    => 'insert_time' },
+    );
 
     $c->stash(
         documents => $documents,
         template  => 'requests/add_document.tt',
     );
-}
-
-=head2 decide_on
-
-Ensure that the current user can decide on the stashed request.
-
-=cut
-
-sub decide_on : Chained('request') CaptureArgs(0) {
-    my ($self, $c) = @_;
-
-    my $request = $c->stash->{request};
-    $c->detach('/forbidden') unless $c->user->can_decide_on($request->current_action);
 }
 
 =head2 update_status
@@ -354,7 +260,7 @@ with the role on the current step.
 
 =cut
 
-sub update_status : PathPart Chained('decide_on') Args(0) {
+sub update_status : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     die 'Method must be POST' unless $c->req->method eq 'POST';
@@ -377,6 +283,9 @@ sub update_status : PathPart Chained('decide_on') Args(0) {
         my $comment = $result->valid('comment');
         $request->update_status($status, $c->user->obj, $group, $comment);
 
+        # Make sure we get update_time
+        $request->discard_changes;
+
         $self->send_changed_request_email($c, $request, $c->user->obj, $comment);
         if ($request->is_open) {
             $self->send_new_action_email($c, $request, $c->user->obj, $comment);
@@ -393,7 +302,7 @@ status via L<JSON>.
 
 =cut
 
-sub list_action_groups : PathPart Chained('decide_on') Args(0) {
+sub list_action_groups : PathPart Chained('request') Args(0) {
     my ($self, $c) = @_;
 
     my $status_id = $c->req->param('status_id');
@@ -407,14 +316,20 @@ sub list_action_groups : PathPart Chained('decide_on') Args(0) {
             my $groups = $request->groups_for_status($status);
             $c->stash(groups => [ map { $_->to_json } $groups->all ]);
 
-            if (my $selected_group = $request->default_group_for_status($status)) {
-                $c->stash(selected_group => $selected_group->to_json);
+            my $current_group = $request->current_action->groups->first;
+            if (my $parent_group = $current_group->parent_group) {
+                # Default to the parent group
+                $c->stash(selected_group => $groups->find($parent_group->id)->to_json);
+            }
+
+            if ($status->recycles_request and my $prev_action = $request->current_action->prev_action) {
+                $c->stash(prev_group => $prev_action->group->to_json);
             }
         }
     }
 
     my $view = $c->view('JSON');
-    $view->expose_stash([ qw/groups selected_group/ ]);
+    $view->expose_stash([ qw/groups selected_group prev_group/ ]);
     $c->forward($view);
 }
 
@@ -456,20 +371,15 @@ to the submitter and to users who have previously acted on it.
 =cut
 
 sub send_changed_request_email {
-    my ($self, $c, $request, $actor, $comment, $previous_title, $previous_description) = @_;
+    my ($self, $c, $request, $actor, $comment) = @_;
 
     my $past_actors  = $request->past_actors;
     my @to_addresses = map { $_->email } grep { $_->wants_email } $past_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
 
     $c->stash(
         request => $request,
         actor   => $actor,
         comment => $comment,
-        previous_title => $previous_title,
-        previous_description => $previous_description,
         email => {
             from     => $c->config->{email}->{from_address},
             to       => join(', ', @to_addresses),
@@ -484,7 +394,7 @@ sub send_changed_request_email {
         },
     );
 
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head2 send_new_action_email
@@ -500,9 +410,6 @@ sub send_new_action_email {
 
     my $possible_actors = $request->possible_actors;
     my @to_addresses    = map { $_->email } grep { $_->wants_email } $possible_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
 
     $c->stash(
         request => $request,
@@ -521,49 +428,7 @@ sub send_new_action_email {
         },
     );
 
-    $self->send_email($c);
-}
-
-=head2 send_new_document_email
-
-Send notification that a new document was uploaded for a
-L<UFL::Workflow::Schema::Request>.
-
-=cut
-
-sub send_new_document_email {
-    my ($self, $c, $request, $actor, $document, $replaced_document) = @_;
-
-    my $possible_actors = $request->possible_actors;
-    my $past_actors = $request->past_actors;
-
-    my @to_addresses;
-    push @to_addresses, map { $_->email } grep { $_->wants_email } $possible_actors->all;
-    push @to_addresses, map { $_->email } grep { $_->wants_email } $past_actors->all;
-
-    # Get latest request information
-    $request->discard_changes;
-
-    $c->stash(
-        request           => $request,
-        actor             => $actor,
-        document          => $document,
-        replaced_document => $replaced_document,
-        email             => {
-            from     => $c->config->{email}->{from_address},
-            to       => join(', ', @to_addresses),
-            subject  => $request->subject('New document added to '),
-            header   => [
-                'Return-Path' => $c->config->{email}->{admin_address},
-                'Reply-To'    => $actor->email,
-                Cc            => $request->submitter->email,
-                'In-Reply-To' => '<' . $request->message_id($c->req->uri->host_port) . '>',
-            ],
-            template => 'text_plain/new_document.tt',
-        },
-    );
-
-    $self->send_email($c);
+    $c->forward($c->view('Email'));
 }
 
 =head1 AUTHOR

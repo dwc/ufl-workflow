@@ -3,8 +3,7 @@ package UFL::Workflow::Schema::User;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;
-use Carp qw/croak/;
-use MRO::Compat;
+use Class::C3;
 use Scalar::Util qw/blessed/;
 
 __PACKAGE__->load_components(qw/+UFL::Workflow::Component::StandardColumns Core/);
@@ -16,21 +15,11 @@ __PACKAGE__->add_columns(
         data_type => 'varchar',
         size      => 16,
     },
-    display_name => {
-        data_type     => 'varchar',
-        size          => 256,
-        default_value => '(Unknown)',
-    },
     email => {
-        data_type   => 'varchar',
-        size        => 256,
-        is_nullable => 1,
+        data_type => 'varchar',
+        size      => 64,
     },
     wants_email => {
-        data_type     => 'boolean',
-        default_value => 1,
-    },
-    active => {
         data_type     => 'boolean',
         default_value => 1,
     },
@@ -82,6 +71,39 @@ See L<UFL::Workflow>.
 User table class for L<UFL::Workflow::Schema>.
 
 =head1 METHODS
+
+=head2 insert
+
+Override L<DBIx::Class::Row/insert> to update the email address field.
+
+=cut
+
+sub insert {
+    my $self = shift;
+
+    $self->_update_email;
+    $self->next::method(@_);
+}
+
+=head2 update
+
+Override L<DBIx::Class::Row/update> to update the email address field.
+
+=cut
+
+sub update {
+    my $self = shift;
+
+    $self->_update_email;
+    $self->next::method(@_);
+}
+
+sub _update_email {
+    my $self = shift;
+
+    my $domain = $self->result_source->schema->email_domain;
+    $self->email($self->username . '@' . $domain);
+}
 
 =head2 has_role
 
@@ -163,14 +185,7 @@ sub can_manage {
     $self->throw_exception('You must provide a request')
         unless blessed $request and $request->isa('UFL::Workflow::Schema::Request');
 
-    # Allow users with current (pending) step's group-role or a past group role
-    my $has_group_role = 0;
-
-    my $possible_actors = $request->possible_actors;
-    $has_group_role = 1 if $possible_actors->count({ user_id => $self->id }) > 0;
-    $has_group_role = 1 if $self->_has_past_group_role($request);
-
-    return ($request->is_open and ($self->id == $request->user_id || $has_group_role));
+    return ($request->is_open and $self->id == $request->user_id);
 }
 
 =head2 can_view
@@ -325,27 +340,6 @@ sub group_requests {
     }
 
     return $group_requests;
-}
-
-=head2 update_from_env
-
-Update this user with information from the environment according to
-the configuration.
-
-=cut
-
-sub update_from_env {
-    my ($self, $env, $field_map) = @_;
-
-    foreach my $env_key (keys %$field_map) {
-        croak "Missing '$env_key' attribute in environment"
-            unless exists $env->{$env_key} and $env->{$env_key};
-
-        my $field = $field_map->{$env_key};
-        $self->$field($env->{$env_key});
-    }
-
-    $self->update;
 }
 
 =head2 uri_args
