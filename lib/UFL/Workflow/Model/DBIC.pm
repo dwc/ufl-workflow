@@ -3,6 +3,7 @@ package UFL::Workflow::Model::DBIC;
 use strict;
 use warnings;
 use base qw/Catalyst::Model::DBIC::Schema/;
+use Class::C3;
 
 =head1 NAME
 
@@ -15,6 +16,26 @@ See L<UFL::Workflow>.
 =head1 DESCRIPTION
 
 L<DBIx::Class> L<Catalyst> model component.
+
+=head1 METHODS
+
+=head2 new
+
+Set the domain for email addresses as configured on the application.
+
+=cut
+
+sub new {
+    my $self = shift->next::method(@_);
+    my $c = $_[0];
+
+    my $domain = $c->config->{email}->{domain};
+    die 'No email domain configured ($c->config->{email}->domain)'
+        unless $domain;
+    $self->schema->email_domain($domain);
+
+    return $self;
+}
 
 =head1 AUTHOR
 

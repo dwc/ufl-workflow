@@ -4,13 +4,7 @@ use strict;
 use warnings;
 use base qw/Catalyst::Controller/;
 
-__PACKAGE__->mk_accessors(qw/authentication_controller authentication_action/);
-
-__PACKAGE__->config(
-    namespace                 => '',
-    authentication_controller => 'Authentication',
-    authentication_action     => 'login_via_form',
-);
+__PACKAGE__->config(namespace => '');
 
 =head1 NAME
 
@@ -24,41 +18,17 @@ Root L<Catalyst> controller for L<UFL::Workflow>.
 
 =head2 auto
 
-Require authentication for all pages. The method used for
-authentication is flexible, using L<Catalyst::Plugin::Authentication>
-and two configuration values.
-
-By default, authentication happens via a standard form, displayed via
-L<UFL::Workflow::Controller::Authentication/login_via_form>.
-
-This is configured using the following keys:
-
-    authentication_controller
-    authentication_action
-
-You can set the C<authentication_controller> key to any other controller
-in your application (i.e. those accessible using C<< $c->controller >>).
-
-Additionally, you can set the C<authentication_action> key to another action
-on that L<Catalyst::Controller>. For example,
-L<UFL::Workflow::Controller::Authentication> contains a C<login_via_env>
-action, which uses the C<REMOTE_USER> environment variable instead of a
-basic form.
-
-Finally, you can configure all of this from your local configuration file:
-
-    Controller::Root:
-      authentication_action: login_via_env
+Require authentication for all pages.
 
 =cut
 
 sub auto : Private {
     my ($self, $c) = @_;
 
-    my $controller = $self->authentication_controller;
-    my $action = $self->authentication_action;
+    $c->forward('unauthorized') and return 0
+        unless $c->user_exists;
 
-    return $c->forward($c->controller($controller)->action_for($action));
+    return 1;
 }
 
 =head2 default
@@ -84,25 +54,13 @@ sub index : Path('') Args(0) {
     my ($self, $c) = @_;
 
     my $requests  = $c->user->recent_requests;
-    my $processes = $c->model('DBIC::Process')->search({ enabled => 1 });
+    my $processes = $c->model('DBIC::Process')->search({ 'enabled' => 1 });
 
     $c->stash(
         requests  => $requests,
         processes => $processes,
         template  => 'index.tt',
     );
-}
-
-=head2 faq
-
-Display the FAQ page.
-
-=cut
-
-sub faq : Path('faq') Args(0) {
-    my ($self, $c) = @_;
-
-    $c->stash(template => 'faq.tt');
 }
 
 =head2 unauthorized
@@ -146,14 +104,27 @@ sub access_denied : Private {
 
 =head2 render
 
-Attempt to render a view, if needed. This hook is necessary to allow
-L<Catalyst::Plugin::FillInForm> and L<Catalyst::Action::RenderView> to
-play nice.
+Attempt to render a view, if needed.
 
 =cut
 
 sub render : ActionClass('RenderView') {
     my ($self, $c) = @_;
+
+    if (@{ $c->error }) {
+        $c->res->status(500);
+
+        # Override the ugly Catalyst debug screen
+        unless ($c->debug) {
+            $c->log->error($_) for @{ $c->error };
+
+            $c->stash(
+                errors   => $c->error,
+                template => 'error.tt',
+            );
+            $c->clear_errors;
+        }
+    }
 }
 
 =head2 end
@@ -166,17 +137,10 @@ sub end : Private {
     my ($self, $c) = @_;
 
     # If we're using the stub email sender, flush any messages to the console
-    # XXX: Catalyst::View::Email doesn't provide an API for this, so we resort to ugliness
-    my $view = $c->view('Email');
-    if ($view->can('sender') and $view->sender->{mailer} eq 'Test' and $view->can('_mailer_obj')) {
-        my $mailer_obj = $view->_mailer_obj;
-
-        if (my @deliveries = @{ $mailer_obj->deliveries }) {
-            use Data::Dumper;
-            $c->log->debug("Emails: " . Dumper(\@deliveries));
-
-            $mailer_obj->clear_deliveries;
-        }
+    if ($c->view('Email')->mailer->mailer eq 'Test') {
+        require Email::Send::Test;
+        $c->log->_dump(Email::Send::Test->emails);
+        Email::Send::Test->clear;
     }
 
     $c->forward('render');
