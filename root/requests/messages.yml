@@ -5,8 +5,6 @@ reports:
     DEFAULT: A search query field
   process_id:
     DEFAULT: A process
-  inactive_processes:
-    DEFAULT: Whether to show inactive processes
   group_id:
     DEFAULT: A group
   status_id:
@@ -15,15 +13,6 @@ reports:
     DEFAULT: A start date
   end_date:
     DEFAULT: An end date
-  page:
-    DEFAULT: A page number
-edit:
-  title:
-    DEFAULT: A title
-    LENGTH:  A shorter title
-  description:
-    DEFAULT: A description
-    LENGTH:  A shorter description
 add_document:
   document:
     DEFAULT:   A document
