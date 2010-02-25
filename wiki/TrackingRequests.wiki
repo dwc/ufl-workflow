@@ -16,7 +16,7 @@ At each step, UFL-Workflow knows who can approve or deny a request based on thei
 The actions allowed at each step are also flexible. UFL-Workflow uses a configurable set of statuses, which can do one (or none) of the following:
 
  * Continue the request on to the next step (or finish it if the request is at the last step)
- * Reassign the request to a different group
+ * Reassign the request to a different group, keeping it at the same step
  * Send the request to the previous step ("recycle")
  * Finish the request, allowing no further action (typically used for denying)
 
