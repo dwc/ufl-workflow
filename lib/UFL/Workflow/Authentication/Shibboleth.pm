@@ -18,8 +18,13 @@ UFL::Workflow::Authentication::Shibboleth - Catalyst::Plugin::Authentication cre
         'Plugin::Authentication' => {
             default_realm => 'myrealm',
             realms => {
-                credential => {
-                    class => '+UFL::Workflow::Authentication::Shibboleth',
+                myrealm => {
+                    store => {
+                        class => '...',
+                    },
+                    credential => {
+                        class => '+UFL::Workflow::Authentication::Shibboleth',
+                    },
                 },
             },
         },
