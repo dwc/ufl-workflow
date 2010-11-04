@@ -10,6 +10,8 @@
     <title>[% title_parts.grep('.').join(' - ') | html %]</title>
     <meta name="generator" content="[% c.config.name _ ' ' _ c.VERSION %]" />
     <meta http-equiv="Content-Type" content="text/html; charset=[% c.config.encoding || 'UTF-8' | html %]" />
+    <link rel="icon" type="image/x-icon" href="//assets.webadmin.ufl.edu/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="//assets.webadmin.ufl.edu/favicon.ico" />
 [% FOREACH stylesheet IN stylesheets %]
     <link rel="stylesheet" type="text/css" href="[% stylesheet | html %]" />
 [% END %]
