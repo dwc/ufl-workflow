@@ -311,11 +311,6 @@ font-weight:bold;
 color:#ff4a00;
 }
 
-#content ul.paging li.current {
-font-weight:bold;
-color:#ff4a00;
-}
-
 #content ul.paging li.prev {
 margin-right:5px;
 }
